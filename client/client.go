@@ -1,0 +1,115 @@
+// Copyright © 2016 Paul Allen <paul@cloudcoreo.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package client
+
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+
+	"golang.org/x/net/context"
+	"golang.org/x/net/context/ctxhttp"
+)
+
+type clientOptions struct {
+	interceptor ClientInterceptor
+}
+
+type ClientOption func(*clientOptions)
+
+// ClientInterceptor is a generic request interceptor, useful for
+// modifying or canceling the request.
+type ClientInterceptor func(*http.Request) error
+
+// WithInterceptor returns a ClientOption for adding an interceptor
+// to a Client.
+func WithInterceptor(ci ClientInterceptor) ClientOption {
+	return func(opts *clientOptions) {
+		opts.interceptor = ci
+	}
+}
+
+type Client struct {
+	client   http.Client
+	endpoint string
+	opts     clientOptions
+}
+
+// New creates a new Client for a given endpoint that can be configured with
+// multiple ClientOption
+func New(endpoint string, opts ...ClientOption) *Client {
+	client := &Client{
+		endpoint: endpoint,
+	}
+
+	for _, opt := range opts {
+		opt(&client.opts)
+	}
+
+	return client
+}
+
+// Do performs an HTTP request with a given context - the response will be decoded
+// into obj.
+func (c *Client) Do(ctx context.Context, method, path string, body io.Reader, obj interface{}) error {
+	req, err := c.buildRequest(method, path, body)
+	if err != nil {
+		return err
+	}
+
+	resp, err := ctxhttp.Do(ctx, &c.client, req)
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+
+	// Read all of resp.Body regardless of status code so we don't leak connections.
+	// The extra io.Copy is to ensure everything has been read, since a json.Decoder doesn't
+	// have that guarantee.
+	err = json.NewDecoder(resp.Body).Decode(obj)
+	io.Copy(ioutil.Discard, resp.Body)
+
+	if resp.StatusCode >= 300 {
+		return &Error{resp.StatusCode}
+	}
+
+	return err
+}
+
+func (c *Client) buildRequest(method, urlPath string, body io.Reader) (*http.Request, error) {
+	req, err := http.NewRequest(method, c.endpoint+"/"+urlPath, body)
+	if err != nil {
+		return nil, err
+	}
+
+	if c.opts.interceptor != nil {
+		if err := c.opts.interceptor(req); err != nil {
+			return nil, err
+		}
+	}
+
+	return req, nil
+}
+
+type Error struct {
+	StatusCode int
+}
+
+func (e *Error) Error() string {
+	return fmt.Sprintf("HTTP error: %s", http.StatusText(e.StatusCode))
+}
