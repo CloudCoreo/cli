@@ -1,6 +1,6 @@
 OSES       := linux darwin freebsd windows
 ARCHES     := 386 amd64
-EXECUTABLE ?= cloudcoreo-cli
+EXECUTABLE ?= coreo
 
 .PHONY: all
 all: vet test build

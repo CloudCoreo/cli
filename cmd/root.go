@@ -77,7 +77,6 @@ func initConfig() {
 	} else {
 		path := absPathify("$HOME")
 
-
 		if _, err := os.Stat(filepath.Join(path, DEFAULT_FOLDER)); err != nil {
 			// set default permissions
 			os.Mkdir(filepath.Join(path, DEFAULT_FOLDER), 0755)

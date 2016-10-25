@@ -8,7 +8,7 @@ import (
 )
 
 var cmdConfigure = &cobra.Command{
-	Use:   CMD_CONFIG_USE,
+	Use: CMD_CONFIG_USE,
 	Short: CMD_CONFIG_SHORT,
 	Long: CMD_CONFIG_LONG,
 	Run: func(cmd *cobra.Command, args []string) {
