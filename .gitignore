@@ -33,3 +33,4 @@ vendor/
 build/
 
 .idea/
+cli

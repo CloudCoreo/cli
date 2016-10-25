@@ -1,6 +1,6 @@
 OSES       := linux darwin freebsd windows
 ARCHES     := 386 amd64
-EXECUTABLE ?= $(shell basename `pwd`)
+EXECUTABLE ?= cloudcoreo-cli
 
 .PHONY: all
 all: vet test build
