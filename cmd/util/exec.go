@@ -22,6 +22,7 @@ import (
 	"golang.org/x/net/context"
 )
 
+//Exec command
 func Exec(ctx context.Context, path string, args ...string) (string, error) {
 	out, err := exec.CommandContext(ctx, path, args...).Output()
 	if err != nil {

@@ -26,32 +26,36 @@ import (
 )
 
 type clientOptions struct {
-	interceptor ClientInterceptor
+	interceptor Interceptor
 }
 
-type ClientOption func(*clientOptions)
+// Option type
+type Option func(*clientOptions)
 
-// ClientInterceptor is a generic request interceptor, useful for
+// Interceptor is a generic request interceptor, useful for
 // modifying or canceling the request.
-type ClientInterceptor func(*http.Request) error
+type Interceptor func(*http.Request) error
 
 // WithInterceptor returns a ClientOption for adding an interceptor
 // to a Client.
-func WithInterceptor(ci ClientInterceptor) ClientOption {
+func WithInterceptor(ci Interceptor) Option {
 	return func(opts *clientOptions) {
 		opts.interceptor = ci
 	}
 }
 
+
+// Client struct
 type Client struct {
 	client   http.Client
 	endpoint string
-	opts     clientOptions
+	opts	 clientOptions
+	auth     Auth
 }
 
 // New creates a new Client for a given endpoint that can be configured with
 // multiple ClientOption
-func New(endpoint string, opts ...ClientOption) *Client {
+func New(endpoint string, opts ...Option) *Client {
 	client := &Client{
 		endpoint: endpoint,
 	}
@@ -106,6 +110,7 @@ func (c *Client) buildRequest(method, urlPath string, body io.Reader) (*http.Req
 	return req, nil
 }
 
+// Error struct for statuscode
 type Error struct {
 	StatusCode int
 }

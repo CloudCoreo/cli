@@ -1,4 +1,4 @@
-package cmd
+package util
 
 import (
 	"os"
@@ -8,6 +8,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// SaveViperConfig Save viper config to file
 func SaveViperConfig() error {
 	f, err := os.Create(viper.ConfigFileUsed())
 	if err != nil {
