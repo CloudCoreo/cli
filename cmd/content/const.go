@@ -29,7 +29,7 @@ const (
 
 	// root command
 
-	CMD_COREO_USE = "cloudcoreo"
+	CMD_COREO_USE = "coreo"
 	CMD_COREO_SHORT = "A brief description of your application"
 	CMD_COREO_LONG = `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
