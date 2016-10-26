@@ -23,6 +23,7 @@ import (
 	"path/filepath"
 	"strings"
 	"runtime"
+	"github.com/CloudCoreo/cli/cmd/content"
 )
 
 
@@ -31,9 +32,9 @@ var userProfile string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   CMD_COREO_USE,
-	Short: CMD_COREO_SHORT,
-	Long: CMD_COREO_LONG,
+	Use:   content.CMD_COREO_USE,
+	Short: content.CMD_COREO_SHORT,
+	Long: content.CMD_COREO_LONG,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -77,14 +78,14 @@ func initConfig() {
 	} else {
 		path := absPathify("$HOME")
 
-		if _, err := os.Stat(filepath.Join(path, DEFAULT_FOLDER)); err != nil {
+		if _, err := os.Stat(filepath.Join(path, content.DEFAULT_FOLDER)); err != nil {
 			// set default permissions
-			os.Mkdir(filepath.Join(path, DEFAULT_FOLDER), 0755)
+			os.Mkdir(filepath.Join(path, content.DEFAULT_FOLDER), 0755)
 		}
 
-		path = path + DEFAULT_FOLDER
-		if _, err := os.Stat(filepath.Join(path, DEFAULT_FILE)); err != nil {
-			_, _ = os.Create(filepath.Join(path, DEFAULT_FILE))
+		path = path + content.DEFAULT_FOLDER
+		if _, err := os.Stat(filepath.Join(path, content.DEFAULT_FILE)); err != nil {
+			_, _ = os.Create(filepath.Join(path, content.DEFAULT_FILE))
 		}
 	}
 

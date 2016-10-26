@@ -1,61 +1,62 @@
+// Copyright © 2016 Paul Allen <paul@cloudcoreo.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package cmd
 
 import (
 	"fmt"
 
+	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	"github.com/CloudCoreo/cli/cmd/util"
 )
 
 var cmdConfigure = &cobra.Command{
-	Use: CMD_CONFIG_USE,
-	Short: CMD_CONFIG_SHORT,
-	Long: CMD_CONFIG_LONG,
+	Use: content.CMD_CONFIG_USE,
+	Short: content.CMD_CONFIG_SHORT,
+	Long: content.CMD_CONFIG_LONG,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		//generate config keys based on user profile
-		apiKey := fmt.Sprintf("%s.%s", userProfile, ACCESS_KEY)
-		secretKey := fmt.Sprintf("%s.%s", userProfile, SECRET_KEY)
-		teamIDKey := fmt.Sprintf("%s.%s", userProfile, TEAM_ID)
+		apiKey := fmt.Sprintf("%s.%s", userProfile, content.ACCESS_KEY)
+		secretKey := fmt.Sprintf("%s.%s", userProfile, content.SECRET_KEY)
+		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.TEAM_ID)
 
 		// load from config
-		apiKeyValue := getValueFromConfig(apiKey)
-		secretKeyValue := getValueFromConfig(secretKey)
-		teamIDValue := getValueFromConfig(teamIDKey)
+		apiKeyValue := util.GetValueFromConfig(apiKey)
+		secretKeyValue := util.GetValueFromConfig(secretKey)
+		teamIDValue := util.GetValueFromConfig(teamIDKey)
 
 		// prompt user for input
-		var userApiKey, userSecretKey, userTeamID string
-		getValueFromUser(&userApiKey, fmt.Sprintf(CMD_CONFIG_PROMPT_API_KEY, apiKeyValue))
-		getValueFromUser(&userSecretKey, fmt.Sprintf(CMD_CONFIG_PROMPT_SECRET_KEY, secretKeyValue))
-		getValueFromUser(&userTeamID, fmt.Sprintf(CMD_CONFIG_PROMPT_TEAM_ID, teamIDValue))
+		var userAPIkey, userSecretKey, userTeamID string
+		getValueFromUser(&userAPIkey, fmt.Sprintf(content.CMD_CONFIG_PROMPT_API_KEY, apiKeyValue))
+		getValueFromUser(&userSecretKey, fmt.Sprintf(content.CMD_CONFIG_PROMPT_SECRET_KEY, secretKeyValue))
+		getValueFromUser(&userTeamID, fmt.Sprintf(content.CMD_CONFIG_PROMPT_TEAM_ID, teamIDValue))
 
 		// replace values in config
-		updateConfig(apiKey, userApiKey)
-		updateConfig(secretKey, userSecretKey)
-		updateConfig(teamIDKey, userTeamID)
+		util.UpdateConfig(apiKey, userAPIkey)
+		util.UpdateConfig(secretKey, userSecretKey)
+		util.UpdateConfig(teamIDKey, userTeamID)
 
 		// save config
-		SaveViperConfig()
+		util.SaveViperConfig()
 	},
-}
-
-func updateConfig(key, value string ) {
-	if value != "" {
-		viper.Set(key, value)
-	}
 }
 
 func getValueFromUser(userKey *string, prompt string) {
 	fmt.Print(prompt)
 	fmt.Scanln(userKey)
-}
-
-func getValueFromConfig(key string) (value string) {
-	if value = viper.GetString(key); value == "" {
-		value = NONE
-	}
-
-	return value
 }
 
 func init() {
