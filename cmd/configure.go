@@ -34,9 +34,9 @@ var cmdConfigure = &cobra.Command{
 		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.TEAM_ID)
 
 		// load from config
-		apiKeyValue := util.GetValueFromConfig(apiKey)
-		secretKeyValue := util.GetValueFromConfig(secretKey)
-		teamIDValue := util.GetValueFromConfig(teamIDKey)
+		apiKeyValue := util.GetValueFromConfig(apiKey, true)
+		secretKeyValue := util.GetValueFromConfig(secretKey, true)
+		teamIDValue := util.GetValueFromConfig(teamIDKey, false)
 
 		// prompt user for input
 		var userAPIkey, userSecretKey, userTeamID string

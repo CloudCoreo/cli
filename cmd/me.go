@@ -18,8 +18,8 @@ var meCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		//generate config keys based on user profile
-		apiKey := util.GetValueFromConfig(fmt.Sprintf("%s.%s", userProfile, content.ACCESS_KEY))
-		secretKey := util.GetValueFromConfig(fmt.Sprintf("%s.%s", userProfile, content.SECRET_KEY))
+		apiKey := util.GetValueFromConfig(fmt.Sprintf("%s.%s", userProfile, content.ACCESS_KEY), false)
+		secretKey := util.GetValueFromConfig(fmt.Sprintf("%s.%s", userProfile, content.SECRET_KEY), false)
 
 		if apiKey == content.NONE || secretKey == content.NONE {
 			fmt.Println(content.ERROR_MISSING_API_KEY_SECRET_KEY)

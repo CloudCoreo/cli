@@ -23,6 +23,8 @@ const (
 	DEFAULT_FILE = "profiles.yaml"
 	NONE = "None"
 	ENDPOINT_ADDRESS = "http://localhost:3000/api"
+	MASK_LENGTH = 4
+	MASK = "****************"
 
 	// errors
 	ERROR_MISSING_API_KEY_SECRET_KEY = "Missing API key or/and Secret key. Please run 'Coreo configure' to configure them."
