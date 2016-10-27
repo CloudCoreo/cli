@@ -6,13 +6,13 @@ import (
 
 // Me struct for api payload
 type Me struct {
-	Defaultteamuri  string `json:"defaultteamuri"`
-	Teamsuri string `json:"teamsuri"`
+	Defaultteamuri  string `json:"defaultTeamUri"`
+	Teamsuri string `json:"teamsUri"`
 	ID string `json:"id"`
 	Self string `json:"self"`
-	Createdat string `json:"createdat"`
-	Defaultteam string `json:"defaultteam"`
-	Gravatariconurl string `json:"gravatariconurl"`
+	Createdat string `json:"createdAt"`
+	Defaultteam string `json:"defaultTeam"`
+	Gravatariconurl string `json:"gravatarIconUrl"`
 	Email string `json:"email"`
 	Username string `json:"username"`
 }
