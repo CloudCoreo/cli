@@ -24,6 +24,7 @@ import (
 	"strings"
 	"runtime"
 	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
 )
 
 
@@ -57,11 +58,7 @@ func init() {
 	// will be global for your application.
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cloudcoreo/profiles.yaml)")
-
 	RootCmd.PersistentFlags().StringVar(&userProfile, "profile", "default", "user profile (default)")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -78,14 +75,12 @@ func initConfig() {
 	} else {
 		path := absPathify("$HOME")
 
-		if _, err := os.Stat(filepath.Join(path, content.DEFAULT_FOLDER)); err != nil {
-			// set default permissions
-			os.Mkdir(filepath.Join(path, content.DEFAULT_FOLDER), 0755)
+		if err := util.CreateFolder(content.DEFAULT_FOLDER, path); err != nil {
+			fmt.Println("Error creating folder")
 		}
 
-		path = path + content.DEFAULT_FOLDER
-		if _, err := os.Stat(filepath.Join(path, content.DEFAULT_FILE)); err != nil {
-			_, _ = os.Create(filepath.Join(path, content.DEFAULT_FILE))
+		if err := util.CreateFile(content.DEFAULT_FILE, filepath.Join(path, content.DEFAULT_FOLDER), ""); err != nil {
+			fmt.Println("Error creating file")
 		}
 	}
 
