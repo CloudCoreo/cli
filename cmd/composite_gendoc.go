@@ -40,7 +40,7 @@ var docHeaders =  map[string]string {
 		"diagram.md": "Diagram",
 		"icon.md": "Icon",
 		"hierarchy.md" : "Hierarchy",
-	}
+}
 
 var docOrder = []string {"head.md", "description.md", "hierarchy.md", "config.yaml", "tags.md", "categories.md", "diagram.md", "icon.md"}
 
@@ -203,7 +203,7 @@ func generateVariablesContent(config YamlConfig, check func(bool, interface{}) b
 			contentBytes.WriteString("### `"+ option.key + "`:\n")
 			contentBytes.WriteString("  * description: "+ option.description)
 
-			if printVar && option.defaultValues != nil {
+			if printVar && option.defaultValues != nil && option.valueType != nil{
 
 				switch option.valueType  {
 				case "boolean":
