@@ -39,9 +39,10 @@ var docHeaders =  map[string]string {
 		"categories.md": "Categories",
 		"diagram.md": "Diagram",
 		"icon.md": "Icon",
+		"hierarchy.md" : "Hierarchy",
 	}
 
-var docOrder = []string {"head.md", "description.md", "config.yaml", "tags.md", "categories.md", "diagram.md", "icon.md"}
+var docOrder = []string {"head.md", "description.md", "hierarchy.md", "config.yaml", "tags.md", "categories.md", "diagram.md", "icon.md"}
 
 var cmdCompositeGendoc = &cobra.Command{
 	Use: content.CMD_COMPOSITE_GENDOC_USE,
@@ -81,7 +82,7 @@ var cmdCompositeGendoc = &cobra.Command{
 					readmeFileContent.WriteString(fmt.Sprintf("## %s\n", docHeaders[docOrder[index]]))
 				}
 
-				readmeFileContent.WriteString(string(fileContent)+"\n")
+				readmeFileContent.WriteString(string(fileContent)+"\n\n")
 			}
 		}
 
