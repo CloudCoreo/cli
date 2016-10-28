@@ -185,15 +185,17 @@ func generateVariablesContent(config YamlConfig, check func(bool, interface{}) b
 		option := varOption{}
 		option.key = variable.Key.(string)
 		for _, o := range variable.Value.(yaml.MapSlice) {
-			switch o.Key {
-			case "description":
-				option.description = o.Value.(string)
-			case "required":
-				option.required = o.Value.(bool)
-			case "type":
-				option.valueType = o.Value.(string)
-			case "default":
-				option.defaultValues = o.Value
+			if o.Value != nil {
+				switch o.Key {
+				case "description":
+					option.description = o.Value.(string)
+				case "required":
+					option.required = o.Value.(bool)
+				case "type":
+					option.valueType = o.Value.(string)
+				case "default":
+					option.defaultValues = o.Value
+				}
 			}
 		}
 
@@ -203,7 +205,7 @@ func generateVariablesContent(config YamlConfig, check func(bool, interface{}) b
 			contentBytes.WriteString("### `"+ option.key + "`:\n")
 			contentBytes.WriteString("  * description: "+ option.description)
 
-			if printVar && option.defaultValues != nil && option.valueType != nil{
+			if printVar && option.defaultValues != nil{
 
 				switch option.valueType  {
 				case "boolean":
