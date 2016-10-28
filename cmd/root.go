@@ -79,7 +79,7 @@ func initConfig() {
 			fmt.Println("Error creating folder")
 		}
 
-		if err := util.CreateFile(content.DEFAULT_FILE, filepath.Join(path, content.DEFAULT_FOLDER), ""); err != nil {
+		if err := util.CreateFile(content.DEFAULT_FILE, filepath.Join(path, content.DEFAULT_FOLDER), "", false); err != nil {
 			fmt.Println("Error creating file")
 		}
 	}

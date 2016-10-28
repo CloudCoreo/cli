@@ -24,8 +24,6 @@ import (
 	"path"
 )
 
-var directory string
-
 var cmdCompositeInit = &cobra.Command{
 	Use: content.CMD_COMPOSITE_INIT_USE,
 	Short: content.CMD_COMPOSITE_INIT_SHORT,
@@ -38,7 +36,7 @@ var cmdCompositeInit = &cobra.Command{
 
 		// config.yml file
 		fmt.Println()
-		util.CreateFile(content.DEFAULT_FILES_CONFIG_YAML_FILE, directory,content.DEFAULT_FILES_CONFIG_YAML)
+		util.CreateFile(content.DEFAULT_FILES_CONFIG_YAML_FILE, directory,content.DEFAULT_FILES_CONFIG_YAML, false)
 
 		// override folder
 		util.CreateFolder(content.DEFAULT_FILES_OVERRIDES_FOLDER, directory)
@@ -47,7 +45,7 @@ var cmdCompositeInit = &cobra.Command{
 
 		overrideReadmeContent := fmt.Sprintf("%s%s%s", content.DEFAULT_FILES_OVERRIDES_README_HEADER, overrideTree, content.DEFAULT_FILES_OVERRIDES_README_FOOTER)
 
-		err := util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory, content.DEFAULT_FILES_OVERRIDES_FOLDER), overrideReadmeContent)
+		err := util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory, content.DEFAULT_FILES_OVERRIDES_FOLDER), overrideReadmeContent, false)
 
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
@@ -58,7 +56,7 @@ var cmdCompositeInit = &cobra.Command{
 		// services folder
 		util.CreateFolder(content.DEFAULT_FILES_SERVICES_FOLDER, directory)
 
-		err = util.CreateFile(content.DEFAULT_FILES_CONFIG_RB_FILE, path.Join(directory, content.DEFAULT_FILES_SERVICES_FOLDER), content.DEFAULT_FILES_CONFIG_RB)
+		err = util.CreateFile(content.DEFAULT_FILES_CONFIG_RB_FILE, path.Join(directory, content.DEFAULT_FILES_SERVICES_FOLDER), content.DEFAULT_FILES_CONFIG_RB, false)
 
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
@@ -69,7 +67,7 @@ var cmdCompositeInit = &cobra.Command{
 
 		servicesReadMeContent := fmt.Sprintf("%s%s", content.DEFAULT_FILES_SERVICES_README_HEADER, servicesReadMeCode)
 
-		err = util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory + content.DEFAULT_FILES_SERVICES_FOLDER), servicesReadMeContent)
+		err = util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory + content.DEFAULT_FILES_SERVICES_FOLDER), servicesReadMeContent, false)
 
 		if err != nil {
 			fmt.Println(err.Error())
@@ -84,6 +82,6 @@ var cmdCompositeInit = &cobra.Command{
 func init() {
 	CompositeCmd.AddCommand(cmdCompositeInit)
 
-	cmdCompositeInit.Flags().StringVarP(&directory, content.CMD_COMPOSITE_INIT_FLAG_LONG, content.CMD_COMPOSITE_INIT_FLAG_SHORT, "",content.CMD_COMPOSITE_INIT_FLAG_DESCRIPTION )
+	cmdCompositeInit.Flags().StringVarP(&directory, content.CMD_FLAG_DIRECTORY_LONG, content.CMD_FLAG_DIRECTORY_SHORT, "",content.CMD_FLAG_DIRECTORY_DESCRIPTION )
 }
 

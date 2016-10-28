@@ -19,6 +19,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var directory string
+
+// CompositeCmd represents the based command for composite subcommands
 var CompositeCmd = &cobra.Command{
 	Use: content.CMD_COMPOSITE_USE,
 	Short: content.CMD_COMPOSITE_SHORT,
