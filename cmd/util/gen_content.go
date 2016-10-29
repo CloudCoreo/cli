@@ -14,8 +14,8 @@ func CreateFolder(name, path string) error {
 	return nil
 }
 
-func CreateFile(name, path, content string) error {
-	if _, err := os.Stat(filepath.Join(path, name)); err != nil {
+func CreateFile(name, path, content string, override bool) error {
+	if _, err := os.Stat(filepath.Join(path, name)); err != nil || override {
 		f, _ := os.Create(filepath.Join(path, name))
 		defer f.Close()
 
