@@ -32,7 +32,7 @@ const (
 
 	//Flags
 	CMD_FLAG_DIRECTORY_LONG = "directory"
-	CMD_FLAG_DIRECTORY_SHORT = "D"
+	CMD_FLAG_DIRECTORY_SHORT = "d"
 	CMD_FLAG_DIRECTORY_DESCRIPTION = "the working directory <fully-qualified-path>"
 
 
