@@ -35,6 +35,14 @@ const (
 	CMD_FLAG_DIRECTORY_SHORT = "D"
 	CMD_FLAG_DIRECTORY_DESCRIPTION = "the working directory <fully-qualified-path>"
 
+
+	// version command
+	CMD_VERSION_USE = "version"
+	CMD_VERSION_SHORT = "Print the version number of Coreo CLI"
+	CMD_VERSION_LONG = `Print the version number of Coreo CLI.`
+	CMD_VERSION = "Coreo CLI v0.0.1"
+
+
 	// root command
 	CMD_COREO_USE = "coreo"
 	CMD_COREO_SHORT = "CloudCoreo CLI"

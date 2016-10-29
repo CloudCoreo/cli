@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/CloudCoreo/cli/cmd/content"
 )
 
 func init() {
@@ -11,10 +12,10 @@ func init() {
 }
 
 var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Print the version number of Coreo CLI",
-	Long:  `Print the version number of Coreo CLI`,
+	Use:   content.CMD_VERSION_USE,
+	Short: content.CMD_VERSION_SHORT,
+	Long:  content.CMD_VERSION_LONG,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Coreo CLI v0.0.1")
+		fmt.Println(content.CMD_VERSION)
 	},
 }

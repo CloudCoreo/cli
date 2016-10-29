@@ -206,23 +206,26 @@ func generateVariablesContent(config YamlConfig, check func(bool, interface{}) b
 			contentBytes.WriteString("  * description: "+ option.description)
 
 			if printVar && option.defaultValues != nil{
-
-				switch option.valueType  {
-				case "boolean":
-					contentBytes.WriteString("\n  * default: ")
-					contentBytes.WriteString(strconv.FormatBool(option.defaultValues.(bool)))
-				case "string":
-					contentBytes.WriteString("\n  * default: ")
-					contentBytes.WriteString(option.defaultValues.(string))
+				switch strings.ToLower(option.valueType)  {
 				case "array":
 					// Convert to string[] and then join items with ,
 					defaultValues :=  convertStringSlice(option.defaultValues)
 
 					contentBytes.WriteString("\n  * default: ")
 					contentBytes.WriteString(fmt.Sprint(strings.Join(defaultValues, ", ")))
+				case "boolean":
+					contentBytes.WriteString("\n  * default: ")
+					contentBytes.WriteString(strconv.FormatBool(option.defaultValues.(bool)))
+				case "case":
+					contentBytes.WriteString("\n  * default: ")
+					contentBytes.WriteString(option.defaultValues.(string))
 				case "number":
 					contentBytes.WriteString("\n  * default: ")
 					contentBytes.WriteString(fmt.Sprint(option.defaultValues))
+				case "string":
+					contentBytes.WriteString("\n  * default: ")
+					contentBytes.WriteString(option.defaultValues.(string))
+
 				default:
 					// if no type is provided
 					c := option.defaultValues.(string)
@@ -252,13 +255,19 @@ func convertStringSlice(slice interface{}) []string {
 
 	s := reflect.ValueOf(slice)
 	if s.Kind() != reflect.Slice {
-	panic("InterfaceSlice() given a non-slice type")
+		panic("InterfaceSlice() given a non-slice type")
 	}
 
 	ret := make([]string, s.Len())
 
 	for i:=0; i<s.Len(); i++ {
-	ret[i] = s.Index(i).Interface().(string)
+
+		switch  s.Index(i).Interface().(type){
+		case string:
+			ret[i] = s.Index(i).Interface().(string)
+		case int:
+			ret[i] = strconv.FormatInt(int64(s.Index(i).Interface().(int)),16)
+		}
 	}
 
 	return ret
