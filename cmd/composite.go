@@ -15,7 +15,7 @@
 package cmd
 
 import (
-	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/cloudcoreo/cli/cmd/content"
 	"github.com/spf13/cobra"
 )
 

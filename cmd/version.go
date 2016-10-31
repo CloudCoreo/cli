@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/cloudcoreo/cli/cmd/content"
 )
 
 func init() {

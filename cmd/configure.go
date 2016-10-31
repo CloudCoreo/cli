@@ -17,9 +17,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/cloudcoreo/cli/cmd/content"
 	"github.com/spf13/cobra"
-	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/cloudcoreo/cli/cmd/util"
 )
 
 var cmdConfigure = &cobra.Command{
