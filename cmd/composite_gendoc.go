@@ -279,6 +279,6 @@ func convertStringSlice(slice interface{}) []string {
 func init() {
 	CompositeCmd.AddCommand(cmdCompositeGendoc)
 
-	cmdCompositeGendoc.Flags().StringVarP(&directory, content.CMD_FLAG_DIRECTORY_LONG, content.CMD_FLAG_DIRECTORY_SHORT, "",content.CMD_FLAG_DIRECTORY_DESCRIPTION )
+	cmdCompositeGendoc.Flags().StringVarP(&directory, content.CMD_FLAG_DIRECTORY_LONG, content.CMD_FLAG_DIRECTORY_SHORT, "", content.CMD_FLAG_DIRECTORY_DESCRIPTION)
 }
 

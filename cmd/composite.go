@@ -19,7 +19,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var directory string
+var directory, name, gitRepoUrl string
+var serverDir bool
 
 // CompositeCmd represents the based command for composite subcommands
 var CompositeCmd = &cobra.Command{
