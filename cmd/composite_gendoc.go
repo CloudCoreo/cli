@@ -218,24 +218,25 @@ func generateVariablesContent(config YamlConfig, check func(bool, interface{}) b
 					contentBytes.WriteString(strconv.FormatBool(option.defaultValues.(bool)))
 				case "case":
 					contentBytes.WriteString("\n  * default: ")
-					contentBytes.WriteString(option.defaultValues.(string))
+					contentBytes.WriteString(fmt.Sprint(option.defaultValues))
 				case "number":
 					contentBytes.WriteString("\n  * default: ")
 					contentBytes.WriteString(fmt.Sprint(option.defaultValues))
 				case "string":
 					contentBytes.WriteString("\n  * default: ")
-					contentBytes.WriteString(option.defaultValues.(string))
+					contentBytes.WriteString(fmt.Sprint(option.defaultValues))
 
 				default:
-					// if no type is provided
-					c := option.defaultValues.(string)
-					if strings.Contains(c, "\n") {
-						contentBytes.WriteString("\n  * default: \n" + content.DEFAULT_FILES_README_CODE_TICKS + "\n")
-						contentBytes.WriteString(option.defaultValues.(string) + "\n")
-						contentBytes.WriteString(content.DEFAULT_FILES_README_CODE_TICKS)
-					} else {
-						contentBytes.WriteString("\n  * default: ")
-						contentBytes.WriteString(option.defaultValues.(string)+"\n")
+					// if unknown type is provided try to cast it to string
+					if c, ok := option.defaultValues.(string); ok {
+						if strings.Contains(c, "\n") {
+							contentBytes.WriteString("\n  * default: \n" + content.DEFAULT_FILES_README_CODE_TICKS + "\n")
+							contentBytes.WriteString(option.defaultValues.(string) + "\n")
+							contentBytes.WriteString(content.DEFAULT_FILES_README_CODE_TICKS)
+						} else {
+							contentBytes.WriteString("\n  * default: ")
+							contentBytes.WriteString(option.defaultValues.(string) + "\n")
+						}
 					}
 				}
 			}
@@ -267,6 +268,8 @@ func convertStringSlice(slice interface{}) []string {
 			ret[i] = s.Index(i).Interface().(string)
 		case int:
 			ret[i] = strconv.FormatInt(int64(s.Index(i).Interface().(int)),16)
+		case bool:
+			ret[i] = strconv.FormatBool(s.Index(i).Interface().(bool))
 		}
 	}
 
