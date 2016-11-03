@@ -96,9 +96,12 @@ func (c *Client) Do(ctx context.Context, method, path string, body io.Reader, ob
 }
 
 func (c *Client) buildRequest(method, urlPath string, body io.Reader) (*http.Request, error) {
-	req, err := http.NewRequest(method, c.endpoint+"/"+urlPath, body)
+	req, err := http.NewRequest(method, urlPath, body)
 	if err != nil {
 		return nil, err
+	}
+	if method == "POST" ||  method == "PUT" {
+		req.Header.Set("Content-Type", "application/json")
 	}
 
 	if c.opts.interceptor != nil {

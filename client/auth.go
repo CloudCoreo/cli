@@ -1,27 +1,22 @@
 package client
 
 import (
+	"bytes"
 	"crypto/hmac"
+	"crypto/md5"
 	"crypto/sha1"
 	"encoding/base64"
-	"crypto/md5"
 	"encoding/hex"
-	"net/http"
 	"fmt"
-	"io"
-	"bytes"
+	"io/ioutil"
+	"net/http"
+	"strings"
 	"time"
 )
 
 // Auth struct for API and secret key
 type Auth struct {
 	APIKey, SecretKey string
-}
-
-func streamToByte(stream io.Reader) []byte {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(stream)
-	return buf.Bytes()
 }
 
 func computeHmac1(message string, secret string) string {
@@ -31,10 +26,9 @@ func computeHmac1(message string, secret string) string {
 	return base64.StdEncoding.EncodeToString(h.Sum(nil))
 }
 
-
-func getMD5Hash(body []byte) string {
+func getMD5Hash(body string) string {
 	hasher := md5.New()
-	hasher.Write(body)
+	hasher.Write([]byte(body))
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
@@ -42,16 +36,19 @@ func getMD5Hash(body []byte) string {
 func (a *Auth) SignRequest(req *http.Request) error {
 	method := req.Method
 
-	body := []byte{}
+	body := ""
 	if req.Body != nil {
-		body = streamToByte(req.Body)
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(req.Body)
+		body = buf.String()
+		req.Body = ioutil.NopCloser(strings.NewReader(body))
+		req.ContentLength = int64(len(body))
 	}
 
 	mediaType := req.Header.Get("Content-Type")
 	date := time.Now().String()
 	apiKey := a.APIKey
 	secretKey := a.SecretKey
-
 
 	message := fmt.Sprintf("%s\n%s\n%s\n%s", method, getMD5Hash(body), mediaType, date)
 

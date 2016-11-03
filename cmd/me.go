@@ -29,7 +29,7 @@ var meCmd = &cobra.Command{
 		a := client.Auth{APIKey: apiKey, SecretKey: secretKey}
 		i := client.Interceptor(a.SignRequest)
 		c := client.New(content.ENDPOINT_ADDRESS, client.WithInterceptor(i))
-		t, err := c.GetMe(context.Background())
+		t, err := c.GetTokens(context.Background())
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
