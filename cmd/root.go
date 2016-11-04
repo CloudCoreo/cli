@@ -109,7 +109,9 @@ func SetupCoreoCredentials() {
 		os.Exit(-1)
 	}
 	secret = secretKey
+}
 
+func SetupCoreoDefaultTeam() {
 	tID, err := util.CheckTeamIDFlag(teamID, userProfile)
 
 	if err != nil {

@@ -36,6 +36,8 @@ var GitKeyDeleteCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
+
 	},
 	Run:func(cmd *cobra.Command, args []string) {
 		fmt.Println(key, secret)

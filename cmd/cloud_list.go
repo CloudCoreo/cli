@@ -31,6 +31,8 @@ var CloudListCmd = &cobra.Command{
 	Long: content.CMD_CLOUD_LIST_LONG,
 	PreRun:func(cmd *cobra.Command, args []string) {
 		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
+
 	},
 	Run:func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)

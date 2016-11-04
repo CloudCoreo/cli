@@ -38,6 +38,8 @@ var TokenAddCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
+
 	},
 	Run:func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)

@@ -32,6 +32,8 @@ var TeamShowCmd = &cobra.Command{
 	Long: content.CMD_TEAM_SHOW_LONG,
 	PreRun:func(cmd *cobra.Command, args []string) {
 		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
+
 	},
 	Run:func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
