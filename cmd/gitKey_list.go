@@ -20,21 +20,16 @@ import (
 	"os"
 
 	"github.com/cloudcoreo/cli/cmd/content"
-	"github.com/cloudcoreo/cli/cmd/util"
 	"github.com/cloudcoreo/cli/client"
 	"github.com/spf13/cobra"
 )
 
-// CloudShowCmd represents the based command for cloud subcommands
-var CloudShowCmd = &cobra.Command{
-	Use: content.CMD_CLOUD_SHOW_USE,
-	Short: content.CMD_CLOUD_SHOW_SHORT,
-	Long: content.CMD_CLOUD_SHOW_LONG,
+// GitKeyListCmd represents the based command for gitkey subcommands
+var GitKeyListCmd = &cobra.Command{
+	Use: content.CMD_GITKEY_LIST_USE,
+	Short: content.CMD_GITKEY_LIST_SHORT,
+	Long: content.CMD_GITKEY_LIST_LONG,
 	PreRun:func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCloudShowOrDeleteFlag(cloudID); err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
-			os.Exit(-1)
-		}
 		SetupCoreoCredentials()
 	},
 	Run:func(cmd *cobra.Command, args []string) {
@@ -46,7 +41,7 @@ var CloudShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		t, err := c.GetCloudAccountByID(context.Background(), teamID, cloudID)
+		t, err := c.GetGitKeys(context.Background(), teamID)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -57,7 +52,5 @@ var CloudShowCmd = &cobra.Command{
 }
 
 func init() {
-	CloudCmd.AddCommand(CloudShowCmd)
-
-	CloudShowCmd.Flags().StringVarP(&cloudID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "",content.CMD_FLAG_CLOUDID_DESCRIPTION )
+	GitKeyCmd.AddCommand(GitKeyListCmd)
 }

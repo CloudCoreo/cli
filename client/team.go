@@ -35,7 +35,7 @@ func (c *Client) GetTeams(ctx context.Context) ([]Team, error) {
 }
 
 // GetTeams method to get Team info object
-func (c *Client) GetTeam(ctx context.Context, teamID string) (Team, error) {
+func (c *Client) GetTeamByID(ctx context.Context, teamID string) (Team, error) {
 	team := Team{}
 	teams, err := c.GetTeams(ctx)
 	if err != nil {

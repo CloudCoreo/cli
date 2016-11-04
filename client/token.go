@@ -36,7 +36,7 @@ func (c *Client) GetTokens(ctx context.Context) ([]Token, error) {
 }
 
 // GetTokenByID method for token command
-func (c *Client) GetTokenByID(ctx context.Context, teamID, tokenID string) (Token, error) {
+func (c *Client) GetTokenByID(ctx context.Context, tokenID string) (Token, error) {
 	token := Token{}
 
 	tokens, err := c.GetTokens(ctx)

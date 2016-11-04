@@ -61,11 +61,12 @@ func (c *Client) GetGitKeyByID(ctx context.Context, teamID, gitKeyID string) (Gi
 }
 
 // CreateGitKey method to create a gitKey object
-func (c *Client) CreateGitKey(ctx context.Context, teamID, keyMaterial, name string) error {
+func (c *Client) CreateGitKey(ctx context.Context, teamID, keyMaterial, name string) (GitKey, error) {
+	gitKey := GitKey{}
 	teams, err := c.GetTeams(ctx)
 
 	if err != nil {
-		return err
+		return gitKey, err
 	}
 
 	for _,team := range teams {
@@ -73,15 +74,15 @@ func (c *Client) CreateGitKey(ctx context.Context, teamID, keyMaterial, name str
 			gitKeyPlayLoad := fmt.Sprintf(`{"keyMaterial":"%s","name":"%s","teamId":"%s"}`, keyMaterial, name, teamID)
 			var jsonStr = []byte(gitKeyPlayLoad)
 			gitKeyLink := GetLinkByRef(team.Links, "gitKeys")
-			err := c.Do(ctx, "POST", gitKeyLink.Href, bytes.NewBuffer(jsonStr), nil)
+			err := c.Do(ctx, "POST", gitKeyLink.Href, bytes.NewBuffer(jsonStr), &gitKey)
 			if err != nil {
-				return err
+				return gitKey, err
 			}
 			break
 		}
 	}
 
-	return nil
+	return gitKey, nil
 }
 
 // DeleteGitKeyByID method to delete gitKey object

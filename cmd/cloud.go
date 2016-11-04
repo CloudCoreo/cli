@@ -19,11 +19,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CloudCmd represents the based command for composite subcommands
+var cloudID string
+
+// CloudCmd represents the based command for cloud subcommands
 var CloudCmd = &cobra.Command{
 	Use: content.CMD_CLOUD_USE,
 	Short: content.CMD_CLOUD_SHORT,
 	Long: content.CMD_CLOUD_LONG,
+	PostRun:func(cmd *cobra.Command, args []string) {
+		SetupCoreoCredentials()
+	},
 }
 
 func init() {

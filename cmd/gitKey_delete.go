@@ -25,13 +25,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CloudShowCmd represents the based command for cloud subcommands
-var CloudShowCmd = &cobra.Command{
-	Use: content.CMD_CLOUD_SHOW_USE,
-	Short: content.CMD_CLOUD_SHOW_SHORT,
-	Long: content.CMD_CLOUD_SHOW_LONG,
+// GitKeyDeleteCmd represents the based command for gitkey subcommands
+var GitKeyDeleteCmd = &cobra.Command{
+	Use: content.CMD_GITKEY_DELETE_USE,
+	Short: content.CMD_GITKEY_DELETE_SHORT,
+	Long: content.CMD_GITKEY_DELETE_LONG,
 	PreRun:func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCloudShowOrDeleteFlag(cloudID); err != nil {
+		if err := util.CheckGitKeyShowOrDeleteFlag(cloudID); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
@@ -46,18 +46,18 @@ var CloudShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		t, err := c.GetCloudAccountByID(context.Background(), teamID, cloudID)
+		err = c.DeleteGitKeyByID(context.Background(), teamID, gitKeyID)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
 
-		fmt.Printf("%#v", t)
+		fmt.Printf("Git key deleted")
 	},
 }
 
 func init() {
-	CloudCmd.AddCommand(CloudShowCmd)
+	GitKeyCmd.AddCommand(GitKeyDeleteCmd)
 
-	CloudShowCmd.Flags().StringVarP(&cloudID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "",content.CMD_FLAG_CLOUDID_DESCRIPTION )
+	GitKeyDeleteCmd.Flags().StringVarP(&gitKeyID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "",content.CMD_FLAG_CLOUDID_DESCRIPTION )
 }

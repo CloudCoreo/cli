@@ -61,11 +61,12 @@ func (c *Client) GetCloudAccountByID(ctx context.Context, teamID, cloudID string
 }
 
 // CreateCloudAccount method to create a cloud object
-func (c *Client) CreateCloudAccount(ctx context.Context, teamID, accessKeyID, secretAccessKey, cloudName string) error {
+func (c *Client) CreateCloudAccount(ctx context.Context, teamID, accessKeyID, secretAccessKey, cloudName string) (CloudAccount, error) {
+	cloudAccount := CloudAccount{}
 	teams, err := c.GetTeams(ctx)
 
 	if err != nil {
-		return err
+		return cloudAccount, err
 	}
 
 	for _,team := range teams {
@@ -77,15 +78,15 @@ func (c *Client) CreateCloudAccount(ctx context.Context, teamID, accessKeyID, se
 
 			cloudLink := GetLinkByRef(team.Links, "cloudAccounts")
 
-			err := c.Do(ctx, "POST", cloudLink.Href, bytes.NewBuffer(jsonStr), nil)
+			err := c.Do(ctx, "POST", cloudLink.Href, bytes.NewBuffer(jsonStr), &cloudAccount)
 			if err != nil {
-				return err
+				return cloudAccount, err
 			}
 			break
 		}
 	}
 
-	return nil
+	return cloudAccount, nil
 }
 
 // DeleteCloudAccountByID method to delete cloud object

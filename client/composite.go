@@ -23,7 +23,7 @@ type Composite struct {
 // GetComposites method to get composite info array object
 func (c *Client) GetComposites(ctx context.Context, teamID string) ([]Composite, error) {
 	composites := []Composite{}
-	team, err := c.GetTeam(ctx, teamID)
+	team, err := c.GetTeamByID(ctx, teamID)
 
 	if err != nil {
 		return composites, err
@@ -40,7 +40,7 @@ func (c *Client) GetComposites(ctx context.Context, teamID string) ([]Composite,
 }
 
 // GetComposite method to get composite info object
-func (c *Client) GetComposite(ctx context.Context, teamID, compositeID string) (Composite, error) {
+func (c *Client) GetCompositeByID(ctx context.Context, teamID, compositeID string) (Composite, error) {
 	composite := Composite{}
 	composites, err := c.GetComposites(ctx, teamID)
 	if err != nil {

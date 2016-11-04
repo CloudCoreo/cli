@@ -25,13 +25,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CloudShowCmd represents the based command for cloud subcommands
-var CloudShowCmd = &cobra.Command{
-	Use: content.CMD_CLOUD_SHOW_USE,
-	Short: content.CMD_CLOUD_SHOW_SHORT,
-	Long: content.CMD_CLOUD_SHOW_LONG,
+var tokenName, tokenDescription string
+
+// TokenAddCmd represents the based command for token subcommands
+var TokenAddCmd = &cobra.Command{
+	Use: content.CMD_TOKEN_ADD_USE,
+	Short: content.CMD_TOKEN_ADD_SHORT,
+	Long: content.CMD_TOKEN_ADD_LONG,
 	PreRun:func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCloudShowOrDeleteFlag(cloudID); err != nil {
+		if err := util.CheckTokenAddFlags(tokenName, tokenDescription); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
@@ -46,7 +48,7 @@ var CloudShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		t, err := c.GetCloudAccountByID(context.Background(), teamID, cloudID)
+		t, err := c.CreateToken(context.Background(), tokenName, tokenDescription)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -57,7 +59,8 @@ var CloudShowCmd = &cobra.Command{
 }
 
 func init() {
-	CloudCmd.AddCommand(CloudShowCmd)
+	TokenCmd.AddCommand(TokenAddCmd)
+	TokenAddCmd.Flags().StringVarP(&tokenName, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "",content.CMD_FLAG_NAME_DESCRIPTION )
+	TokenAddCmd.Flags().StringVarP(&tokenDescription, content.CMD_FLAG_DESCRIPTION_LONG, content.CMD_FLAG_DESCRIPTION_SHORT, "",content.CMD_FLAG_DESCRIPTION_DESCRIPTION )
 
-	CloudShowCmd.Flags().StringVarP(&cloudID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "",content.CMD_FLAG_CLOUDID_DESCRIPTION )
 }

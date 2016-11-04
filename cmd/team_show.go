@@ -20,21 +20,16 @@ import (
 	"os"
 
 	"github.com/cloudcoreo/cli/cmd/content"
-	"github.com/cloudcoreo/cli/cmd/util"
 	"github.com/cloudcoreo/cli/client"
 	"github.com/spf13/cobra"
 )
 
-// CloudShowCmd represents the based command for cloud subcommands
-var CloudShowCmd = &cobra.Command{
-	Use: content.CMD_CLOUD_SHOW_USE,
-	Short: content.CMD_CLOUD_SHOW_SHORT,
-	Long: content.CMD_CLOUD_SHOW_LONG,
+// TeamshowCmd represents the based command for team subcommands
+var TeamShowCmd = &cobra.Command{
+	Use: content.CMD_TEAM_SHOW_USE,
+	Short: content.CMD_TEAM_SHOW_SHORT,
+	Long: content.CMD_TEAM_SHOW_LONG,
 	PreRun:func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCloudShowOrDeleteFlag(cloudID); err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
-			os.Exit(-1)
-		}
 		SetupCoreoCredentials()
 	},
 	Run:func(cmd *cobra.Command, args []string) {
@@ -46,7 +41,7 @@ var CloudShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		t, err := c.GetCloudAccountByID(context.Background(), teamID, cloudID)
+		t, err := c.GetTeamByID(context.Background(), teamID)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -57,7 +52,7 @@ var CloudShowCmd = &cobra.Command{
 }
 
 func init() {
-	CloudCmd.AddCommand(CloudShowCmd)
+	TeamCmd.AddCommand(TeamShowCmd)
 
-	CloudShowCmd.Flags().StringVarP(&cloudID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "",content.CMD_FLAG_CLOUDID_DESCRIPTION )
+	TeamShowCmd.Flags().StringVarP(&teamID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "",content.CMD_FLAG_TEAMID_DESCRIPTION )
 }

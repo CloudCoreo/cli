@@ -27,9 +27,7 @@ import (
 	"github.com/cloudcoreo/cli/cmd/util"
 )
 
-
-var cfgFile string
-var userProfile string
+var key, secret, teamID,  userProfile, cfgFile, resourceKey, resourceSecret, resourceName string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -59,6 +57,9 @@ func init() {
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cloudcoreo/profiles.yaml)")
 	RootCmd.PersistentFlags().StringVar(&userProfile, "profile", "default", "user profile (default)")
+	RootCmd.PersistentFlags().StringVar(&key, "api-key", content.NONE, "Coreo api key")
+	RootCmd.PersistentFlags().StringVar(&secret, "api-secret", content.NONE, "Coreo secret key")
+	RootCmd.PersistentFlags().StringVar(&teamID, "team-id", content.NONE, "Coreo team id")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -84,11 +85,38 @@ func initConfig() {
 		}
 	}
 
-
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Println("Error reading config file:", viper.ConfigFileUsed())
 	}
+}
+
+func SetupCoreoCredentials() {
+	apiKey, err := util.CheckAPIKeyFlag(key, userProfile)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, err.Error())
+		os.Exit(-1)
+	}
+	key = apiKey
+
+
+	secretKey, err := util.CheckSecretKeyFlag(secret, userProfile)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, err.Error())
+		os.Exit(-1)
+	}
+	secret = secretKey
+
+
+	tID, err := util.CheckTeamIDFlag(teamID, userProfile)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, err.Error())
+		os.Exit(-1)
+	}
+	teamID = tID
 }
 
 func absPathify(inPath string) string {

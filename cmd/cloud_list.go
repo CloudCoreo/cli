@@ -17,13 +17,31 @@ package cmd
 import (
 	"github.com/cloudcoreo/cli/cmd/content"
 	"github.com/spf13/cobra"
+	"fmt"
+	"os"
+	"github.com/cloudcoreo/cli/client"
+	"context"
 )
 
-// CloudListCmd represents the based command for composite subcommands
+// CloudListCmd represents the based command for cloud subcommands
 var CloudListCmd = &cobra.Command{
 	Use: content.CMD_CLOUD_LIST_USE,
 	Short: content.CMD_CLOUD_LIST_SHORT,
 	Long: content.CMD_CLOUD_LIST_LONG,
+	PreRun:func(cmd *cobra.Command, args []string) {
+		SetupCoreoCredentials()
+	},
+	Run:func(cmd *cobra.Command, args []string) {
+		fmt.Println(key, secret)
+		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
+		t, err := c.GetCloudAccounts(context.Background(), teamID)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, err.Error())
+			os.Exit(-1)
+		}
+
+		fmt.Printf("%#v", t)
+	},
 }
 
 func init() {

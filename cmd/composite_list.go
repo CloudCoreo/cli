@@ -17,18 +17,33 @@ package cmd
 import (
 	"github.com/cloudcoreo/cli/cmd/content"
 	"github.com/spf13/cobra"
+	"fmt"
+	"os"
+	"github.com/cloudcoreo/cli/client"
+	"context"
 )
 
-var directory, name, gitRepoUrl, compositeID string
-var serverDir bool
+// CompositeListCmd represents the based command for composite subcommands
+var CompositeListCmd = &cobra.Command{
+	Use: content.CMD_COMPOSITE_LIST_USE,
+	Short: content.CMD_COMPOSITE_LIST_SHORT,
+	Long: content.CMD_COMPOSITE_LIST_LONG,
+	PreRun:func(cmd *cobra.Command, args []string) {
+		SetupCoreoCredentials()
+	},
+	Run:func(cmd *cobra.Command, args []string) {
+		fmt.Println(key, secret)
+		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
+		t, err := c.GetComposites(context.Background(), teamID)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, err.Error())
+			os.Exit(-1)
+		}
 
-// CompositeCmd represents the based command for composite subcommands
-var CompositeCmd = &cobra.Command{
-	Use: content.CMD_COMPOSITE_USE,
-	Short: content.CMD_COMPOSITE_SHORT,
-	Long: content.CMD_COMPOSITE_LONG,
+		fmt.Printf("%#v", t)
+	},
 }
 
 func init() {
-	RootCmd.AddCommand(CompositeCmd)
+	CompositeCmd.AddCommand(CompositeListCmd)
 }
