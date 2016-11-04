@@ -38,7 +38,6 @@ var CloudDeleteCmd = &cobra.Command{
 		SetupCoreoCredentials()
 	},
 	Run:func(cmd *cobra.Command, args []string) {
-		fmt.Println(key, secret)
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 
 		if err != nil {

@@ -28,9 +28,13 @@ func (c *Client) GetGitKeys(ctx context.Context, teamID string) ([]GitKey, error
 
 	for _,team := range teams {
 		if team.ID == teamID {
-			gitKeyLink := GetLinkByRef(team.Links, "gitKeys")
+			gitKeyLink, err := GetLinkByRef(team.Links, "gitKeys")
 
-			err := c.Do(ctx, "GET", gitKeyLink.Href, nil, &gitKeys)
+			if err != nil {
+				return gitKeys, err
+			}
+
+			err = c.Do(ctx, "GET", gitKeyLink.Href, nil, &gitKeys)
 			if err != nil {
 				return gitKeys, err
 			}
@@ -73,8 +77,12 @@ func (c *Client) CreateGitKey(ctx context.Context, teamID, keyMaterial, name str
 		if team.ID == teamID {
 			gitKeyPlayLoad := fmt.Sprintf(`{"keyMaterial":"%s","name":"%s","teamId":"%s"}`, keyMaterial, name, teamID)
 			var jsonStr = []byte(gitKeyPlayLoad)
-			gitKeyLink := GetLinkByRef(team.Links, "gitKeys")
-			err := c.Do(ctx, "POST", gitKeyLink.Href, bytes.NewBuffer(jsonStr), &gitKey)
+			gitKeyLink, err := GetLinkByRef(team.Links, "gitKeys")
+			if err != nil {
+				return gitKey, err
+			}
+
+			err = c.Do(ctx, "POST", gitKeyLink.Href, bytes.NewBuffer(jsonStr), &gitKey)
 			if err != nil {
 				return gitKey, err
 			}
@@ -95,8 +103,13 @@ func (c *Client) DeleteGitKeyByID(ctx context.Context, teamID, gitKeyID string) 
 
 	for _, gitKey := range gitKeys {
 		if gitKey.ID == gitKeyID {
-			gitKeyLink := GetLinkByRef(gitKey.Links, "self")
-			err := c.Do(ctx, "DELETE", gitKeyLink.Href, nil, nil)
+			gitKeyLink, err := GetLinkByRef(gitKey.Links, "self")
+
+			if err != nil {
+				return err
+			}
+
+			err = c.Do(ctx, "DELETE", gitKeyLink.Href, nil, nil)
 			if err != nil {
 				return err
 			}

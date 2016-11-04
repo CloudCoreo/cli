@@ -27,7 +27,7 @@ import (
 	"github.com/cloudcoreo/cli/cmd/util"
 )
 
-var key, secret, teamID,  userProfile, cfgFile, resourceKey, resourceSecret, resourceName string
+var key, secret, teamID,  userProfile, cfgFile, resourceKey, resourceSecret, resourceName, format string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -60,6 +60,8 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&key, "api-key", content.NONE, "Coreo api key")
 	RootCmd.PersistentFlags().StringVar(&secret, "api-secret", content.NONE, "Coreo secret key")
 	RootCmd.PersistentFlags().StringVar(&teamID, "team-id", content.NONE, "Coreo team id")
+	RootCmd.PersistentFlags().StringVar(&format, "format", "table", "Output format")
+
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -100,7 +102,6 @@ func SetupCoreoCredentials() {
 	}
 	key = apiKey
 
-
 	secretKey, err := util.CheckSecretKeyFlag(secret, userProfile)
 
 	if err != nil {
@@ -108,7 +109,6 @@ func SetupCoreoCredentials() {
 		os.Exit(-1)
 	}
 	secret = secretKey
-
 
 	tID, err := util.CheckTeamIDFlag(teamID, userProfile)
 

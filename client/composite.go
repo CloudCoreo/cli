@@ -29,9 +29,12 @@ func (c *Client) GetComposites(ctx context.Context, teamID string) ([]Composite,
 		return composites, err
 	}
 
-	teamLink := GetLinkByRef(team.Links, "composite")
+	compsoitesLink, err := GetLinkByRef(team.Links, "composites")
+	if err != nil {
+		return composites, err
+	}
 
-	err = c.Do(ctx, "GET", teamLink.Href, nil, &composites)
+	err = c.Do(ctx, "GET", compsoitesLink.Href, nil, &composites)
 	if err != nil {
 		return composites, err
 	}

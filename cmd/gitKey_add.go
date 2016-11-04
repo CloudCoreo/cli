@@ -47,7 +47,14 @@ var GitKeyAddCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		fmt.Printf("%#v", t)
+		if format == "json" {
+			util.PrettyPrintJson(t)
+		} else {
+			table := util.NewTable()
+			table.SetHeader([] string{"ID", "Name", "TeamID"})
+			table.UseObj(t)
+			fmt.Println(table.Render())
+		}
 	},
 }
 

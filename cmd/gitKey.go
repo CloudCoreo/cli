@@ -26,9 +26,6 @@ var GitKeyCmd = &cobra.Command{
 	Use: content.CMD_GITKEY_USE,
 	Short: content.CMD_GITKEY_SHORT,
 	Long: content.CMD_GITKEY_LONG,
-	PostRun:func(cmd *cobra.Command, args []string) {
-		SetupCoreoCredentials()
-	},
 }
 
 func init() {

@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"github.com/cloudcoreo/cli/cmd/content"
+	"github.com/cloudcoreo/cli/cmd/util"
 	"github.com/spf13/cobra"
 	"fmt"
 	"os"
@@ -32,7 +33,6 @@ var CloudListCmd = &cobra.Command{
 		SetupCoreoCredentials()
 	},
 	Run:func(cmd *cobra.Command, args []string) {
-		fmt.Println(key, secret)
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 		t, err := c.GetCloudAccounts(context.Background(), teamID)
 		if err != nil {
@@ -40,7 +40,19 @@ var CloudListCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		fmt.Printf("%#v", t)
+		b := make([]interface{}, len(t))
+		for i := range t {
+			b[i] = t[i]
+		}
+
+		if format == "json" {
+			util.PrettyPrintJson(t)
+		} else {
+			table := util.NewTable()
+			table.SetHeader([] string{"ID", "Name", "TeamID"})
+			table.UseObj(b)
+			fmt.Println(table.Render())
+		}
 	},
 }
 

@@ -25,7 +25,11 @@ func (c *Client) GetTokens(ctx context.Context) ([]Token, error) {
 		return t, err
 	}
 
-	tokenLink := GetLinkByRef(u.Links, "tokens")
+	tokenLink, err := GetLinkByRef(u.Links, "tokens")
+
+	if err != nil {
+		return t, err
+	}
 
 	err = c.Do(ctx, "GET", tokenLink.Href, nil, &t)
 	if err != nil {
@@ -63,7 +67,11 @@ func (c *Client) CreateToken(ctx context.Context, description, name string) (Tok
 		return token, err
 	}
 
-	tokenLink := GetLinkByRef(u.Links, "tokens")
+	tokenLink, err := GetLinkByRef(u.Links, "tokens")
+
+	if err != nil {
+		return token, err
+	}
 
 	tokenPlayLoad := fmt.Sprintf(`{"description":"%s","name":"%s"}`, description, name)
 	var jsonStr = []byte(tokenPlayLoad)
@@ -85,8 +93,13 @@ func (c *Client) DeleteTokenByID(ctx context.Context, tokenID string) error {
 
 	for _, token := range tokens {
 		if token.ID == tokenID {
-			tokensink := GetLinkByRef(token.Links, "self")
-			err := c.Do(ctx, "DELETE", tokensink.Href, nil, nil)
+			tokenslink, err := GetLinkByRef(token.Links, "self")
+
+			if err != nil {
+				return err
+			}
+
+			err = c.Do(ctx, "DELETE", tokenslink.Href, nil, nil)
 			if err != nil {
 				return err
 			}

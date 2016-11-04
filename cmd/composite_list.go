@@ -15,12 +15,14 @@
 package cmd
 
 import (
-	"github.com/cloudcoreo/cli/cmd/content"
-	"github.com/spf13/cobra"
+	"context"
 	"fmt"
 	"os"
+
 	"github.com/cloudcoreo/cli/client"
-	"context"
+	"github.com/cloudcoreo/cli/cmd/content"
+	"github.com/cloudcoreo/cli/cmd/util"
+	"github.com/spf13/cobra"
 )
 
 // CompositeListCmd represents the based command for composite subcommands
@@ -32,7 +34,6 @@ var CompositeListCmd = &cobra.Command{
 		SetupCoreoCredentials()
 	},
 	Run:func(cmd *cobra.Command, args []string) {
-		fmt.Println(key, secret)
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 		t, err := c.GetComposites(context.Background(), teamID)
 		if err != nil {
@@ -40,7 +41,17 @@ var CompositeListCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		fmt.Printf("%#v", t)
+		b := make([]interface{}, len(t))
+		for i := range t {
+			b[i] = t[i]
+		}
+		if format == "json" {
+			util.PrettyPrintJson(t)
+		} else {
+			table := util.NewTable()
+			table.UseObj(b)
+			fmt.Println(table.Render())
+		}
 	},
 }
 

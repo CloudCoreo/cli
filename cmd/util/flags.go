@@ -77,6 +77,10 @@ func CheckGitKeyAddFlags(name, secret string) error{
 }
 
 
+func CheckCompositeShowOrDeleteFlag(compositeID string) error {
+	return checkFlag(compositeID, "compositeID id is required for this command")
+}
+
 func CheckLayersFlags(name, gitRepoUrl string) error{
 	if err := checkFlag(name, "A composite name is required: -n"); err != nil {
 		return err

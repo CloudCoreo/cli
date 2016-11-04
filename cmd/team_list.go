@@ -22,6 +22,7 @@ import (
 	"github.com/cloudcoreo/cli/cmd/content"
 	"github.com/cloudcoreo/cli/client"
 	"github.com/spf13/cobra"
+	"github.com/cloudcoreo/cli/cmd/util"
 )
 
 // TeamListCmd represents the based command for team subcommands
@@ -33,7 +34,6 @@ var TeamListCmd = &cobra.Command{
 		SetupCoreoCredentials()
 	},
 	Run:func(cmd *cobra.Command, args []string) {
-		fmt.Println(key, secret)
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 		t, err := c.GetTeams(context.Background())
 		if err != nil {
@@ -41,7 +41,19 @@ var TeamListCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		fmt.Printf("%#v", t)
+		b := make([]interface{}, len(t))
+		for i := range t {
+			b[i] = t[i]
+		}
+
+		if format == "json" {
+			util.PrettyPrintJson(t)
+		} else {
+			table := util.NewTable()
+			table.SetHeader([] string{"ID", "TeamName", "TeamDescription"})
+			table.UseObj(b)
+			fmt.Println(table.Render())
+		}
 	},
 }
 

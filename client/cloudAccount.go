@@ -28,9 +28,13 @@ func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]CloudAc
 
 	for _,team := range teams {
 		if team.ID == teamID {
-			cloudLink := GetLinkByRef(team.Links, "cloudAccounts")
+			cloudLink, err := GetLinkByRef(team.Links, "cloudAccounts")
 
-			err := c.Do(ctx, "GET", cloudLink.Href, nil, &clouds)
+			if err != nil {
+				return clouds, err
+			}
+
+			err = c.Do(ctx, "GET", cloudLink.Href, nil, &clouds)
 			if err != nil {
 				return clouds, err
 			}
@@ -76,9 +80,12 @@ func (c *Client) CreateCloudAccount(ctx context.Context, teamID, accessKeyID, se
 			cloudPlayLoad := fmt.Sprintf(`{"name":"%s","accessKeyId":"%s","secretAccessKey":"%s","teamId":"%s"}`, cloudName, accessKeyID, secretAccessKey, teamID)
 			var jsonStr = []byte(cloudPlayLoad)
 
-			cloudLink := GetLinkByRef(team.Links, "cloudAccounts")
+			cloudLink, err := GetLinkByRef(team.Links, "cloudAccounts")
+			if err != nil {
+				return cloudAccount, err
+			}
 
-			err := c.Do(ctx, "POST", cloudLink.Href, bytes.NewBuffer(jsonStr), &cloudAccount)
+			err = c.Do(ctx, "POST", cloudLink.Href, bytes.NewBuffer(jsonStr), &cloudAccount)
 			if err != nil {
 				return cloudAccount, err
 			}
@@ -99,8 +106,12 @@ func (c *Client) DeleteCloudAccountByID(ctx context.Context, teamID, cloudID str
 
 	for _, cloudAccount := range cloudAccounts {
 		if cloudAccount.ID == cloudID {
-			cloudLink := GetLinkByRef(cloudAccount.Links, "self")
-			err := c.Do(ctx, "DELETE", cloudLink.Href, nil, nil)
+			cloudLink, err := GetLinkByRef(cloudAccount.Links, "self")
+			if err != nil {
+				return err
+			}
+
+			err = c.Do(ctx, "DELETE", cloudLink.Href, nil, nil)
 			if err != nil {
 				return err
 			}

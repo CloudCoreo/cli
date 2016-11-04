@@ -20,6 +20,7 @@ import (
 	"os"
 
 	"github.com/cloudcoreo/cli/cmd/content"
+	"github.com/cloudcoreo/cli/cmd/util"
 	"github.com/cloudcoreo/cli/client"
 	"github.com/spf13/cobra"
 )
@@ -33,7 +34,6 @@ var TeamShowCmd = &cobra.Command{
 		SetupCoreoCredentials()
 	},
 	Run:func(cmd *cobra.Command, args []string) {
-		fmt.Println(key, secret)
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 
 		if err != nil {
@@ -47,12 +47,17 @@ var TeamShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		fmt.Printf("%#v", t)
+		if format == "json" {
+			util.PrettyPrintJson(t)
+		} else {
+			table := util.NewTable()
+			table.SetHeader([] string{"ID", "TeamName", "TeamDescription"})
+			table.UseObj(t)
+			fmt.Println(table.Render())
+		}
 	},
 }
 
 func init() {
 	TeamCmd.AddCommand(TeamShowCmd)
-
-	TeamShowCmd.Flags().StringVarP(&teamID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "",content.CMD_FLAG_TEAMID_DESCRIPTION )
 }

@@ -24,7 +24,11 @@ func (c *Client) GetTeams(ctx context.Context) ([]Team, error) {
 		return t, err
 	}
 
-	teamLink := GetLinkByRef(u.Links, "teams")
+	teamLink, err := GetLinkByRef(u.Links, "teams")
+	if err != nil {
+		return t, err
+	}
+
 
 	err = c.Do(ctx, "GET", teamLink.Href, nil, &t)
 	if err != nil {

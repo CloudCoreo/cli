@@ -40,7 +40,6 @@ var TokenAddCmd = &cobra.Command{
 		SetupCoreoCredentials()
 	},
 	Run:func(cmd *cobra.Command, args []string) {
-		fmt.Println(key, secret)
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 
 		if err != nil {
@@ -54,7 +53,14 @@ var TokenAddCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		fmt.Printf("%#v", t)
+		if format == "json" {
+			util.PrettyPrintJson(t)
+		} else {
+			table := util.NewTable()
+			table.SetHeader([] string{"ID", "Name", "Description"})
+			table.UseObj(t)
+			fmt.Println(table.Render())
+		}
 	},
 }
 
@@ -62,5 +68,4 @@ func init() {
 	TokenCmd.AddCommand(TokenAddCmd)
 	TokenAddCmd.Flags().StringVarP(&tokenName, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "",content.CMD_FLAG_NAME_DESCRIPTION )
 	TokenAddCmd.Flags().StringVarP(&tokenDescription, content.CMD_FLAG_DESCRIPTION_LONG, content.CMD_FLAG_DESCRIPTION_SHORT, "",content.CMD_FLAG_DESCRIPTION_DESCRIPTION )
-
 }

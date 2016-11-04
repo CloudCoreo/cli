@@ -31,14 +31,13 @@ var CompositeShowCmd = &cobra.Command{
 	Short: content.CMD_COMPOSITE_SHOW_SHORT,
 	Long: content.CMD_COMPOSITE_SHOW_LONG,
 	PreRun:func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCloudShowOrDeleteFlag(cloudID); err != nil {
+		if err := util.CheckCompositeShowOrDeleteFlag(compositeID); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
 		SetupCoreoCredentials()
 	},
 	Run:func(cmd *cobra.Command, args []string) {
-		fmt.Println(key, secret)
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 
 		if err != nil {
@@ -52,7 +51,13 @@ var CompositeShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		fmt.Printf("%#v", t)
+		if format == "json" {
+			util.PrettyPrintJson(t)
+		} else {
+			table := util.NewTable()
+			table.UseObj(t)
+			fmt.Println(table.Render())
+		}
 	},
 }
 

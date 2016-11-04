@@ -1,5 +1,6 @@
 package client
 
+import "fmt"
 
 type Link struct {
 	Ref string `json:"ref"`
@@ -7,7 +8,7 @@ type Link struct {
 	Href string `json:"href"`
 }
 
-func GetLinkByRef(links []Link, ref string) (Link) {
+func GetLinkByRef(links []Link, ref string) (Link, error) {
 	link := Link{}
 
 	for _, l := range links {
@@ -17,5 +18,9 @@ func GetLinkByRef(links []Link, ref string) (Link) {
 		}
 	}
 
-	return link
+	if link.Href == "" {
+		return link, fmt.Errorf("%s link is empty", ref)
+	}
+
+	return link, nil
 }
