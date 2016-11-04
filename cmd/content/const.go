@@ -217,6 +217,11 @@ const (
 	CMD_COMPOSITE_INIT_SUCCESS = "Initialization completed, default files were generated"
 
 
+	// composite create command
+	CMD_COMPOSITE_CREATE_USE = "create"
+	CMD_COMPOSITE_CREATE_SHORT = "create readme documentation"
+	CMD_COMPOSITE_CREATE_LONG = `create readme documentation.`
+
 	// composite gendoc command
 	CMD_COMPOSITE_GENDOC_USE = "gendoc"
 	CMD_COMPOSITE_GENDOC_SHORT = "generate readme documentation"

@@ -81,6 +81,19 @@ func CheckCompositeShowOrDeleteFlag(compositeID string) error {
 	return checkFlag(compositeID, "compositeID id is required for this command")
 }
 
+func CheckCompositeCreateFlags(name, gitRepoUrl string ) error{
+	if err := checkGitRepoUrl(gitRepoUrl); err != nil  {
+		return err
+	}
+
+	if err := checkFlag(name, "Name flag is required for this command"); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 func CheckLayersFlags(name, gitRepoUrl string) error{
 	if err := checkFlag(name, "A composite name is required: -n"); err != nil {
 		return err

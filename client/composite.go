@@ -1,6 +1,8 @@
 package client
 
 import (
+	"bytes"
+	"fmt"
 	"time"
 
 	"golang.org/x/net/context"
@@ -56,5 +58,29 @@ func (c *Client) GetCompositeByID(ctx context.Context, teamID, compositeID strin
 			break
 		}
 	}
+	return composite, nil
+}
+
+// CreateComposite method to create a composite object
+func (c *Client) CreateComposite(ctx context.Context, gitURL, name, teamID string) (Composite, error)  {
+	team, err := c.GetTeamByID(ctx, teamID)
+	composite := Composite{}
+	if err != nil {
+		return composite, err
+	}
+
+	compositesLink, err := GetLinkByRef(team.Links, "composites")
+
+	if err != nil {
+		return composite, err
+	}
+
+	compositePlayLoad := fmt.Sprintf(`{"name":"%s","gitUrl":"%s","teamId":"%s"}`, name, gitURL, teamID)
+	var jsonStr = []byte(compositePlayLoad)
+	err = c.Do(ctx, "POST", compositesLink.Href, bytes.NewBuffer(jsonStr), &composite)
+	if err != nil {
+		return composite, err
+	}
+
 	return composite, nil
 }
