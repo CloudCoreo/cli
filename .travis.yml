@@ -1,0 +1,4 @@
+language: go
+script: make build
+notifications:
+  email: false
