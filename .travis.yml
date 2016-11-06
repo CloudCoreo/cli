@@ -1,7 +1,4 @@
 language: go
-script: make build
-go:
-  - 1.7
+go: 1.7
 gobuild_args: -ldflags "-X cmd.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X cmd.githash=`git rev-parse HEAD` -X cmd.version=`cat VERSION`"
-notifications:
-  email: false
+install:
