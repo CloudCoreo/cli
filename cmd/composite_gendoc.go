@@ -25,8 +25,8 @@ import (
 	"strings"
 	"strconv"
 
-	"github.com/cloudcoreo/cli/cmd/util"
-	"github.com/cloudcoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )

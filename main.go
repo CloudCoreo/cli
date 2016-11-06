@@ -15,7 +15,7 @@
 package main
 
 import (
-	"github.com/cloudcoreo/cli/cmd"
+	"github.com/CloudCoreo/cli/cmd"
 )
 
 func main() {
