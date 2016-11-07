@@ -1,8 +1,8 @@
 package util
 
 import (
-	"os"
 	"fmt"
+	"os"
 
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"

@@ -6,13 +6,13 @@ import (
 
 // Team struct for api payload
 type Team struct {
-	TeamName string `json:"teamName"`
-	OwnerID string `json:"ownerId"`
-	TeamIcon string `json:"teamIcon"`
+	TeamName        string      `json:"teamName"`
+	OwnerID         string      `json:"ownerId"`
+	TeamIcon        string      `json:"teamIcon"`
 	TeamDescription interface{} `json:"teamDescription"`
-	Default bool `json:"default"`
-	Links []Link `json:"links"`
-	ID string `json:"id"`
+	Default         bool        `json:"default"`
+	Links           []Link      `json:"links"`
+	ID              string      `json:"id"`
 }
 
 // GetTeams method to get Teams info array object
@@ -29,7 +29,6 @@ func (c *Client) GetTeams(ctx context.Context) ([]Team, error) {
 		return t, err
 	}
 
-
 	err = c.Do(ctx, "GET", teamLink.Href, nil, &t)
 	if err != nil {
 		return t, err
@@ -38,7 +37,7 @@ func (c *Client) GetTeams(ctx context.Context) ([]Team, error) {
 	return t, nil
 }
 
-// GetTeams method to get Team info object
+// GetTeamByID method to get Team info object by team ID
 func (c *Client) GetTeamByID(ctx context.Context, teamID string) (Team, error) {
 	team := Team{}
 	teams, err := c.GetTeams(ctx)

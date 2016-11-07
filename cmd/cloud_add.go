@@ -19,18 +19,18 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cloudcoreo/cli/cmd/content"
-	"github.com/cloudcoreo/cli/cmd/util"
-	"github.com/cloudcoreo/cli/client"
+	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/spf13/cobra"
 )
 
 // CloudAddCmd represents the based command for cloud subcommands
 var CloudAddCmd = &cobra.Command{
-	Use: content.CMD_CLOUD_ADD_USE,
+	Use:   content.CMD_CLOUD_ADD_USE,
 	Short: content.CMD_CLOUD_ADD_SHORT,
-	Long: content.CMD_CLOUD_ADD_LONG,
-	PreRun:func(cmd *cobra.Command, args []string) {
+	Long:  content.CMD_CLOUD_ADD_LONG,
+	PreRun: func(cmd *cobra.Command, args []string) {
 		if err := util.CheckCloudAddFlags(resourceName, resourceKey, resourceSecret); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -39,7 +39,7 @@ var CloudAddCmd = &cobra.Command{
 		SetupCoreoDefaultTeam()
 
 	},
-	Run:func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 		t, err := c.CreateCloudAccount(context.Background(), teamID, resourceKey, resourceSecret, resourceName)
 		if err != nil {
@@ -48,10 +48,10 @@ var CloudAddCmd = &cobra.Command{
 		}
 
 		if format == "json" {
-			util.PrettyPrintJson(t)
+			util.PrettyPrintJSON(t)
 		} else {
 			table := util.NewTable()
-			table.SetHeader([] string{"ID", "Name", "TeamID"})
+			table.SetHeader([]string{"ID", "Name", "TeamID"})
 			table.UseObj(t)
 			fmt.Println(table.Render())
 		}
@@ -61,7 +61,7 @@ var CloudAddCmd = &cobra.Command{
 func init() {
 	CloudCmd.AddCommand(CloudAddCmd)
 
-	CloudAddCmd.Flags().StringVarP(&resourceKey, content.CMD_FLAG_KEY_LONG, content.CMD_FLAG_KEY_SHORT, "",content.CMD_FLAG_KEY_DESCRIPTION )
-	CloudAddCmd.Flags().StringVarP(&resourceSecret, content.CMD_FLAG_SECRET_LONG, content.CMD_FLAG_SECRET_SHORT, "",content.CMD_FLAG_SECRET_DESCRIPTION )
-	CloudAddCmd.Flags().StringVarP(&resourceName, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "",content.CMD_FLAG_NAME_DESCRIPTION )
+	CloudAddCmd.Flags().StringVarP(&resourceKey, content.CMD_FLAG_KEY_LONG, content.CMD_FLAG_KEY_SHORT, "", content.CMD_FLAG_KEY_DESCRIPTION)
+	CloudAddCmd.Flags().StringVarP(&resourceSecret, content.CMD_FLAG_SECRET_LONG, content.CMD_FLAG_SECRET_SHORT, "", content.CMD_FLAG_SECRET_DESCRIPTION)
+	CloudAddCmd.Flags().StringVarP(&resourceName, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "", content.CMD_FLAG_NAME_DESCRIPTION)
 }

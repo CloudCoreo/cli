@@ -15,7 +15,7 @@
 package cmd
 
 import (
-	"github.com/cloudcoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/spf13/cobra"
 )
 
@@ -23,9 +23,9 @@ var tokenID string
 
 // TokenCmd represents the based command for token subcommands
 var TokenCmd = &cobra.Command{
-	Use: content.CMD_TOKEN_USE,
+	Use:   content.CMD_TOKEN_USE,
 	Short: content.CMD_TOKEN_SHORT,
-	Long: content.CMD_TOKEN_LONG,
+	Long:  content.CMD_TOKEN_LONG,
 }
 
 func init() {

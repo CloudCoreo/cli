@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/cloudcoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/content"
 )
 
 // CheckGitInstall check if user has git installed
@@ -21,14 +21,14 @@ func CheckGitInstall() error {
 }
 
 // CreateGitSubmodule create composite git submodule
-func CreateGitSubmodule(directory, gitRepoUrl string) error {
+func CreateGitSubmodule(directory, gitRepoURL string) error {
 
-	fmt.Printf("INFO_CREATING_GITSUBMODULE", gitRepoUrl, directory)
+	fmt.Printf(content.INFO_CREATING_GITSUBMODULE, gitRepoURL, directory)
 	if directory == "" {
 		return fmt.Errorf(content.ERROR_DIRECTORY_PATH_NOT_PROVIDED)
 	}
 
-	if gitRepoUrl == "" {
+	if gitRepoURL == "" {
 		return fmt.Errorf(content.ERROR_GIT_URL_NOT_PROVIDED)
 	}
 
@@ -37,12 +37,12 @@ func CreateGitSubmodule(directory, gitRepoUrl string) error {
 		return fmt.Errorf(content.ERROR_INVALID_DIRECTORY, directory)
 	}
 
-	_, err = exec.Command("git", "remote",  "show", "origin").CombinedOutput()
-	if  err != nil {
-		return fmt.Errorf(content.ERROR_INVALID_DIRECTORY)
+	_, err = exec.Command("git", "remote", "show", "origin").CombinedOutput()
+	if err != nil {
+		return fmt.Errorf(content.ERROR_INVALID_DIRECTORY, directory)
 	}
 
-	output, err := exec.Command("git", "submodule", "add", "-f", gitRepoUrl, "extends").CombinedOutput()
+	output, err := exec.Command("git", "submodule", "add", "-f", gitRepoURL, "extends").CombinedOutput()
 	if err != nil {
 		return fmt.Errorf(content.ERROR_GIT_SUBMODULE_FAILED, output)
 	}

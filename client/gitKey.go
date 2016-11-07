@@ -9,12 +9,12 @@ import (
 
 // GitKey struct for api payload
 type GitKey struct {
-	TeamID string `json:"teamId"`
-	Name string `json:"name"`
+	TeamID            string `json:"teamId"`
+	Name              string `json:"name"`
 	Sha256Fingerprint string `json:"sha256fingerprint"`
-	Md5Fingerprint string `json:"md5fingerprint"`
-	Links []Link `json:"links"`
-	ID string `json:"id"`
+	Md5Fingerprint    string `json:"md5fingerprint"`
+	Links             []Link `json:"links"`
+	ID                string `json:"id"`
 }
 
 // GetGitKeys method for gitKey command
@@ -26,7 +26,7 @@ func (c *Client) GetGitKeys(ctx context.Context, teamID string) ([]GitKey, error
 		return gitKeys, err
 	}
 
-	for _,team := range teams {
+	for _, team := range teams {
 		if team.ID == teamID {
 			gitKeyLink, err := GetLinkByRef(team.Links, "gitKeys")
 
@@ -73,7 +73,7 @@ func (c *Client) CreateGitKey(ctx context.Context, teamID, keyMaterial, name str
 		return gitKey, err
 	}
 
-	for _,team := range teams {
+	for _, team := range teams {
 		if team.ID == teamID {
 			gitKeyPlayLoad := fmt.Sprintf(`{"keyMaterial":"%s","name":"%s","teamId":"%s"}`, keyMaterial, name, teamID)
 			var jsonStr = []byte(gitKeyPlayLoad)

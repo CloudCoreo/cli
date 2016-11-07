@@ -3,7 +3,8 @@ package util
 import (
 	"fmt"
 	"strings"
-	"github.com/cloudcoreo/cli/cmd/content"
+
+	"github.com/CloudCoreo/cli/cmd/content"
 )
 
 func checkFlag(flag, error string) error {
@@ -14,21 +15,23 @@ func checkFlag(flag, error string) error {
 	return nil
 }
 
-func checkGitRepoUrl(gitRepoUrl string) error {
-	if gitRepoUrl == "" {
+func checkGitRepoURL(gitRepoURL string) error {
+	if gitRepoURL == "" {
 		return fmt.Errorf(content.ERROR_GIT_REPO_URL_MISSING)
-	} else if !strings.Contains(gitRepoUrl, "git@") {
+	} else if !strings.Contains(gitRepoURL, "git@") {
 		return fmt.Errorf(content.ERROR_INVALID_GIT_REPO_URL)
 	}
 
 	return nil
 }
 
-func CheckCloudShowOrDeleteFlag(cloudID string) error{
+// CheckCloudShowOrDeleteFlag flags check for cloud show or delete command
+func CheckCloudShowOrDeleteFlag(cloudID string) error {
 	return checkFlag(cloudID, "Cloud id is required for this command")
 }
 
-func CheckCloudAddFlags(resourceName, resourceKey, resourceSecret string) error{
+// CheckCloudAddFlags flag check for cloud add command
+func CheckCloudAddFlags(resourceName, resourceKey, resourceSecret string) error {
 	if err := checkFlag(resourceName, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
@@ -44,11 +47,13 @@ func CheckCloudAddFlags(resourceName, resourceKey, resourceSecret string) error{
 	return nil
 }
 
-func CheckTokenShowOrDeleteFlag(tokenID string) error{
-	return checkFlag(tokenID, content.ERROR_TOKEN_ID_MISSING)
+// CheckTokenShowOrDeleteFlag flag check for token show or delete command
+func CheckTokenShowOrDeleteFlag(tokenID string) error {
+	return checkFlag(tokenID, content.ERROR_ID_MISSING)
 }
 
-func CheckTokenAddFlags(name, description string) error{
+// CheckTokenAddFlags flag check for token add command
+func CheckTokenAddFlags(name, description string) error {
 	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
@@ -60,11 +65,13 @@ func CheckTokenAddFlags(name, description string) error{
 	return nil
 }
 
-func CheckGitKeyShowOrDeleteFlag(gitKeyID string) error{
+// CheckGitKeyShowOrDeleteFlag flag check for Git key show or delete command
+func CheckGitKeyShowOrDeleteFlag(gitKeyID string) error {
 	return checkFlag(gitKeyID, content.ERROR_ID_MISSING)
 }
 
-func CheckGitKeyAddFlags(name, secret string) error{
+// CheckGitKeyAddFlags flag check for git key add command
+func CheckGitKeyAddFlags(name, secret string) error {
 	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
@@ -76,13 +83,14 @@ func CheckGitKeyAddFlags(name, secret string) error{
 	return nil
 }
 
-
+// CheckCompositeShowOrDeleteFlag flag check for composite show or delete command
 func CheckCompositeShowOrDeleteFlag(compositeID string) error {
 	return checkFlag(compositeID, content.ERROR_ID_MISSING)
 }
 
-func CheckCompositeCreateFlags(name, gitRepoUrl string ) error{
-	if err := checkGitRepoUrl(gitRepoUrl); err != nil  {
+// CheckCompositeCreateFlags flags check for composite create command
+func CheckCompositeCreateFlags(name, gitRepoURL string) error {
+	if err := checkGitRepoURL(gitRepoURL); err != nil {
 		return err
 	}
 
@@ -94,26 +102,29 @@ func CheckCompositeCreateFlags(name, gitRepoUrl string ) error{
 
 }
 
-func CheckLayersFlags(name, gitRepoUrl string) error{
+// CheckLayersFlags flag check for composite layer command
+func CheckLayersFlags(name, gitRepoURL string) error {
 	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
 
-	if err := checkGitRepoUrl(gitRepoUrl); err != nil  {
+	if err := checkGitRepoURL(gitRepoURL); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func CheckExtendFlags(gitRepoUrl string) error{
-	if err := checkGitRepoUrl(gitRepoUrl); err != nil  {
+// CheckExtendFlags flag check for composite extend command
+func CheckExtendFlags(gitRepoURL string) error {
+	if err := checkGitRepoURL(gitRepoURL); err != nil {
 		return err
 	}
 
 	return nil
 }
 
+// CheckTeamIDFlag flag check for team id
 func CheckTeamIDFlag(teamID string, userProfile string) (string, error) {
 	if teamID == content.NONE {
 		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.TEAM_ID)
@@ -127,6 +138,7 @@ func CheckTeamIDFlag(teamID string, userProfile string) (string, error) {
 	return teamID, nil
 }
 
+// CheckAPIKeyFlag flag check for api key
 func CheckAPIKeyFlag(apiKey string, userProfile string) (string, error) {
 	if apiKey == content.NONE {
 		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.ACCESS_KEY)
@@ -140,7 +152,7 @@ func CheckAPIKeyFlag(apiKey string, userProfile string) (string, error) {
 	return apiKey, nil
 }
 
-
+// CheckSecretKeyFlag flag check for secret key
 func CheckSecretKeyFlag(secretKey string, userProfile string) (string, error) {
 	if secretKey == content.NONE {
 		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.SECRET_KEY)

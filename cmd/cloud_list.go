@@ -15,26 +15,27 @@
 package cmd
 
 import (
-	"github.com/cloudcoreo/cli/cmd/content"
-	"github.com/cloudcoreo/cli/cmd/util"
-	"github.com/spf13/cobra"
+	"context"
 	"fmt"
 	"os"
-	"github.com/cloudcoreo/cli/client"
-	"context"
+
+	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/spf13/cobra"
 )
 
 // CloudListCmd represents the based command for cloud subcommands
 var CloudListCmd = &cobra.Command{
-	Use: content.CMD_CLOUD_LIST_USE,
+	Use:   content.CMD_CLOUD_LIST_USE,
 	Short: content.CMD_CLOUD_LIST_SHORT,
-	Long: content.CMD_CLOUD_LIST_LONG,
-	PreRun:func(cmd *cobra.Command, args []string) {
+	Long:  content.CMD_CLOUD_LIST_LONG,
+	PreRun: func(cmd *cobra.Command, args []string) {
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 
 	},
-	Run:func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 		t, err := c.GetCloudAccounts(context.Background(), teamID)
 		if err != nil {
@@ -48,10 +49,10 @@ var CloudListCmd = &cobra.Command{
 		}
 
 		if format == "json" {
-			util.PrettyPrintJson(t)
+			util.PrettyPrintJSON(t)
 		} else {
 			table := util.NewTable()
-			table.SetHeader([] string{"ID", "Name", "TeamID"})
+			table.SetHeader([]string{"ID", "Name", "TeamID"})
 			table.UseObj(b)
 			fmt.Println(table.Render())
 		}

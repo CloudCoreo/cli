@@ -18,22 +18,23 @@ import (
 	"fmt"
 	"os"
 
+	"path/filepath"
+	"runtime"
+	"strings"
+
+	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"path/filepath"
-	"strings"
-	"runtime"
-	"github.com/cloudcoreo/cli/cmd/content"
-	"github.com/cloudcoreo/cli/cmd/util"
 )
 
-var key, secret, teamID,  userProfile, cfgFile, resourceKey, resourceSecret, resourceName, format string
+var key, secret, teamID, userProfile, cfgFile, resourceKey, resourceSecret, resourceName, format string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   content.CMD_COREO_USE,
 	Short: content.CMD_COREO_SHORT,
-	Long: content.CMD_COREO_LONG,
+	Long:  content.CMD_COREO_LONG,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -68,10 +69,9 @@ func init() {
 func initConfig() {
 
 	viper.SetConfigType("yaml")
-	viper.SetConfigName("profiles") // name of config file (without extension)
-	viper.AddConfigPath("$HOME/.cloudcoreo")       // adding home directory as first search path
-	viper.AutomaticEnv()               // read in environment variables that match
-
+	viper.SetConfigName("profiles")          // name of config file (without extension)
+	viper.AddConfigPath("$HOME/.cloudcoreo") // adding home directory as first search path
+	viper.AutomaticEnv()                     // read in environment variables that match
 
 	if cfgFile != "" { // enable ability to specify config file via flag
 		viper.SetConfigFile(cfgFile)
@@ -93,6 +93,7 @@ func initConfig() {
 	}
 }
 
+// SetupCoreoCredentials Setup default Coreo credentials
 func SetupCoreoCredentials() {
 	apiKey, err := util.CheckAPIKeyFlag(key, userProfile)
 
@@ -111,6 +112,7 @@ func SetupCoreoCredentials() {
 	secret = secretKey
 }
 
+// SetupCoreoDefaultTeam setup default team ID
 func SetupCoreoDefaultTeam() {
 	tID, err := util.CheckTeamIDFlag(teamID, userProfile)
 

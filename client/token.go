@@ -1,19 +1,20 @@
 package client
 
 import (
-	"time"
-	"fmt"
 	"bytes"
+	"fmt"
+	"time"
 
 	"golang.org/x/net/context"
 )
 
+// Token struct
 type Token struct {
-	Name string `json:"name"`
-	Description string `json:"description"`
+	Name         string    `json:"name"`
+	Description  string    `json:"description"`
 	CreationDate time.Time `json:"creationDate"`
-	Links []Link `json:"links"`
-	ID string `json:"id"`
+	Links        []Link    `json:"links"`
+	ID           string    `json:"id"`
 }
 
 // GetTokens method for token command
@@ -60,7 +61,7 @@ func (c *Client) GetTokenByID(ctx context.Context, tokenID string) (Token, error
 }
 
 // CreateToken method to create a token object
-func (c *Client) CreateToken(ctx context.Context, description, name string) (Token, error)  {
+func (c *Client) CreateToken(ctx context.Context, description, name string) (Token, error) {
 	u, err := c.GetUser(ctx)
 	token := Token{}
 	if err != nil {

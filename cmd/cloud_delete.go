@@ -19,18 +19,18 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cloudcoreo/cli/cmd/content"
-	"github.com/cloudcoreo/cli/cmd/util"
-	"github.com/cloudcoreo/cli/client"
+	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/spf13/cobra"
 )
 
 // CloudDeleteCmd represents the based command for cloud subcommands
 var CloudDeleteCmd = &cobra.Command{
-	Use: content.CMD_CLOUD_DELETE_USE,
+	Use:   content.CMD_CLOUD_DELETE_USE,
 	Short: content.CMD_CLOUD_DELETE_SHORT,
-	Long: content.CMD_CLOUD_DELETE_LONG,
-	PreRun:func(cmd *cobra.Command, args []string) {
+	Long:  content.CMD_CLOUD_DELETE_LONG,
+	PreRun: func(cmd *cobra.Command, args []string) {
 		if err := util.CheckCloudShowOrDeleteFlag(cloudID); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -39,7 +39,7 @@ var CloudDeleteCmd = &cobra.Command{
 		SetupCoreoDefaultTeam()
 
 	},
-	Run:func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 
 		if err != nil {
@@ -53,12 +53,12 @@ var CloudDeleteCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		fmt.Println("Cloud account was deleted")
+		fmt.Println(content.ERROR_CLOUDACCOUNT_DELETED)
 	},
 }
 
 func init() {
 	CloudCmd.AddCommand(CloudDeleteCmd)
 
-	CloudDeleteCmd.Flags().StringVarP(&cloudID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "",content.CMD_FLAG_CLOUDID_DESCRIPTION )
+	CloudDeleteCmd.Flags().StringVarP(&cloudID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_CLOUDID_DESCRIPTION)
 }
