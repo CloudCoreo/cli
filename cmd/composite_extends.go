@@ -17,7 +17,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
@@ -29,7 +28,10 @@ var cmdCompositeExtends = &cobra.Command{
 	Short: content.CMD_COMPOSITE_EXTENDS_SHORT,
 	Long: content.CMD_COMPOSITE_EXTENDS_LONG,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		checkExtendsFlags()
+		if err := util.CheckExtendFlags(gitRepoUrl); err != nil {
+			fmt.Println("A composite name is required: -n")
+			os.Exit(1)
+		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -59,17 +61,6 @@ var cmdCompositeExtends = &cobra.Command{
 		}
 	},
 
-}
-
-func checkExtendsFlags() {
-
-	if gitRepoUrl == "" {
-		fmt.Println("A SSH git repo url is required: -g")
-		os.Exit(1)
-	} else if !strings.Contains(gitRepoUrl, "git@") {
-		fmt.Println("Use a SSH git repo url for example : [-g git@github.com:CloudCoreo/audit-aws.git]")
-		os.Exit(1)
-	}
 }
 
 func init() {

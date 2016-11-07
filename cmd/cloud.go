@@ -15,20 +15,19 @@
 package cmd
 
 import (
-	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/cloudcoreo/cli/cmd/content"
 	"github.com/spf13/cobra"
 )
 
-var directory, name, gitRepoUrl, compositeID string
-var serverDir bool
+var cloudID string
 
-// CompositeCmd represents the based command for composite subcommands
-var CompositeCmd = &cobra.Command{
-	Use: content.CMD_COMPOSITE_USE,
-	Short: content.CMD_COMPOSITE_SHORT,
-	Long: content.CMD_COMPOSITE_LONG,
+// CloudCmd represents the based command for cloud subcommands
+var CloudCmd = &cobra.Command{
+	Use: content.CMD_CLOUD_USE,
+	Short: content.CMD_CLOUD_SHORT,
+	Long: content.CMD_CLOUD_LONG,
 }
 
 func init() {
-	RootCmd.AddCommand(CompositeCmd)
+	RootCmd.AddCommand(CloudCmd)
 }
