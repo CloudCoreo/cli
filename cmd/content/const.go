@@ -33,6 +33,13 @@ const (
 	ERROR_GIT_URL_NOT_PROVIDED = "Git url not provided"
 	ERROR_INVALID_DIRECTORY = "Error switching to directory to %s. Please make sure it's a valid directory"
 	ERROR_GIT_SUBMODULE_FAILED = "git submodule add failed with:\n%s\n"
+	ERROR_GIT_REPO_URL_MISSING = "A SSH git repo url is required: -g"
+	ERROR_INVALID_GIT_REPO_URL = "Use a SSH git repo url for example : [-g git@github.com:CloudCoreo/audit-aws.git]"
+	ERROR_NAME_MISSING = "Name is required for this command"
+	ERROR_KEY_MISSING = "Key is required for this command"
+	ERROR_SECRET_MISSING = "Secret is required for this command"
+	ERROR_DESCRIPTION_MISSING = "Description flag is required for this command"
+	ERROR_ID_MISSING = "ID is required for this command"
 
 	// info
 	INFO_CREATING_GITSUBMODULE = "Creating gitsubmodule %s in %s...\n"
@@ -63,7 +70,6 @@ const (
 
 	CMD_FLAG_CLOUDID_DESCRIPTION = "Coreo cloud id"
 	CMD_FLAG_TOKENID_DESCRIPTION = "Coreo token id"
-	CMD_FLAG_TEAMID_DESCRIPTION = "Coreo team id"
 	CMD_FLAG_COMPOSITE_DESCRIPTION = "Coreo composite id"
 	CMD_FLAG_GITKEY_DESCRIPTION = "Coreo gitkey id"
 

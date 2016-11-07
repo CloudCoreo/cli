@@ -16,9 +16,9 @@ func checkFlag(flag, error string) error {
 
 func checkGitRepoUrl(gitRepoUrl string) error {
 	if gitRepoUrl == "" {
-		return fmt.Errorf("A SSH git repo url is required: -g")
+		return fmt.Errorf(content.ERROR_GIT_REPO_URL_MISSING)
 	} else if !strings.Contains(gitRepoUrl, "git@") {
-		return fmt.Errorf("Use a SSH git repo url for example : [-g git@github.com:CloudCoreo/audit-aws.git]")
+		return fmt.Errorf(content.ERROR_INVALID_GIT_REPO_URL)
 	}
 
 	return nil
@@ -29,15 +29,15 @@ func CheckCloudShowOrDeleteFlag(cloudID string) error{
 }
 
 func CheckCloudAddFlags(resourceName, resourceKey, resourceSecret string) error{
-	if err := checkFlag(resourceName, "Resource name is required for this command"); err != nil {
+	if err := checkFlag(resourceName, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
 
-	if err := checkFlag(resourceKey, "Resource key is required for this command"); err != nil {
+	if err := checkFlag(resourceKey, content.ERROR_KEY_MISSING); err != nil {
 		return err
 	}
 
-	if err := checkFlag(resourceSecret, "Resource secret is required for this command"); err != nil {
+	if err := checkFlag(resourceSecret, content.ERROR_SECRET_MISSING); err != nil {
 		return err
 	}
 
@@ -45,15 +45,15 @@ func CheckCloudAddFlags(resourceName, resourceKey, resourceSecret string) error{
 }
 
 func CheckTokenShowOrDeleteFlag(tokenID string) error{
-	return checkFlag(tokenID, "Token id is required for this command")
+	return checkFlag(tokenID, content.ERROR_TOKEN_ID_MISSING)
 }
 
 func CheckTokenAddFlags(name, description string) error{
-	if err := checkFlag(name, "Name flag is required for this command"); err != nil {
+	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
 
-	if err := checkFlag(description, "Description flag is required for this command"); err != nil {
+	if err := checkFlag(description, content.ERROR_DESCRIPTION_MISSING); err != nil {
 		return err
 	}
 
@@ -61,15 +61,15 @@ func CheckTokenAddFlags(name, description string) error{
 }
 
 func CheckGitKeyShowOrDeleteFlag(gitKeyID string) error{
-	return checkFlag(gitKeyID, "gitKeyID id is required for this command")
+	return checkFlag(gitKeyID, content.ERROR_ID_MISSING)
 }
 
 func CheckGitKeyAddFlags(name, secret string) error{
-	if err := checkFlag(name, "Name flag is required for this command"); err != nil {
+	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
 
-	if err := checkFlag(secret, "secret flag is required for this command"); err != nil {
+	if err := checkFlag(secret, content.ERROR_SECRET_MISSING); err != nil {
 		return err
 	}
 
@@ -78,7 +78,7 @@ func CheckGitKeyAddFlags(name, secret string) error{
 
 
 func CheckCompositeShowOrDeleteFlag(compositeID string) error {
-	return checkFlag(compositeID, "compositeID id is required for this command")
+	return checkFlag(compositeID, content.ERROR_ID_MISSING)
 }
 
 func CheckCompositeCreateFlags(name, gitRepoUrl string ) error{
@@ -86,7 +86,7 @@ func CheckCompositeCreateFlags(name, gitRepoUrl string ) error{
 		return err
 	}
 
-	if err := checkFlag(name, "Name flag is required for this command"); err != nil {
+	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
 
@@ -95,7 +95,7 @@ func CheckCompositeCreateFlags(name, gitRepoUrl string ) error{
 }
 
 func CheckLayersFlags(name, gitRepoUrl string) error{
-	if err := checkFlag(name, "A composite name is required: -n"); err != nil {
+	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
 
@@ -120,7 +120,7 @@ func CheckTeamIDFlag(teamID string, userProfile string) (string, error) {
 		teamID = GetValueFromConfig(teamIDKey, false)
 
 		if teamID == content.NONE {
-			return teamID, fmt.Errorf("Team ID is required for this command")
+			return teamID, fmt.Errorf(content.ERROR_ID_MISSING)
 		}
 	}
 
@@ -133,7 +133,7 @@ func CheckAPIKeyFlag(apiKey string, userProfile string) (string, error) {
 		apiKey = GetValueFromConfig(teamIDKey, false)
 
 		if apiKey == content.NONE {
-			return apiKey, fmt.Errorf("API key is required for this command")
+			return apiKey, fmt.Errorf(content.ERROR_KEY_MISSING)
 		}
 	}
 
@@ -147,7 +147,7 @@ func CheckSecretKeyFlag(secretKey string, userProfile string) (string, error) {
 		secretKey = GetValueFromConfig(teamIDKey, false)
 
 		if secretKey == content.NONE {
-			return secretKey, fmt.Errorf("Secret key is required for this command")
+			return secretKey, fmt.Errorf(content.ERROR_SECRET_MISSING)
 		}
 	}
 
