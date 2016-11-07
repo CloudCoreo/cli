@@ -1,4 +1,24 @@
 language: go
 go: 1.7
 gobuild_args: -ldflags "-X cmd.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X cmd.githash=`git rev-parse HEAD` -X cmd.version=`cat VERSION`"
-script: make build
+install:
+before_deploy:
+- GOOS=linux GOARCH=amd64 go build -o coreo_linux_amd64
+- GOOS=linux GOARCH=386 go build -o coreo_linux_386
+- GOOS=linux GOARCH=arm go build -o coreo_linux_arm
+- GOOS=darwin GOARCH=amd64 go build -o coreo_darwin_amd64
+- GOOS=windows GOARCH=amd64 go build -o coreo_windows_amd64.exe
+- GOOS=windows GOARCH=386 go build -o coreo_windows_386.exe
+deploy:
+  skip_cleanup: true
+  provider: releases
+  file:
+  - coreo_linux_amd64
+  - coreo_linux_386
+  - coreo_linux_arm
+  - coreo_darwin_amd64
+  - coreo_windows_amd64.exe
+  - coreo_windows_386.exe
+  on:
+    tags: true
+    repo: CloudCoreo/cli
