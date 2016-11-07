@@ -15,39 +15,39 @@
 package cmd
 
 import (
-	"os"
-	"path"
-	"io/ioutil"
 	"bytes"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"path"
 	"path/filepath"
 	"reflect"
-	"strings"
 	"strconv"
+	"strings"
 
-	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
 
-var docHeaders =  map[string]string {
-		"head.md": "",
-		"description.md":   "Description",
-		"config.yaml": "",
-		"tags.md": "Tags",
-		"categories.md": "Categories",
-		"diagram.md": "Diagram",
-		"icon.md": "Icon",
-		"hierarchy.md" : "Hierarchy",
+var docHeaders = map[string]string{
+	"head.md":        "",
+	"description.md": "Description",
+	"config.yaml":    "",
+	"tags.md":        "Tags",
+	"categories.md":  "Categories",
+	"diagram.md":     "Diagram",
+	"icon.md":        "Icon",
+	"hierarchy.md":   "Hierarchy",
 }
 
-var docOrder = []string {"head.md", "description.md", "hierarchy.md", "config.yaml", "tags.md", "categories.md", "diagram.md", "icon.md"}
+var docOrder = []string{"head.md", "description.md", "hierarchy.md", "config.yaml", "tags.md", "categories.md", "diagram.md", "icon.md"}
 
 var cmdCompositeGendoc = &cobra.Command{
-	Use: content.CMD_COMPOSITE_GENDOC_USE,
+	Use:   content.CMD_COMPOSITE_GENDOC_USE,
 	Short: content.CMD_COMPOSITE_GENDOC_SHORT,
-	Long: content.CMD_COMPOSITE_GENDOC_LONG,
+	Long:  content.CMD_COMPOSITE_GENDOC_LONG,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if directory == "" {
@@ -56,10 +56,9 @@ var cmdCompositeGendoc = &cobra.Command{
 
 		var readmeFileContent bytes.Buffer
 
-		for index := range(docOrder) {
+		for index := range docOrder {
 
 			fileName := docOrder[index]
-
 
 			if fileName == "config.yaml" {
 				configFileContent, _ := generateConfigContent(path.Join(directory, fileName))
@@ -82,7 +81,7 @@ var cmdCompositeGendoc = &cobra.Command{
 					readmeFileContent.WriteString(fmt.Sprintf("## %s\n", docHeaders[docOrder[index]]))
 				}
 
-				readmeFileContent.WriteString(string(fileContent)+"\n\n")
+				readmeFileContent.WriteString(string(fileContent) + "\n\n")
 			}
 		}
 
@@ -104,10 +103,10 @@ type YamlConfig struct {
 }
 
 type varOption struct {
-	key string
-	description string
-	required bool
-	valueType string `schema:"type"`
+	key           string
+	description   string
+	required      bool
+	valueType     string      `schema:"type"`
 	defaultValues interface{} `schema:"default"`
 }
 
@@ -135,10 +134,9 @@ func generateConfigContent(configFilePath string) (string, error) {
 		os.Exit(-1)
 	}
 
-
 	missingRequiredContent, err := generateVariablesContent(
 		config,
-		func(required bool, defaultValue interface{}) bool{
+		func(required bool, defaultValue interface{}) bool {
 			return required && defaultValue == nil
 		},
 		fmt.Sprintf("\n## %s\n\n", content.DEFAULT_FILES_GENDOC_README_REQUIRED_NO_DEFAULT_HEADER),
@@ -146,7 +144,7 @@ func generateConfigContent(configFilePath string) (string, error) {
 
 	requiredContent, err := generateVariablesContent(
 		config,
-		func(required bool, defaultValue interface{}) bool{
+		func(required bool, defaultValue interface{}) bool {
 			return required && defaultValue != nil
 		},
 		fmt.Sprintf("\n## %s\n\n", content.DEFAULT_FILES_GENDOC_README_REQUIRED_DEFAULT_HEADER),
@@ -154,27 +152,25 @@ func generateConfigContent(configFilePath string) (string, error) {
 
 	notRequiredDefaultContent, err := generateVariablesContent(
 		config,
-		func(required bool, defaultValue interface{}) bool{
+		func(required bool, defaultValue interface{}) bool {
 			return !required && defaultValue != nil
 		},
 		fmt.Sprintf("\n## %s\n\n", content.DEFAULT_FILES_GENDOC_README_NO_REQUIRED_DEFAULT_HEADER),
 		true)
 
-
 	theRestContent, err := generateVariablesContent(
 		config,
-		func(required bool, defaultValue interface{}) bool{
+		func(required bool, defaultValue interface{}) bool {
 			return !required && defaultValue == nil
 		},
 		fmt.Sprintf("\n## %s\n\n", content.DEFAULT_FILES_GENDOC_README_NO_REQUIRED_NO_DEFAULT_HEADER),
 		true)
 
-	return missingRequiredContent + requiredContent + notRequiredDefaultContent+theRestContent, err
+	return missingRequiredContent + requiredContent + notRequiredDefaultContent + theRestContent, err
 
 }
 
-
-func generateVariablesContent(config YamlConfig, check func(bool, interface{}) bool, header string, printVar bool ) (string, error) {
+func generateVariablesContent(config YamlConfig, check func(bool, interface{}) bool, header string, printVar bool) (string, error) {
 
 	var contentBytes bytes.Buffer
 	counter := 0
@@ -201,15 +197,15 @@ func generateVariablesContent(config YamlConfig, check func(bool, interface{}) b
 
 		// check if
 		if check(option.required, option.defaultValues) {
-			counter ++
-			contentBytes.WriteString("### `"+ option.key + "`:\n")
-			contentBytes.WriteString("  * description: "+ option.description)
+			counter++
+			contentBytes.WriteString("### `" + option.key + "`:\n")
+			contentBytes.WriteString("  * description: " + option.description)
 
-			if printVar && option.defaultValues != nil{
-				switch strings.ToLower(option.valueType)  {
+			if printVar && option.defaultValues != nil {
+				switch strings.ToLower(option.valueType) {
 				case "array":
 					// Convert to string[] and then join items with ,
-					defaultValues :=  convertStringSlice(option.defaultValues)
+					defaultValues := convertStringSlice(option.defaultValues)
 
 					contentBytes.WriteString("\n  * default: ")
 					contentBytes.WriteString(fmt.Sprint(strings.Join(defaultValues, ", ")))
@@ -261,13 +257,13 @@ func convertStringSlice(slice interface{}) []string {
 
 	ret := make([]string, s.Len())
 
-	for i:=0; i<s.Len(); i++ {
+	for i := 0; i < s.Len(); i++ {
 
-		switch  s.Index(i).Interface().(type){
+		switch s.Index(i).Interface().(type) {
 		case string:
 			ret[i] = s.Index(i).Interface().(string)
 		case int:
-			ret[i] = strconv.FormatInt(int64(s.Index(i).Interface().(int)),16)
+			ret[i] = strconv.FormatInt(int64(s.Index(i).Interface().(int)), 16)
 		case bool:
 			ret[i] = strconv.FormatBool(s.Index(i).Interface().(bool))
 		}
@@ -281,4 +277,3 @@ func init() {
 
 	cmdCompositeGendoc.Flags().StringVarP(&directory, content.CMD_FLAG_DIRECTORY_LONG, content.CMD_FLAG_DIRECTORY_SHORT, "", content.CMD_FLAG_DIRECTORY_DESCRIPTION)
 }
-

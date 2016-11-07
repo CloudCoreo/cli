@@ -3,7 +3,7 @@ package util
 import (
 	"fmt"
 	"strings"
-	"github.com/cloudcoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/content"
 )
 
 func checkFlag(flag, error string) error {

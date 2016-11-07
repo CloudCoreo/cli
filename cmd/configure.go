@@ -18,14 +18,14 @@ import (
 	"fmt"
 
 	"github.com/CloudCoreo/cli/cmd/content"
-	"github.com/spf13/cobra"
 	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/spf13/cobra"
 )
 
 var cmdConfigure = &cobra.Command{
-	Use: content.CMD_CONFIG_USE,
+	Use:   content.CMD_CONFIG_USE,
 	Short: content.CMD_CONFIG_SHORT,
-	Long: content.CMD_CONFIG_LONG,
+	Long:  content.CMD_CONFIG_LONG,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		//generate config keys based on user profile

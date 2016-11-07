@@ -24,9 +24,9 @@ import (
 )
 
 var cmdCompositeExtends = &cobra.Command{
-	Use: content.CMD_COMPOSITE_EXTENDS_USE,
+	Use:   content.CMD_COMPOSITE_EXTENDS_USE,
 	Short: content.CMD_COMPOSITE_EXTENDS_SHORT,
-	Long: content.CMD_COMPOSITE_EXTENDS_LONG,
+	Long:  content.CMD_COMPOSITE_EXTENDS_LONG,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		if err := util.CheckExtendFlags(gitRepoUrl); err != nil {
 			fmt.Println("A composite name is required: -n")
@@ -60,13 +60,12 @@ var cmdCompositeExtends = &cobra.Command{
 			genServerContent(directory)
 		}
 	},
-
 }
 
 func init() {
 	CompositeCmd.AddCommand(cmdCompositeExtends)
 
-	cmdCompositeExtends.Flags().StringVarP(&directory, content.CMD_FLAG_DIRECTORY_LONG, content.CMD_FLAG_DIRECTORY_SHORT, "",content.CMD_FLAG_DIRECTORY_DESCRIPTION )
-	cmdCompositeExtends.Flags().StringVarP(&gitRepoUrl, content.CMD_FLAG_GIT_REPO_LONG, content.CMD_FLAG_GIT_REPO_SHORT, "",content.CMD_FLAG_GIT_REPO_DESCRIPTION )
-	cmdCompositeExtends.Flags().BoolVarP(&serverDir, content.CMD_FLAG_SERVER_LONG, content.CMD_FLAG_SERVER_SHORT, false, content.CMD_FLAG_SERVER_DESCRIPTION )
+	cmdCompositeExtends.Flags().StringVarP(&directory, content.CMD_FLAG_DIRECTORY_LONG, content.CMD_FLAG_DIRECTORY_SHORT, "", content.CMD_FLAG_DIRECTORY_DESCRIPTION)
+	cmdCompositeExtends.Flags().StringVarP(&gitRepoUrl, content.CMD_FLAG_GIT_REPO_LONG, content.CMD_FLAG_GIT_REPO_SHORT, "", content.CMD_FLAG_GIT_REPO_DESCRIPTION)
+	cmdCompositeExtends.Flags().BoolVarP(&serverDir, content.CMD_FLAG_SERVER_LONG, content.CMD_FLAG_SERVER_SHORT, false, content.CMD_FLAG_SERVER_DESCRIPTION)
 }

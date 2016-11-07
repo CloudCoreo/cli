@@ -15,19 +15,19 @@
 package cmd
 
 import (
-
-	"github.com/CloudCoreo/cli/cmd/content"
-	"github.com/spf13/cobra"
-	"github.com/CloudCoreo/cli/cmd/util"
 	"fmt"
 	"os"
 	"path"
+
+	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/spf13/cobra"
 )
 
 var cmdCompositeInit = &cobra.Command{
-	Use: content.CMD_COMPOSITE_INIT_USE,
+	Use:   content.CMD_COMPOSITE_INIT_USE,
 	Short: content.CMD_COMPOSITE_INIT_SHORT,
-	Long: content.CMD_COMPOSITE_INIT_LONG,
+	Long:  content.CMD_COMPOSITE_INIT_LONG,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if directory == "" {
@@ -42,14 +42,14 @@ var cmdCompositeInit = &cobra.Command{
 	},
 }
 
-func genContent (directory string) {
+func genContent(directory string) {
 	if directory == "" {
 		directory, _ = os.Getwd()
 	}
 
 	// config.yml file
 	fmt.Println()
-	util.CreateFile(content.DEFAULT_FILES_CONFIG_YAML_FILE, directory,content.DEFAULT_FILES_CONFIG_YAML, false)
+	util.CreateFile(content.DEFAULT_FILES_CONFIG_YAML_FILE, directory, content.DEFAULT_FILES_CONFIG_YAML, false)
 
 	// override folder
 	util.CreateFolder(content.DEFAULT_FILES_OVERRIDES_FOLDER, directory)
@@ -80,7 +80,7 @@ func genContent (directory string) {
 
 	servicesReadMeContent := fmt.Sprintf("%s%s", content.DEFAULT_FILES_SERVICES_README_HEADER, servicesReadMeCode)
 
-	err = util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory + content.DEFAULT_FILES_SERVICES_FOLDER), servicesReadMeContent, false)
+	err = util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory+content.DEFAULT_FILES_SERVICES_FOLDER), servicesReadMeContent, false)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -122,10 +122,8 @@ func genServerContent(directory string) {
 		os.Exit(-1)
 	}
 
-
 	//shutdown scripts dir
 	util.CreateFolder(content.DEFAULT_FILES_SHUTDOWN_SCRIPTS_FOLDER, directory)
-
 
 	//README.md
 	err = util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory, content.DEFAULT_FILES_SHUTDOWN_SCRIPTS_FOLDER), content.DEFAULT_FILES_SHUTDOWN_README_CONTENT, false)
@@ -148,6 +146,5 @@ func init() {
 	CompositeCmd.AddCommand(cmdCompositeInit)
 
 	cmdCompositeInit.Flags().StringVarP(&directory, content.CMD_FLAG_DIRECTORY_LONG, content.CMD_FLAG_DIRECTORY_SHORT, "", content.CMD_FLAG_DIRECTORY_DESCRIPTION)
-	cmdCompositeInit.Flags().BoolVarP(&serverDir, content.CMD_FLAG_SERVER_LONG, content.CMD_FLAG_SERVER_SHORT, false, content.CMD_FLAG_SERVER_DESCRIPTION )
+	cmdCompositeInit.Flags().BoolVarP(&serverDir, content.CMD_FLAG_SERVER_LONG, content.CMD_FLAG_SERVER_SHORT, false, content.CMD_FLAG_SERVER_DESCRIPTION)
 }
-

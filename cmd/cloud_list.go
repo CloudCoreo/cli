@@ -15,12 +15,12 @@
 package cmd
 
 import (
-	"github.com/cloudcoreo/cli/cmd/content"
-	"github.com/cloudcoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/spf13/cobra"
 	"fmt"
 	"os"
-	"github.com/cloudcoreo/cli/client"
+	"github.com/CloudCoreo/cli/client"
 	"context"
 )
 
