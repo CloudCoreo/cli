@@ -17,7 +17,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strings"
 	"path"
 
 	"github.com/spf13/cobra"
@@ -30,7 +29,10 @@ var cmdCompositeLayer = &cobra.Command{
 	Short: content.CMD_COMPOSITE_LAYER_SHORT,
 	Long: content.CMD_COMPOSITE_LAYER_LONG,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		checkLayersFlags()
+		if err := util.CheckLayersFlags(name, gitRepoUrl); err != nil {
+			fmt.Println("A composite name is required: -n")
+			os.Exit(1)
+		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -66,24 +68,7 @@ var cmdCompositeLayer = &cobra.Command{
 		if serverDir {
 			genServerContent(directory)
 		}
-
 	},
-
-}
-
-func checkLayersFlags() {
-	if name == "" {
-		fmt.Println("A composite name is required: -n")
-		os.Exit(1)
-	}
-
-	if gitRepoUrl == "" {
-		fmt.Println("A SSH git repo url is required: -g")
-		os.Exit(1)
-	} else if !strings.Contains(gitRepoUrl, "git@") {
-		fmt.Println("Use a SSH git repo url for example : [-g git@github.com:CloudCoreo/audit-aws.git]")
-		os.Exit(1)
-	}
 }
 
 func init() {

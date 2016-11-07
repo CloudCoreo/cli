@@ -19,16 +19,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var directory, name, gitRepoUrl, compositeID string
-var serverDir bool
-
-// CompositeCmd represents the based command for composite subcommands
-var CompositeCmd = &cobra.Command{
-	Use: content.CMD_COMPOSITE_USE,
-	Short: content.CMD_COMPOSITE_SHORT,
-	Long: content.CMD_COMPOSITE_LONG,
+// TeamCmd represents the based command for team subcommands
+var TeamCmd = &cobra.Command{
+	Use: content.CMD_TEAM_USE,
+	Short: content.CMD_TEAM_SHORT,
+	Long: content.CMD_TEAM_LONG,
 }
 
 func init() {
-	RootCmd.AddCommand(CompositeCmd)
+	RootCmd.AddCommand(TeamCmd)
 }
