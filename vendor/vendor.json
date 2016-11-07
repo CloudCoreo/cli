@@ -87,6 +87,12 @@
 			"revisionTime": "2016-09-08T09:36:58Z"
 		},
 		{
+			"checksumSHA1": "yf185lmVPcvXjLZuPT1s4JzxI18=",
+			"path": "github.com/mattn/go-runewidth",
+			"revision": "737072b4e32b7a5018b4a7125da8d12de90e8045",
+			"revisionTime": "2016-10-12T01:35:12Z"
+		},
+		{
 			"checksumSHA1": "UuXgD2dDojfS8AViUEe15gLIWZE=",
 			"path": "github.com/mitchellh/mapstructure",
 			"revision": "f3009df150dadf309fdee4a54ed65c124afad715",
