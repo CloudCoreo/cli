@@ -19,16 +19,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var directory, name, gitRepoUrl, compositeID string
-var serverDir bool
+var gitKeyID string
 
-// CompositeCmd represents the based command for composite subcommands
-var CompositeCmd = &cobra.Command{
-	Use: content.CMD_COMPOSITE_USE,
-	Short: content.CMD_COMPOSITE_SHORT,
-	Long: content.CMD_COMPOSITE_LONG,
+// GitKeyCmd represents the based command for gitkey subcommands
+var GitKeyCmd = &cobra.Command{
+	Use: content.CMD_GITKEY_USE,
+	Short: content.CMD_GITKEY_SHORT,
+	Long: content.CMD_GITKEY_LONG,
 }
 
 func init() {
-	RootCmd.AddCommand(CompositeCmd)
+	RootCmd.AddCommand(GitKeyCmd)
 }

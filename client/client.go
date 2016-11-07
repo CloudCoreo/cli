@@ -15,14 +15,15 @@
 package client
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 
-	"golang.org/x/net/context"
 	"golang.org/x/net/context/ctxhttp"
+	"github.com/cloudcoreo/cli/cmd/content"
 )
 
 type clientOptions struct {
@@ -44,13 +45,25 @@ func WithInterceptor(ci Interceptor) Option {
 	}
 }
 
-
 // Client struct
 type Client struct {
 	client   http.Client
 	endpoint string
 	opts	 clientOptions
 	auth     Auth
+}
+
+func MakeClient(apiKey, secretKey, endpoint string) (*Client, error){
+
+	if apiKey == content.NONE || secretKey == content.NONE {
+		return &Client{}, fmt.Errorf(content.ERROR_MISSING_API_KEY_SECRET_KEY)
+	}
+
+	a := Auth{APIKey: apiKey, SecretKey: secretKey}
+	i := Interceptor(a.SignRequest)
+	c := New(endpoint, WithInterceptor(i))
+
+	return c, nil
 }
 
 // New creates a new Client for a given endpoint that can be configured with
@@ -96,9 +109,12 @@ func (c *Client) Do(ctx context.Context, method, path string, body io.Reader, ob
 }
 
 func (c *Client) buildRequest(method, urlPath string, body io.Reader) (*http.Request, error) {
-	req, err := http.NewRequest(method, c.endpoint+"/"+urlPath, body)
+	req, err := http.NewRequest(method, urlPath, body)
 	if err != nil {
 		return nil, err
+	}
+	if method == "POST" ||  method == "PUT" {
+		req.Header.Set("Content-Type", "application/json")
 	}
 
 	if c.opts.interceptor != nil {
