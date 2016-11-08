@@ -47,7 +47,7 @@ var CompositeShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		t, err := c.GetCompositeByID(context.Background(), teamID, cloudID)
+		t, err := c.GetCompositeByID(context.Background(), teamID, compositeID)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
