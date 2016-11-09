@@ -2,24 +2,21 @@ package client
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"time"
-
-	"golang.org/x/net/context"
 )
 
 // Composite struct for api payload
 type Composite struct {
-	TeamID string `json:"teamId"`
 	Name string `json:"name"`
 	GitURL string `json:"gitUrl"`
 	HasCustomDashboard bool `json:"hasCustomDashboard"`
 	CreatedAt time.Time `json:"createdAt"`
-	Self string `json:"self"`
-	TeamURI string `json:"teamUri"`
+	GitKeyID string `json:"gitKeyId"`
+	TeamID string `json:"teamId"`
 	ID string `json:"id"`
-	GitKeyURI string `json:"gitKeyUri"`
-	PlansURI string `json:"plansUri"`
+	Links []Link `json:"links"`
 }
 
 // GetComposites method to get composite info array object
