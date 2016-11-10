@@ -3,7 +3,8 @@ package util
 import (
 	"fmt"
 	"strings"
-	"github.com/cloudcoreo/cli/cmd/content"
+
+	"github.com/CloudCoreo/cli/cmd/content"
 )
 
 func checkFlag(flag, error string) error {
@@ -24,11 +25,11 @@ func checkGitRepoUrl(gitRepoUrl string) error {
 	return nil
 }
 
-func CheckCloudShowOrDeleteFlag(cloudID string) error{
+func CheckCloudShowOrDeleteFlag(cloudID string) error {
 	return checkFlag(cloudID, "Cloud id is required for this command")
 }
 
-func CheckCloudAddFlags(resourceName, resourceKey, resourceSecret string) error{
+func CheckCloudAddFlags(resourceName, resourceKey, resourceSecret string) error {
 	if err := checkFlag(resourceName, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
@@ -44,11 +45,11 @@ func CheckCloudAddFlags(resourceName, resourceKey, resourceSecret string) error{
 	return nil
 }
 
-func CheckTokenShowOrDeleteFlag(tokenID string) error{
-	return checkFlag(tokenID, content.ERROR_TOKEN_ID_MISSING)
+func CheckTokenShowOrDeleteFlag(tokenID string) error {
+	return checkFlag(tokenID, content.ERROR_ID_MISSING)
 }
 
-func CheckTokenAddFlags(name, description string) error{
+func CheckTokenAddFlags(name, description string) error {
 	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
@@ -60,11 +61,11 @@ func CheckTokenAddFlags(name, description string) error{
 	return nil
 }
 
-func CheckGitKeyShowOrDeleteFlag(gitKeyID string) error{
+func CheckGitKeyShowOrDeleteFlag(gitKeyID string) error {
 	return checkFlag(gitKeyID, content.ERROR_ID_MISSING)
 }
 
-func CheckGitKeyAddFlags(name, secret string) error{
+func CheckGitKeyAddFlags(name, secret string) error {
 	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
@@ -76,13 +77,12 @@ func CheckGitKeyAddFlags(name, secret string) error{
 	return nil
 }
 
-
 func CheckCompositeShowOrDeleteFlag(compositeID string) error {
 	return checkFlag(compositeID, content.ERROR_ID_MISSING)
 }
 
-func CheckCompositeCreateFlags(name, gitRepoUrl string ) error{
-	if err := checkGitRepoUrl(gitRepoUrl); err != nil  {
+func CheckCompositeCreateFlags(name, gitRepoUrl string) error {
+	if err := checkGitRepoUrl(gitRepoUrl); err != nil {
 		return err
 	}
 
@@ -94,20 +94,20 @@ func CheckCompositeCreateFlags(name, gitRepoUrl string ) error{
 
 }
 
-func CheckLayersFlags(name, gitRepoUrl string) error{
+func CheckLayersFlags(name, gitRepoUrl string) error {
 	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
 		return err
 	}
 
-	if err := checkGitRepoUrl(gitRepoUrl); err != nil  {
+	if err := checkGitRepoUrl(gitRepoUrl); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func CheckExtendFlags(gitRepoUrl string) error{
-	if err := checkGitRepoUrl(gitRepoUrl); err != nil  {
+func CheckExtendFlags(gitRepoUrl string) error {
+	if err := checkGitRepoUrl(gitRepoUrl); err != nil {
 		return err
 	}
 
@@ -139,7 +139,6 @@ func CheckAPIKeyFlag(apiKey string, userProfile string) (string, error) {
 
 	return apiKey, nil
 }
-
 
 func CheckSecretKeyFlag(secretKey string, userProfile string) (string, error) {
 	if secretKey == content.NONE {

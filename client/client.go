@@ -23,7 +23,7 @@ import (
 	"net/http"
 
 	"golang.org/x/net/context/ctxhttp"
-	"github.com/cloudcoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/content"
 )
 
 type clientOptions struct {

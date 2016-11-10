@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/cloudcoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/content"
 )
 
 // CheckGitInstall check if user has git installed
