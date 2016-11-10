@@ -4,7 +4,11 @@ import (
 	"fmt"
 	"strings"
 
+<<<<<<< HEAD
 	"github.com/cloudcoreo/cli/cmd/content"
+=======
+	"github.com/CloudCoreo/cli/cmd/content"
+>>>>>>> dev
 )
 
 func checkFlag(flag, error string) error {
@@ -152,6 +156,7 @@ func CheckSecretKeyFlag(secretKey string, userProfile string) (string, error) {
 
 	return secretKey, nil
 }
+<<<<<<< HEAD
 
 // Check for compositeID and planID
 func CheckCompositeIdAndPlandIdFlag(compositeID, planID string) error {
@@ -165,3 +170,5 @@ func CheckCompositeIdAndPlandIdFlag(compositeID, planID string) error {
 
 	return nil
 }
+=======
+>>>>>>> dev
