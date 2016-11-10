@@ -1,10 +1,11 @@
 language: go
 go: 1.7
-gobuild_args: -ldflags "-X cmd.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X cmd.githash=`git rev-parse HEAD` -X cmd.version=`cat VERSION`"
+gobuild_args: -ldflags "-X cmd.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X cmd.githash=`git
+  rev-parse HEAD` -X cmd.version=`cat VERSION`"
 install:
-  - go get github.com/mattn/goveralls
+- go get github.com/mattn/goveralls
 script:
-    - $HOME/gopath/bin/goveralls -service=travis-ci
+- $HOME/gopath/bin/goveralls -service=travis-ci
 before_deploy:
 - GOOS=linux GOARCH=amd64 go build -o coreo_linux_amd64
 - GOOS=linux GOARCH=386 go build -o coreo_linux_386
@@ -13,8 +14,10 @@ before_deploy:
 - GOOS=windows GOARCH=amd64 go build -o coreo_windows_amd64.exe
 - GOOS=windows GOARCH=386 go build -o coreo_windows_386.exe
 deploy:
-  skip_cleanup: true
   provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: GpeGV6OO+rrLuO12ZiiVgmH33LT4PSqHQTnVtgaYYe080Vfzq+jG2+Z0WwmWi3nYuV9zqsGcJP1itv/9WFmag5G14MgcvAatigRFON63JTBxZ3qLyK6j8CosTjWAEEIKQhfcEJaddM6j2B8p+kpyArFWhEFGsfpRMuDtWxmEQWGQIAf9GciOlS1+57VGy5kn7Ci42vEzc46Oefxz5h5EMdi9X63Uf87M/DxGuXaHq11cJM4uNfv9P2RjcguLuTKVr+rJKsi/V5PcVVmnYTC/RpemxMRershX3FD7K0P6xNAwGnJW6jdhJ0cUECtka+lLVHJC0Pn0nsaZw45zpghRqRniyT0N1QVhQ5DCqIQkFibDOiKKbjh/d3EutPwH86S9UZubwdaTpurboDIXbZsu9aHINrXzrgBYQNRTwF0/YBC7R6jBiZ2+WU3+hwV2Z/M9FMt2HmPwhBbVQMQfqcrkRNzW6brqWQ4dOmL/jftmXgINTkU/QQnQh2fvL/eYs5zis/mFK7JxcOipKjGQsYfowO2/f1MHY2AkeMuYZtXL/vOCwhPlOwbZTGUq6oWRN4E0TRLOU2pZGoCAKK7GdHMm01Fs6mt20tf3CJHbaTpzU642AWUNXU71X7Q437/uuPQwuEQCOhaXj2j00xZgaz76xHZYYB0mLjlipKY9uwLpomo=
   file:
   - coreo_linux_amd64
   - coreo_linux_386
@@ -23,5 +26,6 @@ deploy:
   - coreo_windows_amd64.exe
   - coreo_windows_386.exe
   on:
-    tags: true
     repo: CloudCoreo/cli
+    branch: dev
+    tags: true
