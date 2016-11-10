@@ -23,9 +23,9 @@ var gitKeyID string
 
 // GitKeyCmd represents the based command for gitkey subcommands
 var GitKeyCmd = &cobra.Command{
-	Use: content.CMD_GITKEY_USE,
+	Use:   content.CMD_GITKEY_USE,
 	Short: content.CMD_GITKEY_SHORT,
-	Long: content.CMD_GITKEY_LONG,
+	Long:  content.CMD_GITKEY_LONG,
 }
 
 func init() {

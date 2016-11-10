@@ -3,11 +3,12 @@ package client
 import "fmt"
 
 type Link struct {
-	Ref string `json:"ref"`
+	Ref    string `json:"ref"`
 	Method string `json:"method"`
-	Href string `json:"href"`
+	Href   string `json:"href"`
 }
 
+// GetLinkByRef Get Link object by ref
 func GetLinkByRef(links []Link, ref string) (Link, error) {
 	link := Link{}
 

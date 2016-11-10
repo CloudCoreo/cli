@@ -19,18 +19,18 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cloudcoreo/cli/cmd/content"
-	"github.com/cloudcoreo/cli/cmd/util"
-	"github.com/cloudcoreo/cli/client"
+	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/spf13/cobra"
 )
 
 // PlanShowCmd represents the based command for plan subcommands
 var PlanShowCmd = &cobra.Command{
-	Use: content.CMD_SHOW_USE,
+	Use:   content.CMD_SHOW_USE,
 	Short: content.CMD_PLAN_SHOW_SHORT,
-	Long: content.CMD_PLAN_SHOW_LONG,
-	PreRun:func(cmd *cobra.Command, args []string) {
+	Long:  content.CMD_PLAN_SHOW_LONG,
+	PreRun: func(cmd *cobra.Command, args []string) {
 		if err := util.CheckCloudShowOrDeleteFlag(cloudID); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -39,7 +39,7 @@ var PlanShowCmd = &cobra.Command{
 		SetupCoreoDefaultTeam()
 
 	},
-	Run:func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 
 		if err != nil {
@@ -47,7 +47,7 @@ var PlanShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		t, err := c.GetPlanByID(context.Background(), teamID, cloudID)
+		t, err := c.GetPlanByID(context.Background(), teamID, cloudID, planID)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -57,7 +57,7 @@ var PlanShowCmd = &cobra.Command{
 			util.PrettyPrintJson(t)
 		} else {
 			table := util.NewTable()
-			table.SetHeader([] string{"ID", "Name", "TeamID"})
+			table.SetHeader([]string{"ID", "Name", "TeamID"})
 			table.UseObj(t)
 			fmt.Println(table.Render())
 		}
@@ -67,5 +67,6 @@ var PlanShowCmd = &cobra.Command{
 func init() {
 	PlanCmd.AddCommand(PlanShowCmd)
 
-	PlanShowCmd.Flags().StringVarP(&cloudID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "",content.CMD_FLAG_CLOUDID_DESCRIPTION )
+	PlandDisabledCmd.Flags().StringVarP(&planID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_PLANID_DESCRIPTION)
+	PlandDisabledCmd.Flags().StringVarP(&compositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
 }

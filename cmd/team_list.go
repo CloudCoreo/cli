@@ -19,21 +19,21 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/client"
-	"github.com/spf13/cobra"
+	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/spf13/cobra"
 )
 
 // TeamListCmd represents the based command for team subcommands
 var TeamListCmd = &cobra.Command{
-	Use: content.CMD_TEAM_LIST_USE,
+	Use:   content.CMD_TEAM_LIST_USE,
 	Short: content.CMD_TEAM_LIST_SHORT,
-	Long: content.CMD_TEAM_LIST_LONG,
-	PreRun:func(cmd *cobra.Command, args []string) {
+	Long:  content.CMD_TEAM_LIST_LONG,
+	PreRun: func(cmd *cobra.Command, args []string) {
 		SetupCoreoCredentials()
 	},
-	Run:func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 		t, err := c.GetTeams(context.Background())
 		if err != nil {
@@ -50,7 +50,7 @@ var TeamListCmd = &cobra.Command{
 			util.PrettyPrintJson(t)
 		} else {
 			table := util.NewTable()
-			table.SetHeader([] string{"ID", "TeamName", "TeamDescription"})
+			table.SetHeader([]string{"ID", "TeamName", "TeamDescription"})
 			table.UseObj(b)
 			fmt.Println(table.Render())
 		}

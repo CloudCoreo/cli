@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/CloudCoreo/cli/client"
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
-	"github.com/CloudCoreo/cli/client"
 	"github.com/spf13/cobra"
 )
 
@@ -29,10 +29,10 @@ var tokenName, tokenDescription string
 
 // TokenAddCmd represents the based command for token subcommands
 var TokenAddCmd = &cobra.Command{
-	Use: content.CMD_TOKEN_ADD_USE,
+	Use:   content.CMD_TOKEN_ADD_USE,
 	Short: content.CMD_TOKEN_ADD_SHORT,
-	Long: content.CMD_TOKEN_ADD_LONG,
-	PreRun:func(cmd *cobra.Command, args []string) {
+	Long:  content.CMD_TOKEN_ADD_LONG,
+	PreRun: func(cmd *cobra.Command, args []string) {
 		if err := util.CheckTokenAddFlags(tokenName, tokenDescription); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -41,7 +41,7 @@ var TokenAddCmd = &cobra.Command{
 		SetupCoreoDefaultTeam()
 
 	},
-	Run:func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 
 		if err != nil {
@@ -59,7 +59,7 @@ var TokenAddCmd = &cobra.Command{
 			util.PrettyPrintJson(t)
 		} else {
 			table := util.NewTable()
-			table.SetHeader([] string{"ID", "Name", "Description"})
+			table.SetHeader([]string{"ID", "Name", "Description"})
 			table.UseObj(t)
 			fmt.Println(table.Render())
 		}
@@ -68,6 +68,6 @@ var TokenAddCmd = &cobra.Command{
 
 func init() {
 	TokenCmd.AddCommand(TokenAddCmd)
-	TokenAddCmd.Flags().StringVarP(&tokenName, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "",content.CMD_FLAG_NAME_DESCRIPTION )
-	TokenAddCmd.Flags().StringVarP(&tokenDescription, content.CMD_FLAG_DESCRIPTION_LONG, content.CMD_FLAG_DESCRIPTION_SHORT, "",content.CMD_FLAG_DESCRIPTION_DESCRIPTION )
+	TokenAddCmd.Flags().StringVarP(&tokenName, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "", content.CMD_FLAG_NAME_DESCRIPTION)
+	TokenAddCmd.Flags().StringVarP(&tokenDescription, content.CMD_FLAG_DESCRIPTION_LONG, content.CMD_FLAG_DESCRIPTION_SHORT, "", content.CMD_FLAG_DESCRIPTION_DESCRIPTION)
 }

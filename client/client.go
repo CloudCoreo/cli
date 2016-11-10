@@ -22,8 +22,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"golang.org/x/net/context/ctxhttp"
 	"github.com/CloudCoreo/cli/cmd/content"
+	"golang.org/x/net/context/ctxhttp"
 )
 
 type clientOptions struct {
@@ -49,11 +49,11 @@ func WithInterceptor(ci Interceptor) Option {
 type Client struct {
 	client   http.Client
 	endpoint string
-	opts	 clientOptions
+	opts     clientOptions
 	auth     Auth
 }
 
-func MakeClient(apiKey, secretKey, endpoint string) (*Client, error){
+func MakeClient(apiKey, secretKey, endpoint string) (*Client, error) {
 
 	if apiKey == content.NONE || secretKey == content.NONE {
 		return &Client{}, fmt.Errorf(content.ERROR_MISSING_API_KEY_SECRET_KEY)
@@ -113,7 +113,7 @@ func (c *Client) buildRequest(method, urlPath string, body io.Reader) (*http.Req
 	if err != nil {
 		return nil, err
 	}
-	if method == "POST" ||  method == "PUT" {
+	if method == "POST" || method == "PUT" {
 		req.Header.Set("Content-Type", "application/json")
 	}
 

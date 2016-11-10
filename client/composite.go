@@ -9,14 +9,14 @@ import (
 
 // Composite struct for api payload
 type Composite struct {
-	Name string `json:"name"`
-	GitURL string `json:"gitUrl"`
-	HasCustomDashboard bool `json:"hasCustomDashboard"`
-	CreatedAt time.Time `json:"createdAt"`
-	GitKeyID string `json:"gitKeyId"`
-	TeamID string `json:"teamId"`
-	ID string `json:"id"`
-	Links []Link `json:"links"`
+	Name               string    `json:"name"`
+	GitURL             string    `json:"gitUrl"`
+	HasCustomDashboard bool      `json:"hasCustomDashboard"`
+	CreatedAt          time.Time `json:"createdAt"`
+	GitKeyID           string    `json:"gitKeyId"`
+	TeamID             string    `json:"teamId"`
+	ID                 string    `json:"id"`
+	Links              []Link    `json:"links"`
 }
 
 // GetComposites method to get composite info array object
@@ -41,7 +41,7 @@ func (c *Client) GetComposites(ctx context.Context, teamID string) ([]Composite,
 	return composites, nil
 }
 
-// GetComposite method to get composite info object
+// GetCompositeByID method to get composite info object
 func (c *Client) GetCompositeByID(ctx context.Context, teamID, compositeID string) (Composite, error) {
 	composite := Composite{}
 	composites, err := c.GetComposites(ctx, teamID)
@@ -59,7 +59,7 @@ func (c *Client) GetCompositeByID(ctx context.Context, teamID, compositeID strin
 }
 
 // CreateComposite method to create a composite object
-func (c *Client) CreateComposite(ctx context.Context, gitURL, name, teamID string) (Composite, error)  {
+func (c *Client) CreateComposite(ctx context.Context, gitURL, name, teamID string) (Composite, error) {
 	team, err := c.GetTeamByID(ctx, teamID)
 	composite := Composite{}
 	if err != nil {

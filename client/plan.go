@@ -1,30 +1,31 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"fmt"
-	"bytes"
 )
 
+// Plan struct object
 type Plan struct {
-	DefaultPanelRepo string `json:"defaultPanelRepo"`
-	DefaultPanelDirectory string `json:"defaultPanelDirectory"`
-	DefaultPanelBranch string `json:"defaultPanelBranch"`
-	Name string `json:"name"`
-	IamUserAccessKeyID string `json:"iamUserAccessKeyId"`
-	IamUserID string `json:"iamUserId"`
+	DefaultPanelRepo       string `json:"defaultPanelRepo"`
+	DefaultPanelDirectory  string `json:"defaultPanelDirectory"`
+	DefaultPanelBranch     string `json:"defaultPanelBranch"`
+	Name                   string `json:"name"`
+	IamUserAccessKeyID     string `json:"iamUserAccessKeyId"`
+	IamUserID              string `json:"iamUserId"`
 	IamUserSecretAccessKey string `json:"iamUserSecretAccessKey"`
-	SnsSubscriptionArn string `json:"snsSubscriptionArn"`
-	SqsArn string `json:"sqsArn"`
-	SqsURL string `json:"sqsUrl"`
-	TopicArn string `json:"topicArn"`
-	DefaultRegion string `json:"defaultRegion"`
-	RefreshInterval int `json:"refreshInterval"`
-	Revision string `json:"revision"`
-	Branch string `json:"branch"`
-	Enabled bool `json:"enabled"`
-	Links []Link `json:"links"`
-	ID string `json:"id"`
+	SnsSubscriptionArn     string `json:"snsSubscriptionArn"`
+	SqsArn                 string `json:"sqsArn"`
+	SqsURL                 string `json:"sqsUrl"`
+	TopicArn               string `json:"topicArn"`
+	DefaultRegion          string `json:"defaultRegion"`
+	RefreshInterval        int    `json:"refreshInterval"`
+	Revision               string `json:"revision"`
+	Branch                 string `json:"branch"`
+	Enabled                bool   `json:"enabled"`
+	Links                  []Link `json:"links"`
+	ID                     string `json:"id"`
 }
 
 // GetPlans method to get plans info array object
@@ -95,7 +96,7 @@ func (c *Client) DeletePlanByID(ctx context.Context, teamID, compositeID, planID
 
 // EnablePlan method to enable a plan object
 func (c *Client) EnablePlan(ctx context.Context, teamID, compositeID, planID string) (Plan, error) {
-	plan, err := updatePlan(ctx, teamID, compositeID, planID, fmt.Sprintf(`{"id":"%s", "enabled":"%t"}`, planID, true))
+	plan, err := c.updatePlan(ctx, teamID, compositeID, planID, fmt.Sprintf(`{"id":"%s", "enabled":"%t"}`, planID, true))
 	if err != nil {
 		return plan, err
 	}
@@ -105,7 +106,7 @@ func (c *Client) EnablePlan(ctx context.Context, teamID, compositeID, planID str
 
 // DisablePlan method to disable a plan object
 func (c *Client) DisablePlan(ctx context.Context, teamID, compositeID, planID string) (Plan, error) {
-	plan, err := updatePlan(ctx, teamID, compositeID, planID, fmt.Sprintf(`{"id":"%s", "enabled":"%t"}`, planID, false))
+	plan, err := c.updatePlan(ctx, teamID, compositeID, planID, fmt.Sprintf(`{"id":"%s", "enabled":"%t"}`, planID, false))
 	if err != nil {
 		return plan, err
 	}
@@ -113,7 +114,7 @@ func (c *Client) DisablePlan(ctx context.Context, teamID, compositeID, planID st
 	return plan, nil
 }
 
-func updatePlan(ctx context.Context, teamID, compositeID, planID, payLoad string) (Plan, error) {
+func (c *Client) updatePlan(ctx context.Context, teamID, compositeID, planID, payLoad string) (Plan, error) {
 	plan := Plan{}
 	plans, err := c.GetPlans(ctx, teamID, compositeID)
 
@@ -121,8 +122,7 @@ func updatePlan(ctx context.Context, teamID, compositeID, planID, payLoad string
 		return plan, err
 	}
 
-	for _,plan := range plans {
-
+	for _, plan := range plans {
 
 		if plan.ID == planID {
 			var jsonStr = []byte(payLoad)
@@ -141,36 +141,4 @@ func updatePlan(ctx context.Context, teamID, compositeID, planID, payLoad string
 	}
 
 	return plan, nil
-}
-
-// InitPlan method to create a plan  object
-func (c *Client) InitPlan(ctx context.Context, teamID, accessKeyID, secretAccessKey, cloudName string) (Plan, error) {
-	cloudAccount := CloudAccount{}
-	teams, err := c.GetTeams(ctx)
-
-	if err != nil {
-		return cloudAccount, err
-	}
-
-	for _,team := range teams {
-
-
-		if team.ID == teamID {
-			cloudPlayLoad := fmt.Sprintf(`{"name":"%s","accessKeyId":"%s","secretAccessKey":"%s","teamId":"%s"}`, cloudName, accessKeyID, secretAccessKey, teamID)
-			var jsonStr = []byte(cloudPlayLoad)
-
-			cloudLink, err := GetLinkByRef(team.Links, "cloudAccounts")
-			if err != nil {
-				return cloudAccount, err
-			}
-
-			err = c.Do(ctx, "POST", cloudLink.Href, bytes.NewBuffer(jsonStr), &cloudAccount)
-			if err != nil {
-				return cloudAccount, err
-			}
-			break
-		}
-	}
-
-	return cloudAccount, nil
 }

@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cloudcoreo/cli/client"
-	"github.com/cloudcoreo/cli/cmd/content"
-	"github.com/cloudcoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/spf13/cobra"
 )
 
@@ -47,13 +47,19 @@ var PlandDisabledCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		err = c.DisablePlan(context.Background(), teamID, compositeID, planID)
+		p, err := c.DisablePlan(context.Background(), teamID, compositeID, planID)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
 
-		fmt.Println("Plan was disabled")
+		if format == "json" {
+			util.PrettyPrintJson(p)
+		} else {
+			table := util.NewTable()
+			table.UseObj(p)
+			fmt.Println(table.Render())
+		}
 	},
 }
 
@@ -61,5 +67,5 @@ func init() {
 	PlanCmd.AddCommand(PlandDisabledCmd)
 
 	PlandDisabledCmd.Flags().StringVarP(&planID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_PLANID_DESCRIPTION)
-	PlandDisabledCmd.Flags().StringVarP(&comositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+	PlandDisabledCmd.Flags().StringVarP(&compositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
 }

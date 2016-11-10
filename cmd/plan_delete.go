@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cloudcoreo/cli/client"
-	"github.com/cloudcoreo/cli/cmd/content"
-	"github.com/cloudcoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/spf13/cobra"
 )
 
@@ -61,6 +61,6 @@ func init() {
 	PlanCmd.AddCommand(PlandDeleteCmd)
 
 	PlandDeleteCmd.Flags().StringVarP(&planID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_CLOUDID_DESCRIPTION)
-	PlandDeleteCmd.Flags().StringVarP(&comositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+	PlandDeleteCmd.Flags().StringVarP(&compositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
 
 }

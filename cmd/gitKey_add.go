@@ -19,20 +19,18 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/CloudCoreo/cli/client"
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
-	"github.com/CloudCoreo/cli/client"
 	"github.com/spf13/cobra"
 )
 
-
-
 // GitKeyAddCmd represents the based command for gitkey subcommands
 var GitKeyAddCmd = &cobra.Command{
-	Use: content.CMD_GITKEY_ADD_USE,
+	Use:   content.CMD_GITKEY_ADD_USE,
 	Short: content.CMD_GITKEY_ADD_SHORT,
-	Long: content.CMD_GITKEY_ADD_LONG,
-	PreRun:func(cmd *cobra.Command, args []string) {
+	Long:  content.CMD_GITKEY_ADD_LONG,
+	PreRun: func(cmd *cobra.Command, args []string) {
 		if err := util.CheckGitKeyAddFlags(resourceName, resourceSecret); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -41,7 +39,7 @@ var GitKeyAddCmd = &cobra.Command{
 		SetupCoreoDefaultTeam()
 
 	},
-	Run:func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 		t, err := c.CreateGitKey(context.Background(), teamID, resourceSecret, resourceName)
 		if err != nil {
@@ -53,7 +51,7 @@ var GitKeyAddCmd = &cobra.Command{
 			util.PrettyPrintJson(t)
 		} else {
 			table := util.NewTable()
-			table.SetHeader([] string{"ID", "Name", "TeamID"})
+			table.SetHeader([]string{"ID", "Name", "TeamID"})
 			table.UseObj(t)
 			fmt.Println(table.Render())
 		}
@@ -63,6 +61,6 @@ var GitKeyAddCmd = &cobra.Command{
 func init() {
 	GitKeyCmd.AddCommand(GitKeyAddCmd)
 
-	GitKeyAddCmd.Flags().StringVarP(&resourceSecret, content.CMD_FLAG_SECRET_LONG, content.CMD_FLAG_SECRET_SHORT, "",content.CMD_FLAG_SECRET_DESCRIPTION )
-	GitKeyAddCmd.Flags().StringVarP(&resourceName, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "",content.CMD_FLAG_NAME_DESCRIPTION )
+	GitKeyAddCmd.Flags().StringVarP(&resourceSecret, content.CMD_FLAG_SECRET_LONG, content.CMD_FLAG_SECRET_SHORT, "", content.CMD_FLAG_SECRET_DESCRIPTION)
+	GitKeyAddCmd.Flags().StringVarP(&resourceName, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "", content.CMD_FLAG_NAME_DESCRIPTION)
 }
