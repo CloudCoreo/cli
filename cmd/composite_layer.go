@@ -29,7 +29,7 @@ var cmdCompositeLayer = &cobra.Command{
 	Short: content.CMD_COMPOSITE_LAYER_SHORT,
 	Long:  content.CMD_COMPOSITE_LAYER_LONG,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := util.CheckLayersFlags(name, gitRepoUrl); err != nil {
+		if err := util.CheckLayersFlags(name, gitRepoURL); err != nil {
 			fmt.Println("A composite name is required: -n")
 			os.Exit(1)
 		}
@@ -54,7 +54,7 @@ var cmdCompositeLayer = &cobra.Command{
 
 		directory = path.Join(directory, "stack-"+name)
 
-		err = util.CreateGitSubmodule(directory, gitRepoUrl)
+		err = util.CreateGitSubmodule(directory, gitRepoURL)
 
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
@@ -75,7 +75,7 @@ func init() {
 	CompositeCmd.AddCommand(cmdCompositeLayer)
 
 	cmdCompositeLayer.Flags().StringVarP(&directory, content.CMD_FLAG_DIRECTORY_LONG, content.CMD_FLAG_DIRECTORY_SHORT, "", content.CMD_FLAG_DIRECTORY_DESCRIPTION)
-	cmdCompositeLayer.Flags().StringVarP(&gitRepoUrl, content.CMD_FLAG_GIT_REPO_LONG, content.CMD_FLAG_GIT_REPO_SHORT, "", content.CMD_FLAG_GIT_REPO_DESCRIPTION)
+	cmdCompositeLayer.Flags().StringVarP(&gitRepoURL, content.CMD_FLAG_GIT_REPO_LONG, content.CMD_FLAG_GIT_REPO_SHORT, "", content.CMD_FLAG_GIT_REPO_DESCRIPTION)
 	cmdCompositeLayer.Flags().StringVarP(&name, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "", content.CMD_FLAG_NAME_DESCRIPTION)
 	cmdCompositeLayer.Flags().BoolVarP(&serverDir, content.CMD_FLAG_SERVER_LONG, content.CMD_FLAG_SERVER_SHORT, false, content.CMD_FLAG_SERVER_DESCRIPTION)
 }

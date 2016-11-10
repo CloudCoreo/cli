@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/spf13/cobra"
 )
 
 var version = "No Version Provided"

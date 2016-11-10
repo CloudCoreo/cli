@@ -3,31 +3,37 @@ package util
 import (
 	"reflect"
 
-	"github.com/bndr/gotabulate"
 	"encoding/json"
 	"fmt"
+
+	"github.com/bndr/gotabulate"
 )
 
+// Table struct
 type Table struct {
 	Header      []string
 	Rows        [][]interface{}
 	MaxCellSize int
 }
 
+// NewTable create new table
 func NewTable() *Table {
 	return new(Table)
 }
 
+// SetHeader set header for table
 func (c *Table) SetHeader(header []string) *Table {
 	c.Header = header
 	return c
 }
 
+// SetMaxCellSize set max cell size
 func (c *Table) SetMaxCellSize(maxCellSize int) *Table {
 	c.MaxCellSize = maxCellSize
 	return c
 }
 
+// UseObj Serialize obj to table
 func (c *Table) UseObj(obj interface{}) *Table {
 
 	t := reflect.TypeOf(obj)
@@ -56,9 +62,8 @@ func (c *Table) UseObj(obj interface{}) *Table {
 				if reflect.TypeOf(subv).Kind() == reflect.Slice {
 					c.UseObj(subv)
 					return c
-				} else {
-					newrow = append(newrow, subv)
 				}
+				newrow = append(newrow, subv)
 			}
 			c.Rows = append(c.Rows, newrow)
 		}
@@ -79,31 +84,31 @@ func (c *Table) UseObj(obj interface{}) *Table {
 	case reflect.String:
 		if len(c.Header) != 1 {
 			return c
-		} else {
-			var newrow []interface{}
-			newrow = append(newrow, obj)
-			c.Rows = append(c.Rows, newrow)
 		}
+		var newrow []interface{}
+		newrow = append(newrow, obj)
+		c.Rows = append(c.Rows, newrow)
+
 	case reflect.Int:
 		if len(c.Header) != 1 {
 			return c
-		} else {
-			var newrow []interface{}
-			newrow = append(newrow, obj)
-			c.Rows = append(c.Rows, newrow)
 		}
+		var newrow []interface{}
+		newrow = append(newrow, obj)
+		c.Rows = append(c.Rows, newrow)
+
 	case reflect.Float64:
 		if len(c.Header) != 1 {
 			return c
-		} else {
-			var newrow []interface{}
-			newrow = append(newrow, obj)
-			c.Rows = append(c.Rows, newrow)
 		}
+		var newrow []interface{}
+		newrow = append(newrow, obj)
+		c.Rows = append(c.Rows, newrow)
 	}
 	return c
 }
 
+// Render table
 func (c *Table) Render() string {
 	t := gotabulate.Create(c.Rows)
 	t.SetHeaders(c.Header)
@@ -116,11 +121,12 @@ func (c *Table) Render() string {
 	return t.Render("grid")
 }
 
-func PrettyPrintJson(obj interface{}) {
+// PrettyPrintJSON pretty print json
+func PrettyPrintJSON(obj interface{}) {
 	jsonData, err := json.MarshalIndent(obj, "", "\t")
 	if err != nil {
 		fmt.Printf("Error: %s", err)
-		return;
+		return
 	}
 	fmt.Println(string(jsonData))
 }

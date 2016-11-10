@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 )
 
+// CreateFolder create folder
 func CreateFolder(name, path string) error {
 	if _, err := os.Stat(filepath.Join(path, name)); err != nil {
 		// set default permissions
@@ -14,6 +15,7 @@ func CreateFolder(name, path string) error {
 	return nil
 }
 
+// CreateFile create a file
 func CreateFile(name, path, content string, override bool) error {
 	if _, err := os.Stat(filepath.Join(path, name)); err != nil || override {
 		f, _ := os.Create(filepath.Join(path, name))

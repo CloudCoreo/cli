@@ -52,7 +52,7 @@ func (a *Auth) SignRequest(req *http.Request) error {
 
 	message := fmt.Sprintf("%s\n%s\n%s\n%s", method, getMD5Hash(body), mediaType, date)
 
-	req.Header.Add("Authorization", "Hmac "+ apiKey + ":" + computeHmac1(message, secretKey))
+	req.Header.Add("Authorization", "Hmac "+apiKey+":"+computeHmac1(message, secretKey))
 	req.Header.Add("date", date)
 
 	return nil

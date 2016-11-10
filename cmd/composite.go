@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var directory, name, gitRepoUrl, compositeID string
+var directory, name, gitRepoURL, compositeID string
 var serverDir bool
 
 // CompositeCmd represents the based command for composite subcommands

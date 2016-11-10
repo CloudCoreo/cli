@@ -93,6 +93,7 @@ func initConfig() {
 	}
 }
 
+// SetupCoreoCredentials Setup default Coreo credentials
 func SetupCoreoCredentials() {
 	apiKey, err := util.CheckAPIKeyFlag(key, userProfile)
 
@@ -111,6 +112,7 @@ func SetupCoreoCredentials() {
 	secret = secretKey
 }
 
+// SetupCoreoDefaultTeam setup default team ID
 func SetupCoreoDefaultTeam() {
 	tID, err := util.CheckTeamIDFlag(teamID, userProfile)
 

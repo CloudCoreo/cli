@@ -27,15 +27,15 @@ import (
 
 // CompositeListCmd represents the based command for composite subcommands
 var CompositeListCmd = &cobra.Command{
-	Use: content.CMD_COMPOSITE_LIST_USE,
+	Use:   content.CMD_COMPOSITE_LIST_USE,
 	Short: content.CMD_COMPOSITE_LIST_SHORT,
-	Long: content.CMD_COMPOSITE_LIST_LONG,
-	PreRun:func(cmd *cobra.Command, args []string) {
+	Long:  content.CMD_COMPOSITE_LIST_LONG,
+	PreRun: func(cmd *cobra.Command, args []string) {
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 
 	},
-	Run:func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 		t, err := c.GetComposites(context.Background(), teamID)
 		if err != nil {
@@ -48,7 +48,7 @@ var CompositeListCmd = &cobra.Command{
 			b[i] = t[i]
 		}
 		if format == "json" {
-			util.PrettyPrintJson(t)
+			util.PrettyPrintJSON(t)
 		} else {
 			table := util.NewTable()
 			table.UseObj(b)

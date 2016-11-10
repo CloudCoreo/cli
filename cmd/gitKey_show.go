@@ -19,18 +19,18 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/CloudCoreo/cli/client"
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
-	"github.com/CloudCoreo/cli/client"
 	"github.com/spf13/cobra"
 )
 
 // GitKeyShowCmd represents the based command for gitkey subcommands
 var GitKeyShowCmd = &cobra.Command{
-	Use: content.CMD_GITKEY_SHOW_USE,
+	Use:   content.CMD_GITKEY_SHOW_USE,
 	Short: content.CMD_GITKEY_SHOW_SHORT,
-	Long: content.CMD_GITKEY_SHOW_LONG,
-	PreRun:func(cmd *cobra.Command, args []string) {
+	Long:  content.CMD_GITKEY_SHOW_LONG,
+	PreRun: func(cmd *cobra.Command, args []string) {
 		if err := util.CheckGitKeyShowOrDeleteFlag(cloudID); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -39,7 +39,7 @@ var GitKeyShowCmd = &cobra.Command{
 		SetupCoreoDefaultTeam()
 
 	},
-	Run:func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
 
 		if err != nil {
@@ -54,10 +54,10 @@ var GitKeyShowCmd = &cobra.Command{
 		}
 
 		if format == "json" {
-			util.PrettyPrintJson(t)
+			util.PrettyPrintJSON(t)
 		} else {
 			table := util.NewTable()
-			table.SetHeader([] string{"ID", "Name", "TeamID"})
+			table.SetHeader([]string{"ID", "Name", "TeamID"})
 			table.UseObj(t)
 			fmt.Println(table.Render())
 		}
@@ -67,5 +67,5 @@ var GitKeyShowCmd = &cobra.Command{
 func init() {
 	GitKeyCmd.AddCommand(GitKeyShowCmd)
 
-	GitKeyShowCmd.Flags().StringVarP(&gitKeyID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "",content.CMD_FLAG_GITKEY_DESCRIPTION )
+	GitKeyShowCmd.Flags().StringVarP(&gitKeyID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_GITKEY_DESCRIPTION)
 }
