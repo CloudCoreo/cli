@@ -67,6 +67,6 @@ var PlanShowCmd = &cobra.Command{
 func init() {
 	PlanCmd.AddCommand(PlanShowCmd)
 
-	PlandDisabledCmd.Flags().StringVarP(&planID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_PLANID_DESCRIPTION)
-	PlandDisabledCmd.Flags().StringVarP(&compositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+	PlanShowCmd.Flags().StringVarP(&planID, content.CMD_FLAG_PLAN_ID_LONG, content.CMD_FLAG_PLAN_ID_SHORT, "", content.CMD_FLAG_PLANID_DESCRIPTION)
+	PlanShowCmd.Flags().StringVarP(&compositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
 }

@@ -68,6 +68,9 @@ const (
 	CMD_FLAG_ID_LONG  = "id"
 	CMD_FLAG_ID_SHORT = "i"
 
+	CMD_FLAG_PLAN_ID_LONG  = "plan-id"
+	CMD_FLAG_PLAN_ID_SHORT = "p"
+
 	CMD_FLAG_CLOUDID_DESCRIPTION   = "Coreo cloud id"
 	CMD_FLAG_TOKENID_DESCRIPTION   = "Coreo token id"
 	CMD_FLAG_COMPOSITE_DESCRIPTION = "Coreo composite id"

@@ -60,7 +60,7 @@ var PlandDeleteCmd = &cobra.Command{
 func init() {
 	PlanCmd.AddCommand(PlandDeleteCmd)
 
-	PlandDeleteCmd.Flags().StringVarP(&planID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_CLOUDID_DESCRIPTION)
+	PlandDeleteCmd.Flags().StringVarP(&planID, content.CMD_FLAG_PLAN_ID_LONG, content.CMD_FLAG_PLAN_ID_SHORT, "", content.CMD_FLAG_PLANID_DESCRIPTION)
 	PlandDeleteCmd.Flags().StringVarP(&compositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
 
 }
