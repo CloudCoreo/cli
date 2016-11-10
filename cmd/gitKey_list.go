@@ -55,7 +55,7 @@ var GitKeyListCmd = &cobra.Command{
 		}
 
 		if format == "json" {
-			util.PrettyPrintJson(t)
+			util.PrettyPrintJSON(t)
 		} else {
 			table := util.NewTable()
 			table.SetHeader([]string{"ID", "Name", "TeamID"})

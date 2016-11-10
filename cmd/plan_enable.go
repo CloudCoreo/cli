@@ -54,7 +54,7 @@ var PlandEnabledCmd = &cobra.Command{
 		}
 
 		if format == "json" {
-			util.PrettyPrintJson(p)
+			util.PrettyPrintJSON(p)
 		} else {
 			table := util.NewTable()
 			table.UseObj(p)

@@ -21,9 +21,9 @@ import (
 
 // TeamCmd represents the based command for team subcommands
 var TeamCmd = &cobra.Command{
-	Use: content.CMD_TEAM_USE,
+	Use:   content.CMD_TEAM_USE,
 	Short: content.CMD_TEAM_SHORT,
-	Long: content.CMD_TEAM_LONG,
+	Long:  content.CMD_TEAM_LONG,
 }
 
 func init() {

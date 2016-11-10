@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// TeamshowCmd represents the based command for team subcommands
+// TeamShowCmd represents the based command for team subcommands
 var TeamShowCmd = &cobra.Command{
 	Use:   content.CMD_TEAM_SHOW_USE,
 	Short: content.CMD_TEAM_SHOW_SHORT,
@@ -50,7 +50,7 @@ var TeamShowCmd = &cobra.Command{
 		}
 
 		if format == "json" {
-			util.PrettyPrintJson(t)
+			util.PrettyPrintJSON(t)
 		} else {
 			table := util.NewTable()
 			table.SetHeader([]string{"ID", "TeamName", "TeamDescription"})

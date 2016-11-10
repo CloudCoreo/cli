@@ -31,7 +31,7 @@ var CompositeCreateCmd = &cobra.Command{
 	Short: content.CMD_COMPOSITE_CREATE_SHORT,
 	Long:  content.CMD_COMPOSITE_CREATE_LONG,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCompositeCreateFlags(name, gitRepoUrl); err != nil {
+		if err := util.CheckCompositeCreateFlags(name, gitRepoURL); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
@@ -41,14 +41,14 @@ var CompositeCreateCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
-		t, err := c.CreateComposite(context.Background(), gitRepoUrl, name, teamID)
+		t, err := c.CreateComposite(context.Background(), gitRepoURL, name, teamID)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
 
 		if format == "json" {
-			util.PrettyPrintJson(t)
+			util.PrettyPrintJSON(t)
 		} else {
 			table := util.NewTable()
 			table.SetHeader([]string{"ID", "Name", "TeamID"})
@@ -62,5 +62,5 @@ func init() {
 	CompositeCmd.AddCommand(CompositeCreateCmd)
 
 	CompositeCreateCmd.Flags().StringVarP(&name, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "", content.CMD_FLAG_NAME_DESCRIPTION)
-	CompositeCreateCmd.Flags().StringVarP(&gitRepoUrl, content.CMD_FLAG_GIT_REPO_LONG, content.CMD_FLAG_GIT_REPO_SHORT, "", content.CMD_FLAG_GIT_REPO_DESCRIPTION)
+	CompositeCreateCmd.Flags().StringVarP(&gitRepoURL, content.CMD_FLAG_GIT_REPO_LONG, content.CMD_FLAG_GIT_REPO_SHORT, "", content.CMD_FLAG_GIT_REPO_DESCRIPTION)
 }

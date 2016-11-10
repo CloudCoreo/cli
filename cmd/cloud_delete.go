@@ -53,7 +53,7 @@ var CloudDeleteCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		fmt.Println("Cloud account was deleted")
+		fmt.Println(content.ERROR_CLOUDACCOUNT_DELETED)
 	},
 }
 

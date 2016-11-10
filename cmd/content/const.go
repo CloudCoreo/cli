@@ -39,6 +39,7 @@ const (
 	ERROR_SECRET_MISSING              = "Secret is required for this command"
 	ERROR_DESCRIPTION_MISSING         = "Description flag is required for this command"
 	ERROR_ID_MISSING                  = "ID is required for this command"
+	ERROR_CLOUDACCOUNT_DELETED        = "Cloud account was deleted"
 
 	// info
 	INFO_CREATING_GITSUBMODULE = "Creating gitsubmodule %s in %s...\n"

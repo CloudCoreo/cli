@@ -7,14 +7,14 @@ import (
 	"golang.org/x/net/context"
 )
 
-// Cloud struct for api payload
+// CloudAccount struct for api payload
 type CloudAccount struct {
-	TeamID string `json:"teamId"`
-	Name string `json:"name"`
-	RoleID string `json:"roleId"`
+	TeamID   string `json:"teamId"`
+	Name     string `json:"name"`
+	RoleID   string `json:"roleId"`
 	RoleName string `json:"roleName"`
-	Links []Link `json:"links"`
-	ID string `json:"id"`
+	Links    []Link `json:"links"`
+	ID       string `json:"id"`
 }
 
 // GetCloudAccounts method for cloud command
@@ -26,7 +26,7 @@ func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]CloudAc
 		return clouds, err
 	}
 
-	for _,team := range teams {
+	for _, team := range teams {
 		if team.ID == teamID {
 			cloudLink, err := GetLinkByRef(team.Links, "cloudAccounts")
 
@@ -44,7 +44,7 @@ func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]CloudAc
 	return clouds, nil
 }
 
-// GetCloudAccount method for cloud command
+// GetCloudAccountByID method getting cloud account by user ID
 func (c *Client) GetCloudAccountByID(ctx context.Context, teamID, cloudID string) (CloudAccount, error) {
 	cloudAccount := CloudAccount{}
 
@@ -73,8 +73,7 @@ func (c *Client) CreateCloudAccount(ctx context.Context, teamID, accessKeyID, se
 		return cloudAccount, err
 	}
 
-	for _,team := range teams {
-
+	for _, team := range teams {
 
 		if team.ID == teamID {
 			cloudPlayLoad := fmt.Sprintf(`{"name":"%s","accessKeyId":"%s","secretAccessKey":"%s","teamId":"%s"}`, cloudName, accessKeyID, secretAccessKey, teamID)
