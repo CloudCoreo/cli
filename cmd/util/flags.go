@@ -109,6 +109,7 @@ func CheckLayersFlags(name, gitRepoURL string) error {
 	}
 
 	if err := checkGitRepoURL(gitRepoURL); err != nil {
+
 		return err
 	}
 
