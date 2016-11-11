@@ -166,3 +166,16 @@ func CheckSecretKeyFlag(secretKey string, userProfile string) (string, error) {
 
 	return secretKey, nil
 }
+
+// Check for compositeID and planID
+func CheckCompositeIdAndPlandIdFlag(compositeID, planID string) error {
+	if err := checkFlag(compositeID, content.ERROR_ID_MISSING); err != nil {
+		return err
+	}
+
+	if err := checkFlag(planID, content.ERROR_ID_MISSING); err != nil {
+		return err
+	}
+
+	return nil
+}

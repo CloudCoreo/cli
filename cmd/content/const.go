@@ -21,7 +21,7 @@ const (
 	DEFAULT_FOLDER   = ".cloudcoreo"
 	DEFAULT_FILE     = "profiles.yaml"
 	NONE             = "None"
-	ENDPOINT_ADDRESS = "http://localhost:3000/api"
+	ENDPOINT_ADDRESS = "https://staging.hack.cloudcoreo.com/api"
 	MASK_LENGTH      = 4
 	MASK             = "****************"
 
@@ -68,10 +68,14 @@ const (
 	CMD_FLAG_ID_LONG  = "id"
 	CMD_FLAG_ID_SHORT = "i"
 
+	CMD_FLAG_PLAN_ID_LONG  = "plan-id"
+	CMD_FLAG_PLAN_ID_SHORT = "p"
+
 	CMD_FLAG_CLOUDID_DESCRIPTION   = "Coreo cloud id"
 	CMD_FLAG_TOKENID_DESCRIPTION   = "Coreo token id"
 	CMD_FLAG_COMPOSITE_DESCRIPTION = "Coreo composite id"
 	CMD_FLAG_GITKEY_DESCRIPTION    = "Coreo gitkey id"
+	CMD_FLAG_PLANID_DESCRIPTION    = "Coreo plan id"
 
 	CMD_FLAG_KEY_LONG        = "key"
 	CMD_FLAG_KEY_SHORT       = "K"
@@ -90,6 +94,43 @@ const (
 	CMD_COREO_USE   = "coreo"
 	CMD_COREO_SHORT = "CloudCoreo CLI"
 	CMD_COREO_LONG  = `CloudCoreo CLI.`
+
+	CMD_LIST_USE    = "list"
+	CMD_CREATE_USE  = "create"
+	CMD_ADD_USE     = "add"
+	CMD_DELETE_USE  = "delete"
+	CMD_SHOW_USE    = "show"
+	CMD_DISABLE_USE = "disable"
+	CMD_RUN_USE     = "run"
+
+	// plan command
+	CMD_PLAN_USE   = "plan"
+	CMD_PLAN_SHORT = "CloudCoreo plan command"
+	CMD_PLAN_LONG  = `CloudCoreo plan command.`
+
+	// plan list command
+	CMD_PLAN_LIST_SHORT = "CloudCoreo plan list command"
+	CMD_PLAN_LIST_LONG  = `CloudCoreo plan list command.`
+
+	// plan create command
+	CMD_PLAN_CREATE_SHORT = "CloudCoreo plan create command"
+	CMD_PLAN_CREATE_LONG  = `CloudCoreo plan create command.`
+
+	// plan delete command
+	CMD_PLAN_DELETE_SHORT = "CloudCoreo plan delete command"
+	CMD_PLAN_DELETE_LONG  = `CloudCoreo plan delete command.`
+
+	// plan show command
+	CMD_PLAN_SHOW_SHORT = "CloudCoreo plan show command"
+	CMD_PLAN_SHOW_LONG  = `CloudCoreo plan show command.`
+
+	// plan disable command
+	CMD_PLAN_DISABLE_SHORT = "CloudCoreo plan disable command"
+	CMD_PLAN_DISABLE_LONG  = `CloudCoreo plan disable command.`
+
+	// plan run command
+	CMD_PLAN_RUN_SHORT = "CloudCoreo plan run command"
+	CMD_PLAN_RUN_LONG  = `CloudCoreo plan run command.`
 
 	// token command
 	CMD_TOKEN_USE   = "token"
