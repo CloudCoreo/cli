@@ -53,6 +53,7 @@ var PlanListCmd = &cobra.Command{
 			util.PrettyPrintJSON(t)
 		} else {
 			table := util.NewTable()
+			table.SetHeader([]string{"ID", "Name"})
 			table.UseObj(b)
 			fmt.Println(table.Render())
 		}

@@ -57,7 +57,7 @@ var PlanShowCmd = &cobra.Command{
 			util.PrettyPrintJSON(t)
 		} else {
 			table := util.NewTable()
-			table.SetHeader([]string{"ID", "Name", "TeamID"})
+			table.SetHeader([]string{"ID", "Name"})
 			table.UseObj(t)
 			fmt.Println(table.Render())
 		}

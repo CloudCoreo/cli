@@ -51,6 +51,7 @@ var CompositeListCmd = &cobra.Command{
 			util.PrettyPrintJSON(t)
 		} else {
 			table := util.NewTable()
+			table.SetHeader([]string{"ID", "Name", "TeamID"})
 			table.UseObj(b)
 			fmt.Println(table.Render())
 		}
