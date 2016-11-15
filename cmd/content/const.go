@@ -40,6 +40,8 @@ const (
 	ERROR_DESCRIPTION_MISSING         = "Description flag is required for this command"
 	ERROR_ID_MISSING                  = "ID is required for this command"
 	ERROR_CLOUDACCOUNT_DELETED        = "Cloud account was deleted"
+	ERROR_GIT_INIT_NOT_RAN        	  = "Not a git repository (or any of the parent directories): .git"
+	ERROR_NO_USER_PROFILE        	  = "No user profile found"
 
 	// info
 	INFO_CREATING_GITSUBMODULE = "Creating gitsubmodule %s in %s...\n"
@@ -251,6 +253,9 @@ const (
 	CMD_CONFIG_PROMPT_API_KEY    = "Enter CloudCoreo api key[%s]: "
 	CMD_CONFIG_PROMPT_SECRET_KEY = "Enter CloudCoreo secret key[%s]: "
 	CMD_CONFIG_PROMPT_TEAM_ID    = "Enter CloudCoreo team ID[%s]: "
+
+	CMD_CONFIG_LIST_SHORT             = "List all user profiles"
+	CMD_CONFIG_LIST_LONG              = `List all user profiles.`
 
 	// composite command
 	CMD_COMPOSITE_USE   = "composite"

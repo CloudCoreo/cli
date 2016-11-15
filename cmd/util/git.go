@@ -37,9 +37,9 @@ func CreateGitSubmodule(directory, gitRepoURL string) error {
 		return fmt.Errorf(content.ERROR_INVALID_DIRECTORY, directory)
 	}
 
-	_, err = exec.Command("git", "remote", "show", "origin").CombinedOutput()
+	_, err = exec.Command("git", "rev-parse", "--is-inside-work-tree").CombinedOutput()
 	if err != nil {
-		return fmt.Errorf(content.ERROR_INVALID_DIRECTORY, directory)
+		return fmt.Errorf(content.ERROR_GIT_INIT_NOT_RAN)
 	}
 
 	output, err := exec.Command("git", "submodule", "add", "-f", gitRepoURL, "extends").CombinedOutput()
