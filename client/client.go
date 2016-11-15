@@ -53,7 +53,7 @@ type Client struct {
 	auth     Auth
 }
 
-// MakeClient
+// MakeClient make client
 func MakeClient(apiKey, secretKey, endpoint string) (*Client, error) {
 
 	if apiKey == content.NONE || secretKey == content.NONE {
