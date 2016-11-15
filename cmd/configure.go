@@ -33,16 +33,33 @@ var cmdConfigure = &cobra.Command{
 		secretKey := fmt.Sprintf("%s.%s", userProfile, content.SECRET_KEY)
 		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.TEAM_ID)
 
-		// load from config
-		apiKeyValue := util.GetValueFromConfig(apiKey, true)
-		secretKeyValue := util.GetValueFromConfig(secretKey, true)
-		teamIDValue := util.GetValueFromConfig(teamIDKey, false)
+		userAPIkey := ""
+		userSecretKey := ""
+		userTeamID := ""
 
-		// prompt user for input
-		var userAPIkey, userSecretKey, userTeamID string
-		getValueFromUser(&userAPIkey, fmt.Sprintf(content.CMD_CONFIG_PROMPT_API_KEY, apiKeyValue))
-		getValueFromUser(&userSecretKey, fmt.Sprintf(content.CMD_CONFIG_PROMPT_SECRET_KEY, secretKeyValue))
-		getValueFromUser(&userTeamID, fmt.Sprintf(content.CMD_CONFIG_PROMPT_TEAM_ID, teamIDValue))
+		if key != "None" {
+			userAPIkey = key
+		}
+
+		if secret != "None" {
+			userSecretKey = secret
+		}
+
+		if teamID != "None" {
+			userTeamID = teamID
+		}
+
+		if userAPIkey == "" && userSecretKey == "" && userTeamID == "" {
+			// load from config
+			apiKeyValue := util.GetValueFromConfig(apiKey, true)
+			secretKeyValue := util.GetValueFromConfig(secretKey, true)
+			teamIDValue := util.GetValueFromConfig(teamIDKey, false)
+
+			// prompt user for input
+			getValueFromUser(&userAPIkey, fmt.Sprintf(content.CMD_CONFIG_PROMPT_API_KEY, apiKeyValue))
+			getValueFromUser(&userSecretKey, fmt.Sprintf(content.CMD_CONFIG_PROMPT_SECRET_KEY, secretKeyValue))
+			getValueFromUser(&userTeamID, fmt.Sprintf(content.CMD_CONFIG_PROMPT_TEAM_ID, teamIDValue))
+		}
 
 		// replace values in config
 		util.UpdateConfig(apiKey, userAPIkey)
