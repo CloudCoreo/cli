@@ -101,7 +101,9 @@ const (
 	CMD_DELETE_USE  = "delete"
 	CMD_SHOW_USE    = "show"
 	CMD_DISABLE_USE = "disable"
+	CMD_ENABLE_USE  = "enable"
 	CMD_RUN_USE     = "run"
+	CMD_INIT_USE    = "init"
 
 	// plan command
 	CMD_PLAN_USE   = "plan"
@@ -111,6 +113,12 @@ const (
 	// plan list command
 	CMD_PLAN_LIST_SHORT = "CloudCoreo plan list command"
 	CMD_PLAN_LIST_LONG  = `CloudCoreo plan list command.`
+
+	// plan init command
+	CMD_PLAN_INIT_SHORT = "CloudCoreo plan init command"
+	CMD_PLAN_INIT_LONG  = `CloudCoreo plan init command.`
+
+	// plan delete command
 
 	// plan create command
 	CMD_PLAN_CREATE_SHORT = "CloudCoreo plan create command"
@@ -127,6 +135,10 @@ const (
 	// plan disable command
 	CMD_PLAN_DISABLE_SHORT = "CloudCoreo plan disable command"
 	CMD_PLAN_DISABLE_LONG  = `CloudCoreo plan disable command.`
+
+	// plan enable command
+	CMD_PLAN_ENABLE_SHORT = "CloudCoreo plan enable command"
+	CMD_PLAN_ENABLE_LONG  = `CloudCoreo plan enable command.`
 
 	// plan run command
 	CMD_PLAN_RUN_SHORT = "CloudCoreo plan run command"

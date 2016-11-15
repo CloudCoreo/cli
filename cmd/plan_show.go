@@ -31,7 +31,7 @@ var PlanShowCmd = &cobra.Command{
 	Short: content.CMD_PLAN_SHOW_SHORT,
 	Long:  content.CMD_PLAN_SHOW_LONG,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCloudShowOrDeleteFlag(cloudID); err != nil {
+		if err := util.CheckCompositeIdAndPlandIdFlag(compositeID, planID); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
@@ -47,7 +47,7 @@ var PlanShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		t, err := c.GetPlanByID(context.Background(), teamID, cloudID, planID)
+		t, err := c.GetPlanByID(context.Background(), teamID, compositeID, planID)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)

@@ -25,6 +25,7 @@ deploy:
   - coreo_darwin_amd64
   - coreo_windows_amd64.exe
   - coreo_windows_386.exe
+  draft: true
   on:
     repo: CloudCoreo/cli
     branch: dev
