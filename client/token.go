@@ -61,7 +61,7 @@ func (c *Client) GetTokenByID(ctx context.Context, tokenID string) (Token, error
 }
 
 // CreateToken method to create a token object
-func (c *Client) CreateToken(ctx context.Context, description, name string) (Token, error) {
+func (c *Client) CreateToken(ctx context.Context, name, description string) (Token, error) {
 	u, err := c.GetUser(ctx)
 	token := Token{}
 	if err != nil {
