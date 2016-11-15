@@ -27,9 +27,9 @@ import (
 
 // PlandEnabledCmd represents the based command for plan subcommands
 var PlandEnabledCmd = &cobra.Command{
-	Use:   content.CMD_DELETE_USE,
-	Short: content.CMD_PLAN_DELETE_SHORT,
-	Long:  content.CMD_PLAN_DELETE_LONG,
+	Use:   content.CMD_ENABLE_USE,
+	Short: content.CMD_PLAN_ENABLE_SHORT,
+	Long:  content.CMD_PLAN_ENABLE_LONG,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		if err := util.CheckCompositeIdAndPlandIdFlag(compositeID, planID); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())

@@ -25,29 +25,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// PlanShowCmd represents the based command for plan subcommands
-var PlanShowCmd = &cobra.Command{
-	Use:   content.CMD_SHOW_USE,
-	Short: content.CMD_PLAN_SHOW_SHORT,
-	Long:  content.CMD_PLAN_SHOW_LONG,
+var revision, region, interval, branch string
+
+// PlanInitCmd represents the based command for plan subcommands
+var PlanInitCmd = &cobra.Command{
+	Use:   content.CMD_INIT_USE,
+	Short: content.CMD_PLAN_INIT_SHORT,
+	Long:  content.CMD_PLAN_INIT_LONG,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCompositeIdAndPlandIdFlag(compositeID, planID); err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
-			os.Exit(-1)
-		}
+		util.CheckCompositeShowOrDeleteFlag(compositeID)
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
-
-		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
-			os.Exit(-1)
-		}
-
-		t, err := c.GetPlanByID(context.Background(), teamID, compositeID, planID)
+		t, err := c.InitPlan(context.Background(), branch, name, interval, region, teamID, cloudID, compositeID, revision)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -57,7 +50,6 @@ var PlanShowCmd = &cobra.Command{
 			util.PrettyPrintJSON(t)
 		} else {
 			table := util.NewTable()
-			table.SetHeader([]string{"ID", "Name", "TeamID"})
 			table.UseObj(t)
 			fmt.Println(table.Render())
 		}
@@ -65,8 +57,14 @@ var PlanShowCmd = &cobra.Command{
 }
 
 func init() {
-	PlanCmd.AddCommand(PlanShowCmd)
+	PlanCmd.AddCommand(PlanInitCmd)
 
-	PlanShowCmd.Flags().StringVarP(&planID, content.CMD_FLAG_PLAN_ID_LONG, content.CMD_FLAG_PLAN_ID_SHORT, "", content.CMD_FLAG_PLANID_DESCRIPTION)
-	PlanShowCmd.Flags().StringVarP(&compositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+	PlanInitCmd.Flags().StringVarP(&compositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+	PlanInitCmd.Flags().StringVarP(&cloudID, "cloud-id", "", "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+
+	PlanInitCmd.Flags().StringVarP(&name, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "", content.CMD_FLAG_NAME_DESCRIPTION)
+	PlanInitCmd.Flags().StringVarP(&revision, "gitcommit-id", "", "HEAD", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+	PlanInitCmd.Flags().StringVarP(&region, "region", "", "us-east-1", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+	PlanInitCmd.Flags().StringVarP(&interval, "interval", "", "1", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+	PlanInitCmd.Flags().StringVarP(&branch, "branch", "", "master", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
 }
