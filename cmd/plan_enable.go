@@ -27,45 +27,37 @@ import (
 
 // PlandEnabledCmd represents the based command for plan subcommands
 var PlandEnabledCmd = &cobra.Command{
-	Use:   content.CMD_ENABLE_USE,
-	Short: content.CMD_PLAN_ENABLE_SHORT,
-	Long:  content.CMD_PLAN_ENABLE_LONG,
+	Use:   content.CmdEnableUse,
+	Short: content.CmdPlanEnableShort,
+	Long:  content.CmdPlanEnableLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCompositeIdAndPlandIdFlag(compositeID, planID); err != nil {
+		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
+		if err := util.CheckCompositeIDAndPlandIDFlag(compositeID, planID, verbose); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
-		SetupCoreoCredentials()
-		SetupCoreoDefaultTeam()
-
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
-
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
 		p, err := c.EnablePlan(context.Background(), teamID, compositeID, planID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
-		if format == "json" {
-			util.PrettyPrintJSON(p)
-		} else {
-			table := util.NewTable()
-			table.UseObj(p)
-			fmt.Println(table.Render())
-		}
+		util.PrintResult(p, []string{"ID", "Name", "Enabled", "Branch", "RefreshInterval"}, json)
 	},
 }
 
 func init() {
 	PlanCmd.AddCommand(PlandEnabledCmd)
 
-	PlandEnabledCmd.Flags().StringVarP(&planID, content.CMD_FLAG_PLAN_ID_LONG, content.CMD_FLAG_PLAN_ID_SHORT, "", content.CMD_FLAG_PLANID_DESCRIPTION)
-	PlandEnabledCmd.Flags().StringVarP(&compositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+	PlandEnabledCmd.Flags().StringVarP(&planID, content.CmdFlagPlanIDLong, "", "", content.CmdFlagPlanIDDescription)
+	PlandEnabledCmd.Flags().StringVarP(&compositeID, content.CmdFlagCompositeIDLong, "", "", content.CmdFlagCompositeIDDescription)
 }

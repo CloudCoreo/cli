@@ -33,9 +33,9 @@ type Profile struct {
 }
 
 var cmdConfigureList = &cobra.Command{
-	Use:   content.CMD_LIST_USE,
-	Short: content.CMD_CONFIG_LIST_SHORT,
-	Long:  content.CMD_CONFIG_LIST_LONG,
+	Use:   content.CmdListUse,
+	Short: content.CmdConfigureListShort,
+	Long:  content.CmdConfigureListLong,
 	Run: func(cmd *cobra.Command, args []string) {
 		var config interface{}
 		err := viper.Unmarshal(&config)
@@ -46,12 +46,12 @@ var cmdConfigureList = &cobra.Command{
 		}
 
 		profiles := []*Profile{}
-		for k, _ := range config.(map[string]interface{}) {
+		for k := range config.(map[string]interface{}) {
 
 			//generate config keys based on user profile
-			apiKey := fmt.Sprintf("%s.%s", k, content.ACCESS_KEY)
-			secretKey := fmt.Sprintf("%s.%s", k, content.SECRET_KEY)
-			teamIDKey := fmt.Sprintf("%s.%s", k, content.TEAM_ID)
+			apiKey := fmt.Sprintf("%s.%s", k, content.AccessKey)
+			secretKey := fmt.Sprintf("%s.%s", k, content.SecretKey)
+			teamIDKey := fmt.Sprintf("%s.%s", k, content.TeamID)
 
 			profile := &Profile{
 				ProfileName: k,
@@ -65,7 +65,7 @@ var cmdConfigureList = &cobra.Command{
 		}
 
 		if len(profiles) == 0 {
-			fmt.Println(content.ERROR_NO_USER_PROFILE)
+			fmt.Println(content.ErrorNoUserProfileFound)
 			os.Exit(-1)
 		}
 
@@ -77,7 +77,6 @@ var cmdConfigureList = &cobra.Command{
 		table := util.NewTable()
 		table.UseObj(b)
 		fmt.Println(table.Render())
-
 	},
 }
 

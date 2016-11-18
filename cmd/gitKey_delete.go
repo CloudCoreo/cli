@@ -27,30 +27,27 @@ import (
 
 // GitKeyDeleteCmd represents the based command for gitkey subcommands
 var GitKeyDeleteCmd = &cobra.Command{
-	Use:   content.CMD_GITKEY_DELETE_USE,
-	Short: content.CMD_GITKEY_DELETE_SHORT,
-	Long:  content.CMD_GITKEY_DELETE_LONG,
+	Use:   content.CmdDeleteUse,
+	Short: content.CmdGitKeyDeleteShort,
+	Long:  content.CmdGitKeyDeleteLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := util.CheckGitKeyShowOrDeleteFlag(cloudID); err != nil {
+		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
+		if err := util.CheckGitKeyShowOrDeleteFlag(gitKeyID, verbose); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
-		SetupCoreoCredentials()
-		SetupCoreoDefaultTeam()
-
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(key, secret)
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
-
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
 		err = c.DeleteGitKeyByID(context.Background(), teamID, gitKeyID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
@@ -61,5 +58,5 @@ var GitKeyDeleteCmd = &cobra.Command{
 func init() {
 	GitKeyCmd.AddCommand(GitKeyDeleteCmd)
 
-	GitKeyDeleteCmd.Flags().StringVarP(&gitKeyID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_CLOUDID_DESCRIPTION)
+	GitKeyDeleteCmd.Flags().StringVarP(&gitKeyID, content.CmdFlagGitKeyIDLong, "", "", content.CmdFlagGitKeyIDDescription)
 }

@@ -25,9 +25,9 @@ import (
 )
 
 var cmdCompositeInit = &cobra.Command{
-	Use:   content.CMD_COMPOSITE_INIT_USE,
-	Short: content.CMD_COMPOSITE_INIT_SHORT,
-	Long:  content.CMD_COMPOSITE_INIT_LONG,
+	Use:   content.CmdInitUse,
+	Short: content.CmdCompositeInitShort,
+	Long:  content.CmdCompositeInitLong,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if directory == "" {
@@ -49,16 +49,16 @@ func genContent(directory string) {
 
 	// config.yml file
 	fmt.Println()
-	util.CreateFile(content.DEFAULT_FILES_CONFIG_YAML_FILE, directory, content.DEFAULT_FILES_CONFIG_YAML, false)
+	util.CreateFile(content.DefaultFilesConfigYAMLName, directory, content.DefaultFilesConfigYAMLContent, false)
 
 	// override folder
-	util.CreateFolder(content.DEFAULT_FILES_OVERRIDES_FOLDER, directory)
+	util.CreateFolder(content.DefaultFilesOverrideFolderName, directory)
 
-	overrideTree := fmt.Sprintf(content.DEFAULT_FILES_OVERRIDES_README_TREE, content.DEFAULT_FILES_README_CODE_TICKS, content.DEFAULT_FILES_README_CODE_TICKS)
+	overrideTree := fmt.Sprintf(content.DefaultFilesOverridesReadMeTree, content.DefaultFilesReadMeCodeTicks, content.DefaultFilesReadMeCodeTicks)
 
-	overrideReadmeContent := fmt.Sprintf("%s%s%s", content.DEFAULT_FILES_OVERRIDES_README_HEADER, overrideTree, content.DEFAULT_FILES_OVERRIDES_README_FOOTER)
+	overrideReadmeContent := fmt.Sprintf("%s%s%s", content.DefaultFilesOverridesReadMeHeader, overrideTree, content.DefaultFilesOverridesReadMeFooter)
 
-	err := util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory, content.DEFAULT_FILES_OVERRIDES_FOLDER), overrideReadmeContent, false)
+	err := util.CreateFile(content.DefaultFilesReadMEName, path.Join(directory, content.DefaultFilesOverrideFolderName), overrideReadmeContent, false)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())
@@ -67,36 +67,36 @@ func genContent(directory string) {
 	}
 
 	// services folder
-	util.CreateFolder(content.DEFAULT_FILES_SERVICES_FOLDER, directory)
+	util.CreateFolder(content.DefaultFilesServicesFolder, directory)
 
-	err = util.CreateFile(content.DEFAULT_FILES_CONFIG_RB_FILE, path.Join(directory, content.DEFAULT_FILES_SERVICES_FOLDER), content.DEFAULT_FILES_CONFIG_RB, false)
+	err = util.CreateFile(content.DefaultFilesConfigRBName, path.Join(directory, content.DefaultFilesServicesFolder), content.DefaultFilesConfigRBContent, false)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())
 		os.Exit(-1)
 	}
 
-	servicesReadMeCode := fmt.Sprintf(content.DEFAULT_FILES_SERVICES_README_CODE, content.DEFAULT_FILES_README_CODE_TICKS, content.DEFAULT_FILES_README_CODE_TICKS)
+	servicesReadMeCode := fmt.Sprintf(content.DefaultFilesServicesReadMeCode, content.DefaultFilesReadMeCodeTicks, content.DefaultFilesReadMeCodeTicks)
 
-	servicesReadMeContent := fmt.Sprintf("%s%s", content.DEFAULT_FILES_SERVICES_README_HEADER, servicesReadMeCode)
+	servicesReadMeContent := fmt.Sprintf("%s%s", content.DefaultFilesServicesReadMeHeader, servicesReadMeCode)
 
-	err = util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory+content.DEFAULT_FILES_SERVICES_FOLDER), servicesReadMeContent, false)
+	err = util.CreateFile(content.DefaultFilesReadMEName, path.Join(directory+content.DefaultFilesServicesFolder), servicesReadMeContent, false)
 
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 
 	if err == nil {
-		fmt.Println(content.CMD_COMPOSITE_INIT_SUCCESS)
+		fmt.Println(content.CmdCompositeInitSuccess)
 	}
 }
 
 func genServerContent(directory string) {
 	//operational scripts dir
-	util.CreateFolder(content.DEFAULT_FILES_OPERATIONAL_SCRIPTS_FOLDER, directory)
+	util.CreateFolder(content.DefaultFilesOperationalScriptsFolder, directory)
 
 	// generate operational readme file
-	err := util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory, content.DEFAULT_FILES_OPERATIONAL_SCRIPTS_FOLDER), content.DEFAULT_FILES_OPERATIONAL_README_CONTENT, false)
+	err := util.CreateFile(content.DefaultFilesReadMEName, path.Join(directory, content.DefaultFilesOperationalScriptsFolder), content.DefaultFilesOperationalReadMeContent, false)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())
@@ -104,10 +104,10 @@ func genServerContent(directory string) {
 	}
 
 	//boot scripts dir
-	util.CreateFolder(content.DEFAULT_FILES_BOOT_SCRIPTS_FOLDER, directory)
+	util.CreateFolder(content.DefaultFilesBootScriptsFolder, directory)
 
 	//README.md
-	err = util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory, content.DEFAULT_FILES_BOOT_SCRIPTS_FOLDER), content.DEFAULT_FILES_BOOT_README_CONTENT, false)
+	err = util.CreateFile(content.DefaultFilesReadMEName, path.Join(directory, content.DefaultFilesBootScriptsFolder), content.DefaultFilesBootReadMeContent, false)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())
@@ -115,7 +115,7 @@ func genServerContent(directory string) {
 	}
 
 	//order.yaml
-	err = util.CreateFile(content.DEFAULT_FILES_ORDER_YAML_FILE, path.Join(directory, content.DEFAULT_FILES_BOOT_SCRIPTS_FOLDER), content.DEFAULT_FILES_BOOT_ORDER_YAML_CONTENT, false)
+	err = util.CreateFile(content.DefaultFilesOrderYAMLName, path.Join(directory, content.DefaultFilesBootScriptsFolder), content.DefaultFilesBootOrderYAMLContent, false)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())
@@ -123,10 +123,10 @@ func genServerContent(directory string) {
 	}
 
 	//shutdown scripts dir
-	util.CreateFolder(content.DEFAULT_FILES_SHUTDOWN_SCRIPTS_FOLDER, directory)
+	util.CreateFolder(content.DefaultFilesShutdownScriptsFolder, directory)
 
 	//README.md
-	err = util.CreateFile(content.DEFAULT_FILES_README_FILE, path.Join(directory, content.DEFAULT_FILES_SHUTDOWN_SCRIPTS_FOLDER), content.DEFAULT_FILES_SHUTDOWN_README_CONTENT, false)
+	err = util.CreateFile(content.DefaultFilesReadMEName, path.Join(directory, content.DefaultFilesShutdownScriptsFolder), content.DefaultFilesShutDownReadMeContent, false)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())
@@ -134,7 +134,7 @@ func genServerContent(directory string) {
 	}
 
 	//order.yaml
-	err = util.CreateFile(content.DEFAULT_FILES_ORDER_YAML_FILE, path.Join(directory, content.DEFAULT_FILES_SHUTDOWN_SCRIPTS_FOLDER), content.DEFAULT_FILES_SHUTDOWN_ORDER_YAML_CONTENT, false)
+	err = util.CreateFile(content.DefaultFilesOrderYAMLName, path.Join(directory, content.DefaultFilesShutdownScriptsFolder), content.DefaultFilesShutDownOrderYAMLContent, false)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())
@@ -145,6 +145,6 @@ func genServerContent(directory string) {
 func init() {
 	CompositeCmd.AddCommand(cmdCompositeInit)
 
-	cmdCompositeInit.Flags().StringVarP(&directory, content.CMD_FLAG_DIRECTORY_LONG, content.CMD_FLAG_DIRECTORY_SHORT, "", content.CMD_FLAG_DIRECTORY_DESCRIPTION)
-	cmdCompositeInit.Flags().BoolVarP(&serverDir, content.CMD_FLAG_SERVER_LONG, content.CMD_FLAG_SERVER_SHORT, false, content.CMD_FLAG_SERVER_DESCRIPTION)
+	cmdCompositeInit.Flags().StringVarP(&directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
+	cmdCompositeInit.Flags().BoolVarP(&serverDir, content.CmdFlagServerLong, content.CmdFlagServerShort, false, content.CmdFlagServerDescription)
 }

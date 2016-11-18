@@ -1,10 +1,23 @@
+// Copyright © 2016 Paul Allen <paul@cloudcoreo.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package client
 
 import (
 	"bytes"
+	"context"
 	"fmt"
-
-	"golang.org/x/net/context"
 )
 
 // GitKey struct for api payload
@@ -18,26 +31,32 @@ type GitKey struct {
 }
 
 // GetGitKeys method for gitKey command
-func (c *Client) GetGitKeys(ctx context.Context, teamID string) ([]GitKey, error) {
-	gitKeys := []GitKey{}
+func (c *Client) GetGitKeys(ctx context.Context, teamID string) ([]*GitKey, error) {
+	gitKeys := []*GitKey{}
 	teams, err := c.GetTeams(ctx)
 
 	if err != nil {
-		return gitKeys, err
+		return nil, NewError(err.Error())
 	}
 
 	for _, team := range teams {
 		if team.ID == teamID {
-			gitKeyLink, err := GetLinkByRef(team.Links, "gitKeys")
+			gitKeyLink, e := GetLinkByRef(team.Links, "gitKeys")
 
-			if err != nil {
-				return gitKeys, err
+			if e != nil {
+				return nil, NewError(err.Error())
 			}
 
-			err = c.Do(ctx, "GET", gitKeyLink.Href, nil, &gitKeys)
-			if err != nil {
-				return gitKeys, err
+			e = c.Do(ctx, "GET", gitKeyLink.Href, nil, &gitKeys)
+			if e != nil {
+				return nil, NewError(err.Error())
 			}
+		}
+	}
+
+	if len(gitKeys) == 0 {
+		if err != nil {
+			return nil, NewError(fmt.Sprintf("No composites found under team ID %s.", teamID))
 		}
 	}
 
@@ -45,13 +64,13 @@ func (c *Client) GetGitKeys(ctx context.Context, teamID string) ([]GitKey, error
 }
 
 // GetGitKeyByID method for gitKey command
-func (c *Client) GetGitKeyByID(ctx context.Context, teamID, gitKeyID string) (GitKey, error) {
-	gitKey := GitKey{}
+func (c *Client) GetGitKeyByID(ctx context.Context, teamID, gitKeyID string) (*GitKey, error) {
+	gitKey := &GitKey{}
 
 	gitKeys, err := c.GetGitKeys(ctx, teamID)
 
 	if err != nil {
-		return gitKey, err
+		return nil, NewError(err.Error())
 	}
 
 	for _, g := range gitKeys {
@@ -61,33 +80,41 @@ func (c *Client) GetGitKeyByID(ctx context.Context, teamID, gitKeyID string) (Gi
 		}
 	}
 
+	if gitKey.ID == "" {
+		return nil, NewError(fmt.Sprintf("No gitKey with ID %s found under team ID %s.", gitKey, teamID))
+	}
+
 	return gitKey, nil
 }
 
 // CreateGitKey method to create a gitKey object
-func (c *Client) CreateGitKey(ctx context.Context, teamID, keyMaterial, name string) (GitKey, error) {
-	gitKey := GitKey{}
+func (c *Client) CreateGitKey(ctx context.Context, teamID, keyMaterial, name string) (*GitKey, error) {
+	gitKey := &GitKey{}
 	teams, err := c.GetTeams(ctx)
 
 	if err != nil {
-		return gitKey, err
+		return nil, NewError(err.Error())
 	}
 
 	for _, team := range teams {
 		if team.ID == teamID {
-			gitKeyPlayLoad := fmt.Sprintf(`{"keyMaterial":"%s","name":"%s","teamId":"%s"}`, keyMaterial, name, teamID)
-			var jsonStr = []byte(gitKeyPlayLoad)
+			gitKeyPayLoad := fmt.Sprintf(`{"keyMaterial":"%s","name":"%s","teamId":"%s"}`, keyMaterial, name, teamID)
+			var jsonStr = []byte(gitKeyPayLoad)
 			gitKeyLink, err := GetLinkByRef(team.Links, "gitKeys")
 			if err != nil {
-				return gitKey, err
+				return nil, NewError(err.Error())
 			}
 
 			err = c.Do(ctx, "POST", gitKeyLink.Href, bytes.NewBuffer(jsonStr), &gitKey)
 			if err != nil {
-				return gitKey, err
+				return nil, NewError(err.Error())
 			}
 			break
 		}
+	}
+
+	if gitKey.ID == "" {
+		return nil, NewError(fmt.Sprintf("Failed to create gitKey under team ID %s.", teamID))
 	}
 
 	return gitKey, nil
@@ -101,20 +128,27 @@ func (c *Client) DeleteGitKeyByID(ctx context.Context, teamID, gitKeyID string) 
 		return err
 	}
 
+	gitKeyFound := false
+
 	for _, gitKey := range gitKeys {
 		if gitKey.ID == gitKeyID {
+			gitKeyFound = true
 			gitKeyLink, err := GetLinkByRef(gitKey.Links, "self")
 
 			if err != nil {
-				return err
+				return NewError(err.Error())
 			}
 
 			err = c.Do(ctx, "DELETE", gitKeyLink.Href, nil, nil)
 			if err != nil {
-				return err
+				return NewError(err.Error())
 			}
 			break
 		}
+	}
+
+	if !gitKeyFound {
+		return NewError(fmt.Sprintf("Failed to delete git key with ID %s found under team ID %s.", gitKeyID, teamID))
 	}
 
 	return nil

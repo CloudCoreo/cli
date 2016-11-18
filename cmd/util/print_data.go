@@ -1,3 +1,17 @@
+// Copyright © 2016 Paul Allen <paul@cloudcoreo.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package util
 
 import (
@@ -5,6 +19,8 @@ import (
 
 	"encoding/json"
 	"fmt"
+
+	"os"
 
 	"github.com/bndr/gotabulate"
 )
@@ -112,13 +128,13 @@ func (c *Table) UseObj(obj interface{}) *Table {
 func (c *Table) Render() string {
 	t := gotabulate.Create(c.Rows)
 	t.SetHeaders(c.Header)
-	t.SetAlign("left")
+	t.SetAlign("center")
 	// Set the Empty String (optional)
-	t.SetEmptyString(" None")
+	t.SetEmptyString("None")
 	if c.MaxCellSize != 0 {
 		t.SetMaxCellSize(c.MaxCellSize)
 	}
-	return t.Render("grid")
+	return t.Render("simple")
 }
 
 // PrettyPrintJSON pretty print json
@@ -129,4 +145,25 @@ func PrettyPrintJSON(obj interface{}) {
 		return
 	}
 	fmt.Println(string(jsonData))
+}
+
+//PrintError print error
+func PrintError(err error, json bool) {
+	if json {
+		PrettyPrintJSON(err)
+	} else {
+		fmt.Fprintf(os.Stderr, err.Error())
+	}
+}
+
+//PrintResult print result
+func PrintResult(t interface{}, headers []string, json bool) {
+	if json {
+		PrettyPrintJSON(t)
+	} else {
+		table := NewTable()
+		table.SetHeader(headers)
+		table.UseObj(t)
+		fmt.Println(table.Render())
+	}
 }

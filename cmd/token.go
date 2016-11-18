@@ -23,9 +23,9 @@ var tokenID string
 
 // TokenCmd represents the based command for token subcommands
 var TokenCmd = &cobra.Command{
-	Use:   content.CMD_TOKEN_USE,
-	Short: content.CMD_TOKEN_SHORT,
-	Long:  content.CMD_TOKEN_LONG,
+	Use:   content.CmdTokenUse,
+	Short: content.CmdTokenShort,
+	Long:  content.CmdTokenLong,
 }
 
 func init() {

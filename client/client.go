@@ -15,6 +15,7 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -22,7 +23,6 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/CloudCoreo/cli/cmd/content"
 	"golang.org/x/net/context/ctxhttp"
 )
 
@@ -56,8 +56,8 @@ type Client struct {
 // MakeClient make client
 func MakeClient(apiKey, secretKey, endpoint string) (*Client, error) {
 
-	if apiKey == content.NONE || secretKey == content.NONE {
-		return &Client{}, fmt.Errorf(content.ERROR_MISSING_API_KEY_SECRET_KEY)
+	if apiKey == "None" || secretKey == "None" || apiKey == "" || secretKey == "" {
+		return nil, NewError("Missing API key or/and Secret key. Please run 'Coreo configure' to configure them.")
 	}
 
 	a := Auth{APIKey: apiKey, SecretKey: secretKey}
@@ -96,15 +96,18 @@ func (c *Client) Do(ctx context.Context, method, path string, body io.Reader, ob
 
 	defer resp.Body.Close()
 
+	if resp.StatusCode >= 300 {
+		message := new(bytes.Buffer)
+		message.ReadFrom(resp.Body)
+		msg := fmt.Sprintf("%s, HTTP Error: %s, HTTP Status Code: %d", message.String(), http.StatusText(resp.StatusCode), resp.StatusCode)
+		return NewError(msg)
+	}
+
 	// Read all of resp.Body regardless of status code so we don't leak connections.
 	// The extra io.Copy is to ensure everything has been read, since a json.Decoder doesn't
 	// have that guarantee.
 	err = json.NewDecoder(resp.Body).Decode(obj)
 	io.Copy(ioutil.Discard, resp.Body)
-
-	if resp.StatusCode >= 300 {
-		return &Error{resp.StatusCode}
-	}
 
 	return err
 }
@@ -125,13 +128,4 @@ func (c *Client) buildRequest(method, urlPath string, body io.Reader) (*http.Req
 	}
 
 	return req, nil
-}
-
-// Error struct for statuscode
-type Error struct {
-	StatusCode int
-}
-
-func (e *Error) Error() string {
-	return fmt.Sprintf("HTTP error: %s", http.StatusText(e.StatusCode))
 }

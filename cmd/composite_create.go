@@ -27,9 +27,9 @@ import (
 
 // CompositeCreateCmd represents the based command for Composite subcommands
 var CompositeCreateCmd = &cobra.Command{
-	Use:   content.CMD_COMPOSITE_CREATE_USE,
-	Short: content.CMD_COMPOSITE_CREATE_SHORT,
-	Long:  content.CMD_COMPOSITE_CREATE_LONG,
+	Use:   content.CmdCreateUse,
+	Short: content.CmdCompositeCreateShort,
+	Long:  content.CmdCompositeCreateLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		if err := util.CheckCompositeCreateFlags(name, gitRepoURL); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
@@ -40,27 +40,25 @@ var CompositeCreateCmd = &cobra.Command{
 
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
-		t, err := c.CreateComposite(context.Background(), gitRepoURL, name, teamID)
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
-		if format == "json" {
-			util.PrettyPrintJSON(t)
-		} else {
-			table := util.NewTable()
-			table.SetHeader([]string{"ID", "Name", "TeamID"})
-			table.UseObj(t)
-			fmt.Println(table.Render())
+		t, err := c.CreateComposite(context.Background(), gitRepoURL, name, teamID)
+		if err != nil {
+			util.PrintError(err, json)
+			os.Exit(-1)
 		}
+
+		util.PrintResult(t, []string{"ID", "Name", "TeamID"}, json)
 	},
 }
 
 func init() {
 	CompositeCmd.AddCommand(CompositeCreateCmd)
 
-	CompositeCreateCmd.Flags().StringVarP(&name, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "", content.CMD_FLAG_NAME_DESCRIPTION)
-	CompositeCreateCmd.Flags().StringVarP(&gitRepoURL, content.CMD_FLAG_GIT_REPO_LONG, content.CMD_FLAG_GIT_REPO_SHORT, "", content.CMD_FLAG_GIT_REPO_DESCRIPTION)
+	CompositeCreateCmd.Flags().StringVarP(&name, content.CmdFlagNameLong, content.CmdFlagNameShort, "", content.CmdFlagNameDescription)
+	CompositeCreateCmd.Flags().StringVarP(&gitRepoURL, content.CmdFlagGitRepoLong, content.CmdFlagGitRepoShort, "", content.CmdFlagGitRepoDescription)
 }

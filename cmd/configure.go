@@ -23,15 +23,15 @@ import (
 )
 
 var cmdConfigure = &cobra.Command{
-	Use:   content.CMD_CONFIG_USE,
-	Short: content.CMD_CONFIG_SHORT,
-	Long:  content.CMD_CONFIG_LONG,
+	Use:   content.CmdConfigureUse,
+	Short: content.CmdConfigureShort,
+	Long:  content.CmdConfigureLong,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		//generate config keys based on user profile
-		apiKey := fmt.Sprintf("%s.%s", userProfile, content.ACCESS_KEY)
-		secretKey := fmt.Sprintf("%s.%s", userProfile, content.SECRET_KEY)
-		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.TEAM_ID)
+		apiKey := fmt.Sprintf("%s.%s", userProfile, content.AccessKey)
+		secretKey := fmt.Sprintf("%s.%s", userProfile, content.SecretKey)
+		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.TeamID)
 
 		userAPIkey := ""
 		userSecretKey := ""
@@ -56,9 +56,9 @@ var cmdConfigure = &cobra.Command{
 			teamIDValue := util.GetValueFromConfig(teamIDKey, false)
 
 			// prompt user for input
-			getValueFromUser(&userAPIkey, fmt.Sprintf(content.CMD_CONFIG_PROMPT_API_KEY, apiKeyValue))
-			getValueFromUser(&userSecretKey, fmt.Sprintf(content.CMD_CONFIG_PROMPT_SECRET_KEY, secretKeyValue))
-			getValueFromUser(&userTeamID, fmt.Sprintf(content.CMD_CONFIG_PROMPT_TEAM_ID, teamIDValue))
+			getValueFromUser(&userAPIkey, fmt.Sprintf(content.CmdConfigurePromptAPIKEY, apiKeyValue))
+			getValueFromUser(&userSecretKey, fmt.Sprintf(content.CmdConfigurePromptSecretKEY, secretKeyValue))
+			getValueFromUser(&userTeamID, fmt.Sprintf(content.CmdConfigurePromptTeamID, teamIDValue))
 		}
 
 		// replace values in config

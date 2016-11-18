@@ -45,9 +45,9 @@ var docHeaders = map[string]string{
 var docOrder = []string{"head.md", "description.md", "hierarchy.md", "config.yaml", "tags.md", "categories.md", "diagram.md", "icon.md"}
 
 var cmdCompositeGendoc = &cobra.Command{
-	Use:   content.CMD_COMPOSITE_GENDOC_USE,
-	Short: content.CMD_COMPOSITE_GENDOC_SHORT,
-	Long:  content.CMD_COMPOSITE_GENDOC_LONG,
+	Use:   content.CmdGendocUse,
+	Short: content.CmdCompositeGendocShort,
+	Long:  content.CmdCompositeGendocLong,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if directory == "" {
@@ -67,7 +67,7 @@ var cmdCompositeGendoc = &cobra.Command{
 
 				fileContent, err := ioutil.ReadFile(path.Join(directory, fileName))
 				if err != nil {
-					fmt.Println(fmt.Sprintf(content.ERROR_MISSING_FILE, fileName))
+					fmt.Println(fmt.Sprintf(content.ErrorMissingFile, fileName))
 					err := util.CreateFile(fileName, directory, "", false)
 					if err != nil {
 						fmt.Fprintf(os.Stderr, err.Error())
@@ -85,7 +85,7 @@ var cmdCompositeGendoc = &cobra.Command{
 			}
 		}
 
-		err := util.CreateFile(content.DEFAULT_FILES_README_FILE, directory, readmeFileContent.String(), true)
+		err := util.CreateFile(content.DefaultFilesReadMEName, directory, readmeFileContent.String(), true)
 
 		if err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
@@ -93,7 +93,7 @@ var cmdCompositeGendoc = &cobra.Command{
 
 		}
 
-		fmt.Println(content.CMD_COMPOSITE_GENDOC_SUCCESS)
+		fmt.Println(content.CmdCompositeGendocSuccess)
 	},
 }
 
@@ -139,7 +139,7 @@ func generateConfigContent(configFilePath string) (string, error) {
 		func(required bool, defaultValue interface{}) bool {
 			return required && defaultValue == nil
 		},
-		fmt.Sprintf("\n## %s\n\n", content.DEFAULT_FILES_GENDOC_README_REQUIRED_NO_DEFAULT_HEADER),
+		fmt.Sprintf("\n## %s\n\n", content.DefautlFilesGenDocReadMeRquiredNoDefaultHeader),
 		false)
 
 	requiredContent, err := generateVariablesContent(
@@ -147,7 +147,7 @@ func generateConfigContent(configFilePath string) (string, error) {
 		func(required bool, defaultValue interface{}) bool {
 			return required && defaultValue != nil
 		},
-		fmt.Sprintf("\n## %s\n\n", content.DEFAULT_FILES_GENDOC_README_REQUIRED_DEFAULT_HEADER),
+		fmt.Sprintf("\n## %s\n\n", content.DefautlFilesGenDocReadMeRquiredDefaultHeader),
 		true)
 
 	notRequiredDefaultContent, err := generateVariablesContent(
@@ -155,7 +155,7 @@ func generateConfigContent(configFilePath string) (string, error) {
 		func(required bool, defaultValue interface{}) bool {
 			return !required && defaultValue != nil
 		},
-		fmt.Sprintf("\n## %s\n\n", content.DEFAULT_FILES_GENDOC_README_NO_REQUIRED_DEFAULT_HEADER),
+		fmt.Sprintf("\n## %s\n\n", content.DefautlFilesGenDocReadMeNoRquiredDefaultHeader),
 		true)
 
 	theRestContent, err := generateVariablesContent(
@@ -163,7 +163,7 @@ func generateConfigContent(configFilePath string) (string, error) {
 		func(required bool, defaultValue interface{}) bool {
 			return !required && defaultValue == nil
 		},
-		fmt.Sprintf("\n## %s\n\n", content.DEFAULT_FILES_GENDOC_README_NO_REQUIRED_NO_DEFAULT_HEADER),
+		fmt.Sprintf("\n## %s\n\n", content.DefautlFilesGenDocReadMeNoRquiredNoDefaultHeader),
 		true)
 
 	return missingRequiredContent + requiredContent + notRequiredDefaultContent + theRestContent, err
@@ -226,9 +226,9 @@ func generateVariablesContent(config YamlConfig, check func(bool, interface{}) b
 					// if unknown type is provided try to cast it to string
 					if c, ok := option.defaultValues.(string); ok {
 						if strings.Contains(c, "\n") {
-							contentBytes.WriteString("\n  * default: \n" + content.DEFAULT_FILES_README_CODE_TICKS + "\n")
+							contentBytes.WriteString("\n  * default: \n" + content.DefaultFilesReadMeCodeTicks + "\n")
 							contentBytes.WriteString(option.defaultValues.(string) + "\n")
-							contentBytes.WriteString(content.DEFAULT_FILES_README_CODE_TICKS)
+							contentBytes.WriteString(content.DefaultFilesReadMeCodeTicks)
 						} else {
 							contentBytes.WriteString("\n  * default: ")
 							contentBytes.WriteString(option.defaultValues.(string) + "\n")
@@ -275,5 +275,5 @@ func convertStringSlice(slice interface{}) []string {
 func init() {
 	CompositeCmd.AddCommand(cmdCompositeGendoc)
 
-	cmdCompositeGendoc.Flags().StringVarP(&directory, content.CMD_FLAG_DIRECTORY_LONG, content.CMD_FLAG_DIRECTORY_SHORT, "", content.CMD_FLAG_DIRECTORY_DESCRIPTION)
+	cmdCompositeGendoc.Flags().StringVarP(&directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
 }

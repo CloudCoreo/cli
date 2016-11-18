@@ -27,11 +27,11 @@ import (
 
 // CloudDeleteCmd represents the based command for cloud subcommands
 var CloudDeleteCmd = &cobra.Command{
-	Use:   content.CMD_CLOUD_DELETE_USE,
-	Short: content.CMD_CLOUD_DELETE_SHORT,
-	Long:  content.CMD_CLOUD_DELETE_LONG,
+	Use:   content.CmdDeleteUse,
+	Short: content.CmdCloudDeleteShort,
+	Long:  content.CmdCloudDeleteLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCloudShowOrDeleteFlag(cloudID); err != nil {
+		if err := util.CheckCloudShowOrDeleteFlag(cloudID, verbose); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
@@ -40,25 +40,25 @@ var CloudDeleteCmd = &cobra.Command{
 
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
 
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
 		err = c.DeleteCloudAccountByID(context.Background(), teamID, cloudID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
-		fmt.Println(content.ERROR_CLOUDACCOUNT_DELETED)
+		fmt.Println(content.InfoCloudAccountDeleted)
 	},
 }
 
 func init() {
 	CloudCmd.AddCommand(CloudDeleteCmd)
 
-	CloudDeleteCmd.Flags().StringVarP(&cloudID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_CLOUDID_DESCRIPTION)
+	CloudDeleteCmd.Flags().StringVarP(&cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescripton)
 }

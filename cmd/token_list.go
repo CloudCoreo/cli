@@ -16,7 +16,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/CloudCoreo/cli/client"
@@ -27,25 +26,24 @@ import (
 
 // TokenListCmd represents the based command for token subcommands
 var TokenListCmd = &cobra.Command{
-	Use:   content.CMD_TOKEN_LIST_USE,
-	Short: content.CMD_TOKEN_LIST_SHORT,
-	Long:  content.CMD_TOKEN_LIST_LONG,
+	Use:   content.CmdListUse,
+	Short: content.CmdTokenListShort,
+	Long:  content.CmdTokenListLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
-
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
 		t, err := c.GetTokens(context.Background())
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
@@ -54,14 +52,7 @@ var TokenListCmd = &cobra.Command{
 			b[i] = t[i]
 		}
 
-		if format == "json" {
-			util.PrettyPrintJSON(t)
-		} else {
-			table := util.NewTable()
-			table.SetHeader([]string{"ID", "Name", "Description"})
-			table.UseObj(b)
-			fmt.Println(table.Render())
-		}
+		util.PrintResult(b, []string{"ID", "Name", "Description"}, json)
 	},
 }
 

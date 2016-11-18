@@ -27,40 +27,37 @@ import (
 
 // GitKeyAddCmd represents the based command for gitkey subcommands
 var GitKeyAddCmd = &cobra.Command{
-	Use:   content.CMD_GITKEY_ADD_USE,
-	Short: content.CMD_GITKEY_ADD_SHORT,
-	Long:  content.CMD_GITKEY_ADD_LONG,
+	Use:   content.CmdAddUse,
+	Short: content.CmdGitKeyAddShort,
+	Long:  content.CmdGitKeyAddLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
 		if err := util.CheckGitKeyAddFlags(resourceName, resourceSecret); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
-		SetupCoreoCredentials()
-		SetupCoreoDefaultTeam()
-
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
-		t, err := c.CreateGitKey(context.Background(), teamID, resourceSecret, resourceName)
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
-		if format == "json" {
-			util.PrettyPrintJSON(t)
-		} else {
-			table := util.NewTable()
-			table.SetHeader([]string{"ID", "Name", "TeamID"})
-			table.UseObj(t)
-			fmt.Println(table.Render())
+		t, err := c.CreateGitKey(context.Background(), teamID, resourceSecret, resourceName)
+		if err != nil {
+			util.PrintError(err, json)
+			os.Exit(-1)
 		}
+		
+		util.PrintResult(t, []string{"ID", "Name", "TeamID"}, json)
 	},
 }
 
 func init() {
 	GitKeyCmd.AddCommand(GitKeyAddCmd)
 
-	GitKeyAddCmd.Flags().StringVarP(&resourceSecret, content.CMD_FLAG_SECRET_LONG, content.CMD_FLAG_SECRET_SHORT, "", content.CMD_FLAG_SECRET_DESCRIPTION)
-	GitKeyAddCmd.Flags().StringVarP(&resourceName, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "", content.CMD_FLAG_NAME_DESCRIPTION)
+	GitKeyAddCmd.Flags().StringVarP(&resourceSecret, content.CmdFlagSecretLong, content.CmdFlagSecretShort, "", content.CmdFlagSecretDescription)
+	GitKeyAddCmd.Flags().StringVarP(&resourceName, content.CmdFlagNameLong, content.CmdFlagNameShort, "", content.CmdFlagNameDescription)
 }

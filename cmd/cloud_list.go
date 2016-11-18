@@ -16,7 +16,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/CloudCoreo/cli/client"
@@ -27,19 +26,24 @@ import (
 
 // CloudListCmd represents the based command for cloud subcommands
 var CloudListCmd = &cobra.Command{
-	Use:   content.CMD_CLOUD_LIST_USE,
-	Short: content.CMD_CLOUD_LIST_SHORT,
-	Long:  content.CMD_CLOUD_LIST_LONG,
+	Use:   content.CmdListUse,
+	Short: content.CmdCloudListShort,
+	Long:  content.CmdCloudListLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
+		if err != nil {
+			util.PrintError(err, json)
+			return
+		}
+
 		t, err := c.GetCloudAccounts(context.Background(), teamID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
@@ -48,14 +52,7 @@ var CloudListCmd = &cobra.Command{
 			b[i] = t[i]
 		}
 
-		if format == "json" {
-			util.PrettyPrintJSON(t)
-		} else {
-			table := util.NewTable()
-			table.SetHeader([]string{"ID", "Name", "TeamID"})
-			table.UseObj(b)
-			fmt.Println(table.Render())
-		}
+		util.PrintResult(b, []string{"ID", "Name", "TeamID"}, json)
 	},
 }
 
