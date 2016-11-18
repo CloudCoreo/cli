@@ -1,18 +1,22 @@
 language: go
-go: 1.7
+go:
+  - 1.7
+ - tip
 gobuild_args: -ldflags "-X cmd.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X cmd.githash=`git
-  rev-parse HEAD` -X cmd.version=`cat VERSION`"
+  rev-parse HEAD` -X cmd.version=`cat VERSION` -X cmd.buildID=$TRAVIS_BUILD_NUMBER"
 install:
-- go get github.com/mattn/goveralls
+  - go get github.com/mattn/goveralls
+  - go get github.com/golang/lint/golint
 script:
-- $HOME/gopath/bin/goveralls -service=travis-ci
+  - go vet $(go list ./... | grep -v vendor)
+  - $HOME/gopath/bin/goveralls -service=travis-ci
 before_deploy:
-- GOOS=linux GOARCH=amd64 go build -o coreo_linux_amd64
-- GOOS=linux GOARCH=386 go build -o coreo_linux_386
-- GOOS=linux GOARCH=arm go build -o coreo_linux_arm
-- GOOS=darwin GOARCH=amd64 go build -o coreo_darwin_amd64
-- GOOS=windows GOARCH=amd64 go build -o coreo_windows_amd64.exe
-- GOOS=windows GOARCH=386 go build -o coreo_windows_386.exe
+  - GOOS=linux GOARCH=amd64 go build -o coreo_linux_amd64
+  - GOOS=linux GOARCH=386 go build -o coreo_linux_386
+  - GOOS=linux GOARCH=arm go build -o coreo_linux_arm
+  - GOOS=darwin GOARCH=amd64 go build -o coreo_darwin_amd64
+  - GOOS=windows GOARCH=amd64 go build -o coreo_windows_amd64.exe
+  - GOOS=windows GOARCH=386 go build -o coreo_windows_386.exe
 deploy:
   provider: releases
   skip_cleanup: true

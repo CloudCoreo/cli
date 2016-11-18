@@ -24,6 +24,7 @@ import (
 var version = "No Version Provided"
 var buildstamp = "Unknown buildstamp"
 var githash = "Unknown githash"
+var buildID = "Unknown buildID"
 
 func init() {
 	RootCmd.AddCommand(versionCmd)
@@ -37,5 +38,6 @@ var versionCmd = &cobra.Command{
 		fmt.Printf("Version: %s\n", version)
 		fmt.Printf("Git hash: %s\n", githash)
 		fmt.Printf("Buildstamp: %s\n", buildstamp)
+		fmt.Printf("BuildID: %s\n", buildID)
 	},
 }
