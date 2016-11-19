@@ -7,7 +7,6 @@ install:
   - go get github.com/mattn/goveralls
   - go get github.com/golang/lint/golint
 script:
-  - golint $(go list ./... | grep -v vendor)
   - go vet $(go list ./... | grep -v vendor)
   - $HOME/gopath/bin/goveralls -service=travis-ci
 before_deploy:
