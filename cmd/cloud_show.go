@@ -31,13 +31,13 @@ var CloudShowCmd = &cobra.Command{
 	Short: content.CmdCloudShowShort,
 	Long:  content.CmdCloudShowLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
 		if err := util.CheckCloudShowOrDeleteFlag(cloudID, verbose); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
-		SetupCoreoCredentials()
-		SetupCoreoDefaultTeam()
-
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.EndpointAddress)

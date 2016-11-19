@@ -30,6 +30,8 @@ var TokenListCmd = &cobra.Command{
 	Short: content.CmdTokenListShort,
 	Long:  content.CmdTokenListLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 

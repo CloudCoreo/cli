@@ -30,6 +30,8 @@ var TeamShowCmd = &cobra.Command{
 	Short: content.CmdTeamShowShort,
 	Long:  content.CmdTeamShowLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 

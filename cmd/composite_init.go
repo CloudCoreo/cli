@@ -29,7 +29,7 @@ var cmdCompositeInit = &cobra.Command{
 	Short: content.CmdCompositeInitShort,
 	Long:  content.CmdCompositeInitLong,
 	Run: func(cmd *cobra.Command, args []string) {
-
+		util.CheckArgsCount(args)
 		if directory == "" {
 			directory, _ = os.Getwd()
 		}

@@ -30,6 +30,8 @@ var GitKeyListCmd = &cobra.Command{
 	Short: content.CmdGitKeyListShort,
 	Long:  content.CmdGitKeyListLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 
@@ -52,7 +54,8 @@ var GitKeyListCmd = &cobra.Command{
 			b[i] = t[i]
 		}
 
-		util.PrintResult(b, []string{"ID", "Name", "TeamID"}, json)	},
+		util.PrintResult(b, []string{"ID", "Name", "TeamID"}, json)
+	},
 }
 
 func init() {

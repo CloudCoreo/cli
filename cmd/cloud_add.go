@@ -31,6 +31,7 @@ var CloudAddCmd = &cobra.Command{
 	Short: content.CmdCloudAddShort,
 	Long:  content.CmdCloudAddLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 		if err := util.CheckCloudAddFlags(resourceName, resourceKey, resourceSecret); err != nil {

@@ -31,6 +31,8 @@ var TokenDeleteCmd = &cobra.Command{
 	Short: content.CmdTokenDeleteShort,
 	Long:  content.CmdTokenDeleteLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 

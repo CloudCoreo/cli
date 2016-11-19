@@ -31,13 +31,13 @@ var CompositeCreateCmd = &cobra.Command{
 	Short: content.CmdCompositeCreateShort,
 	Long:  content.CmdCompositeCreateLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
 		if err := util.CheckCompositeCreateFlags(name, gitRepoURL); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
-		SetupCoreoCredentials()
-		SetupCoreoDefaultTeam()
-
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.EndpointAddress)

@@ -37,6 +37,8 @@ var cmdConfigureList = &cobra.Command{
 	Short: content.CmdConfigureListShort,
 	Long:  content.CmdConfigureListLong,
 	Run: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		var config interface{}
 		err := viper.Unmarshal(&config)
 

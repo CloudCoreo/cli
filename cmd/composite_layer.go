@@ -29,13 +29,14 @@ var cmdCompositeLayer = &cobra.Command{
 	Short: content.CmdCompositeLayerShort,
 	Long:  content.CmdCompositeLayerLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		if err := util.CheckLayersFlags(name, gitRepoURL); err != nil {
 			fmt.Println("A composite name is required: -n")
 			os.Exit(1)
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-
 		if err := util.CheckGitInstall(); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)

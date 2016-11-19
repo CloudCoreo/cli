@@ -78,6 +78,9 @@ const (
 	//ErrorNoUserProfileFound error
 	ErrorNoUserProfileFound = "[ ERROR ] No user profile found. Set profile using 'Coreo configure' command\n"
 
+	//ErrorAcceptsNoArgs error
+	ErrorAcceptsNoArgs = "[ ERROR ] This command accepts no argument(s).\n"
+
 	//InfoCreatingGitSubmodule info
 	InfoCreatingGitSubmodule = "Creating gitsubmodule %s in %s...\n"
 

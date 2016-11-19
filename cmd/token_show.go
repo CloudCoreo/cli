@@ -31,6 +31,8 @@ var TokenShowCmd = &cobra.Command{
 	Short: content.CmdTokenShowShort,
 	Long:  content.CmdTokenShowLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 		if err := util.CheckTokenShowOrDeleteFlag(tokenID, verbose); err != nil {

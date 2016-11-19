@@ -31,6 +31,8 @@ var GitKeyAddCmd = &cobra.Command{
 	Short: content.CmdGitKeyAddShort,
 	Long:  content.CmdGitKeyAddLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 		if err := util.CheckGitKeyAddFlags(resourceName, resourceSecret); err != nil {
@@ -50,7 +52,7 @@ var GitKeyAddCmd = &cobra.Command{
 			util.PrintError(err, json)
 			os.Exit(-1)
 		}
-		
+
 		util.PrintResult(t, []string{"ID", "Name", "TeamID"}, json)
 	},
 }

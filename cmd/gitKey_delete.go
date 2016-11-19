@@ -31,6 +31,8 @@ var GitKeyDeleteCmd = &cobra.Command{
 	Short: content.CmdGitKeyDeleteShort,
 	Long:  content.CmdGitKeyDeleteLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 		if err := util.CheckGitKeyShowOrDeleteFlag(gitKeyID, verbose); err != nil {

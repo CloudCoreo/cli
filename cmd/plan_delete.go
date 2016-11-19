@@ -31,6 +31,8 @@ var PlandDeleteCmd = &cobra.Command{
 	Short: content.CmdPlanDeleteShort,
 	Long:  content.CmdPlanDeleteLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 		if err := util.CheckCompositeIDAndPlandIDFlag(compositeID, planID, verbose); err != nil {

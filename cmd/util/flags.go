@@ -16,6 +16,7 @@ package util
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/CloudCoreo/cli/cmd/content"
@@ -226,4 +227,12 @@ func CheckCompositeIDAndPlandIDFlag(compositeID, planID string, verbose bool) er
 	}
 
 	return nil
+}
+
+//CheckArgsCount check for args
+func CheckArgsCount(args []string) {
+	if len(args) > 0 {
+		fmt.Print(content.ErrorAcceptsNoArgs)
+		os.Exit(-1)
+	}
 }

@@ -49,6 +49,7 @@ var cmdCompositeGendoc = &cobra.Command{
 	Short: content.CmdCompositeGendocShort,
 	Long:  content.CmdCompositeGendocLong,
 	Run: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
 
 		if directory == "" {
 			directory, _ = os.Getwd()

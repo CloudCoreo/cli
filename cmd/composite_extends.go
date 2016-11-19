@@ -28,6 +28,7 @@ var cmdCompositeExtends = &cobra.Command{
 	Short: content.CmdCompositeExtendsShort,
 	Long:  content.CmdCompositeExtendsLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
 		if err := util.CheckExtendFlags(gitRepoURL); err != nil {
 			fmt.Println("A composite name is required: -n")
 			os.Exit(1)

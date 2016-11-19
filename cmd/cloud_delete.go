@@ -31,6 +31,7 @@ var CloudDeleteCmd = &cobra.Command{
 	Short: content.CmdCloudDeleteShort,
 	Long:  content.CmdCloudDeleteLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
 		if err := util.CheckCloudShowOrDeleteFlag(cloudID, verbose); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)

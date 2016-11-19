@@ -31,6 +31,8 @@ var CompositeShowCmd = &cobra.Command{
 	Short: content.CmdCompositeShowShort,
 	Long:  content.CmdCompositeShowLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 		if err := util.CheckCompositeShowOrDeleteFlag(compositeID, verbose); err != nil {

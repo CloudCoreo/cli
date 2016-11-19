@@ -30,9 +30,9 @@ var CompositeListCmd = &cobra.Command{
 	Short: content.CmdCompositeListShort,
 	Long:  content.CmdCompositeListLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
-
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		c, err := client.MakeClient(key, secret, content.EndpointAddress)
@@ -52,7 +52,7 @@ var CompositeListCmd = &cobra.Command{
 			b[i] = t[i]
 		}
 
-		util.PrintResult(b, []string{"ID", "Name", "CreatedAt", "GitKeyID", "GitURL"}, json)
+		util.PrintResult(t, []string{"ID", "Name", "CreatedAt", "GitKeyID", "GitURL"}, json)
 	},
 }
 

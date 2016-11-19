@@ -31,6 +31,8 @@ var PlandEnabledCmd = &cobra.Command{
 	Short: content.CmdPlanEnableShort,
 	Long:  content.CmdPlanEnableLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 		if err := util.CheckCompositeIDAndPlandIDFlag(compositeID, planID, verbose); err != nil {

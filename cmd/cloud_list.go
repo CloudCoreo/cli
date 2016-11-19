@@ -30,6 +30,7 @@ var CloudListCmd = &cobra.Command{
 	Short: content.CmdCloudListShort,
 	Long:  content.CmdCloudListLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 

@@ -33,6 +33,8 @@ var PlanInitCmd = &cobra.Command{
 	Short: content.CmdPlanInitShort,
 	Long:  content.CmdPlanInitLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 		if err := util.CheckCompositeShowOrDeleteFlag(compositeID, verbose); err != nil {

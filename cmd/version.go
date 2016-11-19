@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/spf13/cobra"
 )
 
@@ -35,6 +36,8 @@ var versionCmd = &cobra.Command{
 	Short: content.CmdVersionShort,
 	Long:  content.CmdVersionLong,
 	Run: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		fmt.Printf("Version: %s\n", version)
 		fmt.Printf("Git hash: %s\n", githash)
 		fmt.Printf("Buildstamp: %s\n", buildstamp)

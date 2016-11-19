@@ -31,6 +31,8 @@ var GitKeyShowCmd = &cobra.Command{
 	Short: content.CmdGitKeyShowShort,
 	Long:  content.CmdGitKeyShowLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 		if err := util.CheckGitKeyShowOrDeleteFlag(gitKeyID, verbose); err != nil {

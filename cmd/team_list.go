@@ -30,6 +30,8 @@ var TeamListCmd = &cobra.Command{
 	Short: content.CmdTeamListShort,
 	Long:  content.CmdTeamListLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
