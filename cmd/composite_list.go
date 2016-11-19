@@ -52,7 +52,7 @@ var CompositeListCmd = &cobra.Command{
 			b[i] = t[i]
 		}
 
-		util.PrintResult(t, []string{"ID", "Name", "CreatedAt", "GitKeyID", "GitURL"}, json)
+		util.PrintResult(b, []string{"ID", "Name", "CreatedAt", "GitKeyID", "GitURL"}, json)
 	},
 }
 
