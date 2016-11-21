@@ -19,6 +19,8 @@ import (
 	"context"
 	"fmt"
 	"time"
+
+	"github.com/CloudCoreo/cli/client/content"
 )
 
 // Composite struct for api payload
@@ -53,9 +55,7 @@ func (c *Client) GetComposites(ctx context.Context, teamID string) ([]*Composite
 	}
 
 	if len(composites) == 0 {
-		if err != nil {
-			return nil, NewError(fmt.Sprintf("No composites found under team ID %s.", teamID))
-		}
+		return nil, NewError(fmt.Sprintf(content.ErrorNoCompositesFound, teamID))
 	}
 
 	return composites, nil
@@ -77,7 +77,7 @@ func (c *Client) GetCompositeByID(ctx context.Context, teamID, compositeID strin
 	}
 
 	if composite.ID == "" {
-		return nil, NewError(fmt.Sprintf("No composite with ID %s found under team ID %s.", compositeID, teamID))
+		return nil, NewError(fmt.Sprintf(content.ErrorNoCompositeWithIDFound, compositeID, teamID))
 	}
 
 	return composite, nil

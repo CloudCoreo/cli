@@ -19,6 +19,8 @@ import (
 	"context"
 	"fmt"
 	"time"
+
+	"github.com/CloudCoreo/cli/client/content"
 )
 
 // Token struct
@@ -51,9 +53,7 @@ func (c *Client) GetTokens(ctx context.Context) ([]*Token, error) {
 	}
 
 	if len(tokens) == 0 {
-		if err != nil {
-			return nil, NewError(fmt.Sprintf("No tokens found. To create a token use `coreo token add [flags]` command."))
-		}
+		return nil, NewError(fmt.Sprintf(content.ErrorNoTokensFound))
 	}
 
 	return tokens, nil
@@ -77,7 +77,7 @@ func (c *Client) GetTokenByID(ctx context.Context, tokenID string) (*Token, erro
 	}
 
 	if token.ID == "" {
-		return nil, NewError(fmt.Sprintf("No token with ID %s found.", tokenID))
+		return nil, NewError(fmt.Sprintf(content.ErrorNoTokenWithIDFound, tokenID))
 	}
 
 	return token, nil
@@ -105,7 +105,7 @@ func (c *Client) CreateToken(ctx context.Context, name, description string) (*To
 	}
 
 	if token.ID == "" {
-		return nil, NewError(fmt.Sprintf("Failed to create token."))
+		return nil, NewError(fmt.Sprintf(content.ErrorFailedTokenCreation))
 	}
 
 	return token, nil
@@ -138,7 +138,7 @@ func (c *Client) DeleteTokenByID(ctx context.Context, tokenID string) error {
 	}
 
 	if !tokenFound {
-		return NewError(fmt.Sprintf("Failed to delete token with ID %s.", tokenID))
+		return NewError(fmt.Sprintf(content.ErrorFailedToDeleteToken, tokenID))
 	}
 
 	return nil

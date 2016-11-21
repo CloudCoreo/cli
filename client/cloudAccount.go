@@ -18,6 +18,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+
+	"github.com/CloudCoreo/cli/client/content"
 )
 
 // CloudAccount struct for api payload
@@ -56,7 +58,7 @@ func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]*CloudA
 
 	if len(clouds) == 0 {
 		if err != nil {
-			return nil, NewError(fmt.Sprintf("No cloud accounts found under team ID %s.", teamID))
+			return nil, NewError(fmt.Sprintf(content.ErrorNoCloudAccountsFound, teamID))
 		}
 	}
 
@@ -81,7 +83,7 @@ func (c *Client) GetCloudAccountByID(ctx context.Context, teamID, cloudID string
 	}
 
 	if cloudAccount.ID == "" {
-		return nil, NewError(fmt.Sprintf("No cloud account with ID %s found under team ID %s.", cloudID, teamID))
+		return nil, NewError(fmt.Sprintf(content.ErrorNoCloudAccountWithIDFound, cloudID, teamID))
 	}
 
 	return cloudAccount, nil
@@ -116,7 +118,7 @@ func (c *Client) CreateCloudAccount(ctx context.Context, teamID, accessKeyID, se
 	}
 
 	if cloudAccount.ID == "" {
-		return nil, NewError(fmt.Sprintf("Failed to create cloud account under team ID %s.", teamID))
+		return nil, NewError(fmt.Sprintf(content.ErrorFailedToCreateCloudAccount, teamID))
 	}
 
 	return cloudAccount, nil
@@ -147,7 +149,7 @@ func (c *Client) DeleteCloudAccountByID(ctx context.Context, teamID, cloudID str
 	}
 
 	if !cloudAccountFound {
-		return NewError(fmt.Sprintf("Failed to delete cloud account with ID %s found under team ID %s.", cloudID, teamID))
+		return NewError(fmt.Sprintf(content.ErrorFailedToDeleteCloudAccount, cloudID, teamID))
 	}
 
 	return nil

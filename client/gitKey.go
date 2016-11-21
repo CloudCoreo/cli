@@ -18,6 +18,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+
+	"github.com/CloudCoreo/cli/client/content"
 )
 
 // GitKey struct for api payload
@@ -55,9 +57,7 @@ func (c *Client) GetGitKeys(ctx context.Context, teamID string) ([]*GitKey, erro
 	}
 
 	if len(gitKeys) == 0 {
-		if err != nil {
-			return nil, NewError(fmt.Sprintf("No composites found under team ID %s.", teamID))
-		}
+		return nil, NewError(fmt.Sprintf(content.ErrorNoGitKeysFound, teamID))
 	}
 
 	return gitKeys, nil
@@ -81,7 +81,7 @@ func (c *Client) GetGitKeyByID(ctx context.Context, teamID, gitKeyID string) (*G
 	}
 
 	if gitKey.ID == "" {
-		return nil, NewError(fmt.Sprintf("No gitKey with ID %s found under team ID %s.", gitKey, teamID))
+		return nil, NewError(fmt.Sprintf(content.ErrorNoGitKeyWithIDFound, gitKey, teamID))
 	}
 
 	return gitKey, nil
@@ -114,7 +114,7 @@ func (c *Client) CreateGitKey(ctx context.Context, teamID, keyMaterial, name str
 	}
 
 	if gitKey.ID == "" {
-		return nil, NewError(fmt.Sprintf("Failed to create gitKey under team ID %s.", teamID))
+		return nil, NewError(fmt.Sprintf(content.ErrorFailedToCreateGitKey, teamID))
 	}
 
 	return gitKey, nil
@@ -148,7 +148,7 @@ func (c *Client) DeleteGitKeyByID(ctx context.Context, teamID, gitKeyID string) 
 	}
 
 	if !gitKeyFound {
-		return NewError(fmt.Sprintf("Failed to delete git key with ID %s found under team ID %s.", gitKeyID, teamID))
+		return NewError(fmt.Sprintf(content.ErrorFailedToDeleteGitKey, gitKeyID, teamID))
 	}
 
 	return nil

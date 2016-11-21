@@ -23,6 +23,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/CloudCoreo/cli/client/content"
 	"golang.org/x/net/context/ctxhttp"
 )
 
@@ -57,7 +58,7 @@ type Client struct {
 func MakeClient(apiKey, secretKey, endpoint string) (*Client, error) {
 
 	if apiKey == "None" || secretKey == "None" || apiKey == "" || secretKey == "" {
-		return nil, NewError("Missing API key or/and Secret key. Please run 'coreo configure' to configure them.")
+		return nil, NewError(content.ErrorMissingAPIOrSecretKey)
 	}
 
 	a := Auth{APIKey: apiKey, SecretKey: secretKey}

@@ -20,6 +20,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/CloudCoreo/cli/client/content"
 )
 
 // Plan struct object
@@ -74,9 +76,7 @@ func (c *Client) GetPlans(ctx context.Context, teamID, compositeID string) ([]*P
 	}
 
 	if len(plans) == 0 {
-		if err != nil {
-			return nil, NewError(fmt.Sprintf("No plans found under team ID %s and composite ID %s.", teamID, compositeID))
-		}
+		return nil, NewError(fmt.Sprintf(content.ErrorNoPlansFound, teamID, compositeID))
 	}
 
 	return plans, nil
@@ -98,7 +98,7 @@ func (c *Client) GetPlanByID(ctx context.Context, teamID, compositeID, planID st
 	}
 
 	if plan.ID == "" {
-		return nil, NewError(fmt.Sprintf("No plan with ID %s found under team ID %s and composite ID %s.", planID, teamID, compositeID))
+		return nil, NewError(fmt.Sprintf(content.ErrorNoPlanWithIDFound, planID, teamID, compositeID))
 	}
 
 	return plan, nil
@@ -130,7 +130,7 @@ func (c *Client) DeletePlanByID(ctx context.Context, teamID, compositeID, planID
 	}
 
 	if !planFound {
-		return NewError(fmt.Sprintf("Failed to delete plan ID %s found under team ID %s and composite ID %s.", planID, teamID, compositeID))
+		return NewError(fmt.Sprintf(content.ErrorFailedToDeletePlan, planID, teamID, compositeID))
 	}
 
 	return nil
@@ -169,7 +169,7 @@ func (c *Client) EnablePlan(ctx context.Context, teamID, compositeID, planID str
 	}
 
 	if plan.ID == "" {
-		return nil, NewError(fmt.Sprintf("Failed to enable plan with ID %s found under team ID %s and composite ID %s.", planID, teamID, compositeID))
+		return nil, NewError(fmt.Sprintf(content.ErrorFailedToEnablePlan, planID, teamID, compositeID))
 	}
 
 	return plan, nil
@@ -208,7 +208,7 @@ func (c *Client) DisablePlan(ctx context.Context, teamID, compositeID, planID st
 	}
 
 	if plan.ID == "" {
-		return nil, NewError(fmt.Sprintf("Failed to disable plan with ID %s found under team ID %s and composite ID %s.", planID, teamID, compositeID))
+		return nil, NewError(fmt.Sprintf(content.ErrorFailedToDisblePlan, planID, teamID, compositeID))
 	}
 
 	return plan, nil

@@ -16,6 +16,9 @@ package client
 
 import (
 	"context"
+	"fmt"
+
+	"github.com/CloudCoreo/cli/client/content"
 )
 
 // Team struct for api payload
@@ -65,5 +68,10 @@ func (c *Client) GetTeamByID(ctx context.Context, teamID string) (*Team, error) 
 			break
 		}
 	}
+
+	if team.ID == "" {
+		return nil, NewError(fmt.Sprintf(content.ErrorNoTeamWithIDFound, teamID))
+	}
+
 	return team, nil
 }
