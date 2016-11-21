@@ -27,20 +27,29 @@ import (
 
 // PlanListCmd represents the based command for cloud subcommands
 var PlanListCmd = &cobra.Command{
-	Use:   content.CMD_LIST_USE,
-	Short: content.CMD_PLAN_LIST_SHORT,
-	Long:  content.CMD_PLAN_LIST_LONG,
+	Use:   content.CmdListUse,
+	Short: content.CmdPlanListShort,
+	Long:  content.CmdPlanListLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		util.CheckCompositeShowOrDeleteFlag(compositeID)
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
-
+		if err := util.CheckCompositeShowOrDeleteFlag(compositeID, verbose); err != nil {
+			fmt.Fprintf(os.Stderr, err.Error())
+			os.Exit(-1)
+		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
+		if err != nil {
+			util.PrintError(err, json)
+			os.Exit(-1)
+		}
+
 		t, err := c.GetPlans(context.Background(), teamID, compositeID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
@@ -49,19 +58,12 @@ var PlanListCmd = &cobra.Command{
 			b[i] = t[i]
 		}
 
-		if format == "json" {
-			util.PrettyPrintJSON(t)
-		} else {
-			table := util.NewTable()
-			table.SetHeader([]string{"ID", "Name"})
-			table.UseObj(b)
-			fmt.Println(table.Render())
-		}
+		util.PrintResult(b, []string{"ID", "Name", "Enabled", "Branch", "RefreshInterval"}, json)
 	},
 }
 
 func init() {
 	PlanCmd.AddCommand(PlanListCmd)
 
-	PlanListCmd.Flags().StringVarP(&compositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+	PlanListCmd.Flags().StringVarP(&compositeID, content.CmdFlagCompositeIDLong, "", "", content.CmdFlagCompositeIDDescription)
 }

@@ -33,3 +33,5 @@ build/
 cli
 
 dump.rdb
+
+*.DS_Store

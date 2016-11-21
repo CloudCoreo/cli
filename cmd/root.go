@@ -28,13 +28,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-var key, secret, teamID, userProfile, cfgFile, resourceKey, resourceSecret, resourceName, format string
+var key, secret, teamID, userProfile, cfgFile, resourceKey, resourceSecret, resourceName string
+var json, verbose bool
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   content.CMD_COREO_USE,
-	Short: content.CMD_COREO_SHORT,
-	Long:  content.CMD_COREO_LONG,
+	Use:   content.CmdCoreoUse,
+	Short: content.CmdCoreoShort,
+	Long:  content.CmdCoreoLong,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -56,13 +57,13 @@ func init() {
 	// Cobra supports Persistent Flags, which, if defined here,
 	// will be global for your application.
 
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cloudcoreo/profiles.yaml)")
-	RootCmd.PersistentFlags().StringVar(&userProfile, "profile", "default", "user profile (default)")
-	RootCmd.PersistentFlags().StringVar(&key, "api-key", content.NONE, "Coreo api key")
-	RootCmd.PersistentFlags().StringVar(&secret, "api-secret", content.NONE, "Coreo secret key")
-	RootCmd.PersistentFlags().StringVar(&teamID, "team-id", content.NONE, "Coreo team id")
-	RootCmd.PersistentFlags().StringVar(&format, "format", "table", "Output format")
-
+	RootCmd.PersistentFlags().StringVar(&cfgFile, content.CmdFlagConfigLong, "", content.CmdFlagConfigDescription)
+	RootCmd.PersistentFlags().StringVar(&userProfile, content.CmdFlagProfileLong, "default", content.CmdFlagProfileDescription)
+	RootCmd.PersistentFlags().StringVar(&key, content.CmdFlagAPIKeyLong, content.None, content.CmdFlagAPIKeyDescription)
+	RootCmd.PersistentFlags().StringVar(&secret, content.CmdFlagAPISecretLong, content.None, content.CmdFlagAPISecretDescription)
+	RootCmd.PersistentFlags().StringVar(&teamID, content.CmdFlagTeamIDLong, content.None, content.CmdFlagTeamIDDescription)
+	RootCmd.PersistentFlags().BoolVar(&json, content.CmdFlagJSONLong, false, content.CmdFlagJSONDescription)
+	RootCmd.PersistentFlags().BoolVar(&verbose, content.CmdFlagVerboseLong, false, content.CmdFlagVerboseDescription)
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -78,11 +79,11 @@ func initConfig() {
 	} else {
 		path := absPathify("$HOME")
 
-		if err := util.CreateFolder(content.DEFAULT_FOLDER, path); err != nil {
+		if err := util.CreateFolder(content.DefaultFolder, path); err != nil {
 			fmt.Println("Error creating folder")
 		}
 
-		if err := util.CreateFile(content.DEFAULT_FILE, filepath.Join(path, content.DEFAULT_FOLDER), "", false); err != nil {
+		if err := util.CreateFile(content.DefaultFile, filepath.Join(path, content.DefaultFolder), "", false); err != nil {
 			fmt.Println("Error creating file")
 		}
 	}
@@ -114,7 +115,7 @@ func SetupCoreoCredentials() {
 
 // SetupCoreoDefaultTeam setup default team ID
 func SetupCoreoDefaultTeam() {
-	tID, err := util.CheckTeamIDFlag(teamID, userProfile)
+	tID, err := util.CheckTeamIDFlag(teamID, userProfile, verbose)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())

@@ -25,17 +25,18 @@ import (
 )
 
 var cmdCompositeLayer = &cobra.Command{
-	Use:   content.CMD_COMPOSITE_LAYER_USE,
-	Short: content.CMD_COMPOSITE_LAYER_SHORT,
-	Long:  content.CMD_COMPOSITE_LAYER_LONG,
+	Use:   content.CmdLayerUse,
+	Short: content.CmdCompositeLayerShort,
+	Long:  content.CmdCompositeLayerLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
+
 		if err := util.CheckLayersFlags(name, gitRepoURL); err != nil {
 			fmt.Println("A composite name is required: -n")
 			os.Exit(1)
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-
 		if err := util.CheckGitInstall(); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
@@ -60,7 +61,7 @@ var cmdCompositeLayer = &cobra.Command{
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
-		fmt.Println(content.CMD_COMPOSITE_LAYER_SUCCESS)
+		fmt.Println(content.CmdCompositeLayerSuccess)
 
 		// generate override and service files
 		genContent(directory)
@@ -74,8 +75,8 @@ var cmdCompositeLayer = &cobra.Command{
 func init() {
 	CompositeCmd.AddCommand(cmdCompositeLayer)
 
-	cmdCompositeLayer.Flags().StringVarP(&directory, content.CMD_FLAG_DIRECTORY_LONG, content.CMD_FLAG_DIRECTORY_SHORT, "", content.CMD_FLAG_DIRECTORY_DESCRIPTION)
-	cmdCompositeLayer.Flags().StringVarP(&gitRepoURL, content.CMD_FLAG_GIT_REPO_LONG, content.CMD_FLAG_GIT_REPO_SHORT, "", content.CMD_FLAG_GIT_REPO_DESCRIPTION)
-	cmdCompositeLayer.Flags().StringVarP(&name, content.CMD_FLAG_NAME_LONG, content.CMD_FLAG_NAME_SHORT, "", content.CMD_FLAG_NAME_DESCRIPTION)
-	cmdCompositeLayer.Flags().BoolVarP(&serverDir, content.CMD_FLAG_SERVER_LONG, content.CMD_FLAG_SERVER_SHORT, false, content.CMD_FLAG_SERVER_DESCRIPTION)
+	cmdCompositeLayer.Flags().StringVarP(&directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
+	cmdCompositeLayer.Flags().StringVarP(&gitRepoURL, content.CmdFlagGitRepoLong, content.CmdFlagGitRepoShort, "", content.CmdFlagGitRepoDescription)
+	cmdCompositeLayer.Flags().StringVarP(&name, content.CmdFlagNameLong, content.CmdFlagNameShort, "", content.CmdFlagNameDescription)
+	cmdCompositeLayer.Flags().BoolVarP(&serverDir, content.CmdFlagServerLong, content.CmdFlagServerShort, false, content.CmdFlagServerDescription)
 }

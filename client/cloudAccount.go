@@ -1,10 +1,25 @@
+// Copyright © 2016 Paul Allen <paul@cloudcoreo.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package client
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 
-	"golang.org/x/net/context"
+	"github.com/CloudCoreo/cli/client/content"
 )
 
 // CloudAccount struct for api payload
@@ -18,8 +33,8 @@ type CloudAccount struct {
 }
 
 // GetCloudAccounts method for cloud command
-func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]CloudAccount, error) {
-	clouds := []CloudAccount{}
+func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]*CloudAccount, error) {
+	clouds := []*CloudAccount{}
 	teams, err := c.GetTeams(ctx)
 
 	if err != nil {
@@ -28,16 +43,22 @@ func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]CloudAc
 
 	for _, team := range teams {
 		if team.ID == teamID {
-			cloudLink, err := GetLinkByRef(team.Links, "cloudAccounts")
+			cloudLink, e := GetLinkByRef(team.Links, "cloudAccounts")
 
-			if err != nil {
-				return clouds, err
+			if e != nil {
+				return nil, NewError(err.Error())
 			}
 
-			err = c.Do(ctx, "GET", cloudLink.Href, nil, &clouds)
-			if err != nil {
-				return clouds, err
+			e = c.Do(ctx, "GET", cloudLink.Href, nil, &clouds)
+			if e != nil {
+				return nil, NewError(err.Error())
 			}
+		}
+	}
+
+	if len(clouds) == 0 {
+		if err != nil {
+			return nil, NewError(fmt.Sprintf(content.ErrorNoCloudAccountsFound, teamID))
 		}
 	}
 
@@ -45,13 +66,13 @@ func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]CloudAc
 }
 
 // GetCloudAccountByID method getting cloud account by user ID
-func (c *Client) GetCloudAccountByID(ctx context.Context, teamID, cloudID string) (CloudAccount, error) {
-	cloudAccount := CloudAccount{}
+func (c *Client) GetCloudAccountByID(ctx context.Context, teamID, cloudID string) (*CloudAccount, error) {
+	cloudAccount := &CloudAccount{}
 
 	cloudAccounts, err := c.GetCloudAccounts(ctx, teamID)
 
 	if err != nil {
-		return cloudAccount, err
+		return nil, NewError(err.Error())
 	}
 
 	for _, c := range cloudAccounts {
@@ -61,12 +82,16 @@ func (c *Client) GetCloudAccountByID(ctx context.Context, teamID, cloudID string
 		}
 	}
 
+	if cloudAccount.ID == "" {
+		return nil, NewError(fmt.Sprintf(content.ErrorNoCloudAccountWithIDFound, cloudID, teamID))
+	}
+
 	return cloudAccount, nil
 }
 
 // CreateCloudAccount method to create a cloud object
-func (c *Client) CreateCloudAccount(ctx context.Context, teamID, accessKeyID, secretAccessKey, cloudName string) (CloudAccount, error) {
-	cloudAccount := CloudAccount{}
+func (c *Client) CreateCloudAccount(ctx context.Context, teamID, accessKeyID, secretAccessKey, cloudName string) (*CloudAccount, error) {
+	cloudAccount := &CloudAccount{}
 	teams, err := c.GetTeams(ctx)
 
 	if err != nil {
@@ -76,20 +101,24 @@ func (c *Client) CreateCloudAccount(ctx context.Context, teamID, accessKeyID, se
 	for _, team := range teams {
 
 		if team.ID == teamID {
-			cloudPlayLoad := fmt.Sprintf(`{"name":"%s","accessKeyId":"%s","secretAccessKey":"%s","teamId":"%s"}`, cloudName, accessKeyID, secretAccessKey, teamID)
-			var jsonStr = []byte(cloudPlayLoad)
+			cloudPayLoad := fmt.Sprintf(`{"name":"%s","accessKeyId":"%s","secretAccessKey":"%s","teamId":"%s"}`, cloudName, accessKeyID, secretAccessKey, teamID)
+			var jsonStr = []byte(cloudPayLoad)
 
 			cloudLink, err := GetLinkByRef(team.Links, "cloudAccounts")
 			if err != nil {
-				return cloudAccount, err
+				return nil, NewError(err.Error())
 			}
 
 			err = c.Do(ctx, "POST", cloudLink.Href, bytes.NewBuffer(jsonStr), &cloudAccount)
 			if err != nil {
-				return cloudAccount, err
+				return nil, NewError(err.Error())
 			}
 			break
 		}
+	}
+
+	if cloudAccount.ID == "" {
+		return nil, NewError(fmt.Sprintf(content.ErrorFailedToCreateCloudAccount, teamID))
 	}
 
 	return cloudAccount, nil
@@ -98,24 +127,29 @@ func (c *Client) CreateCloudAccount(ctx context.Context, teamID, accessKeyID, se
 // DeleteCloudAccountByID method to delete cloud object
 func (c *Client) DeleteCloudAccountByID(ctx context.Context, teamID, cloudID string) error {
 	cloudAccounts, err := c.GetCloudAccounts(ctx, teamID)
-
+	cloudAccountFound := false
 	if err != nil {
 		return err
 	}
 
 	for _, cloudAccount := range cloudAccounts {
 		if cloudAccount.ID == cloudID {
+			cloudAccountFound = true
 			cloudLink, err := GetLinkByRef(cloudAccount.Links, "self")
 			if err != nil {
-				return err
+				return NewError(err.Error())
 			}
 
 			err = c.Do(ctx, "DELETE", cloudLink.Href, nil, nil)
 			if err != nil {
-				return err
+				return NewError(err.Error())
 			}
 			break
 		}
+	}
+
+	if !cloudAccountFound {
+		return NewError(fmt.Sprintf(content.ErrorFailedToDeleteCloudAccount, cloudID, teamID))
 	}
 
 	return nil

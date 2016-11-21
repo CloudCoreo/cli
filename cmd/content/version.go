@@ -12,22 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cmd
+package content
 
-import (
-	"github.com/CloudCoreo/cli/cmd/content"
-	"github.com/spf13/cobra"
+const (
+	// CmdVersionUse command
+	CmdVersionUse = "version"
+
+	//CmdVersionShort command
+	CmdVersionShort = "Print the version number of Coreo CLI"
+
+	//CmdVersionLong command
+	CmdVersionLong = `Print the version number of Coreo CLI.`
 )
-
-var gitKeyID string
-
-// GitKeyCmd represents the based command for gitkey subcommands
-var GitKeyCmd = &cobra.Command{
-	Use:   content.CmdGitKeyUse,
-	Short: content.CmdGitKeyShort,
-	Long:  content.CmdGitKeyLong,
-}
-
-func init() {
-	RootCmd.AddCommand(GitKeyCmd)
-}

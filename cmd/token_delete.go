@@ -27,29 +27,30 @@ import (
 
 // TokenDeleteCmd represents the based command for token subcommands
 var TokenDeleteCmd = &cobra.Command{
-	Use:   content.CMD_TOKEN_SHOW_USE,
-	Short: content.CMD_TOKEN_SHOW_SHORT,
-	Long:  content.CMD_TOKEN_SHOW_LONG,
+	Use:   content.CmdDeleteUse,
+	Short: content.CmdTokenDeleteShort,
+	Long:  content.CmdTokenDeleteLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := util.CheckTokenShowOrDeleteFlag(tokenID); err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
-			os.Exit(-1)
-		}
+		util.CheckArgsCount(args)
+
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
 
+		if err := util.CheckTokenShowOrDeleteFlag(tokenID, verbose); err != nil {
+			fmt.Fprintf(os.Stderr, err.Error())
+			os.Exit(-1)
+		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
-
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
 		err = c.DeleteTokenByID(context.Background(), tokenID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
@@ -60,5 +61,5 @@ var TokenDeleteCmd = &cobra.Command{
 func init() {
 	TokenCmd.AddCommand(TokenDeleteCmd)
 
-	TokenDeleteCmd.Flags().StringVarP(&tokenID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_TOKENID_DESCRIPTION)
+	TokenDeleteCmd.Flags().StringVarP(&tokenID, content.CmdFlagTokenIDLong, "", "", content.CmdFlagTokenIDDescription)
 }

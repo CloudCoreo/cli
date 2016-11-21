@@ -1,3 +1,17 @@
+// Copyright © 2016 Paul Allen <paul@cloudcoreo.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package client
 
 import (
@@ -6,6 +20,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/CloudCoreo/cli/client/content"
 )
 
 // Plan struct object
@@ -41,40 +57,48 @@ type PlanConfig struct {
 }
 
 // GetPlans method to get plans info array object
-func (c *Client) GetPlans(ctx context.Context, teamID, compositeID string) ([]Plan, error) {
-	plans := []Plan{}
+func (c *Client) GetPlans(ctx context.Context, teamID, compositeID string) ([]*Plan, error) {
 	composite, err := c.GetCompositeByID(ctx, teamID, compositeID)
 
 	if err != nil {
-		return plans, err
+		return nil, err
 	}
 
 	plansLink, err := GetLinkByRef(composite.Links, "plans")
 	if err != nil {
-		return plans, err
+		return nil, err
 	}
 
+	plans := []*Plan{}
 	err = c.Do(ctx, "GET", plansLink.Href, nil, &plans)
 	if err != nil {
-		return plans, err
+		return nil, err
+	}
+
+	if len(plans) == 0 {
+		return nil, NewError(fmt.Sprintf(content.ErrorNoPlansFound, teamID, compositeID))
 	}
 
 	return plans, nil
 }
 
 // GetPlanByID method to get plan info object
-func (c *Client) GetPlanByID(ctx context.Context, teamID, compositeID, planID string) (Plan, error) {
-	plan := Plan{}
+func (c *Client) GetPlanByID(ctx context.Context, teamID, compositeID, planID string) (*Plan, error) {
 	plans, err := c.GetPlans(ctx, teamID, compositeID)
 	if err != nil {
-		return plan, err
+		return nil, err
 	}
 
+	plan := &Plan{}
 	for _, p := range plans {
 		if p.ID == planID {
 			plan = p
 			break
 		}
+	}
+
+	if plan.ID == "" {
+		return nil, NewError(fmt.Sprintf(content.ErrorNoPlanWithIDFound, planID, teamID, compositeID))
 	}
 
 	return plan, nil
@@ -88,8 +112,10 @@ func (c *Client) DeletePlanByID(ctx context.Context, teamID, compositeID, planID
 		return err
 	}
 
+	planFound := false
 	for _, plan := range plans {
 		if plan.ID == planID {
+			planFound = true
 			planLink, err := GetLinkByRef(plan.Links, "self")
 			if err != nil {
 				return err
@@ -103,17 +129,22 @@ func (c *Client) DeletePlanByID(ctx context.Context, teamID, compositeID, planID
 		}
 	}
 
+	if !planFound {
+		return NewError(fmt.Sprintf(content.ErrorFailedToDeletePlan, planID, teamID, compositeID))
+	}
+
 	return nil
 }
 
 // EnablePlan method to enable a plan object
-func (c *Client) EnablePlan(ctx context.Context, teamID, compositeID, planID string) (Plan, error) {
-	plan := Plan{}
+func (c *Client) EnablePlan(ctx context.Context, teamID, compositeID, planID string) (*Plan, error) {
 	plans, err := c.GetPlans(ctx, teamID, compositeID)
 
 	if err != nil {
-		return plan, err
+		return nil, err
 	}
+
+	plan := &Plan{}
 
 	for _, p := range plans {
 
@@ -137,17 +168,22 @@ func (c *Client) EnablePlan(ctx context.Context, teamID, compositeID, planID str
 		}
 	}
 
+	if plan.ID == "" {
+		return nil, NewError(fmt.Sprintf(content.ErrorFailedToEnablePlan, planID, teamID, compositeID))
+	}
+
 	return plan, nil
 }
 
 // DisablePlan method to disable a plan object
-func (c *Client) DisablePlan(ctx context.Context, teamID, compositeID, planID string) (Plan, error) {
-	plan := Plan{}
+func (c *Client) DisablePlan(ctx context.Context, teamID, compositeID, planID string) (*Plan, error) {
 	plans, err := c.GetPlans(ctx, teamID, compositeID)
 
 	if err != nil {
-		return plan, err
+		return nil, err
 	}
+
+	plan := &Plan{}
 
 	for _, p := range plans {
 
@@ -169,6 +205,10 @@ func (c *Client) DisablePlan(ctx context.Context, teamID, compositeID, planID st
 			}
 			break
 		}
+	}
+
+	if plan.ID == "" {
+		return nil, NewError(fmt.Sprintf(content.ErrorFailedToDisblePlan, planID, teamID, compositeID))
 	}
 
 	return plan, nil
@@ -226,7 +266,7 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, interval, region, t
 	return planConfig, nil
 }
 
-func (c *Client) getPlanConfig(ctx context.Context, plan Plan) (PlanConfig, error) {
+func (c *Client) getPlanConfig(ctx context.Context, plan *Plan) (PlanConfig, error) {
 	planConfig := PlanConfig{}
 	planConfigLink, err := GetLinkByRef(plan.Links, "planconfig")
 	if err != nil {

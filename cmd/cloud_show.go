@@ -27,45 +27,37 @@ import (
 
 // CloudShowCmd represents the based command for cloud subcommands
 var CloudShowCmd = &cobra.Command{
-	Use:   content.CMD_CLOUD_SHOW_USE,
-	Short: content.CMD_CLOUD_SHOW_SHORT,
-	Long:  content.CMD_CLOUD_SHOW_LONG,
+	Use:   content.CmdShowUse,
+	Short: content.CmdCloudShowShort,
+	Long:  content.CmdCloudShowLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCloudShowOrDeleteFlag(cloudID); err != nil {
+		util.CheckArgsCount(args)
+		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
+		if err := util.CheckCloudShowOrDeleteFlag(cloudID, verbose); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
-		SetupCoreoCredentials()
-		SetupCoreoDefaultTeam()
-
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
-
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
 		t, err := c.GetCloudAccountByID(context.Background(), teamID, cloudID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
-		if format == "json" {
-			util.PrettyPrintJSON(t)
-		} else {
-			table := util.NewTable()
-			table.SetHeader([]string{"ID", "Name", "TeamID"})
-			table.UseObj(t)
-			fmt.Println(table.Render())
-		}
+		util.PrintResult(t, []string{"ID", "Name", "TeamID"}, json)
 	},
 }
 
 func init() {
 	CloudCmd.AddCommand(CloudShowCmd)
 
-	CloudShowCmd.Flags().StringVarP(&cloudID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_CLOUDID_DESCRIPTION)
+	CloudShowCmd.Flags().StringVarP(&cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescripton)
 }

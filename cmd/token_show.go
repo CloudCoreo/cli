@@ -27,44 +27,38 @@ import (
 
 // TokenShowCmd represents the based command for token subcommands
 var TokenShowCmd = &cobra.Command{
-	Use:   content.CMD_TOKEN_SHOW_USE,
-	Short: content.CMD_TOKEN_SHOW_SHORT,
-	Long:  content.CMD_TOKEN_SHOW_LONG,
+	Use:   content.CmdShowUse,
+	Short: content.CmdTokenShowShort,
+	Long:  content.CmdTokenShowLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := util.CheckTokenShowOrDeleteFlag(tokenID); err != nil {
+		util.CheckArgsCount(args)
+
+		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
+		if err := util.CheckTokenShowOrDeleteFlag(tokenID, verbose); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
-		SetupCoreoCredentials()
-		SetupCoreoDefaultTeam()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
-
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
 		t, err := c.GetTokenByID(context.Background(), tokenID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
-		if format == "json" {
-			util.PrettyPrintJSON(t)
-		} else {
-			table := util.NewTable()
-			table.SetHeader([]string{"ID", "Name", "Description"})
-			table.UseObj(t)
-			fmt.Println(table.Render())
-		}
+		util.PrintResult(t, []string{"ID", "Name", "Description"}, json)
 	},
 }
 
 func init() {
 	TokenCmd.AddCommand(TokenShowCmd)
 
-	TokenShowCmd.Flags().StringVarP(&tokenID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_TOKENID_DESCRIPTION)
+	TokenShowCmd.Flags().StringVarP(&tokenID, content.CmdFlagTokenIDLong, "", "", content.CmdFlagTokenIDDescription)
 }

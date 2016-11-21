@@ -16,7 +16,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/CloudCoreo/cli/client"
@@ -27,19 +26,24 @@ import (
 
 // CompositeListCmd represents the based command for composite subcommands
 var CompositeListCmd = &cobra.Command{
-	Use:   content.CMD_COMPOSITE_LIST_USE,
-	Short: content.CMD_COMPOSITE_LIST_SHORT,
-	Long:  content.CMD_COMPOSITE_LIST_LONG,
+	Use:   content.CmdListUse,
+	Short: content.CmdCompositeListShort,
+	Long:  content.CmdCompositeListLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		util.CheckArgsCount(args)
 		SetupCoreoCredentials()
 		SetupCoreoDefaultTeam()
-
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
+		if err != nil {
+			util.PrintError(err, json)
+			os.Exit(-1)
+		}
+
 		t, err := c.GetComposites(context.Background(), teamID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
@@ -47,14 +51,8 @@ var CompositeListCmd = &cobra.Command{
 		for i := range t {
 			b[i] = t[i]
 		}
-		if format == "json" {
-			util.PrettyPrintJSON(t)
-		} else {
-			table := util.NewTable()
-			table.SetHeader([]string{"ID", "Name", "TeamID"})
-			table.UseObj(b)
-			fmt.Println(table.Render())
-		}
+
+		util.PrintResult(b, []string{"ID", "Name", "CreatedAt", "GitKeyID", "GitURL"}, json)
 	},
 }
 

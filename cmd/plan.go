@@ -23,9 +23,9 @@ var planID string
 
 // PlanCmd represents the based command for plan subcommands
 var PlanCmd = &cobra.Command{
-	Use: content.CMD_PLAN_USE,
-	Short: content.CMD_PLAN_SHORT,
-	Long: content.CMD_PLAN_LONG,
+	Use:   content.CmdPlanUse,
+	Short: content.CmdPlanShort,
+	Long:  content.CmdPlanLong,
 }
 
 func init() {

@@ -23,9 +23,9 @@ var cloudID string
 
 // CloudCmd represents the based command for cloud subcommands
 var CloudCmd = &cobra.Command{
-	Use:   content.CMD_CLOUD_USE,
-	Short: content.CMD_CLOUD_SHORT,
-	Long:  content.CMD_CLOUD_LONG,
+	Use:   content.CmdCloudUse,
+	Short: content.CmdCloudShort,
+	Long:  content.CmdCloudLong,
 }
 
 func init() {

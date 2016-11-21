@@ -27,40 +27,40 @@ import (
 
 // PlandDeleteCmd represents the based command for plan subcommands
 var PlandDeleteCmd = &cobra.Command{
-	Use:   content.CMD_DELETE_USE,
-	Short: content.CMD_PLAN_DELETE_SHORT,
-	Long:  content.CMD_PLAN_DELETE_LONG,
+	Use:   content.CmdDeleteUse,
+	Short: content.CmdPlanDeleteShort,
+	Long:  content.CmdPlanDeleteLong,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := util.CheckCompositeIdAndPlandIdFlag(compositeID, planID); err != nil {
+		util.CheckArgsCount(args)
+
+		SetupCoreoCredentials()
+		SetupCoreoDefaultTeam()
+		if err := util.CheckCompositeIDAndPlandIDFlag(compositeID, planID, verbose); err != nil {
 			fmt.Fprintf(os.Stderr, err.Error())
 			os.Exit(-1)
 		}
-		SetupCoreoCredentials()
-		SetupCoreoDefaultTeam()
-
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.ENDPOINT_ADDRESS)
-
+		c, err := client.MakeClient(key, secret, content.EndpointAddress)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
 		err = c.DeletePlanByID(context.Background(), teamID, compositeID, planID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			util.PrintError(err, json)
 			os.Exit(-1)
 		}
 
-		fmt.Println("Plan was deleted")
+		fmt.Println(content.InfoPlanDeleted)
 	},
 }
 
 func init() {
 	PlanCmd.AddCommand(PlandDeleteCmd)
 
-	PlandDeleteCmd.Flags().StringVarP(&planID, content.CMD_FLAG_PLAN_ID_LONG, content.CMD_FLAG_PLAN_ID_SHORT, "", content.CMD_FLAG_PLANID_DESCRIPTION)
-	PlandDeleteCmd.Flags().StringVarP(&compositeID, content.CMD_FLAG_ID_LONG, content.CMD_FLAG_ID_SHORT, "", content.CMD_FLAG_COMPOSITE_DESCRIPTION)
+	PlandDeleteCmd.Flags().StringVarP(&planID, content.CmdFlagPlanIDLong, "", "", content.CmdFlagPlanIDDescription)
+	PlandDeleteCmd.Flags().StringVarP(&compositeID, content.CmdFlagCompositeIDLong, "", "", content.CmdFlagCompositeIDDescription)
 
 }

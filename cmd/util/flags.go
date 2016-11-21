@@ -1,7 +1,22 @@
+// Copyright © 2016 Paul Allen <paul@cloudcoreo.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package util
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/CloudCoreo/cli/cmd/content"
@@ -17,30 +32,39 @@ func checkFlag(flag, error string) error {
 
 func checkGitRepoURL(gitRepoURL string) error {
 	if gitRepoURL == "" {
-		return fmt.Errorf(content.ERROR_GIT_REPO_URL_MISSING)
+		return fmt.Errorf(content.ErrorGitRepoURLMissing)
 	} else if !strings.Contains(gitRepoURL, "git@") {
-		return fmt.Errorf(content.ERROR_INVALID_GIT_REPO_URL)
+		return fmt.Errorf(content.ErrorInvalidGitRepoURL)
 	}
 
 	return nil
 }
 
 // CheckCloudShowOrDeleteFlag flags check for cloud show or delete command
-func CheckCloudShowOrDeleteFlag(cloudID string) error {
-	return checkFlag(cloudID, "Cloud id is required for this command")
+func CheckCloudShowOrDeleteFlag(cloudID string, verbose bool) error {
+
+	if err := checkFlag(cloudID, content.ErrorCloudIDRequired); err != nil {
+		return err
+	}
+
+	if verbose {
+		fmt.Printf(content.InfoUsingCloudAccount, cloudID)
+	}
+
+	return nil
 }
 
 // CheckCloudAddFlags flag check for cloud add command
 func CheckCloudAddFlags(resourceName, resourceKey, resourceSecret string) error {
-	if err := checkFlag(resourceName, content.ERROR_NAME_MISSING); err != nil {
+	if err := checkFlag(resourceName, content.ErrorNameMissing); err != nil {
 		return err
 	}
 
-	if err := checkFlag(resourceKey, content.ERROR_KEY_MISSING); err != nil {
+	if err := checkFlag(resourceKey, content.ErrorKeyMissing); err != nil {
 		return err
 	}
 
-	if err := checkFlag(resourceSecret, content.ERROR_SECRET_MISSING); err != nil {
+	if err := checkFlag(resourceSecret, content.ErrorSecretMissing); err != nil {
 		return err
 	}
 
@@ -48,35 +72,38 @@ func CheckCloudAddFlags(resourceName, resourceKey, resourceSecret string) error 
 }
 
 // CheckTokenShowOrDeleteFlag flag check for token show or delete command
-func CheckTokenShowOrDeleteFlag(tokenID string) error {
-	return checkFlag(tokenID, content.ERROR_ID_MISSING)
-}
-
-// CheckTokenAddFlags flag check for token add command
-func CheckTokenAddFlags(name, description string) error {
-	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
+func CheckTokenShowOrDeleteFlag(tokenID string, verbose bool) error {
+	if err := checkFlag(tokenID, content.ErrorTokenIDMissing); err != nil {
 		return err
 	}
 
-	if err := checkFlag(description, content.ERROR_DESCRIPTION_MISSING); err != nil {
-		return err
+	if verbose {
+		fmt.Printf(content.InfoUsingTokenID, tokenID)
 	}
 
 	return nil
 }
 
 // CheckGitKeyShowOrDeleteFlag flag check for Git key show or delete command
-func CheckGitKeyShowOrDeleteFlag(gitKeyID string) error {
-	return checkFlag(gitKeyID, content.ERROR_ID_MISSING)
+func CheckGitKeyShowOrDeleteFlag(gitKeyID string, verbose bool) error {
+	if err := checkFlag(gitKeyID, content.ErrorGitKeyIDMissing); err != nil {
+		return err
+	}
+
+	if verbose {
+		fmt.Printf(content.InfoUsingGitKeyID, gitKeyID)
+	}
+
+	return nil
 }
 
 // CheckGitKeyAddFlags flag check for git key add command
 func CheckGitKeyAddFlags(name, secret string) error {
-	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
+	if err := checkFlag(name, content.ErrorNameMissing); err != nil {
 		return err
 	}
 
-	if err := checkFlag(secret, content.ERROR_SECRET_MISSING); err != nil {
+	if err := checkFlag(secret, content.ErrorSecretMissing); err != nil {
 		return err
 	}
 
@@ -84,8 +111,17 @@ func CheckGitKeyAddFlags(name, secret string) error {
 }
 
 // CheckCompositeShowOrDeleteFlag flag check for composite show or delete command
-func CheckCompositeShowOrDeleteFlag(compositeID string) error {
-	return checkFlag(compositeID, content.ERROR_ID_MISSING)
+func CheckCompositeShowOrDeleteFlag(compositeID string, verbose bool) error {
+	if err := checkFlag(compositeID, content.ErrorCompositeIDRequired); err != nil {
+		return err
+	}
+
+	if verbose {
+		fmt.Printf(content.InfoUsingCompsiteID, compositeID)
+	}
+
+	return nil
+
 }
 
 // CheckCompositeCreateFlags flags check for composite create command
@@ -94,7 +130,7 @@ func CheckCompositeCreateFlags(name, gitRepoURL string) error {
 		return err
 	}
 
-	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
+	if err := checkFlag(name, content.ErrorNameMissing); err != nil {
 		return err
 	}
 
@@ -104,7 +140,7 @@ func CheckCompositeCreateFlags(name, gitRepoURL string) error {
 
 // CheckLayersFlags flag check for composite layer command
 func CheckLayersFlags(name, gitRepoURL string) error {
-	if err := checkFlag(name, content.ERROR_NAME_MISSING); err != nil {
+	if err := checkFlag(name, content.ErrorNameMissing); err != nil {
 		return err
 	}
 
@@ -126,14 +162,19 @@ func CheckExtendFlags(gitRepoURL string) error {
 }
 
 // CheckTeamIDFlag flag check for team id
-func CheckTeamIDFlag(teamID string, userProfile string) (string, error) {
-	if teamID == content.NONE {
-		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.TEAM_ID)
+func CheckTeamIDFlag(teamID, userProfile string, verbose bool) (string, error) {
+	if teamID == content.None {
+		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.TeamID)
 		teamID = GetValueFromConfig(teamIDKey, false)
 
-		if teamID == content.NONE {
-			return teamID, fmt.Errorf(content.ERROR_ID_MISSING)
+		if teamID == content.None {
+			return teamID, fmt.Errorf(content.ErrorTeamIDMissing)
 		}
+	}
+
+	if verbose {
+		fmt.Printf(content.InfoUsingProfile, userProfile)
+		fmt.Printf(content.InfoUsingTeamID, teamID)
 	}
 
 	return teamID, nil
@@ -141,12 +182,12 @@ func CheckTeamIDFlag(teamID string, userProfile string) (string, error) {
 
 // CheckAPIKeyFlag flag check for api key
 func CheckAPIKeyFlag(apiKey string, userProfile string) (string, error) {
-	if apiKey == content.NONE {
-		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.ACCESS_KEY)
+	if apiKey == content.None {
+		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.AccessKey)
 		apiKey = GetValueFromConfig(teamIDKey, false)
 
-		if apiKey == content.NONE {
-			return apiKey, fmt.Errorf(content.ERROR_KEY_MISSING)
+		if apiKey == content.None {
+			return apiKey, fmt.Errorf(content.ErrorKeyMissing)
 		}
 	}
 
@@ -155,27 +196,43 @@ func CheckAPIKeyFlag(apiKey string, userProfile string) (string, error) {
 
 // CheckSecretKeyFlag flag check for secret key
 func CheckSecretKeyFlag(secretKey string, userProfile string) (string, error) {
-	if secretKey == content.NONE {
-		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.SECRET_KEY)
-		secretKey = GetValueFromConfig(teamIDKey, false)
+	if secretKey == content.None {
+		secretIDKey := fmt.Sprintf("%s.%s", userProfile, content.SecretKey)
+		secretKey = GetValueFromConfig(secretIDKey, false)
 
-		if secretKey == content.NONE {
-			return secretKey, fmt.Errorf(content.ERROR_SECRET_MISSING)
+		if secretKey == content.None {
+			return secretKey, fmt.Errorf(content.ErrorSecretMissing)
 		}
 	}
 
 	return secretKey, nil
 }
 
-// Check for compositeID and planID
-func CheckCompositeIdAndPlandIdFlag(compositeID, planID string) error {
-	if err := checkFlag(compositeID, content.ERROR_ID_MISSING); err != nil {
+//CheckCompositeIDAndPlandIDFlag Check for compositeID and planID
+func CheckCompositeIDAndPlandIDFlag(compositeID, planID string, verbose bool) error {
+	if err := checkFlag(compositeID, content.ErrorCompositeIDRequired); err != nil {
 		return err
 	}
 
-	if err := checkFlag(planID, content.ERROR_ID_MISSING); err != nil {
+	if verbose {
+		fmt.Printf(content.InfoUsingCompsiteID, compositeID)
+	}
+
+	if err := checkFlag(planID, content.ErrorPlanIDRequired); err != nil {
 		return err
+	}
+
+	if verbose {
+		fmt.Printf(content.InfoUsingPlanID, planID)
 	}
 
 	return nil
+}
+
+//CheckArgsCount check for args
+func CheckArgsCount(args []string) {
+	if len(args) > 0 {
+		fmt.Print(content.ErrorAcceptsNoArgs)
+		os.Exit(-1)
+	}
 }
