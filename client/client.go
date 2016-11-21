@@ -57,7 +57,7 @@ type Client struct {
 func MakeClient(apiKey, secretKey, endpoint string) (*Client, error) {
 
 	if apiKey == "None" || secretKey == "None" || apiKey == "" || secretKey == "" {
-		return nil, NewError("Missing API key or/and Secret key. Please run 'Coreo configure' to configure them.")
+		return nil, NewError("Missing API key or/and Secret key. Please run 'coreo configure' to configure them.")
 	}
 
 	a := Auth{APIKey: apiKey, SecretKey: secretKey}

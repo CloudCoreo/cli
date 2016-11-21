@@ -76,7 +76,7 @@ const (
 	ErrorGitInitNotRan = "[ ERROR ] Not a git repository (or any of the parent directories): .git\n"
 
 	//ErrorNoUserProfileFound error
-	ErrorNoUserProfileFound = "[ ERROR ] No user profile found. Set profile using 'Coreo configure' command\n"
+	ErrorNoUserProfileFound = "[ ERROR ] No user profile found. Set profile using 'coreo configure' command\n"
 
 	//ErrorAcceptsNoArgs error
 	ErrorAcceptsNoArgs = "[ ERROR ] This command accepts no argument(s).\n"
