@@ -22,10 +22,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var version = "No Version Provided"
-var buildstamp = "Unknown buildstamp"
-var githash = "Unknown githash"
-var buildID = "Unknown buildID"
+var Version = "No Version Provided"
+var Buildstamp = "Unknown buildstamp"
+var Githash = "Unknown githash"
+var BuildID = "Unknown buildID"
 
 func init() {
 	RootCmd.AddCommand(versionCmd)
@@ -38,9 +38,9 @@ var versionCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		util.CheckArgsCount(args)
 
-		fmt.Printf("Version: %s\n", version)
-		fmt.Printf("Git hash: %s\n", githash)
-		fmt.Printf("Buildstamp: %s\n", buildstamp)
-		fmt.Printf("BuildID: %s\n", buildID)
+		fmt.Printf("Version: %s\n", Version)
+		fmt.Printf("Git hash: %s\n", Githash)
+		fmt.Printf("Buildstamp: %s\n", Buildstamp)
+		fmt.Printf("BuildID: %s\n", BuildID)
 	},
 }
