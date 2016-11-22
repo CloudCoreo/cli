@@ -22,9 +22,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//Version build flag
 var Version = "No Version Provided"
+
+//Buildstamp build flag
 var Buildstamp = "Unknown buildstamp"
+
+//Githash build flag
 var Githash = "Unknown githash"
+
+//BuildID build flag
 var BuildID = "Unknown buildID"
 
 func init() {
