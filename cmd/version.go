@@ -25,9 +25,6 @@ import (
 //Version build flag
 var Version = "No Version Provided"
 
-//Buildstamp build flag
-var Buildstamp = "Unknown buildstamp"
-
 //Githash build flag
 var Githash = "Unknown githash"
 
@@ -47,7 +44,6 @@ var versionCmd = &cobra.Command{
 
 		fmt.Printf("Version: %s\n", Version)
 		fmt.Printf("Git hash: %s\n", Githash)
-		fmt.Printf("Buildstamp: %s\n", Buildstamp)
 		fmt.Printf("BuildID: %s\n", BuildID)
 	},
 }

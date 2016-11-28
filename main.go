@@ -19,13 +19,11 @@ import (
 )
 
 var version = "No Version Provided"
-var buildstamp = "Unknown buildstamp"
 var githash = "Unknown githash"
 var buildID = "Unknown buildID"
 
 func main() {
 	cmd.Version = version
-	cmd.Buildstamp = buildstamp
 	cmd.Githash = githash
 	cmd.BuildID = buildID
 
