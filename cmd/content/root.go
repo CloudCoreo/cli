@@ -34,7 +34,7 @@ const (
 	None = "None"
 
 	//EndpointAddress endpoint
-	EndpointAddress = "https://staging.hack.cloudcoreo.com/api"
+	EndpointAddress = "https://app.cloudcoreo.com/api"
 
 	//MaskLength mask length
 	MaskLength = 4
