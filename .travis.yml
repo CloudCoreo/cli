@@ -10,18 +10,18 @@ script:
   - go vet $(go list ./... | grep -v vendor)
   - $HOME/gopath/bin/goveralls -service=travis-ci
 before_deploy:
-  - GOOS=linux GOARCH=amd64 go build -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
-  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_linux_amd64
-  - GOOS=linux GOARCH=386 go build -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
-  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_linux_386
-  - GOOS=linux GOARCH=arm go build -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
-  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_linux_arm
-  - GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
-  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_darwin_amd64
-  - GOOS=windows GOARCH=amd64 go build -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
-  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_windows_amd64.exe
-  - GOOS=windows GOARCH=386 go build -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
-  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_windows_386.exe
+  - 'GOOS=linux GOARCH=amd64 go build --ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
+  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_linux_amd64'
+  - 'GOOS=linux GOARCH=386 go build --ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
+  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_linux_386'
+  - 'GOOS=linux GOARCH=arm go build --ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
+  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_linux_arm'
+  - 'GOOS=darwin GOARCH=amd64 go build --ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
+  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_darwin_amd64'
+  - 'GOOS=windows GOARCH=amd64 go build --ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
+  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_windows_amd64.exe'
+  - 'GOOS=windows GOARCH=386 go build --ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
+  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER" -o coreo_windows_386.exe'
 deploy:
   provider: releases
   skip_cleanup: true
