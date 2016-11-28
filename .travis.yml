@@ -1,8 +1,8 @@
 language: go
 go:
   - 1.7
-gobuild_args: -ldflags "-X cmd.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X cmd.githash=`git
-  rev-parse HEAD` -X cmd.version=`cat VERSION` -X cmd.buildID=$TRAVIS_BUILD_NUMBER"
+gobuild_args: -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=`git
+  rev-parse HEAD` -X main.version=`cat VERSION` -X main.buildID=$TRAVIS_BUILD_NUMBER"
 install:
   - go get github.com/mattn/goveralls
   - go get github.com/golang/lint/golint
