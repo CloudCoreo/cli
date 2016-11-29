@@ -107,7 +107,11 @@ func (c *Client) Do(ctx context.Context, method, path string, body io.Reader, ob
 	// Read all of resp.Body regardless of status code so we don't leak connections.
 	// The extra io.Copy is to ensure everything has been read, since a json.Decoder doesn't
 	// have that guarantee.
-	err = json.NewDecoder(resp.Body).Decode(obj)
+	if obj != nil {
+		err = json.NewDecoder(resp.Body).Decode(obj)
+
+	}
+
 	io.Copy(ioutil.Discard, resp.Body)
 
 	return err

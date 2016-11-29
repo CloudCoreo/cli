@@ -18,6 +18,14 @@ import (
 	"github.com/CloudCoreo/cli/cmd"
 )
 
+var version = "No Version Provided"
+var githash = "Unknown githash"
+var buildID = "Unknown buildID"
+
 func main() {
+	cmd.Version = version
+	cmd.Githash = githash
+	cmd.BuildID = buildID
+
 	cmd.Execute()
 }
