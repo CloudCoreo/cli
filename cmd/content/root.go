@@ -33,9 +33,6 @@ const (
 	//None none
 	None = "None"
 
-	//EndpointAddress endpoint
-	EndpointAddress = "https://staging.hack.cloudcoreo.com/api"
-
 	//MaskLength mask length
 	MaskLength = 4
 
@@ -100,7 +97,7 @@ const (
 	CmdFlagGitRepoShort = "g"
 
 	//CmdFlagGitRepoDescription cmd
-	CmdFlagGitRepoDescription = "Git repro url"
+	CmdFlagGitRepoDescription = "Git repo url"
 
 	//CmdFlagNameLong cmd
 	CmdFlagNameLong = "name"
@@ -179,6 +176,12 @@ const (
 
 	//CmdFlagProfileDescription secret flag description
 	CmdFlagProfileDescription = "Coreo profile to use."
+
+	//CmdFlagAPIEndpointLong api endpoint flag long
+	CmdFlagAPIEndpointLong = "endpoint"
+
+	//CmdFlagAPIEndpointDescription api endpoint description
+	CmdFlagAPIEndpointDescription = "API Endpoint "
 
 	//CmdCoreoUse Coreo cmd
 	CmdCoreoUse = "coreo"

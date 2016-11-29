@@ -35,7 +35,7 @@ var CompositeListCmd = &cobra.Command{
 		SetupCoreoDefaultTeam()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, content.EndpointAddress)
+		c, err := client.MakeClient(key, secret, apiEndpont)
 		if err != nil {
 			util.PrintError(err, json)
 			os.Exit(-1)

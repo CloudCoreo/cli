@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var key, secret, teamID, userProfile, cfgFile, resourceKey, resourceSecret, resourceName string
+var key, secret, teamID, userProfile, cfgFile, resourceKey, resourceSecret, resourceName, apiEndpont string
 var json, verbose bool
 
 // RootCmd represents the base command when called without any subcommands
@@ -62,6 +62,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&key, content.CmdFlagAPIKeyLong, content.None, content.CmdFlagAPIKeyDescription)
 	RootCmd.PersistentFlags().StringVar(&secret, content.CmdFlagAPISecretLong, content.None, content.CmdFlagAPISecretDescription)
 	RootCmd.PersistentFlags().StringVar(&teamID, content.CmdFlagTeamIDLong, content.None, content.CmdFlagTeamIDDescription)
+	RootCmd.PersistentFlags().StringVar(&apiEndpont, content.CmdFlagAPIEndpointLong, "https://app.cloudcoreo.com/api", content.CmdFlagAPIEndpointDescription)
 	RootCmd.PersistentFlags().BoolVar(&json, content.CmdFlagJSONLong, false, content.CmdFlagJSONDescription)
 	RootCmd.PersistentFlags().BoolVar(&verbose, content.CmdFlagVerboseLong, false, content.CmdFlagVerboseDescription)
 }
