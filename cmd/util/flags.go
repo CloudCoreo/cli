@@ -173,7 +173,6 @@ func CheckTeamIDFlag(teamID, userProfile string, verbose bool) (string, error) {
 	}
 
 	if verbose {
-		fmt.Printf(content.InfoUsingProfile, userProfile)
 		fmt.Printf(content.InfoUsingTeamID, teamID)
 	}
 

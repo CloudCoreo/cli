@@ -52,7 +52,15 @@ var TeamListCmd = &cobra.Command{
 			b[i] = t[i]
 		}
 
-		util.PrintResult(b, []string{"ID", "TeamName", "TeamDescription"}, json)
+		util.PrintResult(b,
+			[]string{"ID", "TeamName", "TeamDescription"},
+			map[string]string{
+				"ID":              "Team ID",
+				"TeamName":        "Team Name",
+				"TeamDescription": "Team Description",
+			},
+			json,
+			verbose)
 	},
 }
 

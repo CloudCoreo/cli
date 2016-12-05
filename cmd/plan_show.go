@@ -53,8 +53,18 @@ var PlanShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		util.PrintResult(t, []string{"ID", "Name", "Enabled", "Branch", "RefreshInterval"}, json)
-	},
+		util.PrintResult(
+			t,
+			[]string{"ID", "Name", "Enabled", "Branch", "RefreshInterval"},
+			map[string]string {
+				"ID": "Plan ID",
+				"Name": "Plan Name",
+				"Enabled" : "Active",
+				"Branch" : "Git Branch",
+				"RefreshInterval": "Interval",
+			},
+			json,
+			verbose)	},
 }
 
 func init() {

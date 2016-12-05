@@ -53,8 +53,16 @@ var TokenShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		util.PrintResult(t, []string{"ID", "Name", "Description"}, json)
-	},
+		util.PrintResult(
+			t,
+			[]string{"ID", "Name", "Description"},
+			map[string]string {
+				"ID": "Token ID",
+				"Name": "Token Name",
+				"Description" : "Token Description",
+			},
+			json,
+			verbose)	},
 }
 
 func init() {

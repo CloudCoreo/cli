@@ -19,10 +19,10 @@ const (
 	CmdTokenUse = "token"
 
 	//CmdTokenShort short descripton
-	CmdTokenShort = "Manage Coreo Tokens"
+	CmdTokenShort = "Manage API Tokens"
 
 	//CmdTokenLong long description
-	CmdTokenLong = `Manage Coreo Tokens.`
+	CmdTokenLong = `Manage API Tokens.`
 
 	//CmdTokenListShort short descripton
 	CmdTokenListShort = "Show list of tokens"

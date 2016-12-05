@@ -54,7 +54,16 @@ var TokenListCmd = &cobra.Command{
 			b[i] = t[i]
 		}
 
-		util.PrintResult(b, []string{"ID", "Name", "Description"}, json)
+		util.PrintResult(
+			b,
+			[]string{"ID", "Name", "Description"},
+			map[string]string {
+				"ID": "Token ID",
+				"Name": "Token Name",
+				"Description" : "Token Description",
+			},
+			json,
+			verbose)
 	},
 }
 

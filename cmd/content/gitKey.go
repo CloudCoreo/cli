@@ -19,10 +19,10 @@ const (
 	CmdGitKeyUse = "git-key"
 
 	//CmdGitKeyShort short description
-	CmdGitKeyShort = "Manage Coreo Git keys"
+	CmdGitKeyShort = "Manage Git keys"
 
 	//CmdGitKeyLong long description
-	CmdGitKeyLong = `Manage Coreo Git keys.`
+	CmdGitKeyLong = `Manage or Add Git keys to connect private repos to your CloudCoreo account. This will allow you to create private Composites and Plans.`
 
 	//CmdGitKeyListShort short description
 	CmdGitKeyListShort = "Show Git keys associated with your Coreo team"

@@ -53,7 +53,16 @@ var CompositeShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		util.PrintResult(t, []string{"ID", "Name", "CreatedAt", "GitKeyID", "GitURL"}, json)
+		util.PrintResult(
+			t,
+			[]string{"ID", "Name", "TeamID"},
+			map[string]string{
+				"ID":     "Composite ID",
+				"Name":   "Composite Name",
+				"TeamID": "Team ID",
+			},
+			json,
+			verbose)
 	},
 }
 

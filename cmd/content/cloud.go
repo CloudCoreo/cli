@@ -19,10 +19,10 @@ const (
 	CmdCloudUse = "cloud"
 
 	//CmdCloudShort short description
-	CmdCloudShort = "Manage Coreo Cloud Accounts"
+	CmdCloudShort = "Manage Cloud Accounts"
 
 	//CmdCloudLong long description
-	CmdCloudLong = `Manage Coreo Cloud Accounts.`
+	CmdCloudLong = `Connect to your cloud accounts.`
 
 	//CmdCloudListShort short description
 	CmdCloudListShort = "Show list of tokens"
