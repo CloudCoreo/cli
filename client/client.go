@@ -100,7 +100,7 @@ func (c *Client) Do(ctx context.Context, method, path string, body io.Reader, ob
 	if resp.StatusCode >= 300 {
 		message := new(bytes.Buffer)
 		message.ReadFrom(resp.Body)
-		msg := fmt.Sprintf("%s, HTTP Error: %s, HTTP Status Code: %d", message.String(), http.StatusText(resp.StatusCode), resp.StatusCode)
+		msg := fmt.Sprintf("%s", message.String())
 		return NewError(msg)
 	}
 

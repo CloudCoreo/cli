@@ -52,7 +52,16 @@ var CloudAddCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		util.PrintResult(t, []string{"ID", "Name", "TeamID"}, json)
+		util.PrintResult(
+			t,
+			[]string{"ID", "Name", "TeamID"},
+			map[string]string{
+				"ID":     "Cloud Account ID",
+				"Name":   "Cloud Account Name",
+				"TeamID": "Team ID",
+			},
+			json,
+			verbose)
 	},
 }
 

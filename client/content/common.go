@@ -23,7 +23,7 @@ const (
 	ErrorNoCompositeWithIDFound = "No composite with ID %s found under team ID %s."
 
 	//ErrorNoGitKeysFound error
-	ErrorNoGitKeysFound = "No composites found under team ID %s."
+	ErrorNoGitKeysFound = "No git keys found under team ID %s."
 
 	//ErrorNoGitKeyWithIDFound error
 	ErrorNoGitKeyWithIDFound = "No git key with ID %s found under team ID %s."

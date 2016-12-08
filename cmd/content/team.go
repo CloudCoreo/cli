@@ -19,10 +19,10 @@ const (
 	CmdTeamUse = "team"
 
 	//CmdTeamShort short description
-	CmdTeamShort = "Manage Coreo Teams"
+	CmdTeamShort = "Manage Teams"
 
 	//CmdTeamLong long descripton
-	CmdTeamLong = `Manage Coreo Teams.`
+	CmdTeamLong = `Manage Teams.`
 
 	//CmdTeamListShort short description
 	CmdTeamListShort = "Show list of team"

@@ -19,10 +19,10 @@ const (
 	CmdPlanUse = "plan"
 
 	//CmdPlanShort short descripton
-	CmdPlanShort = "Manage Coreo Plans"
+	CmdPlanShort = "Manage Plans"
 
 	//CmdPlanLong long description
-	CmdPlanLong = `Manage Coreo Plans.`
+	CmdPlanLong = `Manage Plans.`
 
 	//CmdPlanListShort short descripton
 	CmdPlanListShort = "List all plans"

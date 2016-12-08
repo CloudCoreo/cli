@@ -64,10 +64,10 @@ const (
 	ErrorNameMissing = "[ ERROR ] Name is required for this command. Use flag --name\n"
 
 	//ErrorKeyMissing error
-	ErrorKeyMissing = "[ ERROR ] Key is required for this command. Use flag --key\n"
+	ErrorKeyMissing = "[ ERROR ] Coreo API Key is required for this command. Use flag --api-key\n"
 
 	//ErrorSecretMissing error
-	ErrorSecretMissing = "[ ERROR ] Secret is required for this command. Use flag --secret\n"
+	ErrorSecretMissing = "[ ERROR ] Coreo API Secret is required for this command. Use flag --api-secret\n"
 
 	//ErrorGitInitNotRan error
 	ErrorGitInitNotRan = "[ ERROR ] Not a git repository (or any of the parent directories): .git\n"
@@ -233,4 +233,7 @@ const (
 
 	//InfoUsingProfile info using profile
 	InfoUsingProfile = "[ OK ] Using Profile %s\n"
+
+	//InfoCommandSuccess info command was executed successfully
+	InfoCommandSuccess =  "[ OK ] Command was executed successfully"
 )

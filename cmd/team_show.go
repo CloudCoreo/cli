@@ -49,7 +49,16 @@ var TeamShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		util.PrintResult(t, []string{"ID", "TeamName", "TeamDescription"}, json)
+		util.PrintResult(
+			t,
+			[]string{"ID", "TeamName", "TeamDescription"},
+			map[string]string {
+				"ID": "Team ID",
+				"TeamName": "Team Name",
+				"TeamDescription" : "Team Description",
+			},
+			json,
+			verbose)
 	},
 }
 

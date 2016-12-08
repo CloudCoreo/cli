@@ -64,7 +64,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&teamID, content.CmdFlagTeamIDLong, content.None, content.CmdFlagTeamIDDescription)
 	RootCmd.PersistentFlags().StringVar(&apiEndpont, content.CmdFlagAPIEndpointLong, "https://app.cloudcoreo.com/api", content.CmdFlagAPIEndpointDescription)
 	RootCmd.PersistentFlags().BoolVar(&json, content.CmdFlagJSONLong, false, content.CmdFlagJSONDescription)
-	RootCmd.PersistentFlags().BoolVar(&verbose, content.CmdFlagVerboseLong, false, content.CmdFlagVerboseDescription)
+	RootCmd.PersistentFlags().BoolVar(&verbose, content.CmdFlagVerboseLong, true, content.CmdFlagVerboseDescription)
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -112,6 +112,10 @@ func SetupCoreoCredentials() {
 		os.Exit(-1)
 	}
 	secret = secretKey
+
+	if verbose {
+		fmt.Printf(content.InfoUsingProfile, userProfile)
+	}
 }
 
 // SetupCoreoDefaultTeam setup default team ID

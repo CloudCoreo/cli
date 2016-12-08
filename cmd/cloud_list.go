@@ -53,7 +53,16 @@ var CloudListCmd = &cobra.Command{
 			b[i] = t[i]
 		}
 
-		util.PrintResult(b, []string{"ID", "Name", "TeamID"}, json)
+		util.PrintResult(
+			b,
+			[]string{"ID", "Name", "TeamID"},
+			map[string]string {
+				"ID": "Cloud Account ID",
+				"Name": "Cloud Account Name",
+				"TeamID" : "Team ID",
+			},
+			json,
+			verbose)
 	},
 }
 

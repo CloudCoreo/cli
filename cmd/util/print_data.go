@@ -22,11 +22,13 @@ import (
 
 	"os"
 
+	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/bndr/gotabulate"
 )
 
 // Table struct
 type Table struct {
+	HeaderMap   map[string]string
 	Header      []string
 	Rows        [][]interface{}
 	MaxCellSize int
@@ -35,6 +37,12 @@ type Table struct {
 // NewTable create new table
 func NewTable() *Table {
 	return new(Table)
+}
+
+// SetHeaderMap set headerMap for table
+func (c *Table) SetHeaderMap(headerMap map[string]string) *Table {
+	c.HeaderMap = headerMap
+	return c
 }
 
 // SetHeader set header for table
@@ -127,7 +135,18 @@ func (c *Table) UseObj(obj interface{}) *Table {
 // Render table
 func (c *Table) Render() string {
 	t := gotabulate.Create(c.Rows)
-	t.SetHeaders(c.Header)
+
+	if c.HeaderMap != nil {
+		var headers []string
+		for _, h := range c.Header {
+			headers = append(headers, c.HeaderMap[h])
+		}
+
+		t.SetHeaders(headers)
+	} else {
+		t.SetHeaders(c.Header)
+	}
+
 	t.SetAlign("center")
 	// Set the Empty String (optional)
 	t.SetEmptyString("None")
@@ -157,13 +176,19 @@ func PrintError(err error, json bool) {
 }
 
 //PrintResult print result
-func PrintResult(t interface{}, headers []string, json bool) {
+func PrintResult(t interface{}, headers []string, headersMap map[string]string, json, verbose bool) {
 	if json {
 		PrettyPrintJSON(t)
 	} else {
 		table := NewTable()
 		table.SetHeader(headers)
+		table.SetHeaderMap(headersMap)
+
 		table.UseObj(t)
 		fmt.Println(table.Render())
+	}
+
+	if verbose {
+		fmt.Println(content.InfoCommandSuccess)
 	}
 }

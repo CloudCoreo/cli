@@ -53,8 +53,16 @@ var GitKeyShowCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		util.PrintResult(t, []string{"ID", "Name", "TeamID"}, json)
-	},
+		util.PrintResult(
+			t,
+			[]string{"ID", "Name", "TeamID"},
+			map[string]string {
+				"ID": "Git Key ID",
+				"Name": "Git Key Name",
+				"TeamID" : "Team ID",
+			},
+			json,
+			verbose)	},
 }
 
 func init() {

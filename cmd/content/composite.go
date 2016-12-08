@@ -19,10 +19,12 @@ const (
 	CmdCompositeUse = "composite"
 
 	//CmdCompositeShort short descripton
-	CmdCompositeShort = "Manage Coreo Composites"
+	CmdCompositeShort = "Manage Composites"
 
 	//CmdCompositeLong long descripton
-	CmdCompositeLong = `Manage Coreo Composites.`
+	CmdCompositeLong = `Manage Composites. Composites are inheritable cloud reference designs that
+can be easily extended and updated. A Composite can specify a single micro-service,
+a group of services, a complex application, or an entire data center definition.`
 
 	//CmdCompositeInitShort short descripton
 	CmdCompositeInitShort = "Create a new configuration"
