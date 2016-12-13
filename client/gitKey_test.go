@@ -12,8 +12,8 @@ import (
 )
 
 const teamGitKeyJSONPayload = `[{
-		"teamName": "coolguru-default",
-			"ownerId": "583bc8dbca5e631017ed46c8",
+		"teamName": "gitUser-default",
+			"ownerId": "userID",
 			"teamIcon": "periodic-bg-5.png",
 			"teamDescription": null,
 			"default": true,
@@ -21,30 +21,30 @@ const teamGitKeyJSONPayload = `[{
 		{
 		"ref": "self",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/583bc8dbca5e631017ed46c9"
+		"href": "https://app.cloudcoreo.com/api/teams/teamID"
 		},
 		{
 		"ref": "owner",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/users/583bc8dbca5e631017ed46c8"
+		"href": "https://app.cloudcoreo.com/api/users/userID"
 		},
 		{
 		"ref": "users",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/583bc8dbca5e631017ed46c9/users"
+		"href": "https://app.cloudcoreo.com/api/teams/teamID/users"
 		},
 		{
 		"ref": "gitKeys",
 		"method": "GET",
-		"href": "%s/api/teams/583bc8dbca5e631017ed46c9/gitkeys"
+		"href": "%s/api/teams/teamID/gitkeys"
 		}
 	],
-		"id": "583bc8dbca5e631017ed46c9"
+		"id": "teamID"
 	}]`
 
 const teamGitKeyJSONPayloadMissingGitKeyLink = `[{
-		"teamName": "coolguru-default",
-			"ownerId": "583bc8dbca5e631017ed46c8",
+		"teamName": "gitUser-default",
+			"ownerId": "userID",
 			"teamIcon": "periodic-bg-5.png",
 			"teamDescription": null,
 			"default": true,
@@ -52,38 +52,38 @@ const teamGitKeyJSONPayloadMissingGitKeyLink = `[{
 		{
 		"ref": "self",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/583bc8dbca5e631017ed46c9"
+		"href": "https://app.cloudcoreo.com/api/teams/teamID"
 		},
 		{
 		"ref": "owner",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/users/583bc8dbca5e631017ed46c8"
+		"href": "https://app.cloudcoreo.com/api/users/userID"
 		},
 		{
 		"ref": "users",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/583bc8dbca5e631017ed46c9/users"
+		"href": "https://app.cloudcoreo.com/api/teams/teamID/users"
 		}
 	],
-		"id": "583bc8dbca5e631017ed46c9"
+		"id": "teamID"
 	}]`
 
 const GitKeyJSONPayload = `[
 	{
-		"teamId": "583bc8dbca5e631017ed46c9",
+		"teamId": "teamID",
 		"name": "Test key",
-		"sha256fingerprint": "SHA256:Jbl/YDLNXwIu9w1eqm6CN4HSEsWJplkDydy7AQ9al9g",
-		"md5fingerprint": "39:18:b9:c9:aa:b6:5c:15:8f:f9:a2:7a:cf:24:23:c1",
+		"sha256fingerprint": "SHA256:Jbl/sadfasdfasf",
+		"md5fingerprint": "123:123:123:123:123:123:123:123:123:3d:asdf:asdf:asdf:asdf:asdf:asf",
 		"links": [
 			{
 				"ref": "self",
 				"method": "GET",
-				"href": "https://app.cloudcoreo.com/api/gitkeys/585049537bb23bb35859ee5e"
+				"href": "https://app.cloudcoreo.com/api/gitkeys/gitkeyID"
 			},
 			{
 				"ref": "team",
 				"method": "GET",
-				"href": "https://app.cloudcoreo.com/api/teams/583bc8dbca5e631017ed46c9"
+				"href": "https://app.cloudcoreo.com/api/teams/teamID"
 			}
 		],
 		"id": "gitKeyID"
@@ -91,108 +91,108 @@ const GitKeyJSONPayload = `[
 ]`
 
 const GitKeyJSONPayloadMissingSelfData = `[{
-		"teamId": "583bc8dbca5e631017ed46c9",
+		"teamId": "teamID",
 		"name": "Test key",
-		"sha256fingerprint": "SHA256:Jbl/YDLNXwIu9w1eqm6CN4HSEsWJplkDydy7AQ9al9g",
-		"md5fingerprint": "39:18:b9:c9:aa:b6:5c:15:8f:f9:a2:7a:cf:24:23:c1",
+		"sha256fingerprint": "SHA256:Jbl/sadfasdfasf",
+		"md5fingerprint": "123:123:123:123:123:123:123:123:123:3d:asdf:asdf:asdf:asdf:asdf:asf",
 		"id": "gitKeyID"
 	}]`
 
 const createdGitKeyJSONPayload = `{
-		"id": "583bca6dca5e631017ed46fb"
+		"id": "compositeID"
 	}`
 
 func TestGetGitKeysSuccess(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.GetGitKeys(context.Background(), "583bc8dbca5e631017ed46c9")
+	_, err := client.GetGitKeys(context.Background(), "teamID")
 	assert.Nil(t, err, "GetGitKeys shouldn't return error.")
 }
 
 func TestGetGitKeysFailureInvalidUserResponse(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(`{}`).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.GetGitKeys(context.Background(), "583bc8dbca5e631017ed46c9")
+	_, err := client.GetGitKeys(context.Background(), "teamID")
 	assert.NotNil(t, err, "GetGitKeys should return error.")
 }
 
 func TestGetGitKeysFailureInvalidTeamResponse(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(`{}`).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(`{}`).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.GetGitKeys(context.Background(), "583bc8dbca5e631017ed46c9")
+	_, err := client.GetGitKeys(context.Background(), "teamID")
 	assert.NotNil(t, err, "GetGitKeys should return error.")
 }
 
 func TestGetGitKeysFailureInvalidGitKeyresponse(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("GET").WithBody(`{}`).WithStatus(http.StatusOK)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("GET").WithBody(`{}`).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.GetGitKeys(context.Background(), "583bc8dbca5e631017ed46c9")
+	_, err := client.GetGitKeys(context.Background(), "teamID")
 	assert.NotNil(t, err, "GetGitKeys should return error.")
 }
 
 func TestGetGitKeysFailureMissingGitKeysLink(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(teamGitKeyJSONPayloadMissingGitKeyLink).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(teamGitKeyJSONPayloadMissingGitKeyLink).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.GetGitKeys(context.Background(), "583bc8dbca5e631017ed46c9")
+	_, err := client.GetGitKeys(context.Background(), "teamID")
 	assert.NotNil(t, err, "GetGitKeys should return error.")
 	assert.Equal(t, "Resource for given ID not found.", err.Error())
 }
 
 func TestGetGitKeysFailedNoGitKeysFound(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("GET").WithBody(`[]`).WithStatus(http.StatusOK)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("GET").WithBody(`[]`).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.GetGitKeys(context.Background(), "583bc8dbca5e631017ed46c9")
+	_, err := client.GetGitKeys(context.Background(), "teamID")
 	assert.NotNil(t, err, "GetGitKeys should return error.")
-	assert.Equal(t, "No git keys found under team ID 583bc8dbca5e631017ed46c9.", err.Error())
+	assert.Equal(t, "No git keys found under team ID teamID.", err.Error())
 
 }
 
 func TestGetGitKeyByIDSuccess(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.GetGitKeyByID(context.Background(), "583bc8dbca5e631017ed46c9", "gitKeyID")
+	_, err := client.GetGitKeyByID(context.Background(), "teamID", "gitKeyID")
 	assert.Nil(t, err, "GetGitKeyByID shouldn't return error.")
 }
 
 func TestGetGitKeyByIDFailureInvalidTeamID(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
@@ -205,88 +205,88 @@ func TestGetGitKeyByIDFailureInvalidTeamID(t *testing.T) {
 
 func TestGetGitKeyByIDFailureInvalidGitKeyID(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("GET").WithBody(GitKeyJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.GetGitKeyByID(context.Background(), "583bc8dbca5e631017ed46c9", "invalidGitKeyID")
+	_, err := client.GetGitKeyByID(context.Background(), "teamID", "invalidGitKeyID")
 	assert.NotNil(t, err, "GetGitKeyByID should return error.")
-	assert.Equal(t, "No git key with ID invalidGitKeyID found under team ID 583bc8dbca5e631017ed46c9.", err.Error())
+	assert.Equal(t, "No git key with ID invalidGitKeyID found under team ID teamID.", err.Error())
 }
 
 func TestCreateGitKeySuccess(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("POST").WithBody(createdGitKeyJSONPayload).WithStatus(http.StatusCreated)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("POST").WithBody(createdGitKeyJSONPayload).WithStatus(http.StatusCreated)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateGitKey(context.Background(), "583bc8dbca5e631017ed46c9", "keyMaterial", "name")
+	_, err := client.CreateGitKey(context.Background(), "teamID", "keyMaterial", "name")
 	assert.Nil(t, err, "CreateGitKey shouldn't return error.")
 }
 
 func TestCreateGitKeyFailureBadRequest(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("POST").WithBody(createdGitKeyJSONPayload).WithStatus(http.StatusBadRequest)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("POST").WithBody(createdGitKeyJSONPayload).WithStatus(http.StatusBadRequest)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateGitKey(context.Background(), "583bc8dbca5e631017ed46c9", "keyMaterial", "name")
+	_, err := client.CreateGitKey(context.Background(), "teamID", "keyMaterial", "name")
 	assert.NotNil(t, err, "CreateGitKey should return error.")
 }
 
 func TestCreateGitKeyFailedToParseUser(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("POST").WithBody(createdGitKeyJSONPayload).WithStatus(http.StatusCreated)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("POST").WithBody(createdGitKeyJSONPayload).WithStatus(http.StatusCreated)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(`{}`).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateGitKey(context.Background(), "583bc8dbca5e631017ed46c9", "keyMaterial", "name")
+	_, err := client.CreateGitKey(context.Background(), "teamID", "keyMaterial", "name")
 	assert.NotNil(t, err, "CreateGitKey should return error.")
 }
 
 func TestCreateGitKeyFailedToParseGitKeyLink(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("POST").WithBody(createdGitKeyJSONPayload).WithStatus(http.StatusCreated)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(`{}`).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("POST").WithBody(createdGitKeyJSONPayload).WithStatus(http.StatusCreated)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(`{}`).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateGitKey(context.Background(), "583bc8dbca5e631017ed46c9", "keyMaterial", "name")
+	_, err := client.CreateGitKey(context.Background(), "teamID", "keyMaterial", "name")
 	assert.NotNil(t, err, "CreateGitKey should return error.")
 	assert.Equal(t, "json: cannot unmarshal object into Go value of type []*client.Team", err.Error())
 }
 
 func TestCreateGitKeysFailureMissingGitKeysLink(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("POST").WithBody(createdGitKeyJSONPayload).WithStatus(http.StatusCreated)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(teamGitKeyJSONPayloadMissingGitKeyLink).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("POST").WithBody(createdGitKeyJSONPayload).WithStatus(http.StatusCreated)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(teamGitKeyJSONPayloadMissingGitKeyLink).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateGitKey(context.Background(), "583bc8dbca5e631017ed46c9", "keyMaterial", "name")
+	_, err := client.CreateGitKey(context.Background(), "teamID", "keyMaterial", "name")
 	assert.NotNil(t, err, "CreateGitKey should return error.")
 	assert.Equal(t, "Resource for given ID not found.", err.Error())
 }
 
 func TestCreateGitKeyFailureGitKeyNotCreated(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/583bc8dbca5e631017ed46c9/gitkeys").WithMethod("POST").WithBody(`{}`).WithStatus(http.StatusCreated)
-	ts.Path("/api/users/583bc8dbca5e631017ed46c8/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/gitkeys").WithMethod("POST").WithBody(`{}`).WithStatus(http.StatusCreated)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamGitKeyJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateGitKey(context.Background(), "583bc8dbca5e631017ed46c9", "keyMaterial", "name")
+	_, err := client.CreateGitKey(context.Background(), "teamID", "keyMaterial", "name")
 	assert.NotNil(t, err, "CreateGitKey should return error.")
-	assert.Equal(t, "Failed to create git key under team ID 583bc8dbca5e631017ed46c9.", err.Error())
+	assert.Equal(t, "Failed to create git key under team ID teamID.", err.Error())
 }

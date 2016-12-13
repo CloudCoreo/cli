@@ -95,8 +95,8 @@ func (suite *DoTestSuite) SetupTest() {
 func (suite *DoTestSuite) TestDo() {
 	ts := httpstub.New()
 	ts.Path("/").WithBody(`{
-		"teamName": "coolguru-default",
-			"ownerId": "583bc8dbca5e631017ed46c8",
+		"teamName": "gitUser-default",
+			"ownerId": "userID",
 			"teamIcon": "periodic-bg-5.png",
 			"teamDescription": null,
 			"default": true,
@@ -104,35 +104,35 @@ func (suite *DoTestSuite) TestDo() {
 		{
 		"ref": "self",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/583bc8dbca5e631017ed46c9"
+		"href": "https://app.cloudcoreo.com/api/teams/teamID"
 		},
 		{
 		"ref": "owner",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/users/583bc8dbca5e631017ed46c8"
+		"href": "https://app.cloudcoreo.com/api/users/userID"
 		},
 		{
 		"ref": "composites",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/583bc8dbca5e631017ed46c9/composites"
+		"href": "https://app.cloudcoreo.com/api/teams/teamID/composites"
 		},
 		{
 		"ref": "users",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/583bc8dbca5e631017ed46c9/users"
+		"href": "https://app.cloudcoreo.com/api/teams/teamID/users"
 		},
 		{
 		"ref": "gitKeys",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/583bc8dbca5e631017ed46c9/gitkeys"
+		"href": "https://app.cloudcoreo.com/api/teams/teamID/gitkeys"
 		},
 		{
 		"ref": "cloudAccounts",
 		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/583bc8dbca5e631017ed46c9/cloudaccounts"
+		"href": "https://app.cloudcoreo.com/api/teams/teamID/cloudaccounts"
 		}
 	],
-		"id": "583bc8dbca5e631017ed46c9"
+		"id": "teamID"
 	}`).WithStatus(http.StatusOK)
 
 	defer ts.Close()
@@ -141,7 +141,7 @@ func (suite *DoTestSuite) TestDo() {
 	team := &Team{}
 	err := client.Do(context.Background(), "POST", ts.URL, nil, &team)
 	assert.Nil(suite.T(), err, "Do shouldn't return error.")
-	assert.Equal(suite.T(), "583bc8dbca5e631017ed46c9", team.ID)
+	assert.Equal(suite.T(), "teamID", team.ID)
 }
 
 // TestDoTestSuite Execute TestDoTestSuite test suite

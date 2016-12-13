@@ -10,34 +10,34 @@ import (
 )
 
 const userJSONPayload = `{
-	"username": "coolguru",
-	"email": "nandesh@cloudcoreo.com",
-	"gravatarIconUrl": "http://www.gravatar.com/avatar/ff813888fedf42ea2f849b2fba9e9de8",
+	"username": "gitUser",
+	"email": "user@cloudcoreo.com",
+	"gravatarIconUrl": "http://www.gravatar.com/avatar/avatarID",
 	"createdAt": "2016-11-26T09:22:40.356Z",
-	"defaultTeamId": "583bc8dbca5e631017ed46c9",
+	"defaultTeamId": "teamID",
 	"links": [
 		{
 			"ref": "self",
 			"method": "GET",
-			"href": "https://app.cloudcoreo.com/api/users/583bc8dbca5e631017ed46c8"
+			"href": "https://app.cloudcoreo.com/api/users/userID"
 		},
 		{
 			"ref": "defaultTeam",
 			"method": "GET",
-			"href": "https://app.cloudcoreo.com/api/teams/583bc8dbca5e631017ed46c9"
+			"href": "https://app.cloudcoreo.com/api/teams/teamID"
 		},
 		{
 			"ref": "teams",
 			"method": "GET",
-			"href": "https://app.cloudcoreo.com/api/users/583bc8dbca5e631017ed46c8/teams"
+			"href": "https://app.cloudcoreo.com/api/users/userID/teams"
 		},
 		{
 			"ref": "tokens",
 			"method": "GET",
-			"href": "https://app.cloudcoreo.com/api/users/583bc8dbca5e631017ed46c8/tokens"
+			"href": "https://app.cloudcoreo.com/api/users/userID/tokens"
 		}
 	],
-	"id": "583bc8dbca5e631017ed46c8"
+	"id": "userID"
 }`
 
 func TestGetUserSuccess(t *testing.T) {
