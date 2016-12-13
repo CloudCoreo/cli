@@ -104,5 +104,9 @@ func (c *Client) CreateComposite(ctx context.Context, gitURL, name, teamID strin
 		return composite, err
 	}
 
+	if composite.ID == "" {
+		return nil, NewError(fmt.Sprintf(content.ErrorFailedToCreateComposite, teamID))
+	}
+
 	return composite, nil
 }

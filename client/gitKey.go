@@ -46,12 +46,12 @@ func (c *Client) GetGitKeys(ctx context.Context, teamID string) ([]*GitKey, erro
 			gitKeyLink, e := GetLinkByRef(team.Links, "gitKeys")
 
 			if e != nil {
-				return nil, NewError(err.Error())
+				return nil, NewError(e.Error())
 			}
 
 			e = c.Do(ctx, "GET", gitKeyLink.Href, nil, &gitKeys)
 			if e != nil {
-				return nil, NewError(err.Error())
+				return nil, NewError(e.Error())
 			}
 		}
 	}
@@ -81,7 +81,7 @@ func (c *Client) GetGitKeyByID(ctx context.Context, teamID, gitKeyID string) (*G
 	}
 
 	if gitKey.ID == "" {
-		return nil, NewError(fmt.Sprintf(content.ErrorNoGitKeyWithIDFound, gitKey, teamID))
+		return nil, NewError(fmt.Sprintf(content.ErrorNoGitKeyWithIDFound, gitKeyID, teamID))
 	}
 
 	return gitKey, nil

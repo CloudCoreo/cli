@@ -143,7 +143,6 @@ func (c *Client) EnablePlan(ctx context.Context, teamID, compositeID, planID str
 	if err != nil {
 		return nil, err
 	}
-
 	plan := &Plan{}
 
 	for _, p := range plans {
@@ -152,23 +151,23 @@ func (c *Client) EnablePlan(ctx context.Context, teamID, compositeID, planID str
 			p.Enabled = true
 			jsonStr, err := json.Marshal(p)
 			if err != nil {
-				return plan, err
+				return nil, err
 			}
 
 			planLink, err := GetLinkByRef(p.Links, "self")
 			if err != nil {
-				return plan, err
+				return nil, err
 			}
 
 			err = c.Do(ctx, "PUT", planLink.Href, bytes.NewBuffer(jsonStr), &plan)
 			if err != nil {
-				return plan, err
+				return nil, err
 			}
 			break
 		}
 	}
 
-	if plan.ID == "" {
+	if plan.ID == "" && !plan.Enabled {
 		return nil, NewError(fmt.Sprintf(content.ErrorFailedToEnablePlan, planID, teamID, compositeID))
 	}
 

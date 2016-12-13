@@ -38,7 +38,7 @@ func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]*CloudA
 	teams, err := c.GetTeams(ctx)
 
 	if err != nil {
-		return clouds, err
+		return nil, err
 	}
 
 	for _, team := range teams {
@@ -46,20 +46,18 @@ func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]*CloudA
 			cloudLink, e := GetLinkByRef(team.Links, "cloudAccounts")
 
 			if e != nil {
-				return nil, NewError(err.Error())
+				return nil, NewError(e.Error())
 			}
 
-			e = c.Do(ctx, "GET", cloudLink.Href, nil, &clouds)
-			if e != nil {
+			err = c.Do(ctx, "GET", cloudLink.Href, nil, &clouds)
+			if err != nil {
 				return nil, NewError(err.Error())
 			}
 		}
 	}
 
 	if len(clouds) == 0 {
-		if err != nil {
-			return nil, NewError(fmt.Sprintf(content.ErrorNoCloudAccountsFound, teamID))
-		}
+		return nil, NewError(fmt.Sprintf(content.ErrorNoCloudAccountsFound, teamID))
 	}
 
 	return clouds, nil
