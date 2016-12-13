@@ -404,6 +404,7 @@ func TestDeleteCloudAccountByIDFailureInvalidCloudID(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	err := client.DeleteCloudAccountByID(context.Background(), "teamID", "cloudAccountID")
+	err := client.DeleteCloudAccountByID(context.Background(), "teamID", "InvalidCloudAccountID")
 	assert.NotNil(t, err, "DeleteCloudAccountByID should return error.")
+	assert.Equal(t, "Failed to delete cloud account with ID InvalidCloudAccountID under team ID teamID.", err.Error())
 }
