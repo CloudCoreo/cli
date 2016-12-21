@@ -88,20 +88,20 @@ func (c *Client) CreateToken(ctx context.Context, name, description string) (*To
 	u, err := c.GetUser(ctx)
 	token := &Token{}
 	if err != nil {
-		return token, err
+		return nil, err
 	}
 
 	tokenLink, err := GetLinkByRef(u.Links, "tokens")
 
 	if err != nil {
-		return token, err
+		return nil, err
 	}
 
 	tokenPayLoad := fmt.Sprintf(`{"description":"%s","name":"%s"}`, description, name)
 	var jsonStr = []byte(tokenPayLoad)
 	err = c.Do(ctx, "POST", tokenLink.Href, bytes.NewBuffer(jsonStr), &token)
 	if err != nil {
-		return token, err
+		return nil, err
 	}
 
 	if token.ID == "" {

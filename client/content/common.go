@@ -16,6 +16,9 @@ const (
 	//ErrorFailedToDeleteCloudAccount error
 	ErrorFailedToDeleteCloudAccount = "Failed to delete cloud account with ID %s under team ID %s."
 
+	//ErrorFailedToCreateComposite error
+	ErrorFailedToCreateComposite = "Failed to create composite under team ID %s."
+
 	//ErrorNoCompositesFound error
 	ErrorNoCompositesFound = "No composites found under team ID %s."
 

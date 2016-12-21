@@ -35,7 +35,7 @@ func (c *Client) GetUser(ctx context.Context) (*User, error) {
 	t := &User{}
 	err := c.Do(ctx, "GET", c.endpoint+"/me", nil, &t)
 	if err != nil {
-		return t, err
+		return nil, err
 	}
 
 	return t, nil

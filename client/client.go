@@ -63,14 +63,14 @@ func MakeClient(apiKey, secretKey, endpoint string) (*Client, error) {
 
 	a := Auth{APIKey: apiKey, SecretKey: secretKey}
 	i := Interceptor(a.SignRequest)
-	c := New(endpoint, WithInterceptor(i))
+	c := newClient(endpoint, WithInterceptor(i))
 
 	return c, nil
 }
 
 // New creates a new Client for a given endpoint that can be configured with
 // multiple ClientOption
-func New(endpoint string, opts ...Option) *Client {
+func newClient(endpoint string, opts ...Option) *Client {
 	client := &Client{
 		endpoint: endpoint,
 	}
@@ -109,7 +109,6 @@ func (c *Client) Do(ctx context.Context, method, path string, body io.Reader, ob
 	// have that guarantee.
 	if obj != nil {
 		err = json.NewDecoder(resp.Body).Decode(obj)
-
 	}
 
 	io.Copy(ioutil.Discard, resp.Body)

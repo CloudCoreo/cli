@@ -9,6 +9,12 @@
 			"revisionTime": "2016-10-08T17:27:12Z"
 		},
 		{
+			"checksumSHA1": "dvabztWVQX8f6oMLRyv4dLH+TGY=",
+			"path": "github.com/davecgh/go-spew/spew",
+			"revision": "346938d642f2ec3594ed81d874461961cd0faa76",
+			"revisionTime": "2016-10-29T20:57:26Z"
+		},
+		{
 			"checksumSHA1": "nmc2qcdbg17Ny8tHeEDQuphV6jA=",
 			"path": "github.com/fsnotify/fsnotify",
 			"revision": "bd2828f9f176e52d7222e565abb2d338d3f3c103",
@@ -75,6 +81,13 @@
 			"revisionTime": "2014-10-17T20:07:13Z"
 		},
 		{
+			"checksumSHA1": "2OfX4JrCGAQ/Fu9zC2pH6P57P7M=",
+			"path": "github.com/jharlap/httpstub",
+			"revision": "ac3849a1e58448eae65eb1f556f8f35dd5e3b993",
+			"revisionTime": "2016-06-11T18:36:43Z",
+			"tree": true
+		},
+		{
 			"checksumSHA1": "KQhA4EQp4Ldwj9nJZnEURlE6aQw=",
 			"path": "github.com/kr/fs",
 			"revision": "2788f0dbd16903de03cb8186e5c7d97b69ad387b",
@@ -123,6 +136,12 @@
 			"revisionTime": "2016-09-30T22:07:58Z"
 		},
 		{
+			"checksumSHA1": "LuFv4/jlrmFNnDb/5SCSEPAM9vU=",
+			"path": "github.com/pmezard/go-difflib/difflib",
+			"revision": "792786c7400a136282c1664665ae0a8db921c6c2",
+			"revisionTime": "2016-01-10T10:55:54Z"
+		},
+		{
 			"checksumSHA1": "59wTbS4fE2282Q88NrBYImbFGbo=",
 			"path": "github.com/spf13/afero",
 			"revision": "52e4a6cfac46163658bd4f123c49b6ee7dc75f78",
@@ -169,6 +188,49 @@
 			"path": "github.com/spf13/viper",
 			"revision": "80ab6657f9ec7e5761f6603320d3d58dfe6970f6",
 			"revisionTime": "2016-10-24T15:49:00Z"
+		},
+		{
+			"checksumSHA1": "4pPvWfQXiMJ4hnji7HbKXtnU2gc=",
+			"path": "github.com/stretchr/objx",
+			"revision": "1a9d0bb9f541897e62256577b352fdbc1fb4fd94",
+			"revisionTime": "2015-09-28T12:21:52Z",
+			"tree": true
+		},
+		{
+			"checksumSHA1": "/kKwYqD04AkkDZFQhGwklKw3RFA=",
+			"path": "github.com/stretchr/testify",
+			"revision": "18a02ba4a312f95da08ff4cfc0055750ce50ae9e",
+			"revisionTime": "2016-11-17T07:43:51Z"
+		},
+		{
+			"checksumSHA1": "hIEmcd7hIDqO/xWSp1rJJHd0TpE=",
+			"path": "github.com/stretchr/testify/assert",
+			"revision": "18a02ba4a312f95da08ff4cfc0055750ce50ae9e",
+			"revisionTime": "2016-11-17T07:43:51Z"
+		},
+		{
+			"checksumSHA1": "fg3TzS9/QK3wZbzei3Z6O8XPLHg=",
+			"path": "github.com/stretchr/testify/http",
+			"revision": "18a02ba4a312f95da08ff4cfc0055750ce50ae9e",
+			"revisionTime": "2016-11-17T07:43:51Z"
+		},
+		{
+			"checksumSHA1": "cKBlbfqUWhlImzYUu0QFw1hOHwI=",
+			"path": "github.com/stretchr/testify/mock",
+			"revision": "18a02ba4a312f95da08ff4cfc0055750ce50ae9e",
+			"revisionTime": "2016-11-17T07:43:51Z"
+		},
+		{
+			"checksumSHA1": "omdvCNu8sJIc9FbOfObC484M7Dg=",
+			"path": "github.com/stretchr/testify/require",
+			"revision": "18a02ba4a312f95da08ff4cfc0055750ce50ae9e",
+			"revisionTime": "2016-11-17T07:43:51Z"
+		},
+		{
+			"checksumSHA1": "wE2g522VLUmwlEnTBtUSZhY6ex4=",
+			"path": "github.com/stretchr/testify/suite",
+			"revision": "18a02ba4a312f95da08ff4cfc0055750ce50ae9e",
+			"revisionTime": "2016-11-17T07:43:51Z"
 		},
 		{
 			"checksumSHA1": "dwOedwBJ1EIK9+S3t108Bx054Y8=",
