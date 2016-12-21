@@ -55,7 +55,7 @@ const (
 	CmdFlagGitKeyIDDescription = "Coreo Git key ID"
 
 	//ErrorGitKeyIDMissing error
-	ErrorGitKeyIDMissing = "[ ERROR ] Git Key ID is required for this command. Use flag --gitKey-id\n"
+	ErrorGitKeyIDMissing = "Git Key ID is required for this command. Use flag --gitKey-id\n"
 
 	//InfoUsingGitKeyID informational using git key id
 	InfoUsingGitKeyID = "[ OK ] Using Git Key ID %s\n"

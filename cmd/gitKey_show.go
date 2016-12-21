@@ -1,72 +1,73 @@
-// Copyright © 2016 Paul Allen <paul@cloudcoreo.com>
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-package cmd
+package main
 
 import (
-	"context"
-	"fmt"
-	"os"
+	"io"
 
-	"github.com/CloudCoreo/cli/client"
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
 )
 
-// GitKeyShowCmd represents the based command for gitkey subcommands
-var GitKeyShowCmd = &cobra.Command{
-	Use:   content.CmdShowUse,
-	Short: content.CmdGitKeyShowShort,
-	Long:  content.CmdGitKeyShowLong,
-	PreRun: func(cmd *cobra.Command, args []string) {
-		util.CheckArgsCount(args)
-
-		SetupCoreoCredentials()
-		SetupCoreoDefaultTeam()
-		if err := util.CheckGitKeyShowOrDeleteFlag(gitKeyID, verbose); err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
-			os.Exit(-1)
-		}
-	},
-	Run: func(cmd *cobra.Command, args []string) {
-		c, err := client.MakeClient(key, secret, apiEndpont)
-		if err != nil {
-			util.PrintError(err, json)
-			os.Exit(-1)
-		}
-
-		t, err := c.GetGitKeyByID(context.Background(), teamID, gitKeyID)
-		if err != nil {
-			util.PrintError(err, json)
-			os.Exit(-1)
-		}
-
-		util.PrintResult(
-			t,
-			[]string{"ID", "Name", "TeamID"},
-			map[string]string {
-				"ID": "Git Key ID",
-				"Name": "Git Key Name",
-				"TeamID" : "Team ID",
-			},
-			json,
-			verbose)	},
+type gitKeyShowCmd struct {
+	out      io.Writer
+	client   coreo.Interface
+	teamID   string
+	gitKeyID string
 }
 
-func init() {
-	GitKeyCmd.AddCommand(GitKeyShowCmd)
+func newGitKeyShowCmd(client coreo.Interface, out io.Writer) *cobra.Command {
+	gitKeyShow := &gitKeyShowCmd{
+		out:    out,
+		client: client,
+	}
 
-	GitKeyShowCmd.Flags().StringVarP(&gitKeyID, content.CmdFlagGitKeyIDLong, "", "", content.CmdFlagGitKeyIDDescription)
+	cmd := &cobra.Command{
+		Use:   content.CmdShowUse,
+		Short: content.CmdGitKeyShowShort,
+		Long:  content.CmdGitKeyShowLong,
+		RunE: func(cmd *cobra.Command, args []string) error {
+
+			if err := util.CheckGitKeyShowOrDeleteFlag(gitKeyShow.gitKeyID, verbose); err != nil {
+				return err
+			}
+
+			if gitKeyShow.client == nil {
+				gitKeyShow.client = coreo.NewClient(
+					coreo.Host(apiEndpoint),
+					coreo.APIKey(key),
+					coreo.SecretKey(secret))
+			}
+
+			gitKeyShow.teamID = teamID
+
+			return gitKeyShow.run()
+		},
+	}
+	f := cmd.Flags()
+
+	f.StringVarP(&gitKeyShow.gitKeyID, content.CmdFlagGitKeyIDLong, "", "", content.CmdFlagGitKeyIDDescription)
+
+	return cmd
+}
+
+func (t *gitKeyShowCmd) run() error {
+	gitKey, err := t.client.ShowGitKeyByID(t.teamID, t.gitKeyID)
+	if err != nil {
+		return err
+	}
+
+	util.PrintResult(
+		t.out,
+		gitKey,
+		[]string{"ID", "Name", "TeamID"},
+		map[string]string{
+			"ID":     "Git Key ID",
+			"Name":   "Git Key Name",
+			"TeamID": "Team ID",
+		},
+		json,
+		verbose)
+
+	return nil
 }

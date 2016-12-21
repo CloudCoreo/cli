@@ -84,7 +84,7 @@ a group of services, a complex application, or an entire data center definition.
 	InfoUsingCompsiteID = "[ OK ] Using Composite ID %s\n"
 
 	//ErrorCompositeIDRequired error message
-	ErrorCompositeIDRequired = "[ ERROR ] Composite ID is required for this command. Use flag '--composite-id'\n"
+	ErrorCompositeIDRequired = "Composite ID is required for this command. Use flag '--composite-id'\n"
 
 	//CmdFlagCompositeIDLong flag
 	CmdFlagCompositeIDLong = "composite-id"

@@ -61,5 +61,5 @@ const (
 	InfoUsingCloudAccount = "[ OK ] Using Cloud Account ID %s\n"
 
 	//ErrorCloudIDRequired error message
-	ErrorCloudIDRequired = "[ ERROR ] Cloud Account ID is required for this command. Use flag '--cloud-id'\n"
+	ErrorCloudIDRequired = "Cloud Account ID is required for this command. Use flag '--cloud-id'\n"
 )

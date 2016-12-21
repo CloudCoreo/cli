@@ -21,6 +21,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+var viperGetString = viper.GetString
+
 // GetValueFromConfig to get values from config
 func GetValueFromConfig(key string, masked bool) (value string) {
 	if value = viper.GetString(key); value == "" {

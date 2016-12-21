@@ -22,6 +22,8 @@ import (
 
 	"os"
 
+	"io"
+
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/bndr/gotabulate"
 )
@@ -176,7 +178,7 @@ func PrintError(err error, json bool) {
 }
 
 //PrintResult print result
-func PrintResult(t interface{}, headers []string, headersMap map[string]string, json, verbose bool) {
+func PrintResult(out io.Writer, t interface{}, headers []string, headersMap map[string]string, json, verbose bool) {
 	if json {
 		PrettyPrintJSON(t)
 	} else {
@@ -185,10 +187,10 @@ func PrintResult(t interface{}, headers []string, headersMap map[string]string, 
 		table.SetHeaderMap(headersMap)
 
 		table.UseObj(t)
-		fmt.Println(table.Render())
+		fmt.Fprintln(out, table.Render())
 	}
 
 	if verbose {
-		fmt.Println(content.InfoCommandSuccess)
+		fmt.Fprintln(out, content.InfoCommandSuccess)
 	}
 }

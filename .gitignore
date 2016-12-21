@@ -35,3 +35,5 @@ cli
 dump.rdb
 
 *.DS_Store
+
+cmd/cmd

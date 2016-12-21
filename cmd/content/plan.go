@@ -109,5 +109,5 @@ const (
 	InfoUsingPlanID = "[ OK ] Using Plan ID %s\n"
 
 	//ErrorPlanIDRequired error message
-	ErrorPlanIDRequired = "[ ERROR ] Plan ID is required for this command. Use flag '--plan-id'\n"
+	ErrorPlanIDRequired = "Plan ID is required for this command. Use flag '--plan-id'\n"
 )

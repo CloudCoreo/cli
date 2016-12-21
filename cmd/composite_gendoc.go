@@ -1,20 +1,8 @@
-// Copyright © 2016 Paul Allen <paul@cloudcoreo.com>
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-package cmd
+package main
 
 import (
+	"io"
+
 	"bytes"
 	"fmt"
 	"io/ioutil"
@@ -44,58 +32,97 @@ var docHeaders = map[string]string{
 
 var docOrder = []string{"head.md", "description.md", "hierarchy.md", "config.yaml", "tags.md", "categories.md", "diagram.md", "icon.md"}
 
-var cmdCompositeGendoc = &cobra.Command{
-	Use:   content.CmdGendocUse,
-	Short: content.CmdCompositeGendocShort,
-	Long:  content.CmdCompositeGendocLong,
-	Run: func(cmd *cobra.Command, args []string) {
-		util.CheckArgsCount(args)
+type compositeGendocCmd struct {
+	out       io.Writer
+	directory string
+	serverDir bool
+}
 
-		if directory == "" {
-			directory, _ = os.Getwd()
-		}
+func newCompositeGendocCmd(out io.Writer) *cobra.Command {
+	compositeGendoc := &compositeGendocCmd{
+		out: out,
+	}
 
-		var readmeFileContent bytes.Buffer
+	cmd := &cobra.Command{
+		Use:   content.CmdGendocUse,
+		Short: content.CmdCompositeGendocShort,
+		Long:  content.CmdCompositeGendocLong,
+		Run: func(cmd *cobra.Command, args []string) {
+			compositeGendoc.ProcessCmdGendocUse(args)
+		},
+	}
 
-		for index := range docOrder {
+	f := cmd.Flags()
 
-			fileName := docOrder[index]
+	f.StringVarP(&compositeGendoc.directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
+	f.BoolVarP(&compositeGendoc.serverDir, content.CmdFlagServerLong, content.CmdFlagServerShort, false, content.CmdFlagServerDescription)
 
-			if fileName == "config.yaml" {
-				configFileContent, _ := generateConfigContent(path.Join(directory, fileName))
-				readmeFileContent.WriteString(configFileContent)
-			} else {
+	return cmd
+}
 
-				fileContent, err := ioutil.ReadFile(path.Join(directory, fileName))
+func (t *compositeGendocCmd) run() error {
+
+	if t.directory == "" {
+		t.directory, _ = os.Getwd()
+	}
+
+	genContent(t.directory)
+
+	if t.serverDir {
+		genServerContent(t.directory)
+	}
+
+	return nil
+}
+
+//ProcessCmdGendocUse Process Cmd GenDoc
+func (t *compositeGendocCmd) ProcessCmdGendocUse(args []string) {
+	util.CheckArgsCount(args)
+
+	if t.directory == "" {
+		t.directory, _ = os.Getwd()
+	}
+
+	var readmeFileContent bytes.Buffer
+
+	for index := range docOrder {
+
+		fileName := docOrder[index]
+
+		if fileName == content.DefaultFilesConfigYAMLName {
+			configFileContent, _ := generateConfigContent(path.Join(t.directory, fileName))
+			readmeFileContent.WriteString(configFileContent)
+		} else {
+
+			fileContent, err := ioutil.ReadFile(path.Join(t.directory, fileName))
+			if err != nil {
+				fmt.Println(fmt.Sprintf(content.ErrorMissingFile, fileName))
+				err := util.CreateFile(fileName, t.directory, "", false)
 				if err != nil {
-					fmt.Println(fmt.Sprintf(content.ErrorMissingFile, fileName))
-					err := util.CreateFile(fileName, directory, "", false)
-					if err != nil {
-						fmt.Fprintf(os.Stderr, err.Error())
-						os.Exit(-1)
-					}
-
+					fmt.Fprintf(os.Stderr, err.Error())
+					os.Exit(-1)
 				}
 
-				// create headers when non empty
-				if docHeaders[fileName] != "" {
-					readmeFileContent.WriteString(fmt.Sprintf("## %s\n", docHeaders[docOrder[index]]))
-				}
-
-				readmeFileContent.WriteString(string(fileContent) + "\n\n")
 			}
+
+			// create headers when non empty
+			if docHeaders[fileName] != "" {
+				readmeFileContent.WriteString(fmt.Sprintf("## %s\n", docHeaders[docOrder[index]]))
+			}
+
+			readmeFileContent.WriteString(string(fileContent) + "\n\n")
 		}
+	}
 
-		err := util.CreateFile(content.DefaultFilesReadMEName, directory, readmeFileContent.String(), true)
+	err := util.CreateFile(content.DefaultFilesReadMEName, t.directory, readmeFileContent.String(), true)
 
-		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
-			os.Exit(-1)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, err.Error())
+		os.Exit(-1)
 
-		}
+	}
 
-		fmt.Println(content.CmdCompositeGendocSuccess)
-	},
+	fmt.Println(content.CmdCompositeGendocSuccess)
 }
 
 // YamlConfig struct for parsing config.yaml file
@@ -271,10 +298,4 @@ func convertStringSlice(slice interface{}) []string {
 	}
 
 	return ret
-}
-
-func init() {
-	CompositeCmd.AddCommand(cmdCompositeGendoc)
-
-	cmdCompositeGendoc.Flags().StringVarP(&directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
 }
