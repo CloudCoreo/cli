@@ -5,7 +5,6 @@ import (
 
 	"fmt"
 	"os"
-	"path"
 
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
@@ -15,7 +14,6 @@ import (
 type compositeExtendsCmd struct {
 	out        io.Writer
 	directory  string
-	name       string
 	gitRepoURL string
 	serverDir  bool
 }
@@ -43,6 +41,7 @@ func newCompositeExtendsCmd(out io.Writer) *cobra.Command {
 
 	f.StringVarP(&compositeExtends.directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
 	f.BoolVarP(&compositeExtends.serverDir, content.CmdFlagServerLong, content.CmdFlagServerShort, false, content.CmdFlagServerDescription)
+	f.StringVarP(&compositeExtends.gitRepoURL, content.CmdFlagGitRepoLong, content.CmdFlagGitRepoShort, "", content.CmdFlagGitRepoDescription)
 
 	return cmd
 }
@@ -50,30 +49,20 @@ func newCompositeExtendsCmd(out io.Writer) *cobra.Command {
 func (t *compositeExtendsCmd) run() error {
 
 	if err := util.CheckGitInstall(); err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		os.Exit(-1)
+		return err
 	}
 
 	if t.directory == "" {
 		t.directory, _ = os.Getwd()
 	}
 
-	err := util.CreateFolder("stack-"+t.name, t.directory)
+	err := util.CreateGitSubmodule(t.directory, t.gitRepoURL)
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		os.Exit(-1)
+		return err
 	}
 
-	t.directory = path.Join(t.directory, "stack-"+t.name)
-
-	err = util.CreateGitSubmodule(t.directory, t.gitRepoURL)
-
-	if err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		os.Exit(-1)
-	}
-	fmt.Println(content.CmdCompositeExtendsSuccess)
+	fmt.Fprintln(t.out, content.CmdCompositeExtendsSuccess)
 
 	// generate override and service files
 	genContent(t.directory)

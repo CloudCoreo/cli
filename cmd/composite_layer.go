@@ -42,6 +42,8 @@ func newCompositeLayerCmd(out io.Writer) *cobra.Command {
 	f := cmd.Flags()
 
 	f.StringVarP(&compositeLayer.directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
+	f.StringVarP(&compositeLayer.name, content.CmdFlagNameLong, content.CmdFlagNameShort, "", content.CmdFlagNameDescription)
+	f.StringVarP(&compositeLayer.gitRepoURL, content.CmdFlagGitRepoLong, content.CmdFlagGitRepoShort, "", content.CmdFlagGitRepoDescription)
 	f.BoolVarP(&compositeLayer.serverDir, content.CmdFlagServerLong, content.CmdFlagServerShort, false, content.CmdFlagServerDescription)
 
 	return cmd
