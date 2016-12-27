@@ -1,20 +1,8 @@
-// Copyright © 2016 Paul Allen <paul@cloudcoreo.com>
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-package cmd
+package main
 
 import (
+	"io"
+
 	"fmt"
 	"os"
 	"path"
@@ -24,22 +12,47 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cmdCompositeInit = &cobra.Command{
-	Use:   content.CmdInitUse,
-	Short: content.CmdCompositeInitShort,
-	Long:  content.CmdCompositeInitLong,
-	Run: func(cmd *cobra.Command, args []string) {
-		util.CheckArgsCount(args)
-		if directory == "" {
-			directory, _ = os.Getwd()
-		}
+type compositeInitCmd struct {
+	out       io.Writer
+	directory string
+	serverDir bool
+}
 
-		genContent(directory)
+func newCompositeInitCmd(out io.Writer) *cobra.Command {
+	compositeInit := &compositeInitCmd{
+		out: out,
+	}
 
-		if serverDir {
-			genServerContent(directory)
-		}
-	},
+	cmd := &cobra.Command{
+		Use:   content.CmdInitUse,
+		Short: content.CmdCompositeInitShort,
+		Long:  content.CmdCompositeInitLong,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return compositeInit.run()
+		},
+	}
+
+	f := cmd.Flags()
+
+	f.StringVarP(&compositeInit.directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
+	f.BoolVarP(&compositeInit.serverDir, content.CmdFlagServerLong, content.CmdFlagServerShort, false, content.CmdFlagServerDescription)
+
+	return cmd
+}
+
+func (t *compositeInitCmd) run() error {
+
+	if t.directory == "" {
+		t.directory, _ = os.Getwd()
+	}
+
+	genContent(t.directory)
+
+	if t.serverDir {
+		genServerContent(t.directory)
+	}
+
+	return nil
 }
 
 func genContent(directory string) {
@@ -140,11 +153,4 @@ func genServerContent(directory string) {
 		fmt.Fprintf(os.Stderr, err.Error())
 		os.Exit(-1)
 	}
-}
-
-func init() {
-	CompositeCmd.AddCommand(cmdCompositeInit)
-
-	cmdCompositeInit.Flags().StringVarP(&directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
-	cmdCompositeInit.Flags().BoolVarP(&serverDir, content.CmdFlagServerLong, content.CmdFlagServerShort, false, content.CmdFlagServerDescription)
 }

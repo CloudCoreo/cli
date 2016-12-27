@@ -40,5 +40,5 @@ const (
 	InfoUsingTeamID = "[ OK ] Using Team ID %s\n"
 
 	//ErrorTeamIDMissing error
-	ErrorTeamIDMissing = "[ ERROR ] Team ID is required for this command. Use flag --team-id\n"
+	ErrorTeamIDMissing = "Team ID is required for this command. Use flag --team-id\n"
 )

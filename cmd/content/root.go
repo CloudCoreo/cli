@@ -40,43 +40,49 @@ const (
 	Mask = "****************"
 
 	//ErrorMissingFile error
-	ErrorMissingFile = "[ ERROR ] Missing %s file, creating it.\n"
+	ErrorMissingFile = "Missing %s file, creating it.\n"
 
 	//ErrorDirectoryPathNotProvided error
-	ErrorDirectoryPathNotProvided = "[ ERROR ] Directory path not provided.\n"
+	ErrorDirectoryPathNotProvided = "Directory path not provided.\n"
 
 	//ErrorGitURLNotProvided error
-	ErrorGitURLNotProvided = "[ ERROR ] Git url not provided. Use flag -g\n"
+	ErrorGitURLNotProvided = "Git url not provided. Use flag -g\n"
 
 	//ErrorInvalidDirectory error
-	ErrorInvalidDirectory = "[ ERROR ] Error switching to directory to %s. Please make sure it's a valid directory.\n"
+	ErrorInvalidDirectory = "Error switching to directory to %s. Please make sure it's a valid directory.\n"
 
 	//ErrorGitSubmoduleFailed error
-	ErrorGitSubmoduleFailed = "[ ERROR ] git submodule add failed with:\n%s\n"
+	ErrorGitSubmoduleFailed = "git submodule add failed with:\n%s\n"
 
 	//ErrorGitRepoURLMissing error
-	ErrorGitRepoURLMissing = "[ ERROR ] A SSH git repo url is required: -g\n"
+	ErrorGitRepoURLMissing = "A SSH git repo url is required: -g\n"
 
 	//ErrorInvalidGitRepoURL error
-	ErrorInvalidGitRepoURL = "[ ERROR ] Use a SSH git repo url for example : [-g git@github.com:CloudCoreo/audit-aws.git]\n"
+	ErrorInvalidGitRepoURL = "Use a SSH git repo url for example : [-g git@github.com:CloudCoreo/audit-aws.git]\n"
 
 	//ErrorNameMissing error
-	ErrorNameMissing = "[ ERROR ] Name is required for this command. Use flag --name\n"
+	ErrorNameMissing = "Name is required for this command. Use flag --name\n"
 
 	//ErrorKeyMissing error
-	ErrorKeyMissing = "[ ERROR ] Coreo API Key is required for this command. Use flag --api-key\n"
+	ErrorKeyMissing = "Key is required for this command. Use flag --key\n"
+
+	//ErrorApiKeyMissing error
+	ErrorApiKeyMissing = "Coreo API Key is required for this command. Use flag --api-key\n"
 
 	//ErrorSecretMissing error
-	ErrorSecretMissing = "[ ERROR ] Coreo API Secret is required for this command. Use flag --api-secret\n"
+	ErrorSecretMissing = "Secret is required for this command. Use flag --secret\n"
+
+	//ErrorApiSecretMissing error
+	ErrorApiSecretMissing = "API Secret is required for this command. Use flag --api-secret\n"
 
 	//ErrorGitInitNotRan error
-	ErrorGitInitNotRan = "[ ERROR ] Not a git repository (or any of the parent directories): .git\n"
+	ErrorGitInitNotRan = "Not a git repository (or any of the parent directories): .git\n"
 
 	//ErrorNoUserProfileFound error
-	ErrorNoUserProfileFound = "[ ERROR ] No user profile found. Set profile using 'coreo configure' command\n"
+	ErrorNoUserProfileFound = "No user profile found. Set profile using 'coreo configure' command\n"
 
 	//ErrorAcceptsNoArgs error
-	ErrorAcceptsNoArgs = "[ ERROR ] This command accepts no argument(s).\n"
+	ErrorAcceptsNoArgs = "This command accepts no argument(s).\n"
 
 	//InfoCreatingGitSubmodule info
 	InfoCreatingGitSubmodule = "Creating gitsubmodule %s in %s...\n"
@@ -181,7 +187,7 @@ const (
 	CmdFlagAPIEndpointLong = "endpoint"
 
 	//CmdFlagAPIEndpointDescription api endpoint description
-	CmdFlagAPIEndpointDescription = "API Endpoint "
+	CmdFlagAPIEndpointDescription = "Coreo API endpoint. Overrides CC_API_HOST."
 
 	//CmdCoreoUse Coreo cmd
 	CmdCoreoUse = "coreo"

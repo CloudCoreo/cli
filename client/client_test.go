@@ -19,6 +19,8 @@ import (
 	"net/http"
 	"testing"
 
+	"fmt"
+
 	"github.com/CloudCoreo/cli/client/content"
 	"github.com/jharlap/httpstub"
 	"github.com/stretchr/testify/assert"
@@ -148,4 +150,13 @@ func (suite *DoTestSuite) TestDo() {
 func TestDoTestSuite(t *testing.T) {
 	setupTester := new(DoTestSuite)
 	suite.Run(t, setupTester)
+}
+
+func TestBuildRequest(t *testing.T) {
+
+	i := Interceptor(func(req *http.Request) error { return fmt.Errorf("Return error") })
+	c := newClient("http://test.com", WithInterceptor(i))
+	_, err := c.buildRequest("GET", "http://test.com", nil)
+
+	assert.NotNil(t, err, "buildRequest should return error.")
 }

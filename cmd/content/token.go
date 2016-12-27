@@ -57,6 +57,9 @@ const (
 	//InfoUsingTokenID informational using Token id
 	InfoUsingTokenID = "[ OK ] Using Token ID %s\n"
 
+	//InfoTokenDeleted information
+	InfoTokenDeleted = "[ DONE ] Token was deleted.\n"
+
 	//ErrorTokenIDMissing error
-	ErrorTokenIDMissing = "[ ERROR ] Token ID is required for this command. Use flag --token-id\n"
+	ErrorTokenIDMissing = "Token ID is required for this command. Use flag --token-id\n"
 )
