@@ -24,7 +24,7 @@ func newPlanDisableCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:   content.CmdEnableUse,
+		Use:   content.CmdDisableUse,
 		Short: content.CmdPlanEnableShort,
 		Long:  content.CmdPlanEnableLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
