@@ -22,7 +22,7 @@ import (
 	"github.com/CloudCoreo/cli/pkg/lint/support"
 )
 
-// Config lints a composites's config.yaml file.
+// Config lints a composites's config.rb file under services folder.
 func Config(linter *support.Linter) {
 	file := "services/config.rb"
 	vf := filepath.Join(linter.CompositeDir, file)
