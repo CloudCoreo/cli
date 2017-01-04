@@ -186,7 +186,7 @@ func CheckAPIKeyFlag(apiKey string, userProfile string) (string, error) {
 		apiKey = GetValueFromConfig(teamIDKey, false)
 
 		if apiKey == content.None {
-			return apiKey, fmt.Errorf(content.ErrorApiKeyMissing)
+			return apiKey, fmt.Errorf(content.ErrorAPIKeyMissing)
 		}
 	}
 
@@ -200,7 +200,7 @@ func CheckSecretKeyFlag(secretKey string, userProfile string) (string, error) {
 		secretKey = GetValueFromConfig(secretIDKey, false)
 
 		if secretKey == content.None {
-			return secretKey, fmt.Errorf(content.ErrorApiSecretMissing)
+			return secretKey, fmt.Errorf(content.ErrorAPISecretMissing)
 		}
 	}
 

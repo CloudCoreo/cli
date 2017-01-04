@@ -49,9 +49,10 @@ func newTeamListCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:   content.CmdListUse,
-		Short: content.CmdTeamListShort,
-		Long:  content.CmdTeamListLong,
+		Use:               content.CmdListUse,
+		Short:             content.CmdTeamListShort,
+		Long:              content.CmdTeamListLong,
+		PersistentPreRunE: setupCoreoCredentials,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			if teamList.client == nil {

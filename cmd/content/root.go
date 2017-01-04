@@ -66,14 +66,14 @@ const (
 	//ErrorKeyMissing error
 	ErrorKeyMissing = "Key is required for this command. Use flag --key\n"
 
-	//ErrorApiKeyMissing error
-	ErrorApiKeyMissing = "Coreo API Key is required for this command. Use flag --api-key\n"
+	//ErrorAPIKeyMissing error
+	ErrorAPIKeyMissing = "Coreo API Key is required for this command. Use flag --api-key\n"
 
 	//ErrorSecretMissing error
 	ErrorSecretMissing = "Secret is required for this command. Use flag --secret\n"
 
-	//ErrorApiSecretMissing error
-	ErrorApiSecretMissing = "API Secret is required for this command. Use flag --api-secret\n"
+	//ErrorAPISecretMissing error
+	ErrorAPISecretMissing = "API Secret is required for this command. Use flag --api-secret\n"
 
 	//ErrorGitInitNotRan error
 	ErrorGitInitNotRan = "Not a git repository (or any of the parent directories): .git\n"
@@ -187,7 +187,7 @@ const (
 	CmdFlagAPIEndpointLong = "endpoint"
 
 	//CmdFlagAPIEndpointDescription api endpoint description
-	CmdFlagAPIEndpointDescription = "Coreo API endpoint. Overrides CC_API_HOST."
+	CmdFlagAPIEndpointDescription = "Coreo API endpoint. Overrides CC_API_ENDPOINT."
 
 	//CmdCoreoUse Coreo cmd
 	CmdCoreoUse = "coreo"
@@ -241,5 +241,5 @@ const (
 	InfoUsingProfile = "[ OK ] Using Profile %s\n"
 
 	//InfoCommandSuccess info command was executed successfully
-	InfoCommandSuccess =  "[ OK ] Command was executed successfully"
+	InfoCommandSuccess = "[ OK ] Command was executed successfully"
 )

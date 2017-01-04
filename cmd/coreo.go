@@ -77,7 +77,6 @@ func newRootCmd(out io.Writer) *cobra.Command {
 		newCompositeCmd(out),
 		newPlanCmd(out),
 		newConfigureCmd(out),
-		newLintCmd(out),
 	)
 
 	return cmd
@@ -118,15 +117,15 @@ func initConfig() {
 	}
 }
 
-func setupCoreoConfig(*cobra.Command, []string) error {
-	setupCoreoCredentials()
-	setupCoreoDefaultTeam()
+func setupCoreoConfig(cmd *cobra.Command, args []string) error {
+	setupCoreoCredentials(cmd, args)
+	setupCoreoDefaultTeam(cmd, args)
 
 	// TODO return valid error
 	return nil
 }
 
-func setupCoreoCredentials() {
+func setupCoreoCredentials(cmd *cobra.Command, args []string) error {
 	apiKey, err := util.CheckAPIKeyFlag(key, userProfile)
 
 	if err != nil {
@@ -146,9 +145,11 @@ func setupCoreoCredentials() {
 	if verbose {
 		fmt.Printf(content.InfoUsingProfile, userProfile)
 	}
+
+	return nil
 }
 
-func setupCoreoDefaultTeam() {
+func setupCoreoDefaultTeam(cmd *cobra.Command, args []string) error {
 	tID, err := util.CheckTeamIDFlag(teamID, userProfile, verbose)
 
 	if err != nil {
@@ -156,6 +157,8 @@ func setupCoreoDefaultTeam() {
 		os.Exit(-1)
 	}
 	teamID = tID
+
+	return nil
 }
 
 func absPathify(inPath string) string {
