@@ -1,3 +1,17 @@
+// Copyright © 2016 Paul Allen <paul@cloudcoreo.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package main
 
 import (
@@ -8,24 +22,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const versionDesc = `
-Show the client and server versions for Helm and tiller.
-
-This will print a representation of the client and server versions of Helm and
-Tiller. The output will look something like this:
-
-Client: &version.Version{SemVer:"v2.0.0", GitCommit:"ff52399e51bb880526e9cd0ed8386f6433b74da1", GitTreeState:"clean"}
-Server: &version.Version{SemVer:"v2.0.0", GitCommit:"b0c113dfb9f612a9add796549da66c0d294508a3", GitTreeState:"clean"}
-
-- SemVer is the semantic version of the release.
-- GitCommit is the SHA for the commit that this version was built from.
-- GitTreeState is "clean" if there are no local code changes when this binary was
-  built, and "dirty" if the binary was built from locally modified code.
-
-To print just the client version, use '--client'. To print just the server version,
-use '--server'.
-`
-
 type versionCmd struct {
 	out           io.Writer
 	clientVersion string
@@ -35,7 +31,7 @@ type versionCmd struct {
 
 var (
 	version string
-	gitHash string
+	githash string
 	buildID string
 )
 
@@ -43,7 +39,7 @@ func newVersionCmd(out io.Writer) *cobra.Command {
 	v := &versionCmd{
 		out:           out,
 		clientVersion: version,
-		clientGithash: gitHash,
+		clientGithash: githash,
 		clientBuildID: buildID,
 	}
 
