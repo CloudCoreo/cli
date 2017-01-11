@@ -66,4 +66,7 @@ const (
 
 	//ErrorNoTeamWithIDFound error
 	ErrorNoTeamWithIDFound = "No team with ID %s found."
+
+	//InfoPlanCreationMessage info
+	InfoPlanCreationMessage = "Adding plan and generating planconfig json file, please wait..."
 )

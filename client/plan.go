@@ -259,7 +259,9 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 	}
 
 	planConfig := &PlanConfig{}
-	fmt.Print("Loading planconfig, please wait...")
+
+	fmt.Print(content.InfoPlanCreationMessage)
+
 	for {
 		fmt.Print(".")
 		plans, err := c.GetPlans(ctx, teamID, compositeID)
@@ -278,8 +280,6 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		}
 		time.Sleep(5 * time.Second)
 	}
-
-	return nil, err
 }
 
 func (c *Client) getPlanConfig(ctx context.Context, plan *Plan) (*PlanConfig, error) {
