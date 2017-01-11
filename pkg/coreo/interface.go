@@ -44,4 +44,6 @@ type Interface interface {
 	EnablePlanByID(teamID, compositeID, planID string) (*client.Plan, error)
 	DisablePlanByID(teamID, compositeID, planID string) (*client.Plan, error)
 	DeletePlanByID(teamID, compositeID, planID string) error
+	InitPlan(branch, name, region, teamID, cloudID, compositeID, revision string, interval int) (*client.PlanConfig, error)
+	CreatePlan(planConfigJSON []byte) (*client.Plan, error)
 }

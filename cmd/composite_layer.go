@@ -66,8 +66,7 @@ func newCompositeLayerCmd(out io.Writer) *cobra.Command {
 func (t *compositeLayerCmd) run() error {
 
 	if err := util.CheckGitInstall(); err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		os.Exit(-1)
+		return err
 	}
 
 	if t.directory == "" {
@@ -77,8 +76,7 @@ func (t *compositeLayerCmd) run() error {
 	err := util.CreateFolder("stack-"+t.name, t.directory)
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		os.Exit(-1)
+		return err
 	}
 
 	t.directory = path.Join(t.directory, "stack-"+t.name)
@@ -86,8 +84,7 @@ func (t *compositeLayerCmd) run() error {
 	err = util.CreateGitSubmodule(t.directory, t.gitRepoURL)
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		os.Exit(-1)
+		return err
 	}
 	fmt.Println(content.CmdCompositeLayerSuccess)
 

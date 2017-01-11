@@ -172,10 +172,10 @@ const (
 	CmdFlagVerboseDescription = "Enable verbose output"
 
 	//CmdFlagConfigLong config flag long
-	CmdFlagConfigLong = "config"
+	CmdFlagConfigLong = "home"
 
 	//CmdFlagConfigDescription config flag description
-	CmdFlagConfigDescription = "Config file (default is $HOME/.cloudcoreo/profiles.yaml)"
+	CmdFlagConfigDescription = "Location of your Coreo config. Overrides $COREO_HOME."
 
 	//CmdFlagProfileLong profile flag long
 	CmdFlagProfileLong = "profile"
@@ -204,38 +204,35 @@ const (
 	//CmdListUse list cmd
 	CmdListUse = "list"
 
-	//CmdCreateUse create cmd
-	CmdCreateUse = "create"
-
 	//CmdAddUse add cmd
-	CmdAddUse = "add"
+	CmdAddUse = "add [flags]"
 
 	//CmdDeleteUse delete cmd
-	CmdDeleteUse = "delete"
+	CmdDeleteUse = "delete [flags]"
 
 	//CmdShowUse show cmd
-	CmdShowUse = "show"
+	CmdShowUse = "show [flags]"
 
 	//CmdDisableUse disable cmd
-	CmdDisableUse = "disable"
+	CmdDisableUse = "disable [flags]"
 
 	//CmdEnableUse enable cmd
-	CmdEnableUse = "enable"
+	CmdEnableUse = "enable [flags]"
 
 	//CmdRunUse run cmd
-	CmdRunUse = "run"
+	CmdRunUse = "run [flags]"
 
 	//CmdInitUse init cmd
-	CmdInitUse = "init"
+	CmdInitUse = "init [flags]"
 
 	//CmdGendocUse gendoc cmd
-	CmdGendocUse = "gendoc"
+	CmdGendocUse = "gendoc [flags]"
 
 	//CmdLayerUse layer cmd
-	CmdLayerUse = "layer"
+	CmdLayerUse = "layer [flags]"
 
 	//CmdExtendsUse extends cmd
-	CmdExtendsUse = "extends"
+	CmdExtendsUse = "extends [flags]"
 
 	//InfoUsingProfile info using profile
 	InfoUsingProfile = "[ OK ] Using Profile %s\n"

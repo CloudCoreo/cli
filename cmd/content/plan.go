@@ -16,7 +16,10 @@ package content
 
 const (
 	//CmdPlanUse plan command
-	CmdPlanUse = "plan"
+	CmdPlanUse = "plan SUBCOMMAND"
+
+	//CmdPlanFinalizeUse plan command
+	CmdPlanFinalizeUse = "finalize [flags]"
 
 	//CmdPlanShort short descripton
 	CmdPlanShort = "Manage Plans"
@@ -37,10 +40,10 @@ const (
 	CmdPlanInitLong = `Init a plan.`
 
 	//CmdPlanCreateShort short descripton
-	CmdPlanCreateShort = "Create a plan"
+	CmdPlanCreateShort = "Finalize a plan"
 
 	//CmdPlanCreateLong long description
-	CmdPlanCreateLong = `Create a plan.`
+	CmdPlanCreateLong = `Finalize a plan.`
 
 	//CmdPlanDeleteShort short descripton
 	CmdPlanDeleteShort = "Delete a plan"
@@ -84,11 +87,11 @@ const (
 	//CmdFlagBranchDescription flag description
 	CmdFlagBranchDescription = "Git branch for plan"
 
-	//CmdFlagGitCommitIDLong commit id flag
-	CmdFlagGitCommitIDLong = "gitcommit-id"
+	//CmdFlagGitRevisionLong commit id flag
+	CmdFlagGitRevisionLong = "revision"
 
-	//CmdFlagGitCommitIDDescription flag description
-	CmdFlagGitCommitIDDescription = "Git commit id for branch"
+	//CmdFlagGitRevisionDescription flag description
+	CmdFlagGitRevisionDescription = "Git revision for plan"
 
 	//CmdFlagCloudRegionLong cloud region flag
 	CmdFlagCloudRegionLong = "region"
@@ -102,12 +105,27 @@ const (
 	//CmdFlagIntervalDescription flag description
 	CmdFlagIntervalDescription = "Refresh rate"
 
+	//CmdFlagJSONFileLong JSON file flag
+	CmdFlagJSONFileLong = "file"
+
+	//CmdFlagJSONFileShort JSON file flag
+	CmdFlagJSONFileShort = "f"
+
+	//CmdFlagJSONFileDescription JSON file description
+	CmdFlagJSONFileDescription = "Plan config JSON file"
+
 	//InfoPlanDeleted information
 	InfoPlanDeleted = "[Done] Plan was deleted.\n"
+
+	//InfoPlanJSONFileCreated plan json file creation
+	InfoPlanJSONFileCreated = "[Done] Plan %s.json file created in directory %s. Update variables in this json file and finalize this plan using `coreo plan finalize` command.\n"
 
 	//InfoUsingPlanID informational using Plan id
 	InfoUsingPlanID = "[ OK ] Using Plan ID %s\n"
 
 	//ErrorPlanIDRequired error message
 	ErrorPlanIDRequired = "Plan ID is required for this command. Use flag '--plan-id'\n"
+
+	//ErrorPlanCreateJSONFileRequired error message
+	ErrorPlanCreateJSONFileRequired = "Plan JSON file is required for this command. Use flag '--file/-f'\n"
 )

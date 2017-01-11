@@ -81,7 +81,7 @@ func (t *cloudShowCmd) run() error {
 			"Name":   "Cloud Account Name",
 			"TeamID": "Team ID",
 		},
-		json,
+		jsonFormat,
 		verbose)
 
 	return nil

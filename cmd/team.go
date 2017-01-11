@@ -87,7 +87,7 @@ func (t *teamListCmd) run() error {
 			"TeamName":        "Team Name",
 			"TeamDescription": "Team Description",
 		},
-		json,
+		jsonFormat,
 		verbose)
 
 	return nil

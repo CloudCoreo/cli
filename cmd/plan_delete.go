@@ -17,6 +17,8 @@ package main
 import (
 	"io"
 
+	"fmt"
+
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/CloudCoreo/cli/pkg/coreo"
@@ -44,7 +46,7 @@ func newPlanDeleteCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			if err := util.CheckCompositeIDAndPlandIDFlag(planDelete.compositeID, planDelete.planID, verbose); err != nil {
-
+				return err
 			}
 
 			if planDelete.client == nil {
@@ -74,5 +76,8 @@ func (t *planDeleteCmd) run() error {
 		return err
 	}
 
+	if verbose {
+		fmt.Println(content.InfoPlanDeleted)
+	}
 	return nil
 }

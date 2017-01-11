@@ -38,7 +38,7 @@ func newCompositeCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command
 	}
 
 	cmd := &cobra.Command{
-		Use:   content.CmdCreateUse,
+		Use:   content.CmdAddUse,
 		Short: content.CmdCompositeCreateShort,
 		Long:  content.CmdCompositeCreateLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -83,7 +83,7 @@ func (t *compositeCreateCmd) run() error {
 			"Name":   "Composite Name",
 			"TeamID": "Team ID",
 		},
-		json,
+		jsonFormat,
 		verbose)
 
 	return nil

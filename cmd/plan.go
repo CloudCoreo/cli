@@ -36,6 +36,8 @@ func newPlanCmd(out io.Writer) *cobra.Command {
 	cmd.AddCommand(newPlanDisableCmd(nil, out))
 	cmd.AddCommand(newPlanEnableCmd(nil, out))
 	cmd.AddCommand(newPlanDeleteCmd(nil, out))
+	cmd.AddCommand(newPlanInitCmd(nil, out))
+	cmd.AddCommand(newPlanCreateCmd(nil, out))
 
 	return cmd
 }
@@ -106,7 +108,7 @@ func (t *PlanListCmd) run() error {
 			"Branch":          "Git Branch",
 			"RefreshInterval": "Interval",
 		},
-		json,
+		jsonFormat,
 		verbose)
 
 	return nil

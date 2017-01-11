@@ -228,6 +228,33 @@ func CheckCompositeIDAndPlandIDFlag(compositeID, planID string, verbose bool) er
 	return nil
 }
 
+//CheckPlanCreateJSONFileFlag Check for JSON file
+func CheckPlanCreateJSONFileFlag(file string) error {
+	if err := checkFlag(file, content.ErrorPlanCreateJSONFileRequired); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//CheckPlanInitRequiredFlags Required flags check
+func CheckPlanInitRequiredFlags(compositeID, cloudID, name string) error {
+	if err := checkFlag(compositeID, content.ErrorCompositeIDRequired); err != nil {
+		return err
+	}
+
+
+	if err := checkFlag(cloudID, content.ErrorCloudIDRequired); err != nil {
+		return err
+	}
+
+	if err := checkFlag(name, content.ErrorNameMissing); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 //CheckArgsCount check for args
 func CheckArgsCount(args []string) {
 	if len(args) > 0 {
