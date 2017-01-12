@@ -44,7 +44,7 @@ func newPlanShowCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			if err := util.CheckCompositeIDAndPlandIDFlag(planShow.compositeID, planShow.planID, verbose); err != nil {
-
+				return err
 			}
 
 			if planShow.client == nil {
@@ -85,7 +85,7 @@ func (t *planShowCmd) run() error {
 			"Branch":          "Git Branch",
 			"RefreshInterval": "Interval",
 		},
-		json,
+		jsonFormat,
 		verbose)
 
 	return nil

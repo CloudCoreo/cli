@@ -93,7 +93,7 @@ func (t *gitKeyListCmd) run() error {
 			"Name":   "Git Key Name",
 			"TeamID": "Team ID",
 		},
-		json,
+		jsonFormat,
 		verbose)
 
 	return nil

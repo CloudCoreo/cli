@@ -160,12 +160,18 @@ func (c *Table) Render() string {
 
 // PrettyPrintJSON pretty print json
 func PrettyPrintJSON(obj interface{}) {
+	fmt.Println(PrettyJSON(obj))
+}
+
+// PrettyJSON return pretty json
+func PrettyJSON(obj interface{}) string {
 	jsonData, err := json.MarshalIndent(obj, "", "\t")
 	if err != nil {
 		fmt.Printf("Error: %s", err)
-		return
+		return ""
 	}
-	fmt.Println(string(jsonData))
+
+	return string(jsonData)
 }
 
 //PrintError print error

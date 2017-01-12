@@ -96,7 +96,7 @@ func (t *compositeListCmd) run() error {
 			"Name":   "Composite Name",
 			"TeamID": "Team ID",
 		},
-		json,
+		jsonFormat,
 		verbose)
 
 	return nil

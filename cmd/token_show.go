@@ -78,7 +78,7 @@ func (t *tokenShowCmd) run() error {
 			"Name":        "Token Name",
 			"Description": "Token Description",
 		},
-		json,
+		jsonFormat,
 		verbose)
 
 	return nil

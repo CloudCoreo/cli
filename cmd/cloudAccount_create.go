@@ -40,7 +40,7 @@ func newCloudCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:   content.CmdCreateUse,
+		Use:   content.CmdAddUse,
 		Short: content.CmdCloudAddShort,
 		Long:  content.CmdCloudAddLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -87,7 +87,7 @@ func (t *cloudCreateCmd) run() error {
 			"Name":   "Cloud Account Name",
 			"TeamID": "Team ID",
 		},
-		json,
+		jsonFormat,
 		verbose)
 
 	return nil

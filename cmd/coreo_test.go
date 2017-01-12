@@ -25,6 +25,7 @@ type fakeReleaseClient struct {
 	gitKeys       []*client.GitKey
 	composites    []*client.Composite
 	plans         []*client.Plan
+	planConfig    []*client.PlanConfig
 	err           error
 }
 
@@ -188,4 +189,23 @@ func (c *fakeReleaseClient) DisablePlanByID(teamID, compositeID, planID string) 
 
 func (c *fakeReleaseClient) DeletePlanByID(teamID, compositeID, planID string) error {
 	return c.err
+}
+
+func (c *fakeReleaseClient) InitPlan(branch, name, region, teamID, cloudID, compositeID, revision string, interval int) (*client.PlanConfig, error) {
+	resp := &client.PlanConfig{}
+	if len(c.planConfig) > 0 {
+
+		resp = c.planConfig[0]
+	}
+	return resp, c.err
+}
+
+func (c *fakeReleaseClient) CreatePlan(planConfigJSON []byte) (*client.Plan, error) {
+	resp := &client.Plan{}
+	if len(c.plans) > 0 {
+
+		resp = c.plans[0]
+	}
+
+	return resp, c.err
 }

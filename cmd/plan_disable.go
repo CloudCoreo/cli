@@ -71,7 +71,7 @@ func (t *planDisableCmd) run() error {
 			"Branch":          "Git Branch",
 			"RefreshInterval": "Interval",
 		},
-		json,
+		jsonFormat,
 		verbose)
 
 	return nil

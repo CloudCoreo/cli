@@ -19,8 +19,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"runtime"
-	"strings"
 
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
@@ -30,17 +28,18 @@ import (
 
 const (
 	hostEnvVar         = "CC_API_ENDPOINT"
+	homeEnvVar         = "COREO_HOME"
 	defaultAPIEndpoint = "https://app.cloudcoreo.com/api"
 )
 
 var (
-	cfgFile     string
+	coreoHome   string
 	userProfile string
 	key         string
 	secret      string
 	teamID      string
 	apiEndpoint string
-	json        bool
+	jsonFormat  bool
 	verbose     bool
 )
 
@@ -60,13 +59,13 @@ func newRootCmd(out io.Writer) *cobra.Command {
 	}
 
 	p := cmd.PersistentFlags()
-	p.StringVar(&cfgFile, content.CmdFlagConfigLong, "", content.CmdFlagConfigDescription)
+	p.StringVar(&coreoHome, content.CmdFlagConfigLong, defaultCoreoHome(), content.CmdFlagConfigDescription)
 	p.StringVar(&userProfile, content.CmdFlagProfileLong, "default", content.CmdFlagProfileDescription)
 	p.StringVar(&key, content.CmdFlagAPIKeyLong, content.None, content.CmdFlagAPIKeyDescription)
 	p.StringVar(&secret, content.CmdFlagAPISecretLong, content.None, content.CmdFlagAPISecretDescription)
 	p.StringVar(&teamID, content.CmdFlagTeamIDLong, content.None, content.CmdFlagTeamIDDescription)
 	p.StringVar(&apiEndpoint, content.CmdFlagAPIEndpointLong, envAPIEndpoint, content.CmdFlagAPIEndpointDescription)
-	p.BoolVar(&json, content.CmdFlagJSONLong, false, content.CmdFlagJSONDescription)
+	p.BoolVar(&jsonFormat, content.CmdFlagJSONLong, false, content.CmdFlagJSONDescription)
 	p.BoolVar(&verbose, content.CmdFlagVerboseLong, true, content.CmdFlagVerboseDescription)
 	cmd.AddCommand(
 		newVersionCmd(out),
@@ -93,22 +92,18 @@ func main() {
 func initConfig() {
 
 	viper.SetConfigType("yaml")
-	viper.SetConfigName("profiles")          // name of config file (without extension)
-	viper.AddConfigPath("$HOME/.cloudcoreo") // adding home directory as first search path
-	viper.AutomaticEnv()                     // read in environment variables that match
+	viper.SetConfigName("profiles") // name of config file (without extension)
+	viper.AddConfigPath(coreoHome)  // adding home directory as first search path
+	viper.AutomaticEnv()            // read in environment variables that match
 
-	if cfgFile != "" { // enable ability to specify config file via flag
-		viper.SetConfigFile(cfgFile)
-	} else {
-		path := absPathify("$HOME")
+	path := homePath()
 
-		if err := util.CreateFolder(content.DefaultFolder, path); err != nil {
-			fmt.Println("Error creating folder")
-		}
+	if err := util.CreateFolder("", path); err != nil {
+		fmt.Println("Error creating folder")
+	}
 
-		if err := util.CreateFile(content.DefaultFile, filepath.Join(path, content.DefaultFolder), "", false); err != nil {
-			fmt.Println("Error creating file")
-		}
+	if err := util.CreateFile(content.DefaultFile, path, "", false); err != nil {
+		fmt.Println("Error creating file")
 	}
 
 	// If a config file is found, read it in.
@@ -118,10 +113,17 @@ func initConfig() {
 }
 
 func setupCoreoConfig(cmd *cobra.Command, args []string) error {
-	setupCoreoCredentials(cmd, args)
-	setupCoreoDefaultTeam(cmd, args)
+	err := setupCoreoCredentials(cmd, args)
 
-	// TODO return valid error
+	if err != nil {
+		return err
+	}
+
+	err = setupCoreoDefaultTeam(cmd, args)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -129,16 +131,15 @@ func setupCoreoCredentials(cmd *cobra.Command, args []string) error {
 	apiKey, err := util.CheckAPIKeyFlag(key, userProfile)
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		os.Exit(-1)
+		return err
+
 	}
 	key = apiKey
 
 	secretKey, err := util.CheckSecretKeyFlag(secret, userProfile)
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		os.Exit(-1)
+		return err
 	}
 	secret = secretKey
 
@@ -153,42 +154,21 @@ func setupCoreoDefaultTeam(cmd *cobra.Command, args []string) error {
 	tID, err := util.CheckTeamIDFlag(teamID, userProfile, verbose)
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		os.Exit(-1)
+		return err
 	}
 	teamID = tID
 
 	return nil
 }
 
-func absPathify(inPath string) string {
-	if strings.HasPrefix(inPath, "$HOME") {
-		inPath = userHomeDir() + inPath[5:]
-	}
-
-	if strings.HasPrefix(inPath, "$") {
-		end := strings.Index(inPath, string(os.PathSeparator))
-		inPath = os.Getenv(inPath[1:end]) + inPath[end:]
-	}
-
-	if filepath.IsAbs(inPath) {
-		return filepath.Clean(inPath)
-	}
-
-	p, err := filepath.Abs(inPath)
-	if err == nil {
-		return filepath.Clean(p)
-	}
-	return ""
-}
-
-func userHomeDir() string {
-	if runtime.GOOS == "windows" {
-		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
-		if home == "" {
-			home = os.Getenv("USERPROFILE")
-		}
+func defaultCoreoHome() string {
+	if home := os.Getenv(homeEnvVar); home != "" {
 		return home
 	}
-	return os.Getenv("HOME")
+
+	return filepath.Join(os.Getenv("HOME"), content.DefaultFolder)
+}
+
+func homePath() string {
+	return os.ExpandEnv(coreoHome)
 }

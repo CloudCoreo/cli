@@ -379,3 +379,45 @@ func (c *Client) DeletePlanByID(teamID, compositeID, planID string) error {
 
 	return nil
 }
+
+//InitPlan init a plan
+func (c *Client) InitPlan(branch, name, region, teamID, cloudID, compositeID, revision string, interval int) (*client.PlanConfig, error) {
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	planConfig, err := client.InitPlan(ctx, branch, name, region, teamID, cloudID, compositeID, revision, interval)
+	if err != nil {
+		return nil, err
+	}
+
+	// Add value property
+	for _, v := range planConfig.Variables {
+		if v.Required {
+			if v.Default != nil {
+				v.Value = v.Default
+			}
+		}
+	}
+
+	return planConfig, nil
+}
+
+//CreatePlan create a plan
+func (c *Client) CreatePlan(planConfigContent []byte) (*client.Plan, error) {
+
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	plan, err := client.CreatePlan(ctx, planConfigContent)
+	if err != nil {
+		return nil, err
+	}
+
+	return plan, nil
+}

@@ -26,34 +26,50 @@ import (
 
 // Plan struct object
 type Plan struct {
-	DefaultPanelRepo       string `json:"defaultPanelRepo"`
-	DefaultPanelDirectory  string `json:"defaultPanelDirectory"`
-	DefaultPanelBranch     string `json:"defaultPanelBranch"`
-	Name                   string `json:"name"`
-	IamUserAccessKeyID     string `json:"iamUserAccessKeyId"`
-	IamUserID              string `json:"iamUserId"`
+	DefaultPanelRepo string `json:"defaultPanelRepo"`
+	DefaultPanelDirectory string `json:"defaultPanelDirectory"`
+	DefaultPanelBranch string `json:"defaultPanelBranch"`
+	Name string `json:"name"`
+	EnginePrefix string `json:"enginePrefix"`
+	IamUserAccessKeyID string `json:"iamUserAccessKeyId"`
+	IamUserID string `json:"iamUserId"`
 	IamUserSecretAccessKey string `json:"iamUserSecretAccessKey"`
-	SnsSubscriptionArn     string `json:"snsSubscriptionArn"`
-	SqsArn                 string `json:"sqsArn"`
-	SqsURL                 string `json:"sqsUrl"`
-	TopicArn               string `json:"topicArn"`
-	DefaultRegion          string `json:"defaultRegion"`
-	RefreshInterval        int    `json:"refreshInterval"`
-	Revision               string `json:"revision"`
-	Branch                 string `json:"branch"`
-	Enabled                bool   `json:"enabled"`
+	SnsSubscriptionArn string `json:"snsSubscriptionArn"`
+	SqsArn string `json:"sqsArn"`
+	SqsURL string `json:"sqsUrl"`
+	TopicArn string `json:"topicArn"`
+	IsSynchronizing bool `json:"isSynchronizing"`
+	IsDraft bool `json:"isDraft"`
+	DefaultRegion string `json:"defaultRegion"`
+	RefreshInterval int `json:"refreshInterval"`
+	RunCounter int `json:"runCounter"`
+	Revision string `json:"revision"`
+	Branch string `json:"branch"`
+	Enabled bool `json:"enabled"`
 	Links                  []Link `json:"links"`
-	ID                     string `json:"id"`
+	ID string `json:"id"`
 }
 
 // PlanConfig struct object
 type PlanConfig struct {
-	AppstackID string `json:"appstackId"`
-	TeamID     string `json:"teamId"`
-	Links      []Link `json:"links"`
-	Variables  string `json:"variables"`
-	PlanID     string `json:"planId"`
-	ID         string `json:"id"`
+	GitRevision string `json:"gitRevision"`
+	GitBranch string `json:"gitBranch"`
+	TeamID string `json:"teamId"`
+	Links                  []Link `json:"links"`
+	Variables map[string]PlanAttribute `json:"variables"`
+	PlanID string `json:"planId"`
+	ID string `json:"id"`
+}
+
+// PlanAttribute struct object
+type PlanAttribute struct {
+	Namespace string `json:"namespace"`
+	Default interface{} `json:"default"`
+	Description string `json:"description"`
+	Required bool `json:"required"`
+	Type string `json:"type"`
+	Class string `json:"class"`
+	Value interface{} `json:"value"`
 }
 
 // GetPlans method to get plans info array object
@@ -214,21 +230,19 @@ func (c *Client) DisablePlan(ctx context.Context, teamID, compositeID, planID st
 }
 
 //InitPlan init plan TODO - UPDATE CODE WHEN READY
-func (c *Client) InitPlan(ctx context.Context, branch, name, interval, region, teamID, cloudID, compositeID, revision string) (PlanConfig, error) {
-	planConfig := PlanConfig{}
-
+func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, cloudID, compositeID, revision string, interval int) (*PlanConfig, error) {
 	composite, err := c.GetCompositeByID(ctx, teamID, compositeID)
 	if err != nil {
-		return planConfig, err
+		return nil, err
 	}
 
 	plansLink, err := GetLinkByRef(composite.Links, "plans")
 	if err != nil {
-		return planConfig, err
+		return nil, err
 	}
 
 	planPayLoad := fmt.Sprintf(
-		`{"name":"%s","awsCredsId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%s","appStackId":"%s"}`,
+		`{"name":"%s","awsCredsId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%d","appStackId":"%s"}`,
 		//{"branch":"master","refreshInterval":1,"revision":"HEAD","defaultRegion":"us-east-1","awsCredsId":"5824e64f4008a3cb41af144f","appStackId":"5824e6284008a3cb41af144d","name":"test-plan"}
 		name,
 		cloudID,
@@ -241,42 +255,85 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, interval, region, t
 	var jsonStr = []byte(planPayLoad)
 	err = c.Do(ctx, "POST", plansLink.Href, bytes.NewBuffer(jsonStr), &composite)
 	if err != nil {
-		return planConfig, err
+		return nil, err
 	}
 
-	for start := time.Now(); time.Since(start) < 300; time.Sleep(10 * time.Second) {
-		fmt.Println("Loading planconfig...")
+	planConfig := &PlanConfig{}
+
+	fmt.Print(content.InfoPlanCreationMessage)
+
+	for {
+		fmt.Print(".")
 		plans, err := c.GetPlans(ctx, teamID, compositeID)
 		if err != nil {
-			return planConfig, err
+			return nil, err
 		}
 
 		for _, p := range plans {
 			if p.Name == name {
 				planConfig, err = c.getPlanConfig(ctx, p)
-				if err != nil {
-					return planConfig, err
+				if err == nil {
+					fmt.Println()
+					return planConfig, nil
 				}
-				break
 			}
 		}
+		time.Sleep(5 * time.Second)
 	}
-
-	return planConfig, nil
 }
 
-func (c *Client) getPlanConfig(ctx context.Context, plan *Plan) (PlanConfig, error) {
-	planConfig := PlanConfig{}
+func (c *Client) getPlanConfig(ctx context.Context, plan *Plan) (*PlanConfig, error) {
+	planConfig := &PlanConfig{}
 	planConfigLink, err := GetLinkByRef(plan.Links, "planconfig")
 	if err != nil {
-		return planConfig, err
+		return nil, err
 	}
 
 	err = c.Do(ctx, "GET", planConfigLink.Href, nil, &planConfig)
 	if err != nil {
-		return planConfig, err
+		return nil, err
 	}
 
 	return planConfig, nil
+
+}
+
+func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Plan, error) {
+
+	planConfig := &PlanConfig{}
+	if err := json.Unmarshal(planConfigContent, &planConfig); err != nil {
+		return nil, err
+	}
+
+	planConfigLink, err := GetLinkByRef(planConfig.Links, "self")
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, "PUT", planConfigLink.Href, bytes.NewBuffer(planConfigContent), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	planLink, err := GetLinkByRef(planConfig.Links, "plan")
+	if err != nil {
+		return nil, err
+	}
+
+	plan := &Plan{}
+	err = c.Do(ctx, "GET", planLink.Href, nil, &plan)
+	if err != nil {
+		return nil, err
+	}
+
+	plan.IsDraft = false
+	jsonStr, err := json.Marshal(plan)
+
+	err = c.Do(ctx, "PUT", planLink.Href, bytes.NewBuffer(jsonStr), &plan)
+	if err != nil {
+		return nil, err
+	}
+
+	return plan, nil
 
 }
