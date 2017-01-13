@@ -421,3 +421,20 @@ func (c *Client) CreatePlan(planConfigContent []byte) (*client.Plan, error) {
 
 	return plan, nil
 }
+
+//GetPlanPanel get plan panel
+func (c *Client) GetPlanPanel(teamID, compositeID, planID string)(*client.Panel, error) {
+
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	plan, err := client.GetPanelInfo(ctx, teamID, compositeID, planID)
+	if err != nil {
+		return nil, err
+	}
+
+	return plan, nil
+}

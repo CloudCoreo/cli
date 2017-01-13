@@ -38,6 +38,7 @@ func newPlanCmd(out io.Writer) *cobra.Command {
 	cmd.AddCommand(newPlanDeleteCmd(nil, out))
 	cmd.AddCommand(newPlanInitCmd(nil, out))
 	cmd.AddCommand(newPlanCreateCmd(nil, out))
+	cmd.AddCommand(newPlanPanelCmd(nil, out))
 
 	return cmd
 }

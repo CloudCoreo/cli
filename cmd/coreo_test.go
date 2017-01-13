@@ -26,6 +26,7 @@ type fakeReleaseClient struct {
 	composites    []*client.Composite
 	plans         []*client.Plan
 	planConfig    []*client.PlanConfig
+	panel 		[]*client.Panel
 	err           error
 }
 
@@ -205,6 +206,17 @@ func (c *fakeReleaseClient) CreatePlan(planConfigJSON []byte) (*client.Plan, err
 	if len(c.plans) > 0 {
 
 		resp = c.plans[0]
+	}
+
+	return resp, c.err
+}
+
+func (c *fakeReleaseClient) GetPlanPanel(teamID, compositeID, planID string)(*client.Panel, error) {
+	resp := &client.Panel{}
+
+	if len(c.panel) > 0 {
+
+		resp = c.panel[0]
 	}
 
 	return resp, c.err
