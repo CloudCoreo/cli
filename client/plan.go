@@ -293,6 +293,23 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		return nil, err
 	}
 
+	planLink, err := GetLinkByRef(plan.Links, "self")
+	if err != nil {
+		return nil, err
+	}
+
+	jsonStr, err = json.Marshal(plan)
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, "PUT", planLink.Href, bytes.NewBuffer(jsonStr), &plan)
+	if err != nil {
+
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
 	fmt.Print(content.InfoPlanCreationMessage)
 
 	planConfig := &PlanConfig{}
@@ -353,7 +370,7 @@ func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Pla
 		return nil, err
 	}
 
-	planLink, err = GetLinkByRef(planConfig.Links, "self")
+	planLink, err = GetLinkByRef(plan.Links, "self")
 	if err != nil {
 		return nil, err
 	}
