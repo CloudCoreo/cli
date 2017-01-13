@@ -58,28 +58,29 @@ type Panel struct {
 
 // Plan struct object
 type Plan struct {
-	DefaultPanelRepo       string `json:"defaultPanelRepo"`
-	DefaultPanelDirectory  string `json:"defaultPanelDirectory"`
-	DefaultPanelBranch     string `json:"defaultPanelBranch"`
-	Name                   string `json:"name"`
-	EnginePrefix           string `json:"enginePrefix"`
-	IamUserAccessKeyID     string `json:"iamUserAccessKeyId"`
-	IamUserID              string `json:"iamUserId"`
-	IamUserSecretAccessKey string `json:"iamUserSecretAccessKey"`
-	SnsSubscriptionArn     string `json:"snsSubscriptionArn"`
-	SqsArn                 string `json:"sqsArn"`
-	SqsURL                 string `json:"sqsUrl"`
-	TopicArn               string `json:"topicArn"`
-	IsSynchronizing        bool   `json:"isSynchronizing"`
-	IsDraft                bool   `json:"isDraft"`
-	DefaultRegion          string `json:"defaultRegion"`
-	RefreshInterval        int    `json:"refreshInterval"`
-	RunCounter             int    `json:"runCounter"`
-	Revision               string `json:"revision"`
-	Branch                 string `json:"branch"`
-	Enabled                bool   `json:"enabled"`
-	Links                  []Link `json:"links"`
-	ID                     string `json:"id"`
+	DefaultPanelRepo       string                   `json:"defaultPanelRepo"`
+	DefaultPanelDirectory  string                   `json:"defaultPanelDirectory"`
+	DefaultPanelBranch     string                   `json:"defaultPanelBranch"`
+	Name                   string                   `json:"name"`
+	EnginePrefix           string                   `json:"enginePrefix"`
+	IamUserAccessKeyID     string                   `json:"iamUserAccessKeyId"`
+	IamUserID              string                   `json:"iamUserId"`
+	IamUserSecretAccessKey string                   `json:"iamUserSecretAccessKey"`
+	SnsSubscriptionArn     string                   `json:"snsSubscriptionArn"`
+	SqsArn                 string                   `json:"sqsArn"`
+	SqsURL                 string                   `json:"sqsUrl"`
+	TopicArn               string                   `json:"topicArn"`
+	IsSynchronizing        bool                     `json:"isSynchronizing"`
+	IsDraft                bool                     `json:"isDraft"`
+	DefaultRegion          string                   `json:"defaultRegion"`
+	RefreshInterval        int                      `json:"refreshInterval"`
+	RunCounter             int                      `json:"runCounter"`
+	Revision               string                   `json:"revision"`
+	Branch                 string                   `json:"branch"`
+	Enabled                bool                     `json:"enabled"`
+	Links                  []Link                   `json:"links"`
+	ID                     string                   `json:"id"`
+	Config                 map[string]PlanAttribute `json:"config"`
 }
 
 // PlanConfig struct object
@@ -376,6 +377,7 @@ func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Pla
 	}
 
 	plan.IsDraft = false
+	plan.Config = planConfig.Variables
 	jsonStr, err := json.Marshal(plan)
 
 	err = c.Do(ctx, "PUT", planLink.Href, bytes.NewBuffer(jsonStr), &plan)
