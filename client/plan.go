@@ -319,6 +319,7 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		fmt.Print(".")
 		planConfig, err = c.getPlanConfig(ctx, plan)
 		if err == nil {
+			planConfig.Variables = setPlanConfigRequiredValues(planConfig.Variables)
 			fmt.Println()
 			return planConfig, nil
 		}
@@ -347,6 +348,12 @@ func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Pla
 
 	planConfig := &PlanConfig{}
 	if err := json.Unmarshal(planConfigContent, &planConfig); err != nil {
+		return nil, err
+	}
+
+	err := verifyPlanConfigRequiredValues(planConfig.Variables)
+
+	if err != nil {
 		return nil, err
 	}
 
@@ -408,4 +415,37 @@ func (c *Client) GetPanelInfo(ctx context.Context, teamID, compositeID, planID s
 	}
 
 	return panel, nil
+}
+
+func verifyPlanConfigRequiredValues(variables map[string]PlanAttribute) error {
+
+	errorFound := false
+	for k, v := range variables {
+		if v.Required && (v.Value == nil || v.Value == "" || v.Value == "INPUT REQUIRED") {
+			errorFound = true
+			fmt.Printf(content.ErrorPlanConfigRequiredVariableMissing, k)
+		}
+	}
+
+	if errorFound {
+		return fmt.Errorf(content.ErrorPlanConfigVaribaleMissing)
+	}
+
+	return nil
+}
+
+func setPlanConfigRequiredValues(variables map[string]PlanAttribute) map[string]PlanAttribute {
+	// Add value property
+	for i, v := range variables {
+		if v.Required {
+			if v.Default != nil {
+				v.Value = v.Default
+			} else {
+				v.Value = "INPUT REQUIRED"
+			}
+			variables[i] = v
+		}
+	}
+
+	return variables
 }

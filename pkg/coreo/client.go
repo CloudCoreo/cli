@@ -393,18 +393,6 @@ func (c *Client) InitPlan(branch, name, region, teamID, cloudID, compositeID, re
 		return nil, err
 	}
 
-	// Add value property
-	for i, v := range planConfig.Variables {
-		if v.Required {
-			if v.Default != nil {
-				v.Value = v.Default
-			} else {
-				v.Value = "INPUT REQUIRED"
-			}
-			planConfig.Variables[i] = v
-		}
-	}
-
 	return planConfig, nil
 }
 
