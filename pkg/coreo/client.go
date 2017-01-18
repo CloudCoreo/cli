@@ -393,15 +393,6 @@ func (c *Client) InitPlan(branch, name, region, teamID, cloudID, compositeID, re
 		return nil, err
 	}
 
-	// Add value property
-	for _, v := range planConfig.Variables {
-		if v.Required {
-			if v.Default != nil {
-				v.Value = v.Default
-			}
-		}
-	}
-
 	return planConfig, nil
 }
 
@@ -423,7 +414,7 @@ func (c *Client) CreatePlan(planConfigContent []byte) (*client.Plan, error) {
 }
 
 //GetPlanPanel get plan panel
-func (c *Client) GetPlanPanel(teamID, compositeID, planID string)(*client.Panel, error) {
+func (c *Client) GetPlanPanel(teamID, compositeID, planID string) (*client.Panel, error) {
 
 	ctx := NewContext()
 	client, err := c.MakeClient()

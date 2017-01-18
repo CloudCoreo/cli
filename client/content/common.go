@@ -69,4 +69,10 @@ const (
 
 	//InfoPlanCreationMessage info
 	InfoPlanCreationMessage = "Adding plan and generating planconfig json file, please wait..."
+
+	//ErrorPlanConfigVaribaleMissing error
+	ErrorPlanConfigVaribaleMissing = "Error in plan config, missing required values."
+
+	//ErrorPlanConfigRequiredVariableMissing error
+	ErrorPlanConfigRequiredVariableMissing = "[Error] Missing plan config value for key %s.\n"
 )

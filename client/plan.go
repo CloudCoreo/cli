@@ -58,28 +58,29 @@ type Panel struct {
 
 // Plan struct object
 type Plan struct {
-	DefaultPanelRepo       string `json:"defaultPanelRepo"`
-	DefaultPanelDirectory  string `json:"defaultPanelDirectory"`
-	DefaultPanelBranch     string `json:"defaultPanelBranch"`
-	Name                   string `json:"name"`
-	EnginePrefix           string `json:"enginePrefix"`
-	IamUserAccessKeyID     string `json:"iamUserAccessKeyId"`
-	IamUserID              string `json:"iamUserId"`
-	IamUserSecretAccessKey string `json:"iamUserSecretAccessKey"`
-	SnsSubscriptionArn     string `json:"snsSubscriptionArn"`
-	SqsArn                 string `json:"sqsArn"`
-	SqsURL                 string `json:"sqsUrl"`
-	TopicArn               string `json:"topicArn"`
-	IsSynchronizing        bool   `json:"isSynchronizing"`
-	IsDraft                bool   `json:"isDraft"`
-	DefaultRegion          string `json:"defaultRegion"`
-	RefreshInterval        int    `json:"refreshInterval"`
-	RunCounter             int    `json:"runCounter"`
-	Revision               string `json:"revision"`
-	Branch                 string `json:"branch"`
-	Enabled                bool   `json:"enabled"`
-	Links                  []Link `json:"links"`
-	ID                     string `json:"id"`
+	DefaultPanelRepo       string                   `json:"defaultPanelRepo"`
+	DefaultPanelDirectory  string                   `json:"defaultPanelDirectory"`
+	DefaultPanelBranch     string                   `json:"defaultPanelBranch"`
+	Name                   string                   `json:"name"`
+	EnginePrefix           string                   `json:"enginePrefix"`
+	IamUserAccessKeyID     string                   `json:"iamUserAccessKeyId"`
+	IamUserID              string                   `json:"iamUserId"`
+	IamUserSecretAccessKey string                   `json:"iamUserSecretAccessKey"`
+	SnsSubscriptionArn     string                   `json:"snsSubscriptionArn"`
+	SqsArn                 string                   `json:"sqsArn"`
+	SqsURL                 string                   `json:"sqsUrl"`
+	TopicArn               string                   `json:"topicArn"`
+	IsSynchronizing        bool                     `json:"isSynchronizing"`
+	IsDraft                bool                     `json:"isDraft"`
+	DefaultRegion          string                   `json:"defaultRegion"`
+	RefreshInterval        int                      `json:"refreshInterval"`
+	RunCounter             int                      `json:"runCounter"`
+	Revision               string                   `json:"revision"`
+	Branch                 string                   `json:"branch"`
+	Enabled                bool                     `json:"enabled"`
+	Links                  []Link                   `json:"links"`
+	ID                     string                   `json:"id"`
+	Config                 map[string]PlanAttribute `json:"config"`
 }
 
 // PlanConfig struct object
@@ -293,6 +294,23 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		return nil, err
 	}
 
+	planLink, err := GetLinkByRef(plan.Links, "self")
+	if err != nil {
+		return nil, err
+	}
+
+	jsonStr, err = json.Marshal(plan)
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, "PUT", planLink.Href, bytes.NewBuffer(jsonStr), &plan)
+	if err != nil {
+
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
 	fmt.Print(content.InfoPlanCreationMessage)
 
 	planConfig := &PlanConfig{}
@@ -301,6 +319,7 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		fmt.Print(".")
 		planConfig, err = c.getPlanConfig(ctx, plan)
 		if err == nil {
+			planConfig.Variables = setPlanConfigRequiredValues(planConfig.Variables)
 			fmt.Println()
 			return planConfig, nil
 		}
@@ -332,6 +351,12 @@ func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Pla
 		return nil, err
 	}
 
+	err := verifyPlanConfigRequiredValues(planConfig.Variables)
+
+	if err != nil {
+		return nil, err
+	}
+
 	planConfigLink, err := GetLinkByRef(planConfig.Links, "self")
 	if err != nil {
 		return nil, err
@@ -353,12 +378,13 @@ func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Pla
 		return nil, err
 	}
 
-	planLink, err = GetLinkByRef(planConfig.Links, "self")
+	planLink, err = GetLinkByRef(plan.Links, "self")
 	if err != nil {
 		return nil, err
 	}
 
 	plan.IsDraft = false
+	plan.Config = planConfig.Variables
 	jsonStr, err := json.Marshal(plan)
 
 	err = c.Do(ctx, "PUT", planLink.Href, bytes.NewBuffer(jsonStr), &plan)
@@ -389,4 +415,37 @@ func (c *Client) GetPanelInfo(ctx context.Context, teamID, compositeID, planID s
 	}
 
 	return panel, nil
+}
+
+func verifyPlanConfigRequiredValues(variables map[string]PlanAttribute) error {
+
+	errorFound := false
+	for k, v := range variables {
+		if v.Required && (v.Value == nil || v.Value == "" || v.Value == "INPUT REQUIRED") {
+			errorFound = true
+			fmt.Printf(content.ErrorPlanConfigRequiredVariableMissing, k)
+		}
+	}
+
+	if errorFound {
+		return fmt.Errorf(content.ErrorPlanConfigVaribaleMissing)
+	}
+
+	return nil
+}
+
+func setPlanConfigRequiredValues(variables map[string]PlanAttribute) map[string]PlanAttribute {
+	// Add value property
+	for i, v := range variables {
+		if v.Required {
+			if v.Default != nil {
+				v.Value = v.Default
+			} else {
+				v.Value = "INPUT REQUIRED"
+			}
+			variables[i] = v
+		}
+	}
+
+	return variables
 }
