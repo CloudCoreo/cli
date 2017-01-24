@@ -26,61 +26,39 @@ import (
 
 //Panel panel struct
 type Panel struct {
-	ResourcesArray []struct {
-		StackName       string    `json:"stackName"`
-		RunID           string    `json:"runId"`
-		EngineStatus    string    `json:"engineStatus"`
-		Namespace       string    `json:"namespace"`
-		ExecutionNumber int       `json:"executionNumber"`
-		Timestamp       time.Time `json:"timestamp"`
-		ExecutionTime   float64   `json:"executionTime"`
-		ResourceType    string    `json:"resourceType"`
-		ResourceName    string    `json:"resourceName"`
-		DataType        string    `json:"dataType"`
-		Inputs          []struct {
-			Type  string `json:"type"`
-			Value string `json:"value"`
-			Name  string `json:"name"`
-		} `json:"inputs"`
-		Outputs []struct {
-			Value string `json:"value"`
-			Name  string `json:"name"`
-		} `json:"outputs"`
-		ResourceID string `json:"resourceId"`
-		ID         string `json:"_id"`
-	} `json:"resourcesArray"`
-	NumberOfResources          int       `json:"numberOfResources"`
-	PlanRefreshIntervalInHours int       `json:"planRefreshIntervalInHours"`
-	LastExecutionTime          time.Time `json:"lastExecutionTime"`
-	EngineState                string    `json:"engineState"`
-	IsEnabled                  bool      `json:"isEnabled"`
+	ResourcesArray             interface{} `json:"resourcesArray"`
+	NumberOfResources          int         `json:"numberOfResources"`
+	PlanRefreshIntervalInHours int         `json:"planRefreshIntervalInHours"`
+	LastExecutionTime          time.Time   `json:"lastExecutionTime"`
+	EngineState                string      `json:"engineState"`
+	IsEnabled                  bool        `json:"isEnabled"`
 }
 
 // Plan struct object
 type Plan struct {
-	DefaultPanelRepo       string                   `json:"defaultPanelRepo"`
-	DefaultPanelDirectory  string                   `json:"defaultPanelDirectory"`
-	DefaultPanelBranch     string                   `json:"defaultPanelBranch"`
-	Name                   string                   `json:"name"`
-	EnginePrefix           string                   `json:"enginePrefix"`
-	IamUserAccessKeyID     string                   `json:"iamUserAccessKeyId"`
-	IamUserID              string                   `json:"iamUserId"`
-	IamUserSecretAccessKey string                   `json:"iamUserSecretAccessKey"`
-	SnsSubscriptionArn     string                   `json:"snsSubscriptionArn"`
-	SqsArn                 string                   `json:"sqsArn"`
-	SqsURL                 string                   `json:"sqsUrl"`
-	TopicArn               string                   `json:"topicArn"`
-	IsSynchronizing        bool                     `json:"isSynchronizing"`
-	IsDraft                bool                     `json:"isDraft"`
-	DefaultRegion          string                   `json:"defaultRegion"`
-	RefreshInterval        int                      `json:"refreshInterval"`
-	RunCounter             int                      `json:"runCounter"`
-	Revision               string                   `json:"revision"`
-	Branch                 string                   `json:"branch"`
-	Enabled                bool                     `json:"enabled"`
-	Links                  []Link                   `json:"links"`
-	ID                     string                   `json:"id"`
-	Config                 map[string]PlanAttribute `json:"config"`
+	DefaultPanelRepo       string      `json:"defaultPanelRepo"`
+	DefaultPanelDirectory  string      `json:"defaultPanelDirectory"`
+	DefaultPanelBranch     string      `json:"defaultPanelBranch"`
+	Name                   string      `json:"name"`
+	IamUserAccessKeyID     string      `json:"iamUserAccessKeyId"`
+	IamUserID              string      `json:"iamUserId"`
+	IamUserSecretAccessKey string      `json:"iamUserSecretAccessKey"`
+	SnsSubscriptionArn     string      `json:"snsSubscriptionArn"`
+	SqsArn                 string      `json:"sqsArn"`
+	SqsURL                 string      `json:"sqsUrl"`
+	TopicArn               string      `json:"topicArn"`
+	EnginePrefix           string      `json:"enginePrefix"`
+	IsSynchronizing        bool        `json:"isSynchronizing"`
+	IsDraft                bool        `json:"isDraft"`
+	DefaultRegion          string      `json:"defaultRegion"`
+	RefreshInterval        int         `json:"refreshInterval"`
+	RunCounter             int         `json:"runCounter"`
+	Revision               string      `json:"revision"`
+	Branch                 string      `json:"branch"`
+	Enabled                bool        `json:"enabled"`
+	Links                  []Link      `json:"links"`
+	ID                     string      `json:"id"`
+	Config                 interface{} `json:"config"`
 }
 
 // PlanConfig struct object
