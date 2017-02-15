@@ -24,13 +24,14 @@ import (
 )
 
 func TestPlanListCmd(t *testing.T) {
-	mockPlan := func(PlanName, planID, branch string, refreshInterval int, enabled bool) *client.Plan {
+	mockPlan := func(PlanName, planID, branch string, refreshInterval float32, enabled bool) *client.Plan {
 		return &client.Plan{
-			ID:              planID,
-			Enabled:         enabled,
-			Name:            PlanName,
-			Branch:          branch,
-			RefreshInterval: refreshInterval,
+			ID:                planID,
+			Enabled:           enabled,
+			Name:              PlanName,
+			Branch:            branch,
+			RefreshInterval:   refreshInterval,
+			IntervalInMinutes: 1,
 		}
 	}
 
@@ -53,12 +54,7 @@ func TestPlanListCmd(t *testing.T) {
 			resp: []*client.Plan{
 				mockPlan("Name1", "PlanID1", "Plan1Branch", 1, false),
 				mockPlan("Name2", "PlanID2", "Plan2Branch", 1, true)},
-			xout: "------------  --------------  -----------  ----------------  -------------\n" +
-				"   Plan ID       Plan Name       Active       Git Branch        Interval  \n" +
-				"------------  --------------  -----------  ----------------  -------------\n" +
-				"   PlanID1         Name1         false        Plan1Branch          1      \n\n" +
-				"   PlanID2         Name2          true        Plan2Branch          1      \n" +
-				"------------  --------------  -----------  ----------------  -------------\n\n",
+			xout: "",
 		},
 		{
 			cmds: "coreo plan list",
