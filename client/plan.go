@@ -51,13 +51,14 @@ type Plan struct {
 	IsSynchronizing        bool        `json:"isSynchronizing"`
 	IsDraft                bool        `json:"isDraft"`
 	DefaultRegion          string      `json:"defaultRegion"`
-	RefreshInterval        int         `json:"refreshInterval"`
+	RefreshInterval        float32     `json:"refreshInterval"`
 	RunCounter             int         `json:"runCounter"`
 	Revision               string      `json:"revision"`
 	Branch                 string      `json:"branch"`
 	Enabled                bool        `json:"enabled"`
 	Links                  []Link      `json:"links"`
 	ID                     string      `json:"id"`
+	IntervalInMinutes      int         `json:"intervalInMinutes"`
 	Config                 interface{} `json:"config"`
 }
 
@@ -241,7 +242,12 @@ func (c *Client) DisablePlan(ctx context.Context, teamID, compositeID, planID st
 }
 
 //InitPlan init plan
-func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, cloudID, compositeID, revision string, interval int) (*PlanConfig, error) {
+func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, cloudID, compositeID, revision string, intervalInMinutes int) (*PlanConfig, error) {
+
+	if intervalInMinutes < 2 || intervalInMinutes > 525600 {
+		return nil, fmt.Errorf(content.ErrorPlanIntervalMintuesInvalid)
+	}
+
 	composite, err := c.GetCompositeByID(ctx, teamID, compositeID)
 	if err != nil {
 		return nil, err
@@ -252,8 +258,10 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		return nil, err
 	}
 
+	interval := (60 * 24) / float32(intervalInMinutes)
+
 	planPayLoad := fmt.Sprintf(
-		`{"name":"%s","awsCredsId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%d","appStackId":"%s"}`,
+		`{"name":"%s","awsCredsId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%f","appStackId":"%s"}`,
 
 		name,
 		cloudID,
