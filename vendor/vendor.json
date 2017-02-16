@@ -9,6 +9,12 @@
 			"revisionTime": "2016-10-08T17:27:12Z"
 		},
 		{
+			"checksumSHA1": "ntacCkWfMT63DaehXLG5FeXWyNM=",
+			"path": "github.com/cpuguy83/go-md2man/md2man",
+			"revision": "a65d4d2de4d5f7c74868dfa9b202a3c8be315aaa",
+			"revisionTime": "2016-09-04T16:08:59Z"
+		},
+		{
 			"checksumSHA1": "dvabztWVQX8f6oMLRyv4dLH+TGY=",
 			"path": "github.com/davecgh/go-spew/spew",
 			"revision": "346938d642f2ec3594ed81d874461961cd0faa76",
@@ -142,6 +148,18 @@
 			"revisionTime": "2016-01-10T10:55:54Z"
 		},
 		{
+			"checksumSHA1": "c7jHQZk5ZEsFR9EXsWJXkszPBZA=",
+			"path": "github.com/russross/blackfriday",
+			"revision": "5f33e7b7878355cd2b7e6b8eefc48a5472c69f70",
+			"revisionTime": "2016-10-03T16:27:22Z"
+		},
+		{
+			"checksumSHA1": "kbgJvKG3NRoqU91rYnXGnyR+8HQ=",
+			"path": "github.com/shurcooL/sanitized_anchor_name",
+			"revision": "1dba4b3954bc059efc3991ec364f9f9a35f597d2",
+			"revisionTime": "2016-09-18T04:11:01Z"
+		},
+		{
 			"checksumSHA1": "59wTbS4fE2282Q88NrBYImbFGbo=",
 			"path": "github.com/spf13/afero",
 			"revision": "52e4a6cfac46163658bd4f123c49b6ee7dc75f78",
@@ -168,6 +186,12 @@
 		{
 			"checksumSHA1": "FZ0r4TzEy9UxXLkFVXFygApni4M=",
 			"path": "github.com/spf13/cobra",
+			"revision": "856b96dcb49d6427babe192998a35190a12c2230",
+			"revisionTime": "2016-10-14T22:20:36Z"
+		},
+		{
+			"checksumSHA1": "ee1na+RTOLeR5fC2X7DvY3EyB10=",
+			"path": "github.com/spf13/cobra/doc",
 			"revision": "856b96dcb49d6427babe192998a35190a12c2230",
 			"revisionTime": "2016-10-14T22:20:36Z"
 		},
