@@ -26,10 +26,16 @@ _testmain.go
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# external packages folder
-vendor/
-
 # build directory
 build/
 
 .idea/
+cli
+
+dump.rdb
+
+*.DS_Store
+
+cmd/cmd
+
+cmd/testPlan.json
