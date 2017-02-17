@@ -77,5 +77,5 @@ const (
 	ErrorPlanConfigRequiredVariableMissing = "Missing plan config value for key %s.\n"
 
 	//ErrorPlanIntervalMintuesInvalid error
-	ErrorPlanIntervalMintuesInvalid = "Interval value should be more than 2 minute and less than 525600 minutes."
+	ErrorPlanIntervalMintuesInvalid = "Interval value should be more than 2 minutes and less than 525600 minutes."
 )
