@@ -18,63 +18,63 @@ const (
 	//CmdCompositeUse command
 	CmdCompositeUse = "composite"
 
-	//CmdCompositeShort short descripton
+	//CmdCompositeShort short description
 	CmdCompositeShort = "Manage Composites"
 
-	//CmdCompositeLong long descripton
+	//CmdCompositeLong long description
 	CmdCompositeLong = `Manage Composites. Composites are inheritable cloud reference designs that
 can be easily extended and updated. A Composite can specify a single micro-service,
 a group of services, a complex application, or an entire data center definition.`
 
-	//CmdCompositeInitShort short descripton
+	//CmdCompositeInitShort short description
 	CmdCompositeInitShort = "Create a new configuration"
 
-	//CmdCompositeInitLong long descripton
+	//CmdCompositeInitLong long description
 	CmdCompositeInitLong = `Configure  Coreo  CLI  options.`
 
 	//CmdCompositeInitSuccess message
 	CmdCompositeInitSuccess = "[Done] Composite initialization completed, default files and folders were generated.\n"
 
-	//CmdCompositeCreateShort short descripton
+	//CmdCompositeCreateShort short description
 	CmdCompositeCreateShort = "Create new composite"
 
-	//CmdCompositeCreateLong long descripton
+	//CmdCompositeCreateLong long description
 	CmdCompositeCreateLong = `Create new composite.`
 
-	//CmdCompositeGendocShort short descripton
+	//CmdCompositeGendocShort short description
 	CmdCompositeGendocShort = "Generate readme documentation"
 
-	//CmdCompositeGendocLong long descripton
+	//CmdCompositeGendocLong long description
 	CmdCompositeGendocLong = `Generate readme documentation.`
 
 	//CmdCompositeGendocSuccess message
 	CmdCompositeGendocSuccess = "[Done] Composite documentation completed, README.md was generated.\n"
 
-	//CmdCompositeListShort short descripton
+	//CmdCompositeListShort short description
 	CmdCompositeListShort = "Show list of composites"
 
-	//CmdCompositeListLong long descripton
+	//CmdCompositeListLong long description
 	CmdCompositeListLong = `Show list of composites.`
 
-	//CmdCompositeShowShort short descripton
+	//CmdCompositeShowShort short description
 	CmdCompositeShowShort = "Show a particular composite"
 
-	//CmdCompositeShowLong long descripton
+	//CmdCompositeShowLong long description
 	CmdCompositeShowLong = `Show a particular compsoite`
 
-	//CmdCompositeLayerShort short descripton
+	//CmdCompositeLayerShort short description
 	CmdCompositeLayerShort = "Generate composite layer"
 
-	//CmdCompositeLayerLong long descripton
+	//CmdCompositeLayerLong long description
 	CmdCompositeLayerLong = `Generate composite layer.`
 
 	//CmdCompositeLayerSuccess layer success
 	CmdCompositeLayerSuccess = "Composite successfully added."
 
-	//CmdCompositeExtendsShort short descripton
+	//CmdCompositeExtendsShort short description
 	CmdCompositeExtendsShort = "Extends a particular composite"
 
-	//CmdCompositeExtendsLong long descripton
+	//CmdCompositeExtendsLong long description
 	CmdCompositeExtendsLong = `Extends a particular composite.`
 
 	//CmdCompositeExtendsSuccess message

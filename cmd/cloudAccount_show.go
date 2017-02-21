@@ -61,7 +61,7 @@ func newCloudShowCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 
 	f := cmd.Flags()
 
-	f.StringVarP(&cloudShow.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescripton)
+	f.StringVarP(&cloudShow.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
 
 	return cmd
 }

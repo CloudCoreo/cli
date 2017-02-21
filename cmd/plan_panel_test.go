@@ -26,7 +26,7 @@ import (
 func TestPlanPanelCmd(t *testing.T) {
 	mockPanel := func(enabled bool) *client.Panel {
 		return &client.Panel{
-			IsEnabled:enabled,
+			IsEnabled: enabled,
 		}
 	}
 
