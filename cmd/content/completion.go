@@ -23,14 +23,14 @@ CmdCompletionShort = "Generate bash autocompletions script"
 
 //CmdDocsLong long description
 CmdCompletionLong = `
-Generate bash autocompletions script for Helm.
+Generate bash autocompletions script for Coreo.
 
 This command can generate shell autocompletions.
 
-	$ helm completion
+	$ coreo completion
 
 Can be sourced as such
 
-	$ source <(helm completion)
+	$ source <(coreo completion)
 `
 )

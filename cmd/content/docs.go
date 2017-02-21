@@ -32,9 +32,9 @@ const (
 
 	//CmdDocsLong long description
 	CmdDocsLong = `
-Generate documentation files for Helm.
+Generate documentation files for Coreo.
 
-This command can generate documentation for Helm in the following formats:
+This command can generate documentation for Coreo in the following formats:
 
 - Markdown
 - Man pages
