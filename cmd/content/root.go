@@ -94,7 +94,7 @@ const (
 	CmdFlagDirectoryShort = "d"
 
 	//CmdFlagDirectoryDescription cmd
-	CmdFlagDirectoryDescription = "the working directory <fully-qualified-path>"
+	CmdFlagDirectoryDescription = "The working directory <fully-qualified-path>"
 
 	//CmdFlagGitRepoLong cmd
 	CmdFlagGitRepoLong = "git-repo"
@@ -187,7 +187,7 @@ const (
 	CmdFlagAPIEndpointLong = "endpoint"
 
 	//CmdFlagAPIEndpointDescription api endpoint description
-	CmdFlagAPIEndpointDescription = "Coreo API endpoint. Overrides CC_API_ENDPOINT."
+	CmdFlagAPIEndpointDescription = "Coreo API endpoint. Overrides $CC_API_ENDPOINT."
 
 	//CmdCoreoUse Coreo cmd
 	CmdCoreoUse = "coreo"
