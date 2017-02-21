@@ -25,8 +25,8 @@ func newPlanDisableCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   content.CmdDisableUse,
-		Short: content.CmdPlanEnableShort,
-		Long:  content.CmdPlanEnableLong,
+		Short: content.CmdPlanDisableShort,
+		Long:  content.CmdPlanDisableLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			if err := util.CheckCompositeIDAndPlandIDFlag(planDisable.compositeID, planDisable.planID, verbose); err != nil {
@@ -63,14 +63,8 @@ func (t *planDisableCmd) run() error {
 	util.PrintResult(
 		t.out,
 		plan,
-		[]string{"ID", "Name", "Enabled", "Branch", "RefreshInterval"},
-		map[string]string{
-			"ID":              "Plan ID",
-			"Name":            "Plan Name",
-			"Enabled":         "Active",
-			"Branch":          "Git Branch",
-			"RefreshInterval": "Interval",
-		},
+		planSchema,
+		planHeader,
 		jsonFormat,
 		verbose)
 

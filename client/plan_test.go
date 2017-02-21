@@ -542,9 +542,41 @@ func TestInitPlanSuccess(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.InitPlan(context.Background(), "branch", "name", "region", "teamID", "cloudID", "compositeID", "revision", 1)
+	_, err := client.InitPlan(context.Background(), "branch", "name", "region", "teamID", "cloudID", "compositeID", "revision", 2)
 
 	assert.Nil(t, err, "Plan init failed")
+}
+
+func TestInitPlanFailureRefreshIntervalLessThan2(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/api/plans/planID/planconfig").WithMethod("GET").WithBody(planConfigPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("POST").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.InitPlan(context.Background(), "branch", "name", "region", "teamID", "cloudID", "compositeID", "revision", 1)
+
+	assert.NotNil(t, err, "Returns error due to refresh interval less than 2.")
+}
+
+func TestInitPlanFailureRefreshIntervalMoreThan525600(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/api/plans/planID/planconfig").WithMethod("GET").WithBody(planConfigPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("POST").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.InitPlan(context.Background(), "branch", "name", "region", "teamID", "cloudID", "compositeID", "revision", 525601)
+
+	assert.NotNil(t, err, "Returns error due to refresh interval more than 525600.")
 }
 
 func TestCreatePlanSuccess(t *testing.T) {

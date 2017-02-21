@@ -60,11 +60,11 @@ func newPlanInitCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&planInit.compositeID, content.CmdFlagCompositeIDLong, "", "", content.CmdFlagCompositeIDDescription)
 	f.StringVarP(&planInit.name, content.CmdFlagNameLong, "", "", content.CmdFlagNameDescription)
 	f.StringVarP(&planInit.region, content.CmdFlagCloudRegionLong, "", "us-east-1", content.CmdFlagCloudRegionDescription)
-	f.StringVarP(&planInit.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescripton)
+	f.StringVarP(&planInit.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
 	f.StringVarP(&planInit.revision, content.CmdFlagGitRevisionLong, "", "HEAD", content.CmdFlagGitRevisionDescription)
 	f.StringVarP(&planInit.branch, content.CmdFlagBranchLong, "", "master", content.CmdFlagBranchDescription)
 	f.StringVarP(&planInit.directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
-	f.IntVarP(&planInit.interval, content.CmdFlagIntervalLong, "", 1, content.CmdFlagIntervalDescription)
+	f.IntVarP(&planInit.interval, content.CmdFlagIntervalLong, "", 1440, content.CmdFlagIntervalDescription)
 
 	return cmd
 }

@@ -243,7 +243,6 @@ func CheckPlanInitRequiredFlags(compositeID, cloudID, name string) error {
 		return err
 	}
 
-
 	if err := checkFlag(cloudID, content.ErrorCloudIDRequired); err != nil {
 		return err
 	}

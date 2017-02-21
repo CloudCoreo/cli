@@ -18,31 +18,31 @@ const (
 	//CmdTokenUse token command
 	CmdTokenUse = "token"
 
-	//CmdTokenShort short descripton
+	//CmdTokenShort short description
 	CmdTokenShort = "Manage API Tokens"
 
 	//CmdTokenLong long description
 	CmdTokenLong = `Manage API Tokens.`
 
-	//CmdTokenListShort short descripton
+	//CmdTokenListShort short description
 	CmdTokenListShort = "Show list of tokens"
 
 	//CmdTokenListLong long description
 	CmdTokenListLong = `Show list of tokens.`
 
-	//CmdTokenAddShort short descripton
+	//CmdTokenAddShort short description
 	CmdTokenAddShort = "Add a token"
 
 	//CmdTokenAddLong long description
 	CmdTokenAddLong = `Add a token.`
 
-	//CmdTokenShowShort short descripton
+	//CmdTokenShowShort short description
 	CmdTokenShowShort = "Show a token"
 
 	//CmdTokenShowLong long description
 	CmdTokenShowLong = `Show a token.`
 
-	//CmdTokenDeleteShort short descripton
+	//CmdTokenDeleteShort short description
 	CmdTokenDeleteShort = "Delete a token"
 
 	//CmdTokenDeleteLong long description

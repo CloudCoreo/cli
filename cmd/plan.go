@@ -23,6 +23,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	planSchema = []string{"ID", "Name", "Enabled", "Branch", "IntervalInMinutes"}
+	planHeader = map[string]string{
+		"ID":              "Plan ID",
+		"Name":            "Plan Name",
+		"Enabled":         "Active",
+		"Branch":          "Git Branch",
+		"IntervalInMinutes": "Interval (Mintues)",
+	}
+)
+
 func newPlanCmd(out io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:               content.CmdPlanUse,
@@ -101,14 +112,8 @@ func (t *PlanListCmd) run() error {
 	util.PrintResult(
 		t.out,
 		b,
-		[]string{"ID", "Name", "Enabled", "Branch", "RefreshInterval"},
-		map[string]string{
-			"ID":              "Plan ID",
-			"Name":            "Plan Name",
-			"Enabled":         "Active",
-			"Branch":          "Git Branch",
-			"RefreshInterval": "Interval",
-		},
+		planSchema,
+		planHeader,
 		jsonFormat,
 		verbose)
 

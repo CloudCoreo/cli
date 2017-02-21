@@ -21,19 +21,19 @@ const (
 	//CmdTeamShort short description
 	CmdTeamShort = "Manage Teams"
 
-	//CmdTeamLong long descripton
+	//CmdTeamLong long description
 	CmdTeamLong = `Manage Teams.`
 
 	//CmdTeamListShort short description
 	CmdTeamListShort = "Show list of team"
 
-	//CmdTeamListLong long descripton
+	//CmdTeamListLong long description
 	CmdTeamListLong = `Show list of team.`
 
 	//CmdTeamShowShort short description
 	CmdTeamShowShort = "Show a team"
 
-	//CmdTeamShowLong long descripton
+	//CmdTeamShowLong long description
 	CmdTeamShowLong = `Show a team.`
 
 	//InfoUsingTeamID informational using team id
