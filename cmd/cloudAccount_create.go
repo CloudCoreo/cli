@@ -64,7 +64,7 @@ func newCloudCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 
 	f := cmd.Flags()
 
-	f.StringVarP(&cloudCreate.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescripton)
+	f.StringVarP(&cloudCreate.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
 	f.StringVarP(&cloudCreate.resourceKey, content.CmdFlagKeyLong, content.CmdFlagKeyShort, "", content.CmdFlagKeyDescription)
 	f.StringVarP(&cloudCreate.resourceSecret, content.CmdFlagSecretLong, content.CmdFlagSecretShort, "", content.CmdFlagSecretDescription)
 	f.StringVarP(&cloudCreate.resourceName, content.CmdFlagNameLong, content.CmdFlagNameShort, "", content.CmdFlagNameDescription)

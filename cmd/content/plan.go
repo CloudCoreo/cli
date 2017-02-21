@@ -21,55 +21,55 @@ const (
 	//CmdPlanFinalizeUse plan command
 	CmdPlanFinalizeUse = "finalize [flags]"
 
-	//CmdPlanShort short descripton
+	//CmdPlanShort short description
 	CmdPlanShort = "Manage Plans"
 
 	//CmdPlanLong long description
 	CmdPlanLong = `Manage Plans.`
 
-	//CmdPlanListShort short descripton
+	//CmdPlanListShort short description
 	CmdPlanListShort = "List all plans"
 
 	//CmdPlanListLong long description
 	CmdPlanListLong = `List all plans.`
 
-	//CmdPlanInitShort short descripton
+	//CmdPlanInitShort short description
 	CmdPlanInitShort = "Init a plan"
 
 	//CmdPlanInitLong long description
 	CmdPlanInitLong = `Init a plan.`
 
-	//CmdPlanCreateShort short descripton
+	//CmdPlanCreateShort short description
 	CmdPlanCreateShort = "Finalize a plan"
 
 	//CmdPlanCreateLong long description
 	CmdPlanCreateLong = `Finalize a plan.`
 
-	//CmdPlanDeleteShort short descripton
+	//CmdPlanDeleteShort short description
 	CmdPlanDeleteShort = "Delete a plan"
 
 	//CmdPlanDeleteLong long description
 	CmdPlanDeleteLong = `Delete a plan.`
 
-	//CmdPlanShowShort short descripton
+	//CmdPlanShowShort short description
 	CmdPlanShowShort = "Show a plan"
 
 	//CmdPlanShowLong long description
 	CmdPlanShowLong = `Show a plan.`
 
-	//CmdPlanDisableShort short descripton
+	//CmdPlanDisableShort short description
 	CmdPlanDisableShort = "Disable a plan"
 
 	//CmdPlanDisableLong long description
 	CmdPlanDisableLong = `Disable a plan.`
 
-	//CmdPlanEnableShort short descripton
+	//CmdPlanEnableShort short description
 	CmdPlanEnableShort = "Enable a plan"
 
 	//CmdPlanEnableLong long description
 	CmdPlanEnableLong = `Enable a plan.`
 
-	//CmdPlanRunShort short descripton
+	//CmdPlanRunShort short description
 	CmdPlanRunShort = "Run a plan"
 
 	//CmdPlanRunLong long description

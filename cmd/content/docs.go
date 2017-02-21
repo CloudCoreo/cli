@@ -43,6 +43,6 @@ It can also generate bash autocompletions.
 
 	$ coreo docs markdown --dir mydocs/
 `
-	//ErrorDocGeneration descripton
+	//ErrorDocGeneration description
 	ErrorDocGeneration = "unknown doc type %q. Try 'markdown' or 'man'"
 )

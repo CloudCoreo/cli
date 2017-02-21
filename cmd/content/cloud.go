@@ -51,8 +51,8 @@ const (
 	// CmdFlagCloudIDLong flag
 	CmdFlagCloudIDLong = "cloud-id"
 
-	// CmdFlagCloudIDDescripton flag description
-	CmdFlagCloudIDDescripton = "Coreo cloud id"
+	// CmdFlagCloudIDDescription flag description
+	CmdFlagCloudIDDescription = "Coreo cloud id"
 
 	//InfoCloudAccountDeleted info
 	InfoCloudAccountDeleted = "Cloud account was deleted"
