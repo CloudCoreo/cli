@@ -19,6 +19,8 @@ import (
 	"os"
 	"os/exec"
 
+	"strings"
+
 	"github.com/CloudCoreo/cli/cmd/content"
 )
 
@@ -62,4 +64,14 @@ func CreateGitSubmodule(directory, gitRepoURL string) error {
 	}
 
 	return nil
+}
+
+//GetRepoNameFromGitURL get repo name from gitURL
+func GetRepoNameFromGitURL(gitURL string) string {
+	repoName, err := exec.Command("basename", gitURL, ".git").CombinedOutput()
+	if err != nil {
+		return "coreo-composite"
+	}
+
+	return strings.TrimSpace(string(repoName))
 }

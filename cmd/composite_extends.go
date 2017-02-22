@@ -20,6 +20,10 @@ import (
 	"fmt"
 	"os"
 
+	"io/ioutil"
+	"path"
+	"path/filepath"
+
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/spf13/cobra"
@@ -60,6 +64,36 @@ func newCompositeExtendsCmd(out io.Writer) *cobra.Command {
 	return cmd
 }
 
+func tryReplaceRootConfigYamlFile(directory string) error {
+	fp := filepath.Join(directory, content.DefaultFilesConfigYAMLName)
+	fi, err := os.Stat(fp)
+
+	if err != nil {
+		return err
+	}
+
+	if fi.Size() == 0 {
+		fileContent, err := ioutil.ReadFile(path.Join(directory, "extends", content.DefaultFilesConfigYAMLName))
+		if err != nil {
+			return err
+		}
+
+		f, err := os.OpenFile(path.Join(directory, content.DefaultFilesConfigYAMLName), os.O_APPEND|os.O_WRONLY, 0666)
+		if err != nil {
+			return err
+		}
+
+		defer f.Close()
+
+		if _, err = f.WriteString(string(fileContent)); err != nil {
+			return err
+		}
+
+	}
+
+	return nil
+}
+
 func (t *compositeExtendsCmd) run() error {
 
 	if err := util.CheckGitInstall(); err != nil {
@@ -80,6 +114,9 @@ func (t *compositeExtendsCmd) run() error {
 
 	// generate override and service files
 	genContent(t.directory)
+
+	// replace root config.yaml from extends folder if empty
+	tryReplaceRootConfigYamlFile(t.directory)
 
 	if t.serverDir {
 		genServerContent(t.directory)
