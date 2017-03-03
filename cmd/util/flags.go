@@ -140,10 +140,6 @@ func CheckCompositeCreateFlags(name, gitRepoURL string) error {
 
 // CheckLayersFlags flag check for composite layer command
 func CheckLayersFlags(name, gitRepoURL string) error {
-	if err := checkFlag(name, content.ErrorNameMissing); err != nil {
-		return err
-	}
-
 	if err := checkGitRepoURL(gitRepoURL); err != nil {
 
 		return err

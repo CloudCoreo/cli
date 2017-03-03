@@ -54,6 +54,9 @@ const (
 	//ErrorGitSubmoduleFailed error
 	ErrorGitSubmoduleFailed = "git submodule add failed with:\n%s\n"
 
+	//ErrorRepoNameFailed error
+	ErrorRepoNameFailed = "Failed to get repo name from giturl."
+
 	//ErrorGitRepoURLMissing error
 	ErrorGitRepoURLMissing = "A SSH git repo url is required: -g\n"
 
@@ -62,6 +65,9 @@ const (
 
 	//ErrorNameMissing error
 	ErrorNameMissing = "Name is required for this command. Use flag --name\n"
+
+	//ErrorStackNameExist error
+	ErrorStackNameExist = "Stack with name %s already exists. Enter new stack name using flag --name\n"
 
 	//ErrorKeyMissing error
 	ErrorKeyMissing = "Key is required for this command. Use flag --key\n"
@@ -115,13 +121,22 @@ const (
 	CmdFlagNameDescription = "Name flag"
 
 	//CmdFlagServerLong cmd
-	CmdFlagServerLong = "add-server-directories"
+	CmdFlagServerLong = "add-server-content"
 
 	//CmdFlagServerShort cmd
 	CmdFlagServerShort = "s"
 
+	//CmdFlagAuditLong cmd
+	CmdFlagAuditLong = "add-audit-content"
+
+	//CmdFlagAuditShort cmd
+	CmdFlagAuditShort = "a"
+
 	//CmdFlagServerDescription cmd
-	CmdFlagServerDescription = "Create server files"
+	CmdFlagServerDescription = "Create server content"
+
+	//CmdFlagAuditDescription cmd
+	CmdFlagAuditDescription = "Create audit content"
 
 	//CmdFlagKeyLong cmd
 	CmdFlagKeyLong = "key"
@@ -181,7 +196,7 @@ const (
 	CmdFlagProfileLong = "profile"
 
 	//CmdFlagProfileDescription secret flag description
-	CmdFlagProfileDescription = "Coreo profile to use."
+	CmdFlagProfileDescription = "Coreo profile to use. Overrides $COREO_PROFILE."
 
 	//CmdFlagAPIEndpointLong api endpoint flag long
 	CmdFlagAPIEndpointLong = "endpoint"
@@ -229,7 +244,7 @@ const (
 	CmdGendocUse = "gendoc [flags]"
 
 	//CmdLayerUse layer cmd
-	CmdLayerUse = "layer [flags]"
+	CmdLayerUse = "layers [flags]"
 
 	//CmdExtendsUse extends cmd
 	CmdExtendsUse = "extends [flags]"

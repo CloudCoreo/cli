@@ -30,6 +30,7 @@ type compositeInitCmd struct {
 	out       io.Writer
 	directory string
 	serverDir bool
+	audit     bool
 }
 
 func newCompositeInitCmd(out io.Writer) *cobra.Command {
@@ -49,6 +50,7 @@ func newCompositeInitCmd(out io.Writer) *cobra.Command {
 	f := cmd.Flags()
 
 	f.StringVarP(&compositeInit.directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
+	f.BoolVarP(&compositeInit.audit, content.CmdFlagAuditLong, content.CmdFlagAuditShort, false, content.CmdFlagAuditDescription)
 	f.BoolVarP(&compositeInit.serverDir, content.CmdFlagServerLong, content.CmdFlagServerShort, false, content.CmdFlagServerDescription)
 
 	return cmd
@@ -64,6 +66,8 @@ func (t *compositeInitCmd) run() error {
 
 	if t.serverDir {
 		genServerContent(t.directory)
+	} else if t.audit {
+		genAuditContent(t.directory)
 	}
 
 	return nil
@@ -76,7 +80,7 @@ func genContent(directory string) {
 
 	// config.yml file
 	fmt.Println()
-	util.CreateFile(content.DefaultFilesConfigYAMLName, directory, content.DefaultFilesConfigYAMLContent, false)
+	util.CreateFile(content.DefaultFilesConfigYAMLName, directory, "", false)
 
 	// override folder
 	util.CreateFolder(content.DefaultFilesOverrideFolderName, directory)
@@ -115,6 +119,24 @@ func genContent(directory string) {
 
 	if err == nil {
 		fmt.Println(content.CmdCompositeInitSuccess)
+	}
+}
+
+func genAuditContent(directory string) {
+	//generate table.yaml
+	err := util.CreateFile(content.DefaultFileTableYAMLName, directory, content.DefaultFilesTableYAMLContent, false)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, err.Error())
+		os.Exit(-1)
+	}
+
+	//generate suppression.yaml
+	err = util.CreateFile(content.DefaultFileSuppressionYAMLName, directory, content.DefaultFileSuppressionYAMLContent, false)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, err.Error())
+		os.Exit(-1)
 	}
 }
 

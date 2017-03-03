@@ -73,13 +73,25 @@ func (t *compositeLayerCmd) run() error {
 		t.directory, _ = os.Getwd()
 	}
 
-	err := util.CreateFolder("stack-"+t.name, t.directory)
+	if t.name == "" {
+		t.name = util.GetRepoNameFromGitURL(t.gitRepoURL)
+	}
+
+	stackName := "stack-" + t.name
+
+	_, err := os.Stat(path.Join(t.directory, stackName))
+
+	if !os.IsNotExist(err) {
+		return fmt.Errorf(content.ErrorStackNameExist, stackName)
+	}
+
+	err = util.CreateFolder(stackName, t.directory)
 
 	if err != nil {
 		return err
 	}
 
-	t.directory = path.Join(t.directory, "stack-"+t.name)
+	t.directory = path.Join(t.directory, stackName)
 
 	err = util.CreateGitSubmodule(t.directory, t.gitRepoURL)
 

@@ -29,7 +29,9 @@ import (
 const (
 	hostEnvVar         = "CC_API_ENDPOINT"
 	homeEnvVar         = "COREO_HOME"
+	profileEnvVar      = "COREO_PROFILE"
 	defaultAPIEndpoint = "https://app.cloudcoreo.com/api"
+	defaultProfile     = "default"
 )
 
 var (
@@ -52,15 +54,19 @@ func newRootCmd(out io.Writer) *cobra.Command {
 		SilenceUsage: true,
 	}
 
-	envAPIEndpoint := os.Getenv(hostEnvVar)
+	userProfileToUse := os.Getenv(profileEnvVar)
+	if userProfileToUse == "" {
+		userProfileToUse = defaultProfile
+	}
 
+	envAPIEndpoint := os.Getenv(hostEnvVar)
 	if envAPIEndpoint == "" {
 		envAPIEndpoint = defaultAPIEndpoint
 	}
 
 	p := cmd.PersistentFlags()
 	p.StringVar(&coreoHome, content.CmdFlagConfigLong, defaultCoreoHome(), content.CmdFlagConfigDescription)
-	p.StringVar(&userProfile, content.CmdFlagProfileLong, "default", content.CmdFlagProfileDescription)
+	p.StringVar(&userProfile, content.CmdFlagProfileLong, userProfileToUse, content.CmdFlagProfileDescription)
 	p.StringVar(&key, content.CmdFlagAPIKeyLong, content.None, content.CmdFlagAPIKeyDescription)
 	p.StringVar(&secret, content.CmdFlagAPISecretLong, content.None, content.CmdFlagAPISecretDescription)
 	p.StringVar(&teamID, content.CmdFlagTeamIDLong, content.None, content.CmdFlagTeamIDDescription)

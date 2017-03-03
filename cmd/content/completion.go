@@ -15,13 +15,13 @@
 package content
 
 const (
-//CmdDocsUse docs command
+//CmdCompletionUse docs command
 CmdCompletionUse = "completion"
 
-//CmdDocsShort short description
+//CmdCompletionShort short description
 CmdCompletionShort = "Generate bash autocompletions script"
 
-//CmdDocsLong long description
+//CmdCompletionLong long description
 CmdCompletionLong = `
 Generate bash autocompletions script for Coreo.
 
