@@ -59,4 +59,7 @@ const (
 
 	//InfoUsingGitKeyID informational using git key id
 	InfoUsingGitKeyID = "[ OK ] Using Git Key ID %s\n"
+
+	//CmdFlagSSHFileDescription SSH prviate key file
+	CmdFlagSSHFileDescription = "SSH prviate key file"
 )

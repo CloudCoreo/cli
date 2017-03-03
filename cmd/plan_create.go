@@ -46,7 +46,7 @@ func newPlanCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 
 	f := cmd.Flags()
 
-	f.StringVarP(&planCreate.planConfigJSONFile, content.CmdFlagJSONFileLong, content.CmdFlagJSONFileShort, "", content.CmdFlagJSONFileDescription)
+	f.StringVarP(&planCreate.planConfigJSONFile, content.CmdFlagFileLong, content.CmdFlagFileShort, "", content.CmdFlagJSONFileDescription)
 
 	return cmd
 }
