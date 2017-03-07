@@ -233,6 +233,19 @@ func CheckPlanCreateJSONFileFlag(file string) error {
 	return nil
 }
 
+//CheckTeamAddFlags Required flags check
+func CheckTeamAddFlags(teamName, teamDescription string) error {
+	if err := checkFlag(teamName, content.ErrorTeamNameRequired); err != nil {
+		return err
+	}
+
+	if err := checkFlag(teamDescription, content.ErrorTeamDescriptionRequired); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 //CheckPlanInitRequiredFlags Required flags check
 func CheckPlanInitRequiredFlags(compositeID, cloudID, name string) error {
 	if err := checkFlag(compositeID, content.ErrorCompositeIDRequired); err != nil {

@@ -36,30 +36,36 @@ type Panel struct {
 
 // Plan struct object
 type Plan struct {
-	DefaultPanelRepo       string      `json:"defaultPanelRepo"`
-	DefaultPanelDirectory  string      `json:"defaultPanelDirectory"`
-	DefaultPanelBranch     string      `json:"defaultPanelBranch"`
-	Name                   string      `json:"name"`
-	IamUserAccessKeyID     string      `json:"iamUserAccessKeyId"`
-	IamUserID              string      `json:"iamUserId"`
-	IamUserSecretAccessKey string      `json:"iamUserSecretAccessKey"`
-	SnsSubscriptionArn     string      `json:"snsSubscriptionArn"`
-	SqsArn                 string      `json:"sqsArn"`
-	SqsURL                 string      `json:"sqsUrl"`
-	TopicArn               string      `json:"topicArn"`
-	EnginePrefix           string      `json:"enginePrefix"`
-	IsSynchronizing        bool        `json:"isSynchronizing"`
-	IsDraft                bool        `json:"isDraft"`
-	DefaultRegion          string      `json:"defaultRegion"`
-	RefreshInterval        float32     `json:"refreshInterval"`
-	RunCounter             int         `json:"runCounter"`
-	Revision               string      `json:"revision"`
-	Branch                 string      `json:"branch"`
-	Enabled                bool        `json:"enabled"`
-	Links                  []Link      `json:"links"`
-	ID                     string      `json:"id"`
-	IntervalInMinutes      int         `json:"intervalInMinutes"`
-	Config                 interface{} `json:"config"`
+	EngineRunInfos struct {
+		EngineState       string    `json:"engineState"`
+		EngineStatus      string    `json:"engineStatus"`
+		RunID             string    `json:"runId"`
+		CreatedAt         time.Time `json:"createdAt"`
+		NumberOfResources int       `json:"numberOfResources"`
+	} `json:"engineRunInfos"`
+	DefaultPanelRepo       string  `json:"defaultPanelRepo"`
+	DefaultPanelDirectory  string  `json:"defaultPanelDirectory"`
+	DefaultPanelBranch     string  `json:"defaultPanelBranch"`
+	Name                   string  `json:"name"`
+	IamUserAccessKeyID     string  `json:"iamUserAccessKeyId"`
+	IamUserID              string  `json:"iamUserId"`
+	IamUserSecretAccessKey string  `json:"iamUserSecretAccessKey"`
+	SnsSubscriptionArn     string  `json:"snsSubscriptionArn"`
+	SqsArn                 string  `json:"sqsArn"`
+	SqsURL                 string  `json:"sqsUrl"`
+	TopicArn               string  `json:"topicArn"`
+	EnginePrefix           string  `json:"enginePrefix"`
+	IsSynchronizing        bool    `json:"isSynchronizing"`
+	IsDraft                bool    `json:"isDraft"`
+	DefaultRegion          string  `json:"defaultRegion"`
+	RefreshInterval        float32 `json:"refreshInterval"`
+	RunCounter             int     `json:"runCounter"`
+	Revision               string  `json:"revision"`
+	Branch                 string  `json:"branch"`
+	Enabled                bool    `json:"enabled"`
+	Links                  []Link  `json:"links"`
+	ID                     string  `json:"id"`
+	IntervalInMinutes      int     `json:"intervalInMinutes"`
 }
 
 // PlanConfig struct object
@@ -127,6 +133,36 @@ func (c *Client) GetPlanByID(ctx context.Context, teamID, compositeID, planID st
 
 	if plan.ID == "" {
 		return nil, NewError(fmt.Sprintf(content.ErrorNoPlanWithIDFound, planID, teamID, compositeID))
+	}
+
+	planLink, err := GetLinkByRef(plan.Links, "self")
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, "GET", planLink.Href, nil, &plan)
+	if err != nil {
+		return nil, err
+	}
+
+	return plan, nil
+}
+
+// RunNowPlanByID method to run-now plan info object
+func (c *Client) RunNowPlanByID(ctx context.Context, teamID, compositeID, planID string) (*Plan, error) {
+	plan, err := c.GetPlanByID(ctx, teamID, compositeID, planID)
+	if err != nil {
+		return nil, err
+	}
+
+	runNowLink, err := GetLinkByRef(plan.Links, "runnow")
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, "GET", runNowLink.Href, nil, &plan)
+	if err != nil {
+		return nil, err
 	}
 
 	return plan, nil
@@ -300,17 +336,27 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 	fmt.Print(content.InfoPlanCreationMessage)
 
 	planConfig := &PlanConfig{}
-
 	for {
 		fmt.Print(".")
+		_ = c.Do(ctx, "GET", planLink.Href, nil, &plan)
+
+		if plan.EngineRunInfos.EngineState == "INITIALIZED" {
+			break
+		}
+
+		time.Sleep(5 * time.Second)
+	}
+
+	if plan.EngineRunInfos.EngineStatus == "OK" {
 		planConfig, err = c.getPlanConfig(ctx, plan)
 		if err == nil {
 			planConfig.Variables = setPlanConfigRequiredValues(planConfig.Variables)
 			fmt.Println()
 			return planConfig, nil
 		}
-		time.Sleep(5 * time.Second)
 	}
+
+	return nil, fmt.Errorf(content.ErrorPlanCreation)
 }
 
 func (c *Client) getPlanConfig(ctx context.Context, plan *Plan) (*PlanConfig, error) {

@@ -23,65 +23,57 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newTeamCmd(out io.Writer) *cobra.Command {
-	cmd := &cobra.Command{
-		Use:               content.CmdTeamUse,
-		Short:             content.CmdTeamShort,
-		Long:              content.CmdTeamLong,
-		PersistentPreRunE: setupCoreoConfig,
-	}
-
-	cmd.AddCommand(newTeamListCmd(nil, out))
-	cmd.AddCommand(newTeamShowCmd(nil, out))
-	cmd.AddCommand(newTeamCreateCmd(nil, out))
-
-	return cmd
+type teamCreateCmd struct {
+	out             io.Writer
+	client          coreo.Interface
+	teamName        string
+	teamDescription string
 }
 
-type teamListCmd struct {
-	out    io.Writer
-	client coreo.Interface
-}
-
-func newTeamListCmd(client coreo.Interface, out io.Writer) *cobra.Command {
-	teamList := &teamListCmd{
+func newTeamCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
+	teamCreate := &teamCreateCmd{
 		out:    out,
 		client: client,
 	}
 
 	cmd := &cobra.Command{
-		Use:               content.CmdListUse,
-		Short:             content.CmdTeamListShort,
-		Long:              content.CmdTeamListLong,
-		PersistentPreRunE: setupCoreoCredentials,
+		Use:   content.CmdAddUse,
+		Short: content.CmdTeamAddShort,
+		Long:  content.CmdTeamAddLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			if teamList.client == nil {
-				teamList.client = coreo.NewClient(
+			if err := util.CheckTeamAddFlags(teamCreate.teamName, teamCreate.teamDescription); err != nil {
+				return err
+			}
+
+			if teamCreate.client == nil {
+				teamCreate.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
 					coreo.APIKey(key),
 					coreo.SecretKey(secret))
 			}
 
-			return teamList.run()
+			return teamCreate.run()
 		},
 	}
+
+	f := cmd.Flags()
+
+	f.StringVarP(&teamCreate.teamName, content.CmdFlagNameLong, content.CmdFlagNameShort, "", content.CmdTeamNameDescription)
+	f.StringVarP(&teamCreate.teamDescription, content.CmdFlagDescriptionLong, content.CmdFlagDescriptionShort, "", content.CmdTeamDescriptionDescription)
 
 	return cmd
 }
 
-func (t *teamListCmd) run() error {
-	teams, err := t.client.ListTeams()
+func (t *teamCreateCmd) run() error {
+	team, err := t.client.CreateTeam(t.teamName, t.teamDescription)
 	if err != nil {
 		return err
 	}
 
-	b := make([]interface{}, len(teams))
-	for i := range teams {
-		b[i] = teams[i]
-	}
-
-	util.PrintResult(t.out, b,
+	util.PrintResult(
+		t.out,
+		team,
 		[]string{"ID", "TeamName", "TeamDescription"},
 		map[string]string{
 			"ID":              "Team ID",

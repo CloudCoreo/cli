@@ -108,6 +108,9 @@ const (
 	//CmdFlagJSONFileDescription JSON file description
 	CmdFlagJSONFileDescription = "Plan config JSON file"
 
+	//InfoPlanRunNowQueued Plan run now info
+	InfoPlanRunNowQueued = "Plan queued to run."
+
 	//InfoPlanDeleted information
 	InfoPlanDeleted = "[Done] Plan was deleted.\n"
 

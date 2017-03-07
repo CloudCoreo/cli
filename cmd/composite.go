@@ -38,6 +38,7 @@ func newCompositeCmd(out io.Writer) *cobra.Command {
 	cmd.AddCommand(newCompositeLayerCmd(out))
 	cmd.AddCommand(newCompositeExtendsCmd(out))
 	cmd.AddCommand(newCompositeGendocCmd(out))
+	cmd.AddCommand(newCompositeDeleteCmd(nil, out))
 
 	return cmd
 }
