@@ -186,6 +186,12 @@ const (
 	//CmdFlagVerboseDescription verbose flag description
 	CmdFlagVerboseDescription = "Enable verbose output"
 
+	//CmdFlagFileLong JSON file flag
+	CmdFlagFileLong = "file"
+
+	//CmdFlagFileShort JSON file flag
+	CmdFlagFileShort = "f"
+
 	//CmdFlagConfigLong config flag long
 	CmdFlagConfigLong = "home"
 

@@ -19,6 +19,9 @@ import (
 	"context"
 	"fmt"
 
+	"encoding/json"
+	"strings"
+
 	"github.com/CloudCoreo/cli/client/content"
 )
 
@@ -98,9 +101,21 @@ func (c *Client) CreateGitKey(ctx context.Context, teamID, keyMaterial, name str
 
 	for _, team := range teams {
 		if team.ID == teamID {
-			gitKeyPayLoad := fmt.Sprintf(`{"keyMaterial":"%s","name":"%s","teamId":"%s"}`, keyMaterial, name, teamID)
+
+			//Json encode ssh private key
+			buf := new(bytes.Buffer)
+			enc := json.NewEncoder(buf)
+			enc.SetEscapeHTML(false)
+			err = enc.Encode(keyMaterial)
+			if err != nil {
+				return nil, NewError(err.Error())
+			}
+
+			gitKeyPayLoad := fmt.Sprintf(`{"keyMaterial":%s,"name":"%s","teamId":"%s"}`, strings.TrimSpace(buf.String()), name, teamID)
+
 			var jsonStr = []byte(gitKeyPayLoad)
 			gitKeyLink, err := GetLinkByRef(team.Links, "gitKeys")
+
 			if err != nil {
 				return nil, NewError(err.Error())
 			}

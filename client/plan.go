@@ -348,7 +348,8 @@ func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Pla
 		return nil, err
 	}
 
-	err = c.Do(ctx, "PUT", planConfigLink.Href, bytes.NewBuffer(planConfigContent), nil)
+	jsonStr, err := json.Marshal(planConfig)
+	err = c.Do(ctx, "PUT", planConfigLink.Href, bytes.NewBuffer(jsonStr), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -370,8 +371,7 @@ func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Pla
 	}
 
 	plan.IsDraft = false
-	plan.Config = planConfig.Variables
-	jsonStr, err := json.Marshal(plan)
+	jsonStr, err = json.Marshal(plan)
 
 	err = c.Do(ctx, "PUT", planLink.Href, bytes.NewBuffer(jsonStr), &plan)
 	if err != nil {

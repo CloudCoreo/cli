@@ -46,7 +46,7 @@ func TestGitKeyCreateCmd(t *testing.T) {
 			cmds: "coreo git-key create, success",
 			desc: "create a git key",
 			flags: []string{
-				"--secret", "secretKey",
+				"-f", "testdata/ssh",
 				"--name", "gitKeyName",
 			},
 			resp: []*client.GitKey{

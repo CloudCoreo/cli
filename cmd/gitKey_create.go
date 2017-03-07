@@ -16,6 +16,7 @@ package main
 
 import (
 	"io"
+	"io/ioutil"
 
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
@@ -24,11 +25,11 @@ import (
 )
 
 type gitKeyCreateCmd struct {
-	out            io.Writer
-	client         coreo.Interface
-	teamID         string
-	resourceSecret string
-	resourceName   string
+	out               io.Writer
+	client            coreo.Interface
+	teamID            string
+	sshPrivateKeyFile string
+	resourceName      string
 }
 
 func newGitKeyCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
@@ -43,7 +44,7 @@ func newGitKeyCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 		Long:  content.CmdGitKeyAddLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			if err := util.CheckGitKeyAddFlags(gitKeyCreate.resourceName, gitKeyCreate.resourceSecret); err != nil {
+			if err := util.CheckGitKeyAddFlags(gitKeyCreate.resourceName, gitKeyCreate.sshPrivateKeyFile); err != nil {
 				return err
 			}
 
@@ -61,14 +62,20 @@ func newGitKeyCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 	}
 	f := cmd.Flags()
 
-	f.StringVarP(&gitKeyCreate.resourceSecret, content.CmdFlagSecretLong, content.CmdFlagSecretShort, "", content.CmdFlagSecretDescription)
+	f.StringVarP(&gitKeyCreate.sshPrivateKeyFile, content.CmdFlagFileLong, content.CmdFlagFileShort, "", content.CmdFlagSSHFileDescription)
 	f.StringVarP(&gitKeyCreate.resourceName, content.CmdFlagNameLong, content.CmdFlagNameShort, "", content.CmdFlagNameDescription)
 
 	return cmd
 }
 
 func (t *gitKeyCreateCmd) run() error {
-	gitKey, err := t.client.CreateGitKey(t.teamID, t.resourceSecret, t.resourceName)
+
+	sshPrivateKey, err := ioutil.ReadFile(t.sshPrivateKeyFile)
+	if err != nil {
+		return err
+	}
+
+	gitKey, err := t.client.CreateGitKey(t.teamID, string(sshPrivateKey), t.resourceName)
 	if err != nil {
 		return err
 	}
