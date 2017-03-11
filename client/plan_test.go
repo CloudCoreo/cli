@@ -74,6 +74,56 @@ const compositeJSONPayloadForPlanMissingPlanLinks = `[
 	}
 ]`
 
+const planJSONPayloadSingleCompleted = `{
+		"engineRunInfos": {
+			"_id": "new_id",
+			"engineState": "COMPLETED",
+			"engineStatus": "OK",
+			"runId": "70991609-1fab-4abf-9846-df1c4c83f4e8_new",
+			"numberOfResources": 18,
+			"createdAt": "2017-03-06T22:43:18.486Z"
+		},
+		"isDraft": true,
+		"links": [
+			{
+				"ref": "self",
+				"method": "GET",
+				"href": "%s/api/plans/planid"
+			},
+			{
+				"ref": "team",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/teams/teamID"
+			},
+			{
+				"ref": "composite",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/composites/compositeID"
+			},
+			{
+				"ref": "cloudAccount",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/cloudaccounts/cloudAccountID"
+			},
+			{
+				"ref": "planconfig",
+				"method": "GET",
+				"href": "%s/api/plans/planID/planconfig"
+			},
+			{
+				"ref": "runnow",
+				"method": "GET",
+				"href": "%s/api/plans/planID/runnow"
+			},
+			{
+				"ref": "panel",
+				"method": "GET",
+				"href": "%s/api/plans/planID/panel"
+			}
+		],
+		"id": "planID"
+	}`
+
 const planJSONPayloadSingle = `{
 		"engineRunInfos": {
 			"_id": "58bde606be8c31b09480f0d9",
@@ -632,6 +682,7 @@ func TestPanelSuccess(t *testing.T) {
 
 func TestRunNowPlanByIDSuccess(t *testing.T) {
 	ts := httpstub.New()
+	ts.Path("/api/plans/planid").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingleCompleted, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/plans/planID/runnow").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)

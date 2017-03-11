@@ -73,6 +73,9 @@ const (
 	//InfoPlanCreationMessage info
 	InfoPlanCreationMessage = "Adding plan and generating planconfig json file, please wait..."
 
+	//InfoPlanRunNowMessage info
+	InfoPlanRunNowMessage = "Adding plan to queue and executing it, please wait..."
+
 	//ErrorPlanConfigVaribaleMissing error
 	ErrorPlanConfigVaribaleMissing = "Error in plan config, missing required values."
 
@@ -84,4 +87,8 @@ const (
 
 	//ErrorPlanCreation error
 	ErrorPlanCreation = "Error creating a plan. Verify that composite and it's variables are correct and try again."
+
+	//ErrorPlanRunNow error
+	ErrorPlanRunNow = "Error running this plan."
+
 )

@@ -72,7 +72,7 @@ func newRootCmd(out io.Writer) *cobra.Command {
 	p.StringVar(&teamID, content.CmdFlagTeamIDLong, content.None, content.CmdFlagTeamIDDescription)
 	p.StringVar(&apiEndpoint, content.CmdFlagAPIEndpointLong, envAPIEndpoint, content.CmdFlagAPIEndpointDescription)
 	p.BoolVar(&jsonFormat, content.CmdFlagJSONLong, false, content.CmdFlagJSONDescription)
-	p.BoolVar(&verbose, content.CmdFlagVerboseLong, true, content.CmdFlagVerboseDescription)
+	p.BoolVar(&verbose, content.CmdFlagVerboseLong, false, content.CmdFlagVerboseDescription)
 	cmd.AddCommand(
 		newVersionCmd(out),
 		newTeamCmd(out),

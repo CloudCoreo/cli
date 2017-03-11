@@ -15,7 +15,6 @@
 package main
 
 import (
-	"fmt"
 	"io"
 
 	"github.com/CloudCoreo/cli/cmd/content"
@@ -70,19 +69,14 @@ func newPlanRunNowCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 }
 
 func (t *planRunNowCmd) run() error {
-	plan, err := t.client.RunNowPlanByID(t.teamID, t.compositeID, t.planID)
+	_, err := t.client.RunNowPlanByID(t.teamID, t.compositeID, t.planID)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(content.InfoPlanRunNowQueued)
-	util.PrintResult(
-		t.out,
-		plan,
-		planSchema,
-		planHeader,
-		jsonFormat,
-		verbose)
+	cmd := newPlanPanelCmd(t.client, t.out)
+	cmd.ParseFlags([]string{"--composite-id", t.compositeID, "--plan-id", t.planID})
+	cmd.RunE(cmd, nil)
 
 	return nil
 }

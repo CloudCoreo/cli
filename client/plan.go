@@ -165,7 +165,31 @@ func (c *Client) RunNowPlanByID(ctx context.Context, teamID, compositeID, planID
 		return nil, err
 	}
 
-	return plan, nil
+	planLink, err := GetLinkByRef(plan.Links, "self")
+	if err != nil {
+		return nil, err
+	}
+
+	prevRunID := plan.EngineRunInfos.RunID
+
+	fmt.Print(content.InfoPlanRunNowMessage)
+
+	for {
+		fmt.Print(".")
+		_ = c.Do(ctx, "GET", planLink.Href, nil, &plan)
+		if plan.EngineRunInfos.RunID != prevRunID && plan.EngineRunInfos.EngineState == "COMPLETED" {
+			break
+		}
+
+		time.Sleep(5 * time.Second)
+	}
+
+	fmt.Println()
+
+	if plan.EngineRunInfos.EngineStatus == "OK" {
+		return plan, nil
+	}
+	return nil, fmt.Errorf(content.ErrorPlanRunNow)
 }
 
 // DeletePlanByID method to delete cloud object
@@ -335,7 +359,6 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 
 	fmt.Print(content.InfoPlanCreationMessage)
 
-	planConfig := &PlanConfig{}
 	for {
 		fmt.Print(".")
 		_ = c.Do(ctx, "GET", planLink.Href, nil, &plan)
@@ -347,6 +370,7 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		time.Sleep(5 * time.Second)
 	}
 
+	planConfig := &PlanConfig{}
 	if plan.EngineRunInfos.EngineStatus == "OK" {
 		planConfig, err = c.getPlanConfig(ctx, plan)
 		if err == nil {
