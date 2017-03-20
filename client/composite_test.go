@@ -248,7 +248,7 @@ func TestCreateCompositeSuccess(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID")
+	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID", "gitKeyId")
 	assert.Nil(t, err, "CreateComposite shouldn't return error.")
 }
 
@@ -260,7 +260,7 @@ func TestCreateCompositeFailureBadRequest(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID")
+	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID", "gitKeyId")
 	assert.NotNil(t, err, "CreateComposite should return error.")
 }
 
@@ -272,7 +272,7 @@ func TestCreateCompositeFailedToParseUser(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID")
+	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID", "gitKeyId")
 	assert.NotNil(t, err, "CreateComposite should return error.")
 }
 
@@ -284,7 +284,7 @@ func TestCreateCompositeFailedToParseCompositeLink(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID")
+	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID", "gitKeyId")
 	assert.NotNil(t, err, "CreateComposite should return error.")
 	assert.Equal(t, "json: cannot unmarshal object into Go value of type []*client.Team", err.Error())
 }
@@ -297,7 +297,7 @@ func TestCreateCompositesFailureMissingCompositesLink(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID")
+	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID", "gitKeyId")
 	assert.NotNil(t, err, "CreateComposite should return error.")
 	assert.Equal(t, "Resource for given ID not found.", err.Error())
 }
@@ -310,7 +310,7 @@ func TestCreateCompositeFailureCompositeNotCreated(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID")
+	_, err := client.CreateComposite(context.Background(), "gitURL", "name", "teamID", "gitKeyId")
 	assert.NotNil(t, err, "CreateComposite should return error.")
 	assert.Equal(t, "Failed to create composite under team ID teamID.", err.Error())
 }

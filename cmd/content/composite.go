@@ -80,6 +80,15 @@ a group of services, a complex application, or an entire data center definition.
 	//CmdCompositeExtendsSuccess message
 	CmdCompositeExtendsSuccess = "[Done] Composite successfully extended.\n"
 
+	//CmdCompositeDeleteShort short desription
+	CmdCompositeDeleteShort = "Delete a composite account"
+
+	//CmdCompositeDeleteLong long desription
+	CmdCompositeDeleteLong = `Delete a composite account.`
+
+	//InfoCompositeDeletedSuccess info
+	InfoCompositeDeletedSuccess = "Composite was deleted"
+
 	//InfoUsingCompsiteID informational using Composite id
 	InfoUsingCompsiteID = "[ OK ] Using Composite ID %s\n"
 

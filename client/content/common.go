@@ -37,6 +37,9 @@ const (
 	//ErrorFailedToDeleteGitKey error
 	ErrorFailedToDeleteGitKey = "Failed to delete git key with ID %s under team ID %s."
 
+	//ErrorFailedToDeleteComposite error
+	ErrorFailedToDeleteComposite = "Failed to delete composite ID %s found under team ID %s."
+
 	//ErrorNoPlansFound error
 	ErrorNoPlansFound = "No plans found under team team ID %s and composite ID %s."
 
@@ -70,6 +73,9 @@ const (
 	//InfoPlanCreationMessage info
 	InfoPlanCreationMessage = "Adding plan and generating planconfig json file, please wait..."
 
+	//InfoPlanRunNowMessage info
+	InfoPlanRunNowMessage = "Adding plan to queue and executing it, please wait..."
+
 	//ErrorPlanConfigVaribaleMissing error
 	ErrorPlanConfigVaribaleMissing = "Error in plan config, missing required values."
 
@@ -78,4 +84,11 @@ const (
 
 	//ErrorPlanIntervalMintuesInvalid error
 	ErrorPlanIntervalMintuesInvalid = "Interval value should be equal to or more than 2 minutes and less than or equal to 525600 minutes."
+
+	//ErrorPlanCreation error
+	ErrorPlanCreation = "Error creating a plan. Verify that composite and it's variables are correct and try again."
+
+	//ErrorPlanRunNow error
+	ErrorPlanRunNow = "Error running this plan."
+
 )

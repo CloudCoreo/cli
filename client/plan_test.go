@@ -74,8 +74,15 @@ const compositeJSONPayloadForPlanMissingPlanLinks = `[
 	}
 ]`
 
-const planJSONPayloadSingle = `{
-
+const planJSONPayloadSingleCompleted = `{
+		"engineRunInfos": {
+			"_id": "new_id",
+			"engineState": "COMPLETED",
+			"engineStatus": "OK",
+			"runId": "70991609-1fab-4abf-9846-df1c4c83f4e8_new",
+			"numberOfResources": 18,
+			"createdAt": "2017-03-06T22:43:18.486Z"
+		},
 		"isDraft": true,
 		"links": [
 			{
@@ -106,7 +113,62 @@ const planJSONPayloadSingle = `{
 			{
 				"ref": "runnow",
 				"method": "GET",
-				"href": "https://app.cloudcoreo.com/api/plans/planID/runnow"
+				"href": "%s/api/plans/planID/runnow"
+			},
+			{
+				"ref": "panel",
+				"method": "GET",
+				"href": "%s/api/plans/planID/panel"
+			}
+		],
+		"id": "planID"
+	}`
+
+const planJSONPayloadSingle = `{
+		"engineRunInfos": {
+			"_id": "58bde606be8c31b09480f0d9",
+			"engineState": "INITIALIZED",
+			"engineStatus": "OK",
+			"runId": "70991609-1fab-4abf-9846-df1c4c83f4e8",
+			"numberOfResources": 18,
+			"createdAt": "2017-03-06T22:43:18.486Z"
+		},
+		"isDraft": true,
+		"links": [
+			{
+				"ref": "self",
+				"method": "GET",
+				"href": "%s/api/plans/planid"
+			},
+			{
+				"ref": "team",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/teams/teamID"
+			},
+			{
+				"ref": "composite",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/composites/compositeID"
+			},
+			{
+				"ref": "cloudAccount",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/cloudaccounts/cloudAccountID"
+			},
+			{
+				"ref": "planconfig",
+				"method": "GET",
+				"href": "%s/api/plans/planID/planconfig"
+			},
+			{
+				"ref": "runnow",
+				"method": "GET",
+				"href": "%s/api/plans/planID/runnow"
+			},
+			{
+				"ref": "panel",
+				"method": "GET",
+				"href": "%s/api/plans/planID/panel"
 			}
 		],
 		"id": "planID"
@@ -163,7 +225,7 @@ const planJSONPayload = `[{
 			{
 				"ref": "runnow",
 				"method": "GET",
-				"href": "https://app.cloudcoreo.com/api/plans/planID/runnow"
+				"href": "%s/api/plans/planID/runnow"
 			}
 		],
 		"id": "planID"
@@ -208,6 +270,15 @@ const planJSONPayloadPlanEnabled = `{
 		"enabled": true,
 		"id": "planID"
 	}`
+
+const panelJSONPayload = `{
+	"resourcesArray": [],
+	"numberOfResources": 18,
+	"planRefreshIntervalInHours": 24,
+	"lastExecutionTime": "2017-03-07T20:20:16.389Z",
+	"engineState": "COMPILED",
+	"isEnabled": false
+}`
 
 const planJSONPayloadPlanDisabled = `{
 		"defaultPanelRepo": "git@github.com:CloudCoreo/default-panel.git",
@@ -319,7 +390,8 @@ func TestGetPlansFailureNoPlansFound(t *testing.T) {
 
 func TestGetPlanByIDSuccess(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(planJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -360,7 +432,7 @@ func TestGetPlanByIDFailureInvalidPlanResponse(t *testing.T) {
 func TestEnablePlanSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planID").WithMethod("PUT").WithBody(planJSONPayloadPlanEnabled).WithStatus(http.StatusOK)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -388,7 +460,7 @@ func TestEnablePlanFailureInvalidPlanResponse(t *testing.T) {
 func TestEnablePlanFailureInvalidPlanID(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planID").WithMethod("PUT").WithBody(planJSONPayloadPlanEnabled).WithStatus(http.StatusOK)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -403,7 +475,7 @@ func TestEnablePlanFailureInvalidPlanID(t *testing.T) {
 func TestEnablePlanFailureToUpdatePlan(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planID").WithMethod("PUT").WithBody(planJSONPayloadPlanDisabled).WithStatus(http.StatusOK)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -418,7 +490,7 @@ func TestEnablePlanFailureToUpdatePlan(t *testing.T) {
 func TestEnablePlanFailureToUpdatePlanBadRequest(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planID").WithMethod("PUT").WithBody(planJSONPayloadPlanDisabled).WithStatus(http.StatusBadRequest)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -447,7 +519,7 @@ func TestEnablePlanFailureMissingSelfLinks(t *testing.T) {
 func TestDisablePlanSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planID").WithMethod("PUT").WithBody(planJSONPayloadPlanDisabled).WithStatus(http.StatusOK)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -475,7 +547,7 @@ func TestDisablePlanFailureInvalidPlanResponse(t *testing.T) {
 func TestDisablePlanFailureInvalidPlanID(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planID").WithMethod("PUT").WithBody(planJSONPayloadPlanDisabled).WithStatus(http.StatusOK)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -490,7 +562,7 @@ func TestDisablePlanFailureInvalidPlanID(t *testing.T) {
 func TestDisablelanFailureToUpdatePlan(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planID").WithMethod("PUT").WithBody(planJSONPayloadPlanEnabled).WithStatus(http.StatusOK)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -505,7 +577,7 @@ func TestDisablelanFailureToUpdatePlan(t *testing.T) {
 func TestDisablePlanFailureToUpdatePlanBadRequest(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planID").WithMethod("PUT").WithBody(planJSONPayloadPlanEnabled).WithStatus(http.StatusBadRequest)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -534,8 +606,8 @@ func TestDisablePlanFailureMissingSelfLinks(t *testing.T) {
 func TestInitPlanSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planID/planconfig").WithMethod("GET").WithBody(planConfigPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("POST").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("POST").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -550,8 +622,8 @@ func TestInitPlanSuccess(t *testing.T) {
 func TestInitPlanFailureRefreshIntervalLessThan2(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planID/planconfig").WithMethod("GET").WithBody(planConfigPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("POST").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("POST").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -566,8 +638,8 @@ func TestInitPlanFailureRefreshIntervalLessThan2(t *testing.T) {
 func TestInitPlanFailureRefreshIntervalMoreThan525600(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planID/planconfig").WithMethod("GET").WithBody(planConfigPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("POST").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("POST").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -581,8 +653,8 @@ func TestInitPlanFailureRefreshIntervalMoreThan525600(t *testing.T) {
 
 func TestCreatePlanSuccess(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
-	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/planconfigs/planConfigID").WithMethod("PUT").WithBody(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
@@ -590,13 +662,13 @@ func TestCreatePlanSuccess(t *testing.T) {
 	_, err := client.CreatePlan(context.Background(), []byte(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)))
 
 	assert.Nil(t, err, "Plan creation failed")
-	//assert.True(t, false, plan.IsDraft)
 }
 
 func TestPanelSuccess(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL)).WithStatus(http.StatusOK)
-	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID/panel").WithMethod("GET").WithBody(panelJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
@@ -606,4 +678,20 @@ func TestPanelSuccess(t *testing.T) {
 	_, err := client.GetPanelInfo(context.Background(), "teamID", "compositeID", "planID")
 
 	assert.Nil(t, err, "Plan planel failed")
+}
+
+func TestRunNowPlanByIDSuccess(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/api/plans/planid").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingleCompleted, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID/runnow").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/composites/compositeID/plans").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/composites").WithMethod("GET").WithBody(fmt.Sprintf(compositeJSONPayloadForPlan, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCompositeJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.RunNowPlanByID(context.Background(), "teamID", "compositeID", "planID")
+	assert.Nil(t, err, "RunNowPlanByID shouldn't return error.")
 }

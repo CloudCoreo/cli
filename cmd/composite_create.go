@@ -29,6 +29,7 @@ type compositeCreateCmd struct {
 	teamID     string
 	gitRepoURL string
 	name       string
+	gitKeyID   string
 }
 
 func newCompositeCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
@@ -64,12 +65,13 @@ func newCompositeCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command
 
 	f.StringVarP(&compositeCreate.name, content.CmdFlagNameLong, content.CmdFlagNameShort, "", content.CmdFlagNameDescription)
 	f.StringVarP(&compositeCreate.gitRepoURL, content.CmdFlagGitRepoLong, content.CmdFlagGitRepoShort, "", content.CmdFlagGitRepoDescription)
+	f.StringVarP(&compositeCreate.gitKeyID, content.CmdFlagGitKeyIDLong, "", "", content.CmdFlagGitKeyIDDescription)
 
 	return cmd
 }
 
 func (t *compositeCreateCmd) run() error {
-	composite, err := t.client.CreateComposite(t.teamID, t.gitRepoURL, t.name)
+	composite, err := t.client.CreateComposite(t.teamID, t.gitRepoURL, t.name, t.gitKeyID)
 	if err != nil {
 		return err
 	}

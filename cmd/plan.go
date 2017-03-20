@@ -50,6 +50,7 @@ func newPlanCmd(out io.Writer) *cobra.Command {
 	cmd.AddCommand(newPlanInitCmd(nil, out))
 	cmd.AddCommand(newPlanCreateCmd(nil, out))
 	cmd.AddCommand(newPlanPanelCmd(nil, out))
+	cmd.AddCommand(newPlanRunNowCmd(nil, out))
 
 	return cmd
 }

@@ -36,9 +36,27 @@ const (
 	//CmdTeamShowLong long description
 	CmdTeamShowLong = `Show a team.`
 
+	//CmdTeamAddShort add a team short description
+	CmdTeamAddShort = "Add a team"
+
+	//CmdTeamAddLong add a team long description
+	CmdTeamAddLong = `Add a team.`
+
+	//CmdTeamNameDescription provide team name
+	CmdTeamNameDescription = "Provide team name"
+
+	//CmdTeamDescriptionDescription provide team description
+	CmdTeamDescriptionDescription = "Provide team description"
+
 	//InfoUsingTeamID informational using team id
 	InfoUsingTeamID = "[ OK ] Using Team ID %s\n"
 
 	//ErrorTeamIDMissing error
 	ErrorTeamIDMissing = "Team ID is required for this command. Use flag --team-id\n"
+
+	//ErrorTeamNameRequired error
+	ErrorTeamNameRequired = "Team Name is required for this command. Use flag --name\n"
+
+	//ErrorTeamDescriptionRequired error
+	ErrorTeamDescriptionRequired = "Team description required for this command. Use flag --description\n"
 )

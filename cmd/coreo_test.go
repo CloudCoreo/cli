@@ -46,6 +46,15 @@ func (c *fakeReleaseClient) ShowTeamByID(teamID string) (*client.Team, error) {
 	return resp, c.err
 }
 
+func (c *fakeReleaseClient) CreateTeam(teamName, teamDescription string) (*client.Team, error) {
+	resp := &client.Team{}
+	if len(c.teams) > 0 {
+		resp = c.teams[0]
+	}
+
+	return resp, c.err
+}
+
 func (c *fakeReleaseClient) ListTokens() ([]*client.Token, error) {
 	resp := c.tokens
 
@@ -142,7 +151,7 @@ func (c *fakeReleaseClient) ShowCompositeByID(teamID, compositeID string) (*clie
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) CreateComposite(teamID, gitRepoURL, name string) (*client.Composite, error) {
+func (c *fakeReleaseClient) CreateComposite(teamID, gitRepoURL, name, gitKeyID string) (*client.Composite, error) {
 	resp := &client.Composite{}
 	if len(c.composites) > 0 {
 
@@ -150,6 +159,10 @@ func (c *fakeReleaseClient) CreateComposite(teamID, gitRepoURL, name string) (*c
 	}
 
 	return resp, c.err
+}
+
+func (c *fakeReleaseClient) DeleteCompositeByID(teamID, compositeID string) error {
+	return c.err
 }
 
 func (c *fakeReleaseClient) ListPlans(teamID, compositeID string) ([]*client.Plan, error) {
@@ -167,6 +180,16 @@ func (c *fakeReleaseClient) ShowPlanByID(teamID, compositeID, planID string) (*c
 
 	return resp, c.err
 }
+func (c *fakeReleaseClient) RunNowPlanByID(teamID, compositeID, planID string) (*client.Plan, error) {
+	resp := &client.Plan{}
+	if len(c.plans) > 0 {
+
+		resp = c.plans[0]
+	}
+
+	return resp, c.err
+}
+
 
 func (c *fakeReleaseClient) EnablePlanByID(teamID, compositeID, planID string) (*client.Plan, error) {
 	resp := &client.Plan{}

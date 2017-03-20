@@ -117,6 +117,12 @@ const (
 	//CmdFlagNameShort cmd
 	CmdFlagNameShort = "n"
 
+	//CmdFlagDescriptionLong cmd
+	CmdFlagDescriptionLong = "description"
+
+	//CmdFlagDescriptionShort cmd
+	CmdFlagDescriptionShort = "d"
+
 	//CmdFlagNameDescription cmd
 	CmdFlagNameDescription = "Name flag"
 
@@ -234,14 +240,14 @@ const (
 	//CmdShowUse show cmd
 	CmdShowUse = "show [flags]"
 
+	//CmdRunNowUse run-now cmd
+	CmdRunNowUse = "run-now [flags]"
+
 	//CmdDisableUse disable cmd
 	CmdDisableUse = "disable [flags]"
 
 	//CmdEnableUse enable cmd
 	CmdEnableUse = "enable [flags]"
-
-	//CmdRunUse run cmd
-	CmdRunUse = "run [flags]"
 
 	//CmdInitUse init cmd
 	CmdInitUse = "init [flags]"

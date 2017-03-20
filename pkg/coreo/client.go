@@ -74,6 +74,22 @@ func (c *Client) ShowTeamByID(teamID string) (*client.Team, error) {
 	return team, nil
 }
 
+//CreateTeam Create a new team
+func (c *Client) CreateTeam(teamName, teamDescription string) (*client.Team, error) {
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	team, err := client.CreateTeam(ctx, teamName, teamDescription)
+	if err != nil {
+		return nil, err
+	}
+
+	return team, nil
+}
+
 //ListTokens get tokens list
 func (c *Client) ListTokens() ([]*client.Token, error) {
 	ctx := NewContext()
@@ -284,15 +300,31 @@ func (c *Client) ShowCompositeByID(teamID, compositeID string) (*client.Composit
 	return composite, nil
 }
 
+//DeleteCompositeByID delete composite by ID
+func (c *Client) DeleteCompositeByID(teamID, compositeID string) (error) {
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return err
+	}
+
+	err = client.DeleteCompositeByID(ctx, teamID, compositeID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 //CreateComposite Create composite
-func (c *Client) CreateComposite(teamID, gitRepoURL, name string) (*client.Composite, error) {
+func (c *Client) CreateComposite(teamID, gitRepoURL, name, gitKeyId string) (*client.Composite, error) {
 	ctx := NewContext()
 	client, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	composite, err := client.CreateComposite(ctx, gitRepoURL, name, teamID)
+	composite, err := client.CreateComposite(ctx, gitRepoURL, name, teamID, gitKeyId)
 	if err != nil {
 		return nil, err
 	}
@@ -325,6 +357,23 @@ func (c *Client) ShowPlanByID(teamID, compositeID, planID string) (*client.Plan,
 	}
 
 	plan, err := client.GetPlanByID(ctx, teamID, compositeID, planID)
+	if err != nil {
+		return nil, err
+	}
+
+	return plan, nil
+}
+
+
+//RunNowPlanByID Run Now plan by ID
+func (c *Client) RunNowPlanByID(teamID, compositeID, planID string) (*client.Plan, error) {
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	plan, err := client.RunNowPlanByID(ctx, teamID, compositeID, planID)
 	if err != nil {
 		return nil, err
 	}
