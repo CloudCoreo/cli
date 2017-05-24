@@ -24,13 +24,13 @@ import (
 )
 
 var (
-	planSchema = []string{"ID", "Name", "Enabled", "Branch", "IntervalInMinutes"}
+	planSchema = []string{"ID", "Name", "Enabled", "Branch", "RefreshInterval"}
 	planHeader = map[string]string{
 		"ID":              "Plan ID",
 		"Name":            "Plan Name",
 		"Enabled":         "Active",
 		"Branch":          "Git Branch",
-		"IntervalInMinutes": "Interval (Mintues)",
+		"RefreshInterval": "Interval (Mintues)",
 	}
 )
 

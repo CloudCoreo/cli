@@ -24,7 +24,7 @@ import (
 )
 
 func TestPlanListCmd(t *testing.T) {
-	mockPlan := func(PlanName, planID, branch string, refreshInterval float32, enabled bool) *client.Plan {
+	mockPlan := func(PlanName, planID, branch string, refreshInterval int, enabled bool) *client.Plan {
 		return &client.Plan{
 			ID:                planID,
 			Enabled:           enabled,

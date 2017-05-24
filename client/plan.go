@@ -43,29 +43,29 @@ type Plan struct {
 		CreatedAt         time.Time `json:"createdAt"`
 		NumberOfResources int       `json:"numberOfResources"`
 	} `json:"engineRunInfos"`
-	DefaultPanelRepo       string  `json:"defaultPanelRepo"`
-	DefaultPanelDirectory  string  `json:"defaultPanelDirectory"`
-	DefaultPanelBranch     string  `json:"defaultPanelBranch"`
-	Name                   string  `json:"name"`
-	IamUserAccessKeyID     string  `json:"iamUserAccessKeyId"`
-	IamUserID              string  `json:"iamUserId"`
-	IamUserSecretAccessKey string  `json:"iamUserSecretAccessKey"`
-	SnsSubscriptionArn     string  `json:"snsSubscriptionArn"`
-	SqsArn                 string  `json:"sqsArn"`
-	SqsURL                 string  `json:"sqsUrl"`
-	TopicArn               string  `json:"topicArn"`
-	EnginePrefix           string  `json:"enginePrefix"`
-	IsSynchronizing        bool    `json:"isSynchronizing"`
-	IsDraft                bool    `json:"isDraft"`
-	DefaultRegion          string  `json:"defaultRegion"`
-	RefreshInterval        float32 `json:"refreshInterval"`
-	RunCounter             int     `json:"runCounter"`
-	Revision               string  `json:"revision"`
-	Branch                 string  `json:"branch"`
-	Enabled                bool    `json:"enabled"`
-	Links                  []Link  `json:"links"`
-	ID                     string  `json:"id"`
-	IntervalInMinutes      int     `json:"intervalInMinutes"`
+	DefaultPanelRepo       string `json:"defaultPanelRepo"`
+	DefaultPanelDirectory  string `json:"defaultPanelDirectory"`
+	DefaultPanelBranch     string `json:"defaultPanelBranch"`
+	Name                   string `json:"name"`
+	IamUserAccessKeyID     string `json:"iamUserAccessKeyId"`
+	IamUserID              string `json:"iamUserId"`
+	IamUserSecretAccessKey string `json:"iamUserSecretAccessKey"`
+	SnsSubscriptionArn     string `json:"snsSubscriptionArn"`
+	SqsArn                 string `json:"sqsArn"`
+	SqsURL                 string `json:"sqsUrl"`
+	TopicArn               string `json:"topicArn"`
+	EnginePrefix           string `json:"enginePrefix"`
+	IsSynchronizing        bool   `json:"isSynchronizing"`
+	IsDraft                bool   `json:"isDraft"`
+	DefaultRegion          string `json:"defaultRegion"`
+	RefreshInterval        int    `json:"refreshInterval"`
+	RunCounter             int    `json:"runCounter"`
+	Revision               string `json:"revision"`
+	Branch                 string `json:"branch"`
+	Enabled                bool   `json:"enabled"`
+	Links                  []Link `json:"links"`
+	ID                     string `json:"id"`
+	IntervalInMinutes      int    `json:"intervalInMinutes"`
 }
 
 // PlanConfig struct object
@@ -318,17 +318,15 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		return nil, err
 	}
 
-	interval := (60 * 24) / float32(intervalInMinutes)
-
 	planPayLoad := fmt.Sprintf(
-		`{"name":"%s","awsCredsId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%f","appStackId":"%s"}`,
+		`{"name":"%s","awsCredsId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%d","appStackId":"%s"}`,
 
 		name,
 		cloudID,
 		region,
 		branch,
 		revision,
-		interval,
+		intervalInMinutes,
 		compositeID)
 
 	var jsonStr = []byte(planPayLoad)
