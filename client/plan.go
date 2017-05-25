@@ -37,11 +37,16 @@ type Panel struct {
 // Plan struct object
 type Plan struct {
 	EngineRunInfos struct {
-		EngineState       string    `json:"engineState"`
-		EngineStatus      string    `json:"engineStatus"`
-		RunID             string    `json:"runId"`
-		CreatedAt         time.Time `json:"createdAt"`
-		NumberOfResources int       `json:"numberOfResources"`
+		EngineState        string    `json:"engineState"`
+		EngineStatus       string    `json:"engineStatus"`
+		RunID              string    `json:"runId"`
+		CreatedAt          time.Time `json:"createdAt"`
+		NumberOfResources  int       `json:"numberOfResources"`
+		EngineStateMessage struct {
+			ResourceError string `json:"resource_error"`
+			ErrorType     string `json:"error_type"`
+			ErrorMessage  string `json:"error_message"`
+		} `json:"engineStateMessage"`
 	} `json:"engineRunInfos"`
 	DefaultPanelRepo       string `json:"defaultPanelRepo"`
 	DefaultPanelDirectory  string `json:"defaultPanelDirectory"`
@@ -189,7 +194,7 @@ func (c *Client) RunNowPlanByID(ctx context.Context, teamID, compositeID, planID
 	if plan.EngineRunInfos.EngineStatus == "OK" {
 		return plan, nil
 	}
-	return nil, fmt.Errorf(content.ErrorPlanRunNow)
+	return nil, fmt.Errorf(content.ErrorPlanRunNow, plan.EngineRunInfos.EngineStateMessage.ErrorMessage)
 }
 
 // DeletePlanByID method to delete cloud object
@@ -431,6 +436,33 @@ func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Pla
 	err = c.Do(ctx, "GET", planLink.Href, nil, &plan)
 	if err != nil {
 		return nil, err
+	}
+
+	fmt.Print(content.InfoPlanCompilingMessage)
+	compilePlanLink, err := GetLinkByRef(plan.Links, "compile_now")
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, "GET", compilePlanLink.Href, nil, &plan)
+	if err != nil {
+		return nil, err
+	}
+
+	for {
+		fmt.Print(".")
+		_ = c.Do(ctx, "GET", planLink.Href, nil, &plan)
+		if plan.EngineRunInfos.EngineState == "COMPILED" || plan.EngineRunInfos.EngineState == "COMPLETED" {
+			break
+		}
+
+		time.Sleep(5 * time.Second)
+	}
+
+	fmt.Println()
+
+	if plan.EngineRunInfos.EngineStatus != "OK" {
+		return nil, fmt.Errorf(content.ErrorPlanCompileNow, plan.EngineRunInfos.EngineStateMessage.ErrorMessage)
 	}
 
 	planLink, err = GetLinkByRef(plan.Links, "self")
