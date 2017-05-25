@@ -89,7 +89,7 @@ const (
 	ErrorPlanIntervalMintuesInvalid = "Interval value should be equal to or more than 2 minutes and less than or equal to 525600 minutes."
 
 	//ErrorPlanCreation error
-	ErrorPlanCreation = "Something went wrong when creating a plan. Verify that composite and it's variables are correct and try again."
+	ErrorPlanCreation = "Something went wrong when adding a plan. More info -> %q"
 
 	//ErrorPlanRunNow error
 	ErrorPlanRunNow = "Something went wrong when running this plan. More info -> %q"

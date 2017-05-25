@@ -373,17 +373,18 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		time.Sleep(5 * time.Second)
 	}
 
+	fmt.Println()
+
 	planConfig := &PlanConfig{}
 	if plan.EngineRunInfos.EngineStatus == "OK" {
 		planConfig, err = c.getPlanConfig(ctx, plan)
 		if err == nil {
 			planConfig.Variables = setPlanConfigRequiredValues(planConfig.Variables)
-			fmt.Println()
 			return planConfig, nil
 		}
 	}
 
-	return nil, fmt.Errorf(content.ErrorPlanCreation)
+	return nil, fmt.Errorf(content.ErrorPlanCreation, plan.EngineRunInfos.EngineStateMessage.ErrorMessage)
 }
 
 func (c *Client) getPlanConfig(ctx context.Context, plan *Plan) (*PlanConfig, error) {

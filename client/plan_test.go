@@ -74,6 +74,119 @@ const compositeJSONPayloadForPlanMissingPlanLinks = `[
 	}
 ]`
 
+const planJSONPayloadSingleCompletedFailed = `{
+		"engineRunInfos": {
+			"_id": "new_id",
+			"engineState": "COMPLETED",
+			"engineStatus": "ERROR",
+			"runId": "70991609-1fab-4abf-9846-df1c4c83f4e8_new",
+			"numberOfResources": 18,
+			"createdAt": "2017-03-06T22:43:18.486Z",
+			"engineStateMessage": {
+				"error_message": "Some failed"
+			}
+		},
+		"isDraft": true,
+		"links": [
+			{
+				"ref": "self",
+				"method": "GET",
+				"href": "%s/api/plans/planid"
+			},
+			{
+				"ref": "team",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/teams/teamID"
+			},
+			{
+				"ref": "composite",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/composites/compositeID"
+			},
+			{
+				"ref": "cloudAccount",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/cloudaccounts/cloudAccountID"
+			},
+			{
+				"ref": "planconfig",
+				"method": "GET",
+				"href": "%s/api/plans/planID/planconfig"
+			},
+			{
+				"ref": "runnow",
+				"method": "GET",
+				"href": "%s/api/plans/planID/runnow"
+			},
+			{
+				"ref": "panel",
+				"method": "GET",
+				"href": "%s/api/plans/planID/panel"
+			},
+			{
+				"ref": "compile_now",
+				"method": "GET",
+				"href": "%s/api/plans/planID/compile_now"
+			}
+		],
+		"id": "planID"
+	}`
+
+const planJSONPayloadSingleCompiled = `{
+		"engineRunInfos": {
+			"_id": "new_id",
+			"engineState": "COMPILED",
+			"engineStatus": "OK",
+			"runId": "70991609-1fab-4abf-9846-df1c4c83f4e8_new",
+			"numberOfResources": 18,
+			"createdAt": "2017-03-06T22:43:18.486Z"
+		},
+		"isDraft": true,
+		"links": [
+			{
+				"ref": "self",
+				"method": "GET",
+				"href": "%s/api/plans/planid"
+			},
+			{
+				"ref": "team",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/teams/teamID"
+			},
+			{
+				"ref": "composite",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/composites/compositeID"
+			},
+			{
+				"ref": "cloudAccount",
+				"method": "GET",
+				"href": "https://app.cloudcoreo.com/api/cloudaccounts/cloudAccountID"
+			},
+			{
+				"ref": "planconfig",
+				"method": "GET",
+				"href": "%s/api/plans/planID/planconfig"
+			},
+			{
+				"ref": "runnow",
+				"method": "GET",
+				"href": "%s/api/plans/planID/runnow"
+			},
+			{
+				"ref": "panel",
+				"method": "GET",
+				"href": "%s/api/plans/planID/panel"
+			},
+			{
+				"ref": "compile_now",
+				"method": "GET",
+				"href": "%s/api/plans/planID/compile_now"
+			}
+		],
+		"id": "planID"
+	}`
+
 const planJSONPayloadSingleCompleted = `{
 		"engineRunInfos": {
 			"_id": "new_id",
@@ -661,10 +774,38 @@ func TestInitPlanFailureRefreshIntervalMoreThan525600(t *testing.T) {
 	assert.NotNil(t, err, "Returns error due to refresh interval more than 525600.")
 }
 
-func TestCreatePlanSuccess(t *testing.T) {
+func TestCreatePlanSuccessCompleted(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingleCompleted, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingleCompleted, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/planconfigs/planConfigID").WithMethod("PUT").WithBody(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.CreatePlan(context.Background(), []byte(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)))
+	assert.Nil(t, err, "Plan creation failed")
+}
+
+func TestCreatePlanFailedCompleted(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingleCompleted, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingleCompletedFailed, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/planconfigs/planConfigID").WithMethod("PUT").WithBody(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.CreatePlan(context.Background(), []byte(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)))
+	assert.NotNil(t, err, "Returns compile failed error.")
+}
+
+func TestCreatePlanSuccessCompiled(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/api/plans/planid").WithMethod("PUT").WithBody(fmt.Sprintf(planJSONPayloadSingleCompleted, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingleCompiled, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/plans/planID").WithMethod("GET").WithBody(fmt.Sprintf(planJSONPayloadSingle, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/planconfigs/planConfigID").WithMethod("PUT").WithBody(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
