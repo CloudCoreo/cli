@@ -397,8 +397,8 @@ const planJSONPayloadPlanEnabled = `{
 const panelJSONPayload = `{
 	"resourcesArray": [],
 	"numberOfResources": 18,
-	"planRefreshIntervalInHours": 24,
-	"lastExecutionTime": "2017-03-07T20:20:16.389Z",
+	"planRefreshIntervalInHours": 0.016666666666666666,
+	"lastExecutionTime": 1496256593240,
 	"engineState": "COMPILED",
 	"isEnabled": false
 }`
