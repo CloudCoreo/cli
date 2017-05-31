@@ -37,35 +37,40 @@ type Panel struct {
 // Plan struct object
 type Plan struct {
 	EngineRunInfos struct {
-		EngineState       string    `json:"engineState"`
-		EngineStatus      string    `json:"engineStatus"`
-		RunID             string    `json:"runId"`
-		CreatedAt         time.Time `json:"createdAt"`
-		NumberOfResources int       `json:"numberOfResources"`
+		EngineState        string    `json:"engineState"`
+		EngineStatus       string    `json:"engineStatus"`
+		RunID              string    `json:"runId"`
+		CreatedAt          time.Time `json:"createdAt"`
+		NumberOfResources  int       `json:"numberOfResources"`
+		EngineStateMessage struct {
+			ResourceError string `json:"resource_error"`
+			ErrorType     string `json:"error_type"`
+			ErrorMessage  string `json:"error_message"`
+		} `json:"engineStateMessage"`
 	} `json:"engineRunInfos"`
-	DefaultPanelRepo       string  `json:"defaultPanelRepo"`
-	DefaultPanelDirectory  string  `json:"defaultPanelDirectory"`
-	DefaultPanelBranch     string  `json:"defaultPanelBranch"`
-	Name                   string  `json:"name"`
-	IamUserAccessKeyID     string  `json:"iamUserAccessKeyId"`
-	IamUserID              string  `json:"iamUserId"`
-	IamUserSecretAccessKey string  `json:"iamUserSecretAccessKey"`
-	SnsSubscriptionArn     string  `json:"snsSubscriptionArn"`
-	SqsArn                 string  `json:"sqsArn"`
-	SqsURL                 string  `json:"sqsUrl"`
-	TopicArn               string  `json:"topicArn"`
-	EnginePrefix           string  `json:"enginePrefix"`
-	IsSynchronizing        bool    `json:"isSynchronizing"`
-	IsDraft                bool    `json:"isDraft"`
-	DefaultRegion          string  `json:"defaultRegion"`
-	RefreshInterval        float32 `json:"refreshInterval"`
-	RunCounter             int     `json:"runCounter"`
-	Revision               string  `json:"revision"`
-	Branch                 string  `json:"branch"`
-	Enabled                bool    `json:"enabled"`
-	Links                  []Link  `json:"links"`
-	ID                     string  `json:"id"`
-	IntervalInMinutes      int     `json:"intervalInMinutes"`
+	DefaultPanelRepo       string `json:"defaultPanelRepo"`
+	DefaultPanelDirectory  string `json:"defaultPanelDirectory"`
+	DefaultPanelBranch     string `json:"defaultPanelBranch"`
+	Name                   string `json:"name"`
+	IamUserAccessKeyID     string `json:"iamUserAccessKeyId"`
+	IamUserID              string `json:"iamUserId"`
+	IamUserSecretAccessKey string `json:"iamUserSecretAccessKey"`
+	SnsSubscriptionArn     string `json:"snsSubscriptionArn"`
+	SqsArn                 string `json:"sqsArn"`
+	SqsURL                 string `json:"sqsUrl"`
+	TopicArn               string `json:"topicArn"`
+	EnginePrefix           string `json:"enginePrefix"`
+	IsSynchronizing        bool   `json:"isSynchronizing"`
+	IsDraft                bool   `json:"isDraft"`
+	DefaultRegion          string `json:"defaultRegion"`
+	RefreshInterval        int    `json:"refreshInterval"`
+	RunCounter             int    `json:"runCounter"`
+	Revision               string `json:"revision"`
+	Branch                 string `json:"branch"`
+	Enabled                bool   `json:"enabled"`
+	Links                  []Link `json:"links"`
+	ID                     string `json:"id"`
+	IntervalInMinutes      int    `json:"intervalInMinutes"`
 }
 
 // PlanConfig struct object
@@ -189,7 +194,7 @@ func (c *Client) RunNowPlanByID(ctx context.Context, teamID, compositeID, planID
 	if plan.EngineRunInfos.EngineStatus == "OK" {
 		return plan, nil
 	}
-	return nil, fmt.Errorf(content.ErrorPlanRunNow)
+	return nil, fmt.Errorf(content.ErrorPlanRunNow, plan.EngineRunInfos.EngineStateMessage.ErrorMessage)
 }
 
 // DeletePlanByID method to delete cloud object
@@ -318,17 +323,15 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		return nil, err
 	}
 
-	interval := (60 * 24) / float32(intervalInMinutes)
-
 	planPayLoad := fmt.Sprintf(
-		`{"name":"%s","awsCredsId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%f","appStackId":"%s"}`,
+		`{"name":"%s","awsCredsId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%d","appStackId":"%s"}`,
 
 		name,
 		cloudID,
 		region,
 		branch,
 		revision,
-		interval,
+		intervalInMinutes,
 		compositeID)
 
 	var jsonStr = []byte(planPayLoad)
@@ -370,17 +373,18 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		time.Sleep(5 * time.Second)
 	}
 
+	fmt.Println()
+
 	planConfig := &PlanConfig{}
 	if plan.EngineRunInfos.EngineStatus == "OK" {
 		planConfig, err = c.getPlanConfig(ctx, plan)
 		if err == nil {
 			planConfig.Variables = setPlanConfigRequiredValues(planConfig.Variables)
-			fmt.Println()
 			return planConfig, nil
 		}
 	}
 
-	return nil, fmt.Errorf(content.ErrorPlanCreation)
+	return nil, fmt.Errorf(content.ErrorPlanCreation, plan.EngineRunInfos.EngineStateMessage.ErrorMessage)
 }
 
 func (c *Client) getPlanConfig(ctx context.Context, plan *Plan) (*PlanConfig, error) {
@@ -433,6 +437,33 @@ func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Pla
 	err = c.Do(ctx, "GET", planLink.Href, nil, &plan)
 	if err != nil {
 		return nil, err
+	}
+
+	fmt.Print(content.InfoPlanCompilingMessage)
+	compilePlanLink, err := GetLinkByRef(plan.Links, "compile_now")
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, "GET", compilePlanLink.Href, nil, &plan)
+	if err != nil {
+		return nil, err
+	}
+
+	for {
+		fmt.Print(".")
+		_ = c.Do(ctx, "GET", planLink.Href, nil, &plan)
+		if plan.EngineRunInfos.EngineState == "COMPILED" || plan.EngineRunInfos.EngineState == "COMPLETED" {
+			break
+		}
+
+		time.Sleep(5 * time.Second)
+	}
+
+	fmt.Println()
+
+	if plan.EngineRunInfos.EngineStatus != "OK" {
+		return nil, fmt.Errorf(content.ErrorPlanCompileNow, plan.EngineRunInfos.EngineStateMessage.ErrorMessage)
 	}
 
 	planLink, err = GetLinkByRef(plan.Links, "self")
