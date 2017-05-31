@@ -28,8 +28,8 @@ import (
 type Panel struct {
 	ResourcesArray             interface{} `json:"resourcesArray"`
 	NumberOfResources          int         `json:"numberOfResources"`
-	PlanRefreshIntervalInHours int         `json:"planRefreshIntervalInHours"`
-	LastExecutionTime          time.Time   `json:"lastExecutionTime"`
+	PlanRefreshIntervalInHours float32     `json:"planRefreshIntervalInHours"`
+	LastExecutionTime          int64       `json:"lastExecutionTime"`
 	EngineState                string      `json:"engineState"`
 	IsEnabled                  bool        `json:"isEnabled"`
 }
