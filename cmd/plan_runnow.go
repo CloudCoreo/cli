@@ -29,6 +29,7 @@ type planRunNowCmd struct {
 	teamID      string
 	compositeID string
 	planID      string
+	block       bool
 }
 
 func newPlanRunNowCmd(client coreo.Interface, out io.Writer) *cobra.Command {
@@ -64,6 +65,7 @@ func newPlanRunNowCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 
 	f.StringVarP(&planRunNow.compositeID, content.CmdFlagCompositeIDLong, "", "", content.CmdFlagCompositeIDDescription)
 	f.StringVarP(&planRunNow.planID, content.CmdFlagPlanIDLong, "", "", content.CmdFlagPlanIDDescription)
+	f.BoolVarP(&planRunNow.block, content.CmdFlagBlockedLong, content.CmdFlagServerShort, false, content.CmdFlagBlockedDescription)
 
 	return cmd
 }
@@ -74,9 +76,11 @@ func (t *planRunNowCmd) run() error {
 		return err
 	}
 
-	cmd := newPlanPanelCmd(t.client, t.out)
-	cmd.ParseFlags([]string{"--composite-id", t.compositeID, "--plan-id", t.planID})
-	cmd.RunE(cmd, nil)
+	if t.block {
+		cmd := newPlanPanelCmd(t.client, t.out)
+		cmd.ParseFlags([]string{"--composite-id", t.compositeID, "--plan-id", t.planID})
+		cmd.RunE(cmd, nil)
+	}
 
 	return nil
 }

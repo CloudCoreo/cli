@@ -81,6 +81,12 @@ const (
 	//CmdFlagPlanIDDescription flag description
 	CmdFlagPlanIDDescription = "Coreo plan id"
 
+	//CmdFlagBlockedLong flag
+	CmdFlagBlockedLong = "block"
+
+	//CmdFlagBlockedDescription flag description
+	CmdFlagBlockedDescription = "Block execution till it's completely."
+
 	//CmdFlagBranchLong flag
 	CmdFlagBranchLong = "branch"
 
