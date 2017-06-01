@@ -844,6 +844,6 @@ func TestRunNowPlanByIDSuccess(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.RunNowPlanByID(context.Background(), "teamID", "compositeID", "planID")
+	_, err := client.RunNowPlanByID(context.Background(), "teamID", "compositeID", "planID", true)
 	assert.Nil(t, err, "RunNowPlanByID shouldn't return error.")
 }

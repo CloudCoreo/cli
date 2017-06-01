@@ -154,7 +154,7 @@ func (c *Client) GetPlanByID(ctx context.Context, teamID, compositeID, planID st
 }
 
 // RunNowPlanByID method to run-now plan info object
-func (c *Client) RunNowPlanByID(ctx context.Context, teamID, compositeID, planID string) (*Plan, error) {
+func (c *Client) RunNowPlanByID(ctx context.Context, teamID, compositeID, planID string, block bool) (*Plan, error) {
 	plan, err := c.GetPlanByID(ctx, teamID, compositeID, planID)
 	if err != nil {
 		return nil, err
@@ -177,24 +177,28 @@ func (c *Client) RunNowPlanByID(ctx context.Context, teamID, compositeID, planID
 
 	prevRunID := plan.EngineRunInfos.RunID
 
-	fmt.Print(content.InfoPlanRunNowMessage)
+	if block {
+		fmt.Print(content.InfoPlanRunNowMessageBlock)
+		for {
+			fmt.Print(".")
+			_ = c.Do(ctx, "GET", planLink.Href, nil, &plan)
+			if plan.EngineRunInfos.RunID != prevRunID && plan.EngineRunInfos.EngineState == "COMPLETED" {
+				break
+			}
 
-	for {
-		fmt.Print(".")
-		_ = c.Do(ctx, "GET", planLink.Href, nil, &plan)
-		if plan.EngineRunInfos.RunID != prevRunID && plan.EngineRunInfos.EngineState == "COMPLETED" {
-			break
+			time.Sleep(5 * time.Second)
 		}
 
-		time.Sleep(5 * time.Second)
+		fmt.Println()
+
+		if plan.EngineRunInfos.EngineStatus == "OK" {
+			return plan, nil
+		}
+		return nil, fmt.Errorf(content.ErrorPlanRunNow, plan.EngineRunInfos.EngineStateMessage.ErrorMessage)
 	}
 
-	fmt.Println()
-
-	if plan.EngineRunInfos.EngineStatus == "OK" {
-		return plan, nil
-	}
-	return nil, fmt.Errorf(content.ErrorPlanRunNow, plan.EngineRunInfos.EngineStateMessage.ErrorMessage)
+	fmt.Print(content.InfoPlanRunNowMessage)
+	return plan, nil
 }
 
 // DeletePlanByID method to delete cloud object

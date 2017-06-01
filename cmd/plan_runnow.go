@@ -71,7 +71,7 @@ func newPlanRunNowCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 }
 
 func (t *planRunNowCmd) run() error {
-	_, err := t.client.RunNowPlanByID(t.teamID, t.compositeID, t.planID)
+	_, err := t.client.RunNowPlanByID(t.teamID, t.compositeID, t.planID, t.block)
 	if err != nil {
 		return err
 	}

@@ -39,7 +39,7 @@ type Interface interface {
 	ListComposites(teamID string) ([]*client.Composite, error)
 	ShowCompositeByID(teamID, compositeID string) (*client.Composite, error)
 	CreateComposite(teamID, gitRepoURL, name, gitKeyId string) (*client.Composite, error)
-	DeleteCompositeByID(teamID, compositeID string) (error)
+	DeleteCompositeByID(teamID, compositeID string) error
 
 	ListPlans(teamID, compositeID string) ([]*client.Plan, error)
 	ShowPlanByID(teamID, compositeID, planID string) (*client.Plan, error)
@@ -49,5 +49,5 @@ type Interface interface {
 	InitPlan(branch, name, region, teamID, cloudID, compositeID, revision string, interval int) (*client.PlanConfig, error)
 	CreatePlan(planConfigJSON []byte) (*client.Plan, error)
 	GetPlanPanel(teamID, compositeID, planID string) (*client.Panel, error)
-	RunNowPlanByID(teamID, compositeID, planID string) (*client.Plan, error)
+	RunNowPlanByID(teamID, compositeID, planID string, block bool) (*client.Plan, error)
 }

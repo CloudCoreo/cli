@@ -76,8 +76,11 @@ const (
 	//InfoPlanCompilingMessage info
 	InfoPlanCompilingMessage = "Compiling plan, please wait..."
 
+	//InfoPlanRunNowMessageBlock info
+	InfoPlanRunNowMessageBlock = "Adding plan to queue and executing it, please wait..."
+
 	//InfoPlanRunNowMessage info
-	InfoPlanRunNowMessage = "Adding plan to queue and executing it, please wait..."
+	InfoPlanRunNowMessage = "Adding plan to queue and executing it."
 
 	//ErrorPlanConfigVaribaleMissing error
 	ErrorPlanConfigVaribaleMissing = "Error in plan config, missing required values."

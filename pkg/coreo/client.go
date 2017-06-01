@@ -301,7 +301,7 @@ func (c *Client) ShowCompositeByID(teamID, compositeID string) (*client.Composit
 }
 
 //DeleteCompositeByID delete composite by ID
-func (c *Client) DeleteCompositeByID(teamID, compositeID string) (error) {
+func (c *Client) DeleteCompositeByID(teamID, compositeID string) error {
 	ctx := NewContext()
 	client, err := c.MakeClient()
 	if err != nil {
@@ -364,16 +364,15 @@ func (c *Client) ShowPlanByID(teamID, compositeID, planID string) (*client.Plan,
 	return plan, nil
 }
 
-
 //RunNowPlanByID Run Now plan by ID
-func (c *Client) RunNowPlanByID(teamID, compositeID, planID string) (*client.Plan, error) {
+func (c *Client) RunNowPlanByID(teamID, compositeID, planID string, block bool) (*client.Plan, error) {
 	ctx := NewContext()
 	client, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	plan, err := client.RunNowPlanByID(ctx, teamID, compositeID, planID)
+	plan, err := client.RunNowPlanByID(ctx, teamID, compositeID, planID, block)
 	if err != nil {
 		return nil, err
 	}

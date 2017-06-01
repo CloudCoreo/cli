@@ -180,7 +180,7 @@ func (c *fakeReleaseClient) ShowPlanByID(teamID, compositeID, planID string) (*c
 
 	return resp, c.err
 }
-func (c *fakeReleaseClient) RunNowPlanByID(teamID, compositeID, planID string) (*client.Plan, error) {
+func (c *fakeReleaseClient) RunNowPlanByID(teamID, compositeID, planID string, block bool) (*client.Plan, error) {
 	resp := &client.Plan{}
 	if len(c.plans) > 0 {
 
@@ -189,7 +189,6 @@ func (c *fakeReleaseClient) RunNowPlanByID(teamID, compositeID, planID string) (
 
 	return resp, c.err
 }
-
 
 func (c *fakeReleaseClient) EnablePlanByID(teamID, compositeID, planID string) (*client.Plan, error) {
 	resp := &client.Plan{}
