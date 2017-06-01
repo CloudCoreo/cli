@@ -80,7 +80,7 @@ const (
 	InfoPlanRunNowMessageBlock = "Adding plan to queue and executing it, please wait..."
 
 	//InfoPlanRunNowMessage info
-	InfoPlanRunNowMessage = "Adding plan to queue and executing it."
+	InfoPlanRunNowMessage = "Adding plan to queue and executing it.\n"
 
 	//ErrorPlanConfigVaribaleMissing error
 	ErrorPlanConfigVaribaleMissing = "Error in plan config, missing required values."
