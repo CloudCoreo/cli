@@ -52,6 +52,7 @@ type Plan struct {
 	DefaultPanelDirectory  string `json:"defaultPanelDirectory"`
 	DefaultPanelBranch     string `json:"defaultPanelBranch"`
 	Name                   string `json:"name"`
+	CloudAccountID         string `json:"cloudAccountId"`
 	IamUserAccessKeyID     string `json:"iamUserAccessKeyId"`
 	IamUserID              string `json:"iamUserId"`
 	IamUserSecretAccessKey string `json:"iamUserSecretAccessKey"`
@@ -328,7 +329,7 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 	}
 
 	planPayLoad := fmt.Sprintf(
-		`{"name":"%s","awsCredsId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%d","appStackId":"%s"}`,
+		`{"name":"%s","cloudAccountId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%d","appStackId":"%s"}`,
 
 		name,
 		cloudID,
