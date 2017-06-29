@@ -15,6 +15,8 @@ type planCreateCmd struct {
 	out                io.Writer
 	client             coreo.Interface
 	planConfigJSONFile string
+	planID             string
+	planConfigID       string
 }
 
 func newPlanCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
@@ -47,6 +49,8 @@ func newPlanCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 	f := cmd.Flags()
 
 	f.StringVarP(&planCreate.planConfigJSONFile, content.CmdFlagFileLong, content.CmdFlagFileShort, "", content.CmdFlagJSONFileDescription)
+	f.StringVarP(&planCreate.planID, content.CmdFlagPlanIDLong, "", "", content.CmdFlagPlanIDDescription)
+	f.StringVarP(&planCreate.planConfigID, content.CmdFlagPlanConfigIDLong, "", "", content.CmdFlagPlanConfigIDDescription)
 
 	return cmd
 }
@@ -55,7 +59,7 @@ func (t *planCreateCmd) run() error {
 
 	planConfigJSON, err := ioutil.ReadFile(t.planConfigJSONFile)
 
-	plan, err := t.client.CreatePlan(planConfigJSON)
+	plan, err := t.client.CreatePlan(planConfigJSON, t.planID, t.planConfigID)
 	if err != nil {
 		return err
 	}

@@ -83,5 +83,10 @@ func (t *planInitCmd) run() error {
 	if verbose {
 		fmt.Printf(content.InfoPlanJSONFileCreated, t.name, t.directory)
 	}
+
+	if jsonFormat {
+		util.PrettyPrintJSON(planConfig)
+	}
+
 	return nil
 }

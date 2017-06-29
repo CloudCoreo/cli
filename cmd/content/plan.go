@@ -78,8 +78,14 @@ const (
 	//CmdFlagPlanIDLong flag
 	CmdFlagPlanIDLong = "plan-id"
 
+	//CmdFlagPlanIDLong flag
+	CmdFlagPlanConfigIDLong = "planconfig-id"
+
 	//CmdFlagPlanIDDescription flag description
 	CmdFlagPlanIDDescription = "Coreo plan id"
+
+	//CmdFlagPlanConfigIDDescription flag description
+	CmdFlagPlanConfigIDDescription = "Coreo plan config id"
 
 	//CmdFlagBlockedLong flag
 	CmdFlagBlockedLong = "block"

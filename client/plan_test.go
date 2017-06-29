@@ -784,7 +784,7 @@ func TestCreatePlanSuccessCompleted(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreatePlan(context.Background(), []byte(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)))
+	_, err := client.CreatePlan(context.Background(), []byte(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)), "", "")
 	assert.Nil(t, err, "Plan creation failed")
 }
 
@@ -798,7 +798,7 @@ func TestCreatePlanFailedCompleted(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreatePlan(context.Background(), []byte(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)))
+	_, err := client.CreatePlan(context.Background(), []byte(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)), "", "")
 	assert.NotNil(t, err, "Returns compile failed error.")
 }
 
@@ -812,7 +812,7 @@ func TestCreatePlanSuccessCompiled(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.CreatePlan(context.Background(), []byte(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)))
+	_, err := client.CreatePlan(context.Background(), []byte(fmt.Sprintf(planConfigPayload, ts.URL, ts.URL)), "", "")
 	assert.Nil(t, err, "Plan creation failed")
 }
 

@@ -445,7 +445,7 @@ func (c *Client) InitPlan(branch, name, region, teamID, cloudID, compositeID, re
 }
 
 //CreatePlan create a plan
-func (c *Client) CreatePlan(planConfigContent []byte) (*client.Plan, error) {
+func (c *Client) CreatePlan(planConfigContent []byte, planID, planConfigID string) (*client.Plan, error) {
 
 	ctx := NewContext()
 	client, err := c.MakeClient()
@@ -453,7 +453,7 @@ func (c *Client) CreatePlan(planConfigContent []byte) (*client.Plan, error) {
 		return nil, err
 	}
 
-	plan, err := client.CreatePlan(ctx, planConfigContent)
+	plan, err := client.CreatePlan(ctx, planConfigContent, planID, planConfigID)
 	if err != nil {
 		return nil, err
 	}
