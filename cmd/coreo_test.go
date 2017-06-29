@@ -223,7 +223,7 @@ func (c *fakeReleaseClient) InitPlan(branch, name, region, teamID, cloudID, comp
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) CreatePlan(planConfigJSON []byte) (*client.Plan, error) {
+func (c *fakeReleaseClient) CreatePlan(planConfigJSON []byte, planID, planConfigID string) (*client.Plan, error) {
 	resp := &client.Plan{}
 	if len(c.plans) > 0 {
 

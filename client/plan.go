@@ -19,6 +19,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/CloudCoreo/cli/client/content"
@@ -408,8 +409,15 @@ func (c *Client) getPlanConfig(ctx context.Context, plan *Plan) (*PlanConfig, er
 
 }
 
+func replaceIDs(link, id string) string {
+	items := strings.Split(link, "/")
+	items[len(items)-1] = id
+
+	return strings.Join(items, "/")
+}
+
 //CreatePlan Create plan
-func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Plan, error) {
+func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte, planID string, planConfigID string) (*Plan, error) {
 
 	planConfig := &PlanConfig{}
 	if err := json.Unmarshal(planConfigContent, &planConfig); err != nil {
@@ -427,13 +435,22 @@ func (c *Client) CreatePlan(ctx context.Context, planConfigContent []byte) (*Pla
 		return nil, err
 	}
 
-	jsonStr, err := json.Marshal(planConfig)
-	err = c.Do(ctx, "PUT", planConfigLink.Href, bytes.NewBuffer(jsonStr), nil)
+	planLink, err := GetLinkByRef(planConfig.Links, "plan")
 	if err != nil {
 		return nil, err
 	}
 
-	planLink, err := GetLinkByRef(planConfig.Links, "plan")
+	// overwrite json planConfigID
+	if planConfigID != "" && planID != "" {
+		planConfigLink.Href = replaceIDs(planConfigLink.Href, planConfigID)
+		planLink.Href = replaceIDs(planLink.Href, planID)
+
+		planConfig.ID = planConfigID
+		planConfig.PlanID = planID
+	}
+
+	jsonStr, err := json.Marshal(planConfig)
+	err = c.Do(ctx, "PUT", planConfigLink.Href, bytes.NewBuffer(jsonStr), nil)
 	if err != nil {
 		return nil, err
 	}
