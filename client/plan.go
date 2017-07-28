@@ -27,11 +27,13 @@ import (
 
 //Panel panel struct
 type Panel struct {
+	RunID                      string      `json:"runId"`
 	ResourcesArray             interface{} `json:"resourcesArray"`
 	NumberOfResources          int         `json:"numberOfResources"`
 	PlanRefreshIntervalInHours float32     `json:"planRefreshIntervalInHours"`
-	LastExecutionTime          int64       `json:"lastExecutionTime"`
+	LastExecutionTime          time.Time   `json:"lastExecutionTime"`
 	EngineState                string      `json:"engineState"`
+	EngineStatus               string      `json:"engineStatus"`
 	IsEnabled                  bool        `json:"isEnabled"`
 }
 
