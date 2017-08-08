@@ -31,7 +31,7 @@ type Panel struct {
 	ResourcesArray             interface{} `json:"resourcesArray"`
 	NumberOfResources          int         `json:"numberOfResources"`
 	PlanRefreshIntervalInHours float32     `json:"planRefreshIntervalInHours"`
-	LastExecutionTime          time.Time   `json:"lastExecutionTime"`
+	LastExecutionTime          interface{} `json:"lastExecutionTime"`
 	EngineState                string      `json:"engineState"`
 	EngineStatus               string      `json:"engineStatus"`
 	IsEnabled                  bool        `json:"isEnabled"`
