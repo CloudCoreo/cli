@@ -32,6 +32,7 @@ type compositeLayerCmd struct {
 	name       string
 	gitRepoURL string
 	serverDir  bool
+	branchName string
 }
 
 func newCompositeLayerCmd(out io.Writer) *cobra.Command {
@@ -58,6 +59,7 @@ func newCompositeLayerCmd(out io.Writer) *cobra.Command {
 	f.StringVarP(&compositeLayer.directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
 	f.StringVarP(&compositeLayer.name, content.CmdFlagNameLong, content.CmdFlagNameShort, "", content.CmdFlagNameDescription)
 	f.StringVarP(&compositeLayer.gitRepoURL, content.CmdFlagGitRepoLong, content.CmdFlagGitRepoShort, "", content.CmdFlagGitRepoDescription)
+	f.StringVarP(&compositeLayer.branchName, content.CmdFlagGitSubmoduleBranchLong, content.CmdFlagGitSubmoduleBranchShort, "master", content.CmdFlagGitSubmoduleBranchDescription)
 	f.BoolVarP(&compositeLayer.serverDir, content.CmdFlagServerLong, content.CmdFlagServerShort, false, content.CmdFlagServerDescription)
 
 	return cmd
@@ -81,7 +83,7 @@ func (t *compositeLayerCmd) run() error {
 
 	t.directory = path.Join(t.directory, "stack-"+t.name)
 
-	err = util.CreateGitSubmodule(t.directory, t.gitRepoURL)
+	err = util.CreateGitSubmodule(t.directory, t.gitRepoURL, t.branchName)
 
 	if err != nil {
 		return err

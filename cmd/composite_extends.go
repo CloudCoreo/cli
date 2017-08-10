@@ -29,6 +29,7 @@ type compositeExtendsCmd struct {
 	out        io.Writer
 	directory  string
 	gitRepoURL string
+	branchName string
 	serverDir  bool
 }
 
@@ -55,6 +56,7 @@ func newCompositeExtendsCmd(out io.Writer) *cobra.Command {
 
 	f.StringVarP(&compositeExtends.directory, content.CmdFlagDirectoryLong, content.CmdFlagDirectoryShort, "", content.CmdFlagDirectoryDescription)
 	f.BoolVarP(&compositeExtends.serverDir, content.CmdFlagServerLong, content.CmdFlagServerShort, false, content.CmdFlagServerDescription)
+	f.StringVarP(&compositeExtends.branchName, content.CmdFlagGitSubmoduleBranchLong, content.CmdFlagGitSubmoduleBranchShort, "master", content.CmdFlagGitSubmoduleBranchDescription)
 	f.StringVarP(&compositeExtends.gitRepoURL, content.CmdFlagGitRepoLong, content.CmdFlagGitRepoShort, "", content.CmdFlagGitRepoDescription)
 
 	return cmd
@@ -70,7 +72,7 @@ func (t *compositeExtendsCmd) run() error {
 		t.directory, _ = os.Getwd()
 	}
 
-	err := util.CreateGitSubmodule(t.directory, t.gitRepoURL)
+	err := util.CreateGitSubmodule(t.directory, t.gitRepoURL, t.branchName)
 
 	if err != nil {
 		return err
