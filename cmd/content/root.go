@@ -216,6 +216,15 @@ const (
 	//CmdFlagAPIEndpointDescription api endpoint description
 	CmdFlagAPIEndpointDescription = "Coreo API endpoint. Overrides $CC_API_ENDPOINT."
 
+	//CmdFlagGitSubmoduleBranchShort git submodule branch short
+	CmdFlagGitSubmoduleBranchShort = "b"
+
+	//CmdFlagGitSubmoduleBranchLong git submodule branch long
+	CmdFlagGitSubmoduleBranchLong = "branch"
+
+	//CmdFlagGitSubmoduleBranchDescription git submodule branch description
+	CmdFlagGitSubmoduleBranchDescription = "Specify a branch for git submodule to target"
+
 	//CmdCoreoUse Coreo cmd
 	CmdCoreoUse = "coreo"
 
