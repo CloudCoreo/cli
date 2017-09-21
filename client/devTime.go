@@ -31,7 +31,17 @@ type DevTime struct {
 	DevTimeID  string `json:"devTimeId"`
 }
 
+// DevTimeStatus struct for status
+type DevTimeStatus struct {
+	Status struct {
+		RunningState string `json:"runningState"`
+		EngineState  string `json:"engineState"`
+	} `json:"status"`
+}
+
+// DevTimeResults struct for results
 type DevTimeResults struct {
+	Results interface{} `json:"results"`
 }
 
 // CreateDevTime method to create a ProxyTask object
@@ -98,7 +108,7 @@ func (c *Client) GetDevTimes(ctx context.Context, teamID string) ([]*DevTime, er
 	return devTimes, nil
 }
 
-// GetDevTimeResults method to devTimes info array object
+// GetDevTimeResults method to get devTimes results
 func (c *Client) GetDevTimeResults(ctx context.Context, teamID, devTimeID string) (*DevTimeResults, error) {
 	devTimes, err := c.GetDevTimes(ctx, teamID)
 	if err != nil {
@@ -131,6 +141,38 @@ func (c *Client) GetDevTimeResults(ctx context.Context, teamID, devTimeID string
 	return devTimeResults, nil
 }
 
+// GetDevTimeStatus method to get devTimes status
+func (c *Client) GetDevTimeStatus(ctx context.Context, teamID, devTimeID string) (*DevTimeStatus, error) {
+	devTimes, err := c.GetDevTimes(ctx, teamID)
+	if err != nil {
+		return nil, err
+	}
+
+	devTime := &DevTime{}
+	for _, d := range devTimes {
+		if d.DevTimeID == devTimeID {
+			devTime = d
+			break
+		}
+	}
+
+	if devTime.DevTimeID == "" {
+		return nil, NewError(fmt.Sprintf(content.ErrorNoDevTimeWithIDFound, devTimeID, teamID))
+	}
+
+	resultsLink, err := GetLinkByRef(devTime.Links, "status")
+	if err != nil {
+		return nil, err
+	}
+	devTimeStatus := &DevTimeStatus{}
+	err = c.Do(ctx, "GET", resultsLink.Href, nil, &devTimeStatus)
+	if err != nil {
+		return nil, err
+	}
+
+	return devTimeStatus, nil
+}
+
 // actionDevTime method to devTimes info array object
 func (c *Client) actionDevTime(ctx context.Context, teamID, devTimeID, action string) error {
 	devTimes, err := c.GetDevTimes(ctx, teamID)
@@ -150,7 +192,7 @@ func (c *Client) actionDevTime(ctx context.Context, teamID, devTimeID, action st
 		return NewError(fmt.Sprintf(content.ErrorNoDevTimeWithIDFound, devTimeID, teamID))
 	}
 
-	resultsLink, err := GetLinkByRef(devTime.Links, "start")
+	resultsLink, err := GetLinkByRef(devTime.Links, action)
 	if err != nil {
 		return err
 	}

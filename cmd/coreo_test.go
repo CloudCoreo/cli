@@ -259,6 +259,10 @@ func (c *fakeReleaseClient) GetDevTimeResults(teamID, devTimeID string) (*client
 	return nil, c.err
 }
 
+func (c *fakeReleaseClient) GetDevTimeStatus(teamID, devTimeID string) (*client.DevTimeStatus, error) {
+	return nil, c.err
+}
+
 func (c *fakeReleaseClient) StartDevTime(teamID, devTimeID string) error {
 	return c.err
 }

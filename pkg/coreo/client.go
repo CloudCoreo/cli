@@ -494,7 +494,7 @@ func (c *Client) CreateDevTime(teamID, context, task string) (*client.DevTime, e
 	return devTime, nil
 }
 
-//GetDevTimeResults create a devtime
+//GetDevTimeResults get devtime results
 func (c *Client) GetDevTimeResults(teamID, devTimeID string) (*client.DevTimeResults, error) {
 	ctx := NewContext()
 	client, err := c.MakeClient()
@@ -508,6 +508,22 @@ func (c *Client) GetDevTimeResults(teamID, devTimeID string) (*client.DevTimeRes
 	}
 
 	return devTimeResults, nil
+}
+
+//GetDevTimeStatus get devtime status
+func (c *Client) GetDevTimeStatus(teamID, devTimeID string) (*client.DevTimeStatus, error) {
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	devTimeStatus, err := client.GetDevTimeStatus(ctx, teamID, devTimeID)
+	if err != nil {
+		return nil, err
+	}
+
+	return devTimeStatus, nil
 }
 
 //StartDevTime start a devtime

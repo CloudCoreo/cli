@@ -37,9 +37,9 @@ func newDevTimeJobsCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:   content.CmdJobsUse,
-		Short: content.CmdDevTimeJobsShort,
-		Long:  content.CmdDevTimeJobsLong,
+		Use:   content.CmdStatusUse,
+		Short: content.CmdDevTimeStatusShort,
+		Long:  content.CmdDevTimeStatusLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			if err := util.CheckDevTimeIDAddFlags(devTimeJobs.devTimeID); err != nil {
@@ -67,23 +67,12 @@ func newDevTimeJobsCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 
 func (t *devTimeJobsCmd) run() error {
 
-	// gitKey, err := t.client.CreateDevTime(t.teamID, t.context, t.task)
-	// if err != nil {
-	// 	return err
-	// }
+	results, err := t.client.GetDevTimeStatus(t.teamID, t.devTimeID)
+	if err != nil {
+		return err
+	}
 
-	// util.PrintResult(
-	// 	t.out,
-	// 	gitKey,
-	// 	[]string{"DevTimeID", "DevTimeURL", "Context", "Task"},
-	// 	map[string]string{
-	// 		"DevTimeID":  "DevTime ID",
-	// 		"DevTimeURL": "DevTime Url",
-	// 		"Context":    "DevTime Context",
-	// 		"Task":       "DevTime Task",
-	// 	},
-	// 	jsonFormat,
-	// 	verbose)
+	util.PrettyPrintJSON(results)
 
 	return nil
 }

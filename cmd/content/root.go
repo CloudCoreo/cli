@@ -276,8 +276,8 @@ const (
 	//CmdStopUse stop cmd
 	CmdStopUse = "stop [flags]"
 
-	//CmdJobsUse jobs cmd
-	CmdJobsUse = "jobs [flags]"
+	//CmdStatusUse status cmd
+	CmdStatusUse = "status [flags]"
 
 	//CmdResultsUse results cmd
 	CmdResultsUse = "results [flags]"

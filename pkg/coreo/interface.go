@@ -55,6 +55,7 @@ type Interface interface {
 
 	CreateDevTime(teamID, context, task string) (*client.DevTime, error)
 	GetDevTimeResults(teamID, devTimeID string) (*client.DevTimeResults, error)
+	GetDevTimeStatus(teamID, devTimeID string) (*client.DevTimeStatus, error)
 	StartDevTime(teamID, devTimeID string) error
 	StopDevTime(teamID, devTimeID string) error
 }

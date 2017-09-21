@@ -48,11 +48,11 @@ const (
 	//CmdDevTimeResultsLong long description
 	CmdDevTimeResultsLong = `Get devtime results for a given devtime ID.`
 
-	//CmdDevTimeJobsShort short description
-	CmdDevTimeJobsShort = "Get running devtime jobs"
+	//u short description
+	CmdDevTimeStatusShort = "Get running devtime status"
 
-	//CmdDevTimeJobsLong long description
-	CmdDevTimeJobsLong = `Get running devtime jobs for a given devtime ID.`
+	//CmdDevTimeStatusLong long description
+	CmdDevTimeStatusLong = `Get running devtime status for a given devtime ID.`
 
 	// CmdFlagDevTimeContextLong flag
 	CmdFlagDevTimeContextLong = "context"

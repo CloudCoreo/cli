@@ -18,7 +18,7 @@ coreo plan add [flags]
       --cloud-id string       Coreo cloud id
       --composite-id string   Coreo composite id
   -d, --directory string      The working directory <fully-qualified-path>
-      --interval int          Refresh rate value with any increment in mintues (between 1 and 525547) (default 1440)
+      --interval int          Refresh rate value with any increment in Minutes (between 1 and 525547) (default 1440)
       --name string           Name flag
       --region string         Cloud region, e.g. AWS 'us-east-1' (default "us-east-1")
       --revision string       Git revision for plan (default "HEAD")
