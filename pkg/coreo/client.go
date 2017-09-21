@@ -477,3 +477,83 @@ func (c *Client) GetPlanPanel(teamID, compositeID, planID string) (*client.Panel
 
 	return plan, nil
 }
+
+//CreateDevTime create a devtime
+func (c *Client) CreateDevTime(teamID, context, task string) (*client.DevTime, error) {
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	devTime, err := client.CreateDevTime(ctx, teamID, context, task)
+	if err != nil {
+		return nil, err
+	}
+
+	return devTime, nil
+}
+
+//GetDevTimeResults get devtime results
+func (c *Client) GetDevTimeResults(teamID, devTimeID string) (*client.DevTimeResults, error) {
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	devTimeResults, err := client.GetDevTimeResults(ctx, teamID, devTimeID)
+	if err != nil {
+		return nil, err
+	}
+
+	return devTimeResults, nil
+}
+
+//GetDevTimeStatus get devtime status
+func (c *Client) GetDevTimeStatus(teamID, devTimeID string) (*client.DevTimeStatus, error) {
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	devTimeStatus, err := client.GetDevTimeStatus(ctx, teamID, devTimeID)
+	if err != nil {
+		return nil, err
+	}
+
+	return devTimeStatus, nil
+}
+
+//StartDevTime start a devtime
+func (c *Client) StartDevTime(teamID, devTimeID string) error {
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return err
+	}
+
+	err = client.StartDevTime(ctx, teamID, devTimeID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//StopDevTime stop a devtime
+func (c *Client) StopDevTime(teamID, devTimeID string) error {
+	ctx := NewContext()
+	client, err := c.MakeClient()
+	if err != nil {
+		return err
+	}
+
+	err = client.StopDevTime(ctx, teamID, devTimeID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

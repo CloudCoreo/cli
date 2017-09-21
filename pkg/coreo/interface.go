@@ -14,7 +14,9 @@
 
 package coreo
 
-import "github.com/CloudCoreo/cli/client"
+import (
+	"github.com/CloudCoreo/cli/client"
+)
 
 // Interface for Coreo client for mocking in tests
 type Interface interface {
@@ -50,4 +52,10 @@ type Interface interface {
 	CreatePlan(planConfigJSON []byte, planID, planConfigID string) (*client.Plan, error)
 	GetPlanPanel(teamID, compositeID, planID string) (*client.Panel, error)
 	RunNowPlanByID(teamID, compositeID, planID string, block bool) (*client.Plan, error)
+
+	CreateDevTime(teamID, context, task string) (*client.DevTime, error)
+	GetDevTimeResults(teamID, devTimeID string) (*client.DevTimeResults, error)
+	GetDevTimeStatus(teamID, devTimeID string) (*client.DevTimeStatus, error)
+	StartDevTime(teamID, devTimeID string) error
+	StopDevTime(teamID, devTimeID string) error
 }

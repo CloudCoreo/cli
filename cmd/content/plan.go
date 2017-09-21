@@ -115,7 +115,7 @@ const (
 	CmdFlagIntervalLong = "interval"
 
 	//CmdFlagIntervalDescription flag description
-	CmdFlagIntervalDescription = "Refresh rate value with any increment in mintues (between 1 and 525547)"
+	CmdFlagIntervalDescription = "Refresh rate value with any increment in Minutes (between 1 and 525547)"
 
 	//CmdFlagJSONFileDescription JSON file description
 	CmdFlagJSONFileDescription = "Plan config JSON file"

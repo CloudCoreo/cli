@@ -30,7 +30,7 @@ var (
 		"Name":            "Plan Name",
 		"Enabled":         "Active",
 		"Branch":          "Git Branch",
-		"RefreshInterval": "Interval (Mintues)",
+		"RefreshInterval": "Interval (Minutes)",
 	}
 )
 

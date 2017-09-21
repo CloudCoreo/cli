@@ -270,6 +270,18 @@ const (
 	//CmdExtendsUse extends cmd
 	CmdExtendsUse = "extends [flags]"
 
+	//CmdStartUse start cmd
+	CmdStartUse = "start [flags]"
+
+	//CmdStopUse stop cmd
+	CmdStopUse = "stop [flags]"
+
+	//CmdStatusUse status cmd
+	CmdStatusUse = "status [flags]"
+
+	//CmdResultsUse results cmd
+	CmdResultsUse = "results [flags]"
+
 	//InfoUsingProfile info using profile
 	InfoUsingProfile = "[ OK ] Using Profile %s\n"
 

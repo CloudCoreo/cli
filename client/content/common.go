@@ -88,8 +88,8 @@ const (
 	//ErrorPlanConfigRequiredVariableMissing error
 	ErrorPlanConfigRequiredVariableMissing = "Missing plan config value for key %s.\n"
 
-	//ErrorPlanIntervalMintuesInvalid error
-	ErrorPlanIntervalMintuesInvalid = "Interval value should be equal to or more than 2 minutes and less than or equal to 525600 minutes."
+	//ErrorPlanIntervalMinutesInvalid error
+	ErrorPlanIntervalMinutesInvalid = "Interval value should be equal to or more than 2 minutes and less than or equal to 525600 minutes."
 
 	//ErrorPlanCreation error
 	ErrorPlanCreation = "Something went wrong when adding a plan. More info -> %q"
@@ -99,4 +99,13 @@ const (
 
 	//ErrorPlanCompileNow error
 	ErrorPlanCompileNow = "Something went wrong compiling this plan. More info -> %q"
+
+	//ErrorFailedToCreateDevTime error
+	ErrorFailedToCreateDevTime = "Failed to create devTime under team ID %s."
+
+	//ErrorNoDevTimesFound error
+	ErrorNoDevTimesFound = "No devTimes found under team ID %s."
+
+	//ErrorNoDevTimeWithIDFound error
+	ErrorNoDevTimeWithIDFound = "No devTime with ID %s found under team ID %s."
 )

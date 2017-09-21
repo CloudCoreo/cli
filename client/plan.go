@@ -318,7 +318,7 @@ func (c *Client) DisablePlan(ctx context.Context, teamID, compositeID, planID st
 func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, cloudID, compositeID, revision string, intervalInMinutes int) (*PlanConfig, error) {
 
 	if intervalInMinutes < 2 || intervalInMinutes > 525600 {
-		return nil, fmt.Errorf(content.ErrorPlanIntervalMintuesInvalid)
+		return nil, fmt.Errorf(content.ErrorPlanIntervalMinutesInvalid)
 	}
 
 	composite, err := c.GetCompositeByID(ctx, teamID, compositeID)
