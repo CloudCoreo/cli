@@ -83,7 +83,7 @@ func newRootCmd(out io.Writer) *cobra.Command {
 		newPlanCmd(out),
 		newConfigureCmd(out),
 		newCompletionCmd(out),
-
+		newDevTimeCmd(out),
 		// Hidden documentation generator command: 'coreo docs'
 		newDocsCmd(out),
 	)

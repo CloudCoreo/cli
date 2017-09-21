@@ -110,6 +110,28 @@ func CheckGitKeyAddFlags(name, secret string) error {
 	return nil
 }
 
+// CheckDevTimeAddFlags flag check for context and task
+func CheckDevTimeAddFlags(context, task string) error {
+	if err := checkFlag(context, content.ErrorContextMissing); err != nil {
+		return err
+	}
+
+	if err := checkFlag(task, content.ErrorTaskMissing); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// CheckDevTimeIDAddFlags flag check for devtime ID
+func CheckDevTimeIDAddFlags(devtimeID string) error {
+	if err := checkFlag(devtimeID, content.ErrorDevTimeIDMissing); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // CheckCompositeShowOrDeleteFlag flag check for composite show or delete command
 func CheckCompositeShowOrDeleteFlag(compositeID string, verbose bool) error {
 	if err := checkFlag(compositeID, content.ErrorCompositeIDRequired); err != nil {

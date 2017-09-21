@@ -27,6 +27,7 @@ type fakeReleaseClient struct {
 	plans         []*client.Plan
 	planConfig    []*client.PlanConfig
 	panel         []*client.Panel
+	devTime       []*client.DevTime
 	err           error
 }
 
@@ -242,4 +243,26 @@ func (c *fakeReleaseClient) GetPlanPanel(teamID, compositeID, planID string) (*c
 	}
 
 	return resp, c.err
+}
+
+func (c *fakeReleaseClient) CreateDevTime(teamID, context, task string) (*client.DevTime, error) {
+	resp := &client.DevTime{}
+	if len(c.devTime) > 0 {
+
+		resp = c.devTime[0]
+	}
+
+	return resp, c.err
+}
+
+func (c *fakeReleaseClient) GetDevTimeResults(teamID, devTimeID string) (*client.DevTimeResults, error) {
+	return nil, c.err
+}
+
+func (c *fakeReleaseClient) StartDevTime(teamID, devTimeID string) error {
+	return c.err
+}
+
+func (c *fakeReleaseClient) StopTimeResults(teamID, devTimeID string) error {
+	return c.err
 }

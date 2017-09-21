@@ -99,4 +99,13 @@ const (
 
 	//ErrorPlanCompileNow error
 	ErrorPlanCompileNow = "Something went wrong compiling this plan. More info -> %q"
+
+	//ErrorFailedToCreateDevTime error
+	ErrorFailedToCreateDevTime = "Failed to create devTime under team ID %s."
+
+	//ErrorNoDevTimesFound error
+	ErrorNoDevTimesFound = "No devTimes found under team ID %s."
+
+	//ErrorNoDevTimeWithIDFound error
+	ErrorNoDevTimeWithIDFound = "No devTime with ID %s found under team ID %s."
 )
