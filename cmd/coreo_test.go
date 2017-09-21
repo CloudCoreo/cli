@@ -263,6 +263,6 @@ func (c *fakeReleaseClient) StartDevTime(teamID, devTimeID string) error {
 	return c.err
 }
 
-func (c *fakeReleaseClient) StopTimeResults(teamID, devTimeID string) error {
+func (c *fakeReleaseClient) StopDevTime(teamID, devTimeID string) error {
 	return c.err
 }
