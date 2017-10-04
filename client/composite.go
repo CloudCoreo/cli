@@ -128,7 +128,7 @@ func (c *Client) CreateComposite(ctx context.Context, gitURL, name, teamID, gitK
 		return composite, err
 	}
 
-	compositePayLoad := fmt.Sprintf(`{"name":"%s","gitUrl":"%s","teamId":"%s","gitKeyId":"%s"}`, name, gitURL, teamID, gitKeyID)
+	compositePayLoad := fmt.Sprintf(`{"name":"%s","gitUrl":"%s","gitKeyId":"%s"}`, name, gitURL, gitKeyID)
 	var jsonStr = []byte(compositePayLoad)
 	err = c.Do(ctx, "POST", compositesLink.Href, bytes.NewBuffer(jsonStr), &composite)
 	if err != nil {
