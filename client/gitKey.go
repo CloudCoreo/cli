@@ -111,7 +111,7 @@ func (c *Client) CreateGitKey(ctx context.Context, teamID, keyMaterial, name str
 				return nil, NewError(err.Error())
 			}
 
-			gitKeyPayLoad := fmt.Sprintf(`{"keyMaterial":%s,"name":"%s","teamId":"%s"}`, strings.TrimSpace(buf.String()), name, teamID)
+			gitKeyPayLoad := fmt.Sprintf(`{"keyMaterial":%s,"name":"%s"}`, strings.TrimSpace(buf.String()), name)
 
 			var jsonStr = []byte(gitKeyPayLoad)
 			gitKeyLink, err := GetLinkByRef(team.Links, "gitKeys")

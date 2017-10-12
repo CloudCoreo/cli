@@ -59,7 +59,7 @@ func (c *Client) CreateDevTime(ctx context.Context, teamID, context, task string
 			if err != nil {
 				return nil, NewError(err.Error())
 			}
-			proxyTaskPayLoad := fmt.Sprintf(`{"context":"%s","task":"%s","teamId":"%s"}`, context, task, teamID)
+			proxyTaskPayLoad := fmt.Sprintf(`{"context":"%s","task":"%s"}`, context, task)
 			var jsonStr = []byte(proxyTaskPayLoad)
 			err = c.Do(ctx, "POST", proxyTaskLink.Href, bytes.NewBuffer(jsonStr), &devTime)
 			if err != nil {

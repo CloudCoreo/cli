@@ -99,7 +99,7 @@ func (c *Client) CreateCloudAccount(ctx context.Context, teamID, accessKeyID, se
 	for _, team := range teams {
 
 		if team.ID == teamID {
-			cloudPayLoad := fmt.Sprintf(`{"name":"%s","accessKeyId":"%s","secretAccessKey":"%s","teamId":"%s"}`, cloudName, accessKeyID, secretAccessKey, teamID)
+			cloudPayLoad := fmt.Sprintf(`{"name":"%s","accessKeyId":"%s","secretAccessKey":"%s"}`, cloudName, accessKeyID, secretAccessKey)
 			var jsonStr = []byte(cloudPayLoad)
 
 			cloudLink, err := GetLinkByRef(team.Links, "cloudAccounts")
