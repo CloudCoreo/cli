@@ -60,7 +60,7 @@ func (a *Auth) SignRequest(req *http.Request) error {
 	}
 
 	mediaType := req.Header.Get("Content-Type")
-	date := time.Now().String()
+	date := time.Now().UTC().String()
 	apiKey := a.APIKey
 	secretKey := a.SecretKey
 
