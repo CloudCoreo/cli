@@ -332,7 +332,7 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 	}
 
 	planPayLoad := fmt.Sprintf(
-		`{"name":"%s","cloudAccountId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%d","appStackId":"%s"}`,
+		`{"name":"%s","cloudAccountId":"%s","region":"%s","branch":"%s","revision":"%s","refreshInterval":"%d","appStackId":"%s","teamId":"%s"}`,
 
 		name,
 		cloudID,
@@ -340,7 +340,8 @@ func (c *Client) InitPlan(ctx context.Context, branch, name, region, teamID, clo
 		branch,
 		revision,
 		intervalInMinutes,
-		compositeID)
+		compositeID,
+		teamID)
 
 	var jsonStr = []byte(planPayLoad)
 	plan := &Plan{}
