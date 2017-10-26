@@ -18,11 +18,11 @@ Use CLI to...
 
 ### OSX
 
-Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.17/coreo_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.17/coreo_darwin_amd64)
+Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.18/coreo_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.18/coreo_darwin_amd64)
 
 ```sh
 $ mkdir coreo && cd coreo
-$ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.17/coreo_darwin_amd64
+$ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.18/coreo_darwin_amd64
 $ chmod +x coreo
 $ export PATH=$PATH:${PWD}   # Add current dir where coreo has been downloaded to
 $ coreo
@@ -30,11 +30,11 @@ $ coreo
 
 ### Linux
 
-Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.17/coreo_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.17/coreo_linux_amd64)
+Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.18/coreo_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.18/coreo_linux_amd64)
 
 ```sh
 $ mkdir coreo && cd coreo
-$ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.17/coreo_linux_amd64
+$ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.18/coreo_linux_amd64
 $ chmod +x coreo
 $ export PATH=$PATH:${PWD}   # Add current dir where coreo has been downloaded to
 $ coreo
@@ -42,7 +42,7 @@ $ coreo
 
 ### Windows
 
-Download `coreo.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.17/coreo_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.17/coreo_windows_amd64.exe)
+Download `coreo.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.18/coreo_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.18/coreo_windows_amd64.exe)
 
 ```
 C:\Users\Username\Downloads> rename coreo_windows_amd64.exe coreo.exe
