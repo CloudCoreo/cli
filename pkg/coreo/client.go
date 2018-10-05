@@ -147,6 +147,7 @@ func (c *Client) ListCloudAccounts(teamID string) ([]*client.CloudAccount, error
 	}
 
 	cloudAccounts, err := client.GetCloudAccounts(ctx, teamID)
+	println("Get cloud accounts ")
 	if err != nil {
 		return nil, err
 	}
@@ -203,357 +204,38 @@ func (c *Client) DeleteCloudAccountByID(teamID, cloudID string) error {
 	return nil
 }
 
-//ListGitKeys Get list of git keys
-func (c *Client) ListGitKeys(teamID string) ([]*client.GitKey, error) {
+//Show violated rules. If the filter condition (teamID, cloudID in this case) is valid,
+//rules will be filtered. Otherwise return all violation rules under this user account.
+func (c *Client) ShowResultRule(teamID, cloudID string) ([]* client.ResultRule, error) {
+	//TODO
 	ctx := NewContext()
 	client, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	gitKeys, err := client.GetGitKeys(ctx, teamID)
+	result, err := client.ShowResultRule(ctx, teamID, cloudID)
 	if err != nil {
 		return nil, err
 	}
 
-	return gitKeys, nil
+	return result, nil
 }
 
-//ShowGitKeyByID Show gitkey with ID
-func (c *Client) ShowGitKeyByID(teamID, gitKeyID string) (*client.GitKey, error) {
+//Show violated objects. If the filter condition (teamID, cloudID in this case) is valid,
+//objects will be filtered. Otherwise return all violation objects under this user account.
+func (c *Client) ShowResultObject(teamID, cloudID string) ([]* client.ResultObject, error) {
+	//TODO
 	ctx := NewContext()
 	client, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	gitKey, err := client.GetGitKeyByID(ctx, teamID, gitKeyID)
+	result, err := client.ShowResultObject(ctx, teamID, cloudID)
 	if err != nil {
 		return nil, err
 	}
 
-	return gitKey, nil
-
-}
-
-//CreateGitKey Create git key
-func (c *Client) CreateGitKey(teamID, resourceSecret, resourceName string) (*client.GitKey, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	gitKey, err := client.CreateGitKey(ctx, teamID, resourceSecret, resourceName)
-	if err != nil {
-		return nil, err
-	}
-
-	return gitKey, nil
-}
-
-//DeleteGitKeyByID delete git key
-func (c *Client) DeleteGitKeyByID(teamID, gitKeyID string) error {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return err
-	}
-
-	err = client.DeleteGitKeyByID(ctx, teamID, gitKeyID)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-//ListComposites List composite
-func (c *Client) ListComposites(teamID string) ([]*client.Composite, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	composites, err := client.GetComposites(ctx, teamID)
-	if err != nil {
-		return nil, err
-	}
-
-	return composites, nil
-}
-
-//ShowCompositeByID show composite by ID
-func (c *Client) ShowCompositeByID(teamID, compositeID string) (*client.Composite, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	composite, err := client.GetCompositeByID(ctx, teamID, compositeID)
-	if err != nil {
-		return nil, err
-	}
-
-	return composite, nil
-}
-
-//DeleteCompositeByID delete composite by ID
-func (c *Client) DeleteCompositeByID(teamID, compositeID string) error {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return err
-	}
-
-	err = client.DeleteCompositeByID(ctx, teamID, compositeID)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-//CreateComposite Create composite
-func (c *Client) CreateComposite(teamID, gitRepoURL, name, gitKeyId string) (*client.Composite, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	composite, err := client.CreateComposite(ctx, gitRepoURL, name, teamID, gitKeyId)
-	if err != nil {
-		return nil, err
-	}
-
-	return composite, nil
-}
-
-//ListPlans List plans
-func (c *Client) ListPlans(teamID, compositeID string) ([]*client.Plan, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	plans, err := client.GetPlans(ctx, teamID, compositeID)
-	if err != nil {
-		return nil, err
-	}
-
-	return plans, nil
-}
-
-//ShowPlanByID Show plan by ID
-func (c *Client) ShowPlanByID(teamID, compositeID, planID string) (*client.Plan, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	plan, err := client.GetPlanByID(ctx, teamID, compositeID, planID)
-	if err != nil {
-		return nil, err
-	}
-
-	return plan, nil
-}
-
-//RunNowPlanByID Run Now plan by ID
-func (c *Client) RunNowPlanByID(teamID, compositeID, planID string, block bool) (*client.Plan, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	plan, err := client.RunNowPlanByID(ctx, teamID, compositeID, planID, block)
-	if err != nil {
-		return nil, err
-	}
-
-	return plan, nil
-}
-
-//EnablePlanByID Enable plan by ID
-func (c *Client) EnablePlanByID(teamID, compositeID, planID string) (*client.Plan, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	plan, err := client.EnablePlan(ctx, teamID, compositeID, planID)
-	if err != nil {
-		return nil, err
-	}
-
-	return plan, nil
-}
-
-//DisablePlanByID Disable plan by ID
-func (c *Client) DisablePlanByID(teamID, compositeID, planID string) (*client.Plan, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	plan, err := client.DisablePlan(ctx, teamID, compositeID, planID)
-	if err != nil {
-		return nil, err
-	}
-
-	return plan, nil
-}
-
-//DeletePlanByID Delete by ID
-func (c *Client) DeletePlanByID(teamID, compositeID, planID string) error {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return err
-	}
-
-	err = client.DeletePlanByID(ctx, teamID, compositeID, planID)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-//InitPlan init a plan
-func (c *Client) InitPlan(branch, name, region, teamID, cloudID, compositeID, revision string, interval int) (*client.PlanConfig, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	planConfig, err := client.InitPlan(ctx, branch, name, region, teamID, cloudID, compositeID, revision, interval)
-	if err != nil {
-		return nil, err
-	}
-
-	return planConfig, nil
-}
-
-//CreatePlan create a plan
-func (c *Client) CreatePlan(planConfigContent []byte, planID, planConfigID string) (*client.Plan, error) {
-
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	plan, err := client.CreatePlan(ctx, planConfigContent, planID, planConfigID)
-	if err != nil {
-		return nil, err
-	}
-
-	return plan, nil
-}
-
-//GetPlanPanel get plan panel
-func (c *Client) GetPlanPanel(teamID, compositeID, planID string) (*client.Panel, error) {
-
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	plan, err := client.GetPanelInfo(ctx, teamID, compositeID, planID)
-	if err != nil {
-		return nil, err
-	}
-
-	return plan, nil
-}
-
-//CreateDevTime create a devtime
-func (c *Client) CreateDevTime(teamID, context, task string) (*client.DevTime, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	devTime, err := client.CreateDevTime(ctx, teamID, context, task)
-	if err != nil {
-		return nil, err
-	}
-
-	return devTime, nil
-}
-
-//GetDevTimeResults get devtime results
-func (c *Client) GetDevTimeResults(teamID, devTimeID string) (*client.DevTimeResults, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	devTimeResults, err := client.GetDevTimeResults(ctx, teamID, devTimeID)
-	if err != nil {
-		return nil, err
-	}
-
-	return devTimeResults, nil
-}
-
-//GetDevTimeStatus get devtime status
-func (c *Client) GetDevTimeStatus(teamID, devTimeID string) (*client.DevTimeStatus, error) {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	devTimeStatus, err := client.GetDevTimeStatus(ctx, teamID, devTimeID)
-	if err != nil {
-		return nil, err
-	}
-
-	return devTimeStatus, nil
-}
-
-//StartDevTime start a devtime
-func (c *Client) StartDevTime(teamID, devTimeID string) error {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return err
-	}
-
-	err = client.StartDevTime(ctx, teamID, devTimeID)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-//StopDevTime stop a devtime
-func (c *Client) StopDevTime(teamID, devTimeID string) error {
-	ctx := NewContext()
-	client, err := c.MakeClient()
-	if err != nil {
-		return err
-	}
-
-	err = client.StopDevTime(ctx, teamID, devTimeID)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return result, nil
 }

@@ -16,10 +16,10 @@ package util
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/CloudCoreo/cli/cmd/content"
+	"os"
 )
 
 func checkFlag(flag, error string) error {
@@ -84,81 +84,6 @@ func CheckTokenShowOrDeleteFlag(tokenID string, verbose bool) error {
 	return nil
 }
 
-// CheckGitKeyShowOrDeleteFlag flag check for Git key show or delete command
-func CheckGitKeyShowOrDeleteFlag(gitKeyID string, verbose bool) error {
-	if err := checkFlag(gitKeyID, content.ErrorGitKeyIDMissing); err != nil {
-		return err
-	}
-
-	if verbose {
-		fmt.Printf(content.InfoUsingGitKeyID, gitKeyID)
-	}
-
-	return nil
-}
-
-// CheckGitKeyAddFlags flag check for git key add command
-func CheckGitKeyAddFlags(name, secret string) error {
-	if err := checkFlag(name, content.ErrorNameMissing); err != nil {
-		return err
-	}
-
-	if err := checkFlag(secret, content.ErrorSecretMissing); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// CheckDevTimeAddFlags flag check for context and task
-func CheckDevTimeAddFlags(context, task string) error {
-	if err := checkFlag(context, content.ErrorContextMissing); err != nil {
-		return err
-	}
-
-	if err := checkFlag(task, content.ErrorTaskMissing); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// CheckDevTimeIDAddFlags flag check for devtime ID
-func CheckDevTimeIDAddFlags(devtimeID string) error {
-	if err := checkFlag(devtimeID, content.ErrorDevTimeIDMissing); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// CheckCompositeShowOrDeleteFlag flag check for composite show or delete command
-func CheckCompositeShowOrDeleteFlag(compositeID string, verbose bool) error {
-	if err := checkFlag(compositeID, content.ErrorCompositeIDRequired); err != nil {
-		return err
-	}
-
-	if verbose {
-		fmt.Printf(content.InfoUsingCompsiteID, compositeID)
-	}
-
-	return nil
-
-}
-
-// CheckCompositeCreateFlags flags check for composite create command
-func CheckCompositeCreateFlags(name, gitRepoURL string) error {
-	if err := checkGitRepoURL(gitRepoURL); err != nil {
-		return err
-	}
-
-	if err := checkFlag(name, content.ErrorNameMissing); err != nil {
-		return err
-	}
-
-	return nil
-
-}
 
 // CheckLayersFlags flag check for composite layer command
 func CheckLayersFlags(name, gitRepoURL string) error {
@@ -225,36 +150,6 @@ func CheckSecretKeyFlag(secretKey string, userProfile string) (string, error) {
 	return secretKey, nil
 }
 
-//CheckCompositeIDAndPlandIDFlag Check for compositeID and planID
-func CheckCompositeIDAndPlandIDFlag(compositeID, planID string, verbose bool) error {
-	if err := checkFlag(compositeID, content.ErrorCompositeIDRequired); err != nil {
-		return err
-	}
-
-	if verbose {
-		fmt.Printf(content.InfoUsingCompsiteID, compositeID)
-	}
-
-	if err := checkFlag(planID, content.ErrorPlanIDRequired); err != nil {
-		return err
-	}
-
-	if verbose {
-		fmt.Printf(content.InfoUsingPlanID, planID)
-	}
-
-	return nil
-}
-
-//CheckPlanCreateJSONFileFlag Check for JSON file
-func CheckPlanCreateJSONFileFlag(file string) error {
-	if err := checkFlag(file, content.ErrorPlanCreateJSONFileRequired); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 //CheckTeamAddFlags Required flags check
 func CheckTeamAddFlags(teamName, teamDescription string) error {
 	if err := checkFlag(teamName, content.ErrorTeamNameRequired); err != nil {
@@ -262,23 +157,6 @@ func CheckTeamAddFlags(teamName, teamDescription string) error {
 	}
 
 	if err := checkFlag(teamDescription, content.ErrorTeamDescriptionRequired); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-//CheckPlanInitRequiredFlags Required flags check
-func CheckPlanInitRequiredFlags(compositeID, cloudID, name string) error {
-	if err := checkFlag(compositeID, content.ErrorCompositeIDRequired); err != nil {
-		return err
-	}
-
-	if err := checkFlag(cloudID, content.ErrorCloudIDRequired); err != nil {
-		return err
-	}
-
-	if err := checkFlag(name, content.ErrorNameMissing); err != nil {
 		return err
 	}
 

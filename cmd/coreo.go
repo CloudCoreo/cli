@@ -78,12 +78,9 @@ func newRootCmd(out io.Writer) *cobra.Command {
 		newTeamCmd(out),
 		newTokenCmd(out),
 		newCloudAccountCmd(out),
-		newGitKeyCmd(out),
-		newCompositeCmd(out),
-		newPlanCmd(out),
 		newConfigureCmd(out),
 		newCompletionCmd(out),
-		newDevTimeCmd(out),
+		newResultCmd(out),
 		// Hidden documentation generator command: 'coreo docs'
 		newDocsCmd(out),
 	)
