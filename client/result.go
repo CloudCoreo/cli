@@ -55,8 +55,8 @@ type ResultRule struct {
 type ResultObject struct {
 	ID string `json:"id"`
 	Info Info `json:"rule_report"`
-	TInfo []TeamInfo `json:"team"`
-	CInfo []CloudAccountInfo `json:"cloud_account"`
+	TInfo TeamInfo `json:"team"`
+	CInfo CloudAccountInfo `json:"cloud_account"`
 	RunId string `json:"run_id"`
 }
 
@@ -71,31 +71,31 @@ func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID string) (
 
 	if teamID != content.None && cloudID != content.None{
 		for i := range result {
-			if hasTeamID(result[i].TInfo, teamID) && hasCloudID(result[i].CInfo, cloudID) {
+			if result[i].TInfo.ID == teamID && result[i].CInfo.ID == cloudID {
 				res = append(res, result[i])
 			}
 		}
 	} else if teamID != content.None{
 		for i := range result {
-			if hasTeamID(result[i].TInfo, teamID){
+			if result[i].TInfo.ID == teamID{
 				res = append(res, result[i])
 			}
 		}
 
 	} else if cloudID != content.None{
 		for i := range result {
-			if hasCloudID(result[i].CInfo, cloudID) {
+			if result[i].CInfo.ID == cloudID {
 				res = append(res, result[i])
 			}
 		}
 	} else {
-		copy(res, result)
+		res = result
 	}
 
 	if len(res) == 0 {
 		return nil, NewError("No violated object")
 	}
-	return result, nil
+	return res, nil
 }
 
 //Show violated rules. If the filter condition (teamID, cloudID in this case) is valid,
