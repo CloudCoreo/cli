@@ -15,31 +15,32 @@
 package main
 
 import (
-	"github.com/CloudCoreo/cli/pkg/coreo"
+	"fmt"
 	"io"
-	"github.com/spf13/cobra"
+
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
-	"fmt"
+	"github.com/CloudCoreo/cli/pkg/coreo"
+	"github.com/spf13/cobra"
 )
 
-type resultObjectCmd struct{
-	client coreo.Interface
-	teamID string
+type resultObjectCmd struct {
+	client  coreo.Interface
+	teamID  string
 	cloudID string
-	out io.Writer
-	level string
+	out     io.Writer
+	level   string
 }
 
 func newResultObjectCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 	resultObject := &resultObjectCmd{
 		client: client,
-		out: out,
+		out:    out,
 	}
 	cmd := &cobra.Command{
-		Use: content.CmdResultObjectUse,
+		Use:   content.CmdResultObjectUse,
 		Short: content.CmdResultObjectShort,
-		Long: content.CmdResultObjectLong,
+		Long:  content.CmdResultObjectLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if resultObject.client == nil {
 				resultObject.client = coreo.NewClient(
@@ -49,7 +50,6 @@ func newResultObjectCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 			}
 
 			resultObject.teamID = teamID
-
 			return resultObject.run()
 		},
 	}

@@ -15,15 +15,16 @@
 package main
 
 import (
-	"github.com/CloudCoreo/cli/pkg/coreo"
 	"io"
+
 	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
 )
 
-type resultCmd struct{
-	client coreo.Interface
-	teamID string
+type resultCmd struct {
+	client  coreo.Interface
+	teamID  string
 	cloudID string
 }
 
@@ -31,9 +32,9 @@ type resultCmd struct{
 //will return all violations under the user account
 func newResultCmd(out io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
-		Use: content.CmdResultUse,
-		Short: content.CmdResultShort,
-		Long: content.CmdResultLong,
+		Use:               content.CmdResultUse,
+		Short:             content.CmdResultShort,
+		Long:              content.CmdResultLong,
 		PersistentPreRunE: setupCoreoCredentials,
 	}
 
