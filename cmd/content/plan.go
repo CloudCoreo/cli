@@ -78,8 +78,20 @@ const (
 	//CmdFlagPlanIDLong flag
 	CmdFlagPlanIDLong = "plan-id"
 
+	//CmdFlagPlanIDLong flag
+	CmdFlagPlanConfigIDLong = "planconfig-id"
+
 	//CmdFlagPlanIDDescription flag description
 	CmdFlagPlanIDDescription = "Coreo plan id"
+
+	//CmdFlagPlanConfigIDDescription flag description
+	CmdFlagPlanConfigIDDescription = "Coreo plan config id"
+
+	//CmdFlagBlockedLong flag
+	CmdFlagBlockedLong = "block"
+
+	//CmdFlagBlockedDescription flag description
+	CmdFlagBlockedDescription = "Block execution till it's completely."
 
 	//CmdFlagBranchLong flag
 	CmdFlagBranchLong = "branch"
@@ -103,13 +115,7 @@ const (
 	CmdFlagIntervalLong = "interval"
 
 	//CmdFlagIntervalDescription flag description
-	CmdFlagIntervalDescription = "Refresh rate value with any increment in mintues (between 1 and 525547)"
-
-	//CmdFlagJSONFileLong JSON file flag
-	CmdFlagJSONFileLong = "file"
-
-	//CmdFlagJSONFileShort JSON file flag
-	CmdFlagJSONFileShort = "f"
+	CmdFlagIntervalDescription = "Refresh rate value with any increment in Minutes (between 1 and 525547)"
 
 	//CmdFlagJSONFileDescription JSON file description
 	CmdFlagJSONFileDescription = "Plan config JSON file"

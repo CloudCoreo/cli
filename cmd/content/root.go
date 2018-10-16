@@ -54,6 +54,9 @@ const (
 	//ErrorGitSubmoduleFailed error
 	ErrorGitSubmoduleFailed = "git submodule add failed with:\n%s\n"
 
+	//ErrorRepoNameFailed error
+	ErrorRepoNameFailed = "Failed to get repo name from giturl."
+
 	//ErrorGitRepoURLMissing error
 	ErrorGitRepoURLMissing = "A SSH git repo url is required: -g\n"
 
@@ -62,6 +65,9 @@ const (
 
 	//ErrorNameMissing error
 	ErrorNameMissing = "Name is required for this command. Use flag --name\n"
+
+	//ErrorStackNameExist error
+	ErrorStackNameExist = "Stack with name %s already exists. Enter new stack name using flag --name\n"
 
 	//ErrorKeyMissing error
 	ErrorKeyMissing = "Key is required for this command. Use flag --key\n"
@@ -111,17 +117,32 @@ const (
 	//CmdFlagNameShort cmd
 	CmdFlagNameShort = "n"
 
+	//CmdFlagDescriptionLong cmd
+	CmdFlagDescriptionLong = "description"
+
+	//CmdFlagDescriptionShort cmd
+	CmdFlagDescriptionShort = "d"
+
 	//CmdFlagNameDescription cmd
 	CmdFlagNameDescription = "Name flag"
 
 	//CmdFlagServerLong cmd
-	CmdFlagServerLong = "add-server-directories"
+	CmdFlagServerLong = "add-server-content"
 
 	//CmdFlagServerShort cmd
 	CmdFlagServerShort = "s"
 
+	//CmdFlagAuditLong cmd
+	CmdFlagAuditLong = "add-audit-content"
+
+	//CmdFlagAuditShort cmd
+	CmdFlagAuditShort = "a"
+
 	//CmdFlagServerDescription cmd
-	CmdFlagServerDescription = "Create server files"
+	CmdFlagServerDescription = "Create server content"
+
+	//CmdFlagAuditDescription cmd
+	CmdFlagAuditDescription = "Create audit content"
 
 	//CmdFlagKeyLong cmd
 	CmdFlagKeyLong = "key"
@@ -171,6 +192,12 @@ const (
 	//CmdFlagVerboseDescription verbose flag description
 	CmdFlagVerboseDescription = "Enable verbose output"
 
+	//CmdFlagFileLong JSON file flag
+	CmdFlagFileLong = "file"
+
+	//CmdFlagFileShort JSON file flag
+	CmdFlagFileShort = "f"
+
 	//CmdFlagConfigLong config flag long
 	CmdFlagConfigLong = "home"
 
@@ -181,13 +208,22 @@ const (
 	CmdFlagProfileLong = "profile"
 
 	//CmdFlagProfileDescription secret flag description
-	CmdFlagProfileDescription = "Coreo profile to use."
+	CmdFlagProfileDescription = "Coreo profile to use. Overrides $COREO_PROFILE."
 
 	//CmdFlagAPIEndpointLong api endpoint flag long
 	CmdFlagAPIEndpointLong = "endpoint"
 
 	//CmdFlagAPIEndpointDescription api endpoint description
 	CmdFlagAPIEndpointDescription = "Coreo API endpoint. Overrides $CC_API_ENDPOINT."
+
+	//CmdFlagGitSubmoduleBranchShort git submodule branch short
+	CmdFlagGitSubmoduleBranchShort = "b"
+
+	//CmdFlagGitSubmoduleBranchLong git submodule branch long
+	CmdFlagGitSubmoduleBranchLong = "branch"
+
+	//CmdFlagGitSubmoduleBranchDescription git submodule branch description
+	CmdFlagGitSubmoduleBranchDescription = "Specify a branch for git submodule to target"
 
 	//CmdCoreoUse Coreo cmd
 	CmdCoreoUse = "coreo"
@@ -213,14 +249,14 @@ const (
 	//CmdShowUse show cmd
 	CmdShowUse = "show [flags]"
 
+	//CmdRunNowUse run-now cmd
+	CmdRunNowUse = "run-now [flags]"
+
 	//CmdDisableUse disable cmd
 	CmdDisableUse = "disable [flags]"
 
 	//CmdEnableUse enable cmd
 	CmdEnableUse = "enable [flags]"
-
-	//CmdRunUse run cmd
-	CmdRunUse = "run [flags]"
 
 	//CmdInitUse init cmd
 	CmdInitUse = "init [flags]"
@@ -229,10 +265,22 @@ const (
 	CmdGendocUse = "gendoc [flags]"
 
 	//CmdLayerUse layer cmd
-	CmdLayerUse = "layer [flags]"
+	CmdLayerUse = "layers [flags]"
 
 	//CmdExtendsUse extends cmd
 	CmdExtendsUse = "extends [flags]"
+
+	//CmdStartUse start cmd
+	CmdStartUse = "start [flags]"
+
+	//CmdStopUse stop cmd
+	CmdStopUse = "stop [flags]"
+
+	//CmdStatusUse status cmd
+	CmdStatusUse = "status [flags]"
+
+	//CmdResultsUse results cmd
+	CmdResultsUse = "results [flags]"
 
 	//InfoUsingProfile info using profile
 	InfoUsingProfile = "[ OK ] Using Profile %s\n"

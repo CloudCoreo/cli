@@ -18,6 +18,8 @@ import (
 	"context"
 	"fmt"
 
+	"bytes"
+
 	"github.com/CloudCoreo/cli/client/content"
 )
 
@@ -34,21 +36,21 @@ type Team struct {
 
 // GetTeams method to get Teams info array object
 func (c *Client) GetTeams(ctx context.Context) ([]*Team, error) {
-	t := []*Team{}
 	u, err := c.GetUser(ctx)
 
 	if err != nil {
-		return t, err
+		return nil, err
 	}
 
 	teamLink, err := GetLinkByRef(u.Links, "teams")
 	if err != nil {
-		return t, err
+		return nil, err
 	}
 
+	t := []*Team{}
 	err = c.Do(ctx, "GET", teamLink.Href, nil, &t)
 	if err != nil {
-		return t, err
+		return nil, err
 	}
 
 	return t, nil
@@ -56,12 +58,12 @@ func (c *Client) GetTeams(ctx context.Context) ([]*Team, error) {
 
 // GetTeamByID method to get Team info object by team ID
 func (c *Client) GetTeamByID(ctx context.Context, teamID string) (*Team, error) {
-	team := &Team{}
 	teams, err := c.GetTeams(ctx)
 	if err != nil {
-		return team, err
+		return nil, err
 	}
 
+	team := &Team{}
 	for _, t := range teams {
 		if t.ID == teamID {
 			team = t
@@ -71,6 +73,33 @@ func (c *Client) GetTeamByID(ctx context.Context, teamID string) (*Team, error) 
 
 	if team.ID == "" {
 		return nil, NewError(fmt.Sprintf(content.ErrorNoTeamWithIDFound, teamID))
+	}
+
+	return team, nil
+}
+
+// CreateTeam method to create a new team
+func (c *Client) CreateTeam(ctx context.Context, teamName, teamDescription string) (*Team, error) {
+
+	u, err := c.GetUser(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	teamLink, err := GetLinkByRef(u.Links, "teams")
+	if err != nil {
+		return nil, err
+	}
+
+	teamPayLoad := fmt.Sprintf(`{"teamName":"%s","teamDescription":"%s"}`, teamName, teamDescription)
+
+	var jsonStr = []byte(teamPayLoad)
+
+	team := &Team{}
+	err = c.Do(ctx, "POST", teamLink.Href, bytes.NewBuffer(jsonStr), &team)
+	if err != nil {
+		return nil, err
 	}
 
 	return team, nil

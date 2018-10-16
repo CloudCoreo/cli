@@ -197,7 +197,7 @@ func TestCreateTokenFailedToParseTokenLink(t *testing.T) {
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	_, err := client.CreateToken(context.Background(), "tokenName", "tokenDescription")
 	assert.NotNil(t, err, "CreateToken should return error.")
-	assert.Equal(t, "Resource for given ID not found.", err.Error())
+	assert.Equal(t, "resource for given ID not found", err.Error())
 }
 
 func TestCreateTokenFailedToCreateToken(t *testing.T) {

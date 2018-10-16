@@ -19,6 +19,8 @@ import (
 	"os"
 	"os/exec"
 
+	"strings"
+
 	"github.com/CloudCoreo/cli/cmd/content"
 )
 
@@ -35,7 +37,7 @@ func CheckGitInstall() error {
 }
 
 // CreateGitSubmodule create composite git submodule
-func CreateGitSubmodule(directory, gitRepoURL string) error {
+func CreateGitSubmodule(directory, gitRepoURL string, branchName string) error {
 
 	fmt.Printf(content.InfoCreatingGitSubmodule, gitRepoURL, directory)
 	if directory == "" {
@@ -56,10 +58,20 @@ func CreateGitSubmodule(directory, gitRepoURL string) error {
 		return fmt.Errorf(content.ErrorGitInitNotRan)
 	}
 
-	output, err := exec.Command("git", "submodule", "add", "-f", gitRepoURL, "extends").CombinedOutput()
+	output, err := exec.Command("git", "submodule", "add", "-b", branchName, "-f", gitRepoURL, "extends").CombinedOutput()
 	if err != nil {
 		return fmt.Errorf(content.ErrorGitSubmoduleFailed, output)
 	}
 
 	return nil
+}
+
+//GetRepoNameFromGitURL get repo name from gitURL
+func GetRepoNameFromGitURL(gitURL string) string {
+	repoName, err := exec.Command("basename", gitURL, ".git").CombinedOutput()
+	if err != nil {
+		return "coreo-composite"
+	}
+
+	return strings.TrimSpace(string(repoName))
 }

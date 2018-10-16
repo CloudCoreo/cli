@@ -33,6 +33,7 @@ func newTeamCmd(out io.Writer) *cobra.Command {
 
 	cmd.AddCommand(newTeamListCmd(nil, out))
 	cmd.AddCommand(newTeamShowCmd(nil, out))
+	cmd.AddCommand(newTeamCreateCmd(nil, out))
 
 	return cmd
 }

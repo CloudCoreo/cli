@@ -77,6 +77,47 @@ const teamJSONPayload = `[{
 		"id": "teamID"
 	}]`
 
+const singleTeamJSONPayload = `{
+		"teamName": "gitUser-default",
+			"ownerId": "userID",
+			"teamIcon": "periodic-bg-5.png",
+			"teamDescription": null,
+			"default": true,
+			"links": [
+		{
+		"ref": "self",
+		"method": "GET",
+		"href": "https://app.cloudcoreo.com/api/teams/teamID"
+		},
+		{
+		"ref": "owner",
+		"method": "GET",
+		"href": "https://app.cloudcoreo.com/api/users/userID"
+		},
+		{
+		"ref": "composites",
+		"method": "GET",
+		"href": "https://app.cloudcoreo.com/api/teams/teamID/composites"
+		},
+		{
+		"ref": "users",
+		"method": "GET",
+		"href": "https://app.cloudcoreo.com/api/teams/teamID/users"
+		},
+		{
+		"ref": "gitKeys",
+		"method": "GET",
+		"href": "https://app.cloudcoreo.com/api/teams/teamID/gitkeys"
+		},
+		{
+		"ref": "cloudAccounts",
+		"method": "GET",
+		"href": "https://app.cloudcoreo.com/api/teams/teamID/cloudaccounts"
+		}
+	],
+		"id": "teamID"
+	}`
+
 func TestGetTeamsSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(teamJSONPayload).WithStatus(http.StatusOK)
@@ -159,4 +200,16 @@ func TestGetTeamByIDFailureTeamIDNotFound(t *testing.T) {
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	_, err := client.GetTeamByID(context.Background(), "583bc8dbca5e631017ed46")
 	assert.NotNil(t, err, "GetTeams should return error.")
+}
+
+func TestCreateTeamSuccess(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/api/users/userID/teams").WithMethod("POST").WithBody(singleTeamJSONPayload).WithStatus(http.StatusOK)
+
+	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.CreateTeam(context.Background(), "TestName", "TestDescription")
+	assert.Nil(t, err, "CreateTeam shouldn't return error.")
 }
