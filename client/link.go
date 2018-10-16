@@ -35,7 +35,7 @@ func GetLinkByRef(links []Link, ref string) (Link, error) {
 	}
 
 	if link.Href == "" {
-		return link, fmt.Errorf("Resource for given ID not found.")
+		return link, fmt.Errorf("resource for given ID not found")
 	}
 	return link, nil
 }

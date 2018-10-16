@@ -72,7 +72,7 @@ func TestResultObjectCmd(t *testing.T) {
 			Info:  info,
 			TInfo: tInfo,
 			CInfo: cInfo,
-			RunId: runId,
+			RunID: runId,
 		}
 	}
 
