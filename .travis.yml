@@ -4,7 +4,7 @@ go:
 gobuild_args: -ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT"
 install:
   - go get github.com/mattn/goveralls
-  - go get github.com/golang/lint/golint
+  - go get golang.org/x/lint/golint
 script:
   - go vet $(go list ./... | grep -v vendor)
   - $HOME/gopath/bin/goveralls -service=travis-ci

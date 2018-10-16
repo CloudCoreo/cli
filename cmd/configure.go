@@ -94,7 +94,9 @@ func (t *configureCmd) run() error {
 	util.UpdateConfig(teamIDKey, userTeamID)
 
 	// save config
-	util.SaveViperConfig()
+	if err := util.SaveViperConfig(); err != nil {
+		println("Unable to save config")
+	}
 	return nil
 }
 

@@ -1,10 +1,9 @@
 package client
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
-
-	"fmt"
 
 	"github.com/jharlap/httpstub"
 	"github.com/stretchr/testify/assert"
@@ -144,7 +143,7 @@ func TestGetCloudAccountsFailureInvalidUserResponse(t *testing.T) {
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	_, err := client.GetCloudAccounts(context.Background(), "teamID")
 	assert.NotNil(t, err, "GetCloudAccounts should return error.")
-	assert.Equal(t, "Resource for given ID not found.", err.Error())
+	assert.Equal(t, "resource for given ID not found", err.Error())
 }
 
 func TestGetCloudAccountsFailureInvalidTeamResponse(t *testing.T) {
@@ -183,7 +182,7 @@ func TestGetCloudAccountsFailureMissingCloudAccountsLink(t *testing.T) {
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	_, err := client.GetCloudAccounts(context.Background(), "teamID")
 	assert.NotNil(t, err, "GetCloudAccounts should return error.")
-	assert.Equal(t, "Resource for given ID not found.", err.Error())
+	assert.Equal(t, "resource for given ID not found", err.Error())
 }
 
 func TestGetCloudAccountsFailedNoCloudAccountsFound(t *testing.T) {
@@ -298,7 +297,7 @@ func TestCreateCloudAccountsFailureMissingCloudAccountsLink(t *testing.T) {
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	_, err := client.CreateCloudAccount(context.Background(), "teamID", "accessKeyID", "secretAccessKey", "cloudName")
 	assert.NotNil(t, err, "CreateCloudAccount should return error.")
-	assert.Equal(t, "Resource for given ID not found.", err.Error())
+	assert.Equal(t, "resource for given ID not found", err.Error())
 }
 
 func TestCreateCloudAccountFailureCloudAccountNotCreated(t *testing.T) {
@@ -379,7 +378,7 @@ func TestDeleteCloudAccountByIDFailureMissingCloudAccountsLink(t *testing.T) {
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	err := client.DeleteCloudAccountByID(context.Background(), "teamID", "cloudAccountID")
 	assert.NotNil(t, err, "DeleteCloudAccountByID should return error.")
-	assert.Equal(t, "Resource for given ID not found.", err.Error())
+	assert.Equal(t, "resource for given ID not found", err.Error())
 }
 
 func TestDeleteCloudAccountByIDAccountFailureBadRequest(t *testing.T) {

@@ -66,23 +66,23 @@ func TestTeamListCmd(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	for _, tt := range tests {
-		frc := &fakeReleaseClient{teams: tt.resp}
-		if tt.err {
+	for _, test := range tests {
+		frc := &fakeReleaseClient{teams: test.resp}
+		if test.err {
 			frc.err = errors.New("Error")
 		}
 
 		cmd := newTeamListCmd(frc, &buf)
-		cmd.ParseFlags(tt.flags)
-		err := cmd.RunE(cmd, tt.args)
+		cmd.ParseFlags(test.flags)
+		err := cmd.RunE(cmd, test.args)
 
-		if (err != nil) != tt.err {
-			t.Errorf("%q. expected error, got '%v'", tt.desc, err)
+		if (err != nil) != test.err {
+			t.Errorf("%q. expected error, got '%v'", test.desc, err)
 		}
 
-		re := regexp.MustCompile(tt.xout)
+		re := regexp.MustCompile(test.xout)
 		if !re.Match(buf.Bytes()) {
-			t.Fatalf("%q\n\t%s:\nexpected\n\t%q\nactual\n\t%q", tt.cmds, tt.desc, tt.xout, buf.String())
+			t.Fatalf("%q\n\t%s:\nexpected\n\t%q\nactual\n\t%q", test.cmds, test.desc, test.xout, buf.String())
 		}
 		buf.Reset()
 	}

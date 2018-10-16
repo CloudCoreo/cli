@@ -33,29 +33,6 @@ type Interface interface {
 	CreateCloudAccount(teamID, resourceKey, resourceSecret, resourceName string) (*client.CloudAccount, error)
 	DeleteCloudAccountByID(teamID, cloudID string) error
 
-	ListGitKeys(teamID string) ([]*client.GitKey, error)
-	ShowGitKeyByID(teamID, gitKeyID string) (*client.GitKey, error)
-	CreateGitKey(teamID, resourceSecret, resourceName string) (*client.GitKey, error)
-	DeleteGitKeyByID(teamID, gitKeyID string) error
-
-	ListComposites(teamID string) ([]*client.Composite, error)
-	ShowCompositeByID(teamID, compositeID string) (*client.Composite, error)
-	CreateComposite(teamID, gitRepoURL, name, gitKeyId string) (*client.Composite, error)
-	DeleteCompositeByID(teamID, compositeID string) error
-
-	ListPlans(teamID, compositeID string) ([]*client.Plan, error)
-	ShowPlanByID(teamID, compositeID, planID string) (*client.Plan, error)
-	EnablePlanByID(teamID, compositeID, planID string) (*client.Plan, error)
-	DisablePlanByID(teamID, compositeID, planID string) (*client.Plan, error)
-	DeletePlanByID(teamID, compositeID, planID string) error
-	InitPlan(branch, name, region, teamID, cloudID, compositeID, revision string, interval int) (*client.PlanConfig, error)
-	CreatePlan(planConfigJSON []byte, planID, planConfigID string) (*client.Plan, error)
-	GetPlanPanel(teamID, compositeID, planID string) (*client.Panel, error)
-	RunNowPlanByID(teamID, compositeID, planID string, block bool) (*client.Plan, error)
-
-	CreateDevTime(teamID, context, task string) (*client.DevTime, error)
-	GetDevTimeResults(teamID, devTimeID string) (*client.DevTimeResults, error)
-	GetDevTimeStatus(teamID, devTimeID string) (*client.DevTimeStatus, error)
-	StartDevTime(teamID, devTimeID string) error
-	StopDevTime(teamID, devTimeID string) error
+	ShowResultObject(teamID, cloudID, level string) ([]* client.ResultObject, error)
+	ShowResultRule(teamID, cloudID, level string) ([]* client.ResultRule, error)
 }
