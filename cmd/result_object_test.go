@@ -2,9 +2,10 @@ package main
 
 import (
 	"bytes"
+	"testing"
+
 	"github.com/CloudCoreo/cli/client"
 	"github.com/pkg/errors"
-	"testing"
 )
 
 const kmsKeyRotatesObjectOutput = `[
@@ -65,10 +66,10 @@ const iamInactiveKeyNoRotationObjectOutput = `[
 
 func TestResultObjectCmd(t *testing.T) {
 	mockObject := func(id string, info client.Info,
-		tInfo client.TeamInfo, cInfo client.CloudAccountInfo, runId string) *client.ResultObject{
+		tInfo client.TeamInfo, cInfo client.CloudAccountInfo, runId string) *client.ResultObject {
 		return &client.ResultObject{
-			ID: id,
-			Info: info,
+			ID:    id,
+			Info:  info,
 			TInfo: tInfo,
 			CInfo: cInfo,
 			RunId: runId,
@@ -86,62 +87,62 @@ func TestResultObjectCmd(t *testing.T) {
 		xout  string
 	}{
 		{
-			cmds: "coreo result object",
-			desc: "Show violating objects",
+			cmds:  "coreo result object",
+			desc:  "Show violating objects",
 			flags: []string{},
 			resp: []*client.ResultObject{
 				mockObject(
 					"a7288f05-157a-4043-ab1a-f55709457807",
 					client.Info{
 						SuggestedAction: "It is recommended that CMK key rotation be enabled.",
-						Link: "http://kb.cloudcoreo.com/mydoc_kms-key-rotates.html",
-						Description: "AWS Key Management Service (KMS) allows customers to rotate the backing key which is key material stored within the KMS which is tied to the key ID of the Customer Created customer master key (CMK). It is the backing key that is used to perform cryptographic operations such as encryption and decryption. Automated key rotation currently retains all prior backing keys so that decryption of encrypted data can take place transparently.",
-						DisplayName: "Verify rotation for customer created CMKs is enabled",
-						Level: "Medium",
-						Service: "kms",
-						Name: "kms-key-rotates",
-						Region: "us-east-1",
+						Link:            "http://kb.cloudcoreo.com/mydoc_kms-key-rotates.html",
+						Description:     "AWS Key Management Service (KMS) allows customers to rotate the backing key which is key material stored within the KMS which is tied to the key ID of the Customer Created customer master key (CMK). It is the backing key that is used to perform cryptographic operations such as encryption and decryption. Automated key rotation currently retains all prior backing keys so that decryption of encrypted data can take place transparently.",
+						DisplayName:     "Verify rotation for customer created CMKs is enabled",
+						Level:           "Medium",
+						Service:         "kms",
+						Name:            "kms-key-rotates",
+						Region:          "us-east-1",
 						IncludeViolationsInCount: true,
-						TimeStamp: "2018-10-11T17:21:55.111+00:00",
+						TimeStamp:                "2018-10-11T17:21:55.111+00:00",
 					},
 					client.TeamInfo{
 						Name: "zechen2",
-						ID: "5bb6a4956365930011a41a0b",
+						ID:   "5bb6a4956365930011a41a0b",
 					},
 					client.CloudAccountInfo{
 						Name: "new-test",
-						ID: "530342348278",
+						ID:   "530342348278",
 					},
 					"1050436168129818625"),
 			},
 			xout: kmsKeyRotatesObjectOutput,
 		},
 		{
-			cmds: "coreo result object",
-			desc: "Show violating objects",
+			cmds:  "coreo result object",
+			desc:  "Show violating objects",
 			flags: []string{},
 			resp: []*client.ResultObject{
 				mockObject(
 					"coreo-team-5b6c76cc2bc8452fe4586bce",
 					client.Info{
 						SuggestedAction: "If you regularly use the AWS access keys, we recommend that you also regularly rotate or delete them.",
-						Link: "http://kb.cloudcoreo.com/mydoc_iam-inactive-key-no-rotation.html",
-						Description: "User has inactive keys that have not been rotated in the last 90 days.",
-						DisplayName: "User Has Access Keys Inactive and Un-rotated",
-						Level: "Medium",
-						Service: "iam",
-						Name: "iam-inactive-key-no-rotation",
-						Region:"global",
+						Link:            "http://kb.cloudcoreo.com/mydoc_iam-inactive-key-no-rotation.html",
+						Description:     "User has inactive keys that have not been rotated in the last 90 days.",
+						DisplayName:     "User Has Access Keys Inactive and Un-rotated",
+						Level:           "Medium",
+						Service:         "iam",
+						Name:            "iam-inactive-key-no-rotation",
+						Region:          "global",
 						IncludeViolationsInCount: true,
-						TimeStamp: "2018-10-11T17:21:54.448+00:00",
+						TimeStamp:                "2018-10-11T17:21:54.448+00:00",
 					},
 					client.TeamInfo{
 						Name: "zechen2",
-						ID: "5bb6a4956365930011a41a0b",
+						ID:   "5bb6a4956365930011a41a0b",
 					},
 					client.CloudAccountInfo{
 						Name: "new-test",
-						ID: "530342348278",
+						ID:   "530342348278",
 					},
 					"1050436168129818625"),
 			},
@@ -168,11 +169,6 @@ func TestResultObjectCmd(t *testing.T) {
 			t.Fatalf("%q\n\t%s:\nexpected\n\t%q\nactual\n\t%q", test.cmds, test.desc, test.xout, buf.String())
 		}
 
-		/*
-		re := regexp.MustCompile(test.xout)
-		if !re.Match(buf.Bytes()) {
-			t.Fatalf("%q\n\t%s:\nexpected\n\t%q\nactual\n\t%q", test.cmds, test.desc, test.xout, buf.String())
-		}*/
 		buf.Reset()
 	}
 }

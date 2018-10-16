@@ -2,9 +2,10 @@ package main
 
 import (
 	"bytes"
+	"testing"
+
 	"github.com/CloudCoreo/cli/client"
 	"github.com/pkg/errors"
-	"testing"
 )
 
 const iamInactiveKeyNoRotationRuleOutput = `[
@@ -75,10 +76,10 @@ func TestResultRuleCmd(t *testing.T) {
 	mockRule := func(id string, info client.Info,
 		tInfo []client.TeamInfo, cInfo []client.CloudAccountInfo, object int) *client.ResultRule {
 		return &client.ResultRule{
-			ID: id,
-			Info: info,
-			TInfo: tInfo,
-			CInfo: cInfo,
+			ID:     id,
+			Info:   info,
+			TInfo:  tInfo,
+			CInfo:  cInfo,
 			Object: object,
 		}
 	}
@@ -94,34 +95,34 @@ func TestResultRuleCmd(t *testing.T) {
 		xout  string
 	}{
 		{
-			cmds: "coreo result object",
-			desc: "Show violating objects",
+			cmds:  "coreo result object",
+			desc:  "Show violating objects",
 			flags: []string{},
 			resp: []*client.ResultRule{
 				mockRule(
 					"iam-inactive-key-no-rotation",
 					client.Info{
 						SuggestedAction: "If you regularly use the AWS access keys, we recommend that you also regularly rotate or delete them.",
-						Link: "http://kb.cloudcoreo.com/mydoc_iam-inactive-key-no-rotation.html",
-						Description: "User has inactive keys that have not been rotated in the last 90 days.",
-						DisplayName: "User Has Access Keys Inactive and Un-rotated",
-						Level: "Medium",
-						Service: "iam",
-						Name: "iam-inactive-key-no-rotation",
-						Region: "global",
+						Link:            "http://kb.cloudcoreo.com/mydoc_iam-inactive-key-no-rotation.html",
+						Description:     "User has inactive keys that have not been rotated in the last 90 days.",
+						DisplayName:     "User Has Access Keys Inactive and Un-rotated",
+						Level:           "Medium",
+						Service:         "iam",
+						Name:            "iam-inactive-key-no-rotation",
+						Region:          "global",
 						IncludeViolationsInCount: true,
-						TimeStamp: "2018-10-11T17:21:54.448+00:00",
+						TimeStamp:                "2018-10-11T17:21:54.448+00:00",
 					},
 					[]client.TeamInfo{
 						{
 							Name: "zechen2",
-							ID: "5bb6a4956365930011a41a0b",
+							ID:   "5bb6a4956365930011a41a0b",
 						},
 					},
 					[]client.CloudAccountInfo{
 						{
 							Name: "new-test",
-							ID: "530342348278",
+							ID:   "530342348278",
 						},
 					},
 					1528),
@@ -129,43 +130,41 @@ func TestResultRuleCmd(t *testing.T) {
 			xout: iamInactiveKeyNoRotationRuleOutput,
 		},
 		{
-			cmds: "coreo result object",
-			desc: "Show violating objects",
+			cmds:  "coreo result object",
+			desc:  "Show violating objects",
 			flags: []string{},
 			resp: []*client.ResultRule{
 				mockRule(
 					"s3-allusers-write",
 					client.Info{
 						SuggestedAction: "Remove the entry from the bucket permissions that allows everyone to write.",
-						Link: "http://kb.cloudcoreo.com/mydoc_s3-allusers-write.html",
-						Description: "Bucket has permissions (ACL) which let all users write to the bucket.",
-						DisplayName: "All users can write to the affected bucket",
-						Level: "High",
-						Service: "s3",
-						Name: "s3-allusers-write",
-						Region: "us-east-1",
+						Link:            "http://kb.cloudcoreo.com/mydoc_s3-allusers-write.html",
+						Description:     "Bucket has permissions (ACL) which let all users write to the bucket.",
+						DisplayName:     "All users can write to the affected bucket",
+						Level:           "High",
+						Service:         "s3",
+						Name:            "s3-allusers-write",
+						Region:          "us-east-1",
 						IncludeViolationsInCount: true,
-						TimeStamp: "2018-10-11T17:21:55.387+00:00",
+						TimeStamp:                "2018-10-11T17:21:55.387+00:00",
 					},
 					[]client.TeamInfo{
 						{
 							Name: "zechen2",
-							ID: "5bb6a4956365930011a41a0b",
+							ID:   "5bb6a4956365930011a41a0b",
 						},
 					},
 					[]client.CloudAccountInfo{
 						{
 							Name: "new-test",
-							ID: "530342348278",
+							ID:   "530342348278",
 						},
 					},
 					2),
 			},
 			xout: S3AllUserWriteRuleOutput,
 		},
-
 	}
-
 
 	var buf bytes.Buffer
 	for _, test := range tests {
@@ -185,11 +184,6 @@ func TestResultRuleCmd(t *testing.T) {
 			t.Fatalf("%q\n\t%s:\nexpected\n\t%q\nactual\n\t%q", test.cmds, test.desc, test.xout, buf.String())
 		}
 
-		/*
-		re := regexp.MustCompile(test.xout)
-		if !re.Match(buf.Bytes()) {
-			t.Fatalf("%q\n\t%s:\nexpected\n\t%q\nactual\n\t%q", test.cmds, test.desc, test.xout, buf.String())
-		}*/
 		buf.Reset()
 	}
 }
