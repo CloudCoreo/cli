@@ -62,4 +62,8 @@ const (
 
 	//ErrorCloudIDRequired error message
 	ErrorCloudIDRequired = "Cloud Account ID is required for this command. Use flag '--cloud-id'\n"
+
+	CmdFlagLevelLong = "severity"
+
+	CmdFlagLevelDescription = "The severity level for violation"
 )

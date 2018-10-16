@@ -206,7 +206,7 @@ func (c *Client) DeleteCloudAccountByID(teamID, cloudID string) error {
 
 //Show violated rules. If the filter condition (teamID, cloudID in this case) is valid,
 //rules will be filtered. Otherwise return all violation rules under this user account.
-func (c *Client) ShowResultRule(teamID, cloudID string) ([]* client.ResultRule, error) {
+func (c *Client) ShowResultRule(teamID, cloudID, level string) ([]* client.ResultRule, error) {
 	//TODO
 	ctx := NewContext()
 	client, err := c.MakeClient()
@@ -214,7 +214,7 @@ func (c *Client) ShowResultRule(teamID, cloudID string) ([]* client.ResultRule, 
 		return nil, err
 	}
 
-	result, err := client.ShowResultRule(ctx, teamID, cloudID)
+	result, err := client.ShowResultRule(ctx, teamID, cloudID, level)
 	if err != nil {
 		return nil, err
 	}
@@ -224,7 +224,7 @@ func (c *Client) ShowResultRule(teamID, cloudID string) ([]* client.ResultRule, 
 
 //Show violated objects. If the filter condition (teamID, cloudID in this case) is valid,
 //objects will be filtered. Otherwise return all violation objects under this user account.
-func (c *Client) ShowResultObject(teamID, cloudID string) ([]* client.ResultObject, error) {
+func (c *Client) ShowResultObject(teamID, cloudID, level string) ([]* client.ResultObject, error) {
 	//TODO
 	ctx := NewContext()
 	client, err := c.MakeClient()
@@ -232,7 +232,7 @@ func (c *Client) ShowResultObject(teamID, cloudID string) ([]* client.ResultObje
 		return nil, err
 	}
 
-	result, err := client.ShowResultObject(ctx, teamID, cloudID)
+	result, err := client.ShowResultObject(ctx, teamID, cloudID, level)
 	if err != nil {
 		return nil, err
 	}

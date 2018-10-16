@@ -3,7 +3,6 @@ package client
 import (
 	"net/http"
 	"testing"
-
 	"fmt"
 
 	"github.com/jharlap/httpstub"

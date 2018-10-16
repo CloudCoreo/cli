@@ -16,6 +16,7 @@ package client
 import (
 	"context"
 	"github.com/CloudCoreo/cli/cmd/content"
+	"strings"
 )
 
 type CloudAccountInfo struct {
@@ -62,34 +63,20 @@ type ResultObject struct {
 
 //Show violated objects. If the filter condition (teamID, cloudID in this case) is valid,
 //objects will be filtered. Otherwise return all violation objects under this user account.
-func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID string) ([]* ResultObject, error) {
+func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level string) ([]* ResultObject, error) {
 	result, err := c.getAllResultObject(ctx)
 	res := []*ResultObject{}
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
 
-	if teamID != content.None && cloudID != content.None{
-		for i := range result {
-			if result[i].TInfo.ID == teamID && result[i].CInfo.ID == cloudID {
+	targetLevels := strings.Split(strings.Replace(level, " ", "", -1), "|")
+	for i := range result {
+		if (teamID == content.None || result[i].TInfo.ID == teamID) &&
+			(cloudID == content.None || result[i].CInfo.ID == cloudID) &&
+			(level == content.None || hasLevel(targetLevels, result[i].Info.Level)) {
 				res = append(res, result[i])
-			}
 		}
-	} else if teamID != content.None{
-		for i := range result {
-			if result[i].TInfo.ID == teamID{
-				res = append(res, result[i])
-			}
-		}
-
-	} else if cloudID != content.None{
-		for i := range result {
-			if result[i].CInfo.ID == cloudID {
-				res = append(res, result[i])
-			}
-		}
-	} else {
-		res = result
 	}
 
 	if len(res) == 0 {
@@ -100,34 +87,20 @@ func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID string) (
 
 //Show violated rules. If the filter condition (teamID, cloudID in this case) is valid,
 //rules will be filtered. Otherwise return all violation rules under this user account.
-func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID string) ([]* ResultRule, error) {
+func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID, level string) ([]* ResultRule, error) {
 	result, err := c.getAllResultRule(ctx)
 	res := []*ResultRule{}
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
 
-	if teamID != content.None && cloudID != content.None{
-		for i := range result {
-			if hasTeamID(result[i].TInfo, teamID) && hasCloudID(result[i].CInfo, cloudID) {
+	targetLevels := strings.Split(strings.Replace(level, " ", "", -1), ",")
+	for i := range result {
+		if (teamID == content.None || hasTeamID(result[i].TInfo, teamID)) &&
+			(cloudID == content.None || hasCloudID(result[i].CInfo, cloudID)) &&
+			(level == content.None || hasLevel(targetLevels, result[i].Info.Level)) {
 				res = append(res, result[i])
-			}
 		}
-	} else if teamID != content.None{
-		for i := range result {
-			if hasTeamID(result[i].TInfo, teamID){
-			res = append(res, result[i])
-			}
-		}
-
-	} else if cloudID != content.None{
-		for i := range result {
-			if hasCloudID(result[i].CInfo, cloudID) {
-			res = append(res, result[i])
-			}
-		}
-	} else {
-		res = result
 	}
 
 	if len(res) == 0 {
@@ -135,6 +108,7 @@ func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID string) ([]
 	}
 	return res, nil
 }
+
 
 func (c *Client) getAllResultObject(ctx context.Context) ([]* ResultObject, error) {
 	result := []*ResultObject{}
@@ -173,6 +147,15 @@ func hasTeamID(teamInfo []TeamInfo, teamID string) bool {
 func hasCloudID(cloudInfo []CloudAccountInfo, cloudID string) bool {
 	for i := range cloudInfo {
 		if cloudInfo[i].ID == cloudID{
+			return true
+		}
+	}
+	return false
+}
+
+func hasLevel(targetLevel []string, level string) bool {
+	for i := range targetLevel {
+		if targetLevel[i] == level {
 			return true
 		}
 	}

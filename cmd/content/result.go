@@ -22,6 +22,6 @@ const(
 	CmdResultRuleShort = "Show violating rules"
 	CmdResultRuleLong = "Show violating rules"
 	CmdResultObjectUse = "object"
-	CmdResultObjectShort = "Show violating rules"
-	CmdResultObjectLong = "Show violating rules"
+	CmdResultObjectShort = "Show violating objects"
+	CmdResultObjectLong = "Show violating objects"
 )

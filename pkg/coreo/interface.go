@@ -33,6 +33,6 @@ type Interface interface {
 	CreateCloudAccount(teamID, resourceKey, resourceSecret, resourceName string) (*client.CloudAccount, error)
 	DeleteCloudAccountByID(teamID, cloudID string) error
 
-	ShowResultObject(teamID, cloudID string) ([]* client.ResultObject, error)
-	ShowResultRule(teamID, cloudID string) ([]* client.ResultRule, error)
+	ShowResultObject(teamID, cloudID, level string) ([]* client.ResultObject, error)
+	ShowResultRule(teamID, cloudID, level string) ([]* client.ResultRule, error)
 }

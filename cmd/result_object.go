@@ -20,17 +20,21 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
+	"fmt"
 )
 
 type resultObjectCmd struct{
 	client coreo.Interface
 	teamID string
 	cloudID string
+	out io.Writer
+	level string
 }
 
 func newResultObjectCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 	resultObject := &resultObjectCmd{
 		client: client,
+		out: out,
 	}
 	cmd := &cobra.Command{
 		Use: content.CmdResultObjectUse,
@@ -51,11 +55,12 @@ func newResultObjectCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 	}
 	f := cmd.Flags()
 	f.StringVar(&resultObject.cloudID, content.CmdFlagCloudIDLong, content.None, content.CmdFlagCloudIDDescription)
+	f.StringVar(&resultObject.level, content.CmdFlagLevelLong, content.None, content.CmdFlagLevelDescription)
 	return cmd
 }
 
 func (t *resultObjectCmd) run() error {
-	res, err := t.client.ShowResultObject(t.teamID, t.cloudID)
+	res, err := t.client.ShowResultObject(t.teamID, t.cloudID, t.level)
 	if err != nil {
 		return err
 	}
@@ -63,7 +68,7 @@ func (t *resultObjectCmd) run() error {
 	for i := range res {
 		b[i] = res[i]
 	}
-	util.PrettyPrintJSON(b)
+	fmt.Fprintln(t.out, util.PrettyJSON(b))
 
 	return nil
 }
