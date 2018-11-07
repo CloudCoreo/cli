@@ -13,7 +13,7 @@ func TestNewTagListSuccess(t *testing.T) {
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	tag := client.newTagList()
 	assert.Equal(t, "Version", *tag[0].Key)
-	assert.Equal(t, "LastUpdatedTime", *tag[0].Value)
+	assert.Equal(t, "LastUpdatedTime", *tag[1].Key)
 }
 
 func TestNewParameterListSuccess(t *testing.T) {
