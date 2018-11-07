@@ -17,6 +17,8 @@ package main
 import (
 	"io"
 
+	"github.com/CloudCoreo/cli/pkg/command"
+
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/CloudCoreo/cli/pkg/coreo"
@@ -25,12 +27,12 @@ import (
 
 type cloudShowCmd struct {
 	out     io.Writer
-	client  coreo.Interface
+	client  command.Interface
 	teamID  string
 	cloudID string
 }
 
-func newCloudShowCmd(client coreo.Interface, out io.Writer) *cobra.Command {
+func newCloudShowCmd(client command.Interface, out io.Writer) *cobra.Command {
 	cloudShow := &cloudShowCmd{
 		out:    out,
 		client: client,

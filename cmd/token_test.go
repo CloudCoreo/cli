@@ -19,13 +19,13 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/pkg/errors"
 )
 
 func TestTokenListCmd(t *testing.T) {
-	mockToken := func(tokenName, tokenID, tokenDescription string) *client.Token {
-		return &client.Token{
+	mockToken := func(tokenName, tokenID, tokenDescription string) *command.Token {
+		return &command.Token{
 			ID:          tokenID,
 			Description: tokenDescription,
 			Name:        tokenName,
@@ -37,7 +37,7 @@ func TestTokenListCmd(t *testing.T) {
 		desc  string
 		flags []string
 		args  []string
-		resp  []*client.Token
+		resp  []*command.Token
 		json  bool
 		err   bool
 		xout  string
@@ -46,7 +46,7 @@ func TestTokenListCmd(t *testing.T) {
 			cmds:  "coreo team list",
 			desc:  "get list of teams",
 			flags: []string{""},
-			resp: []*client.Token{
+			resp: []*command.Token{
 				mockToken("ID1", "TokenDescription1", "TokenName1"),
 				mockToken("ID2", "TokenDescription2", "TokenName2"),
 			},

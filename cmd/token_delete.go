@@ -21,17 +21,18 @@ import (
 
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
 )
 
 type tokenDeleteCmd struct {
 	out     io.Writer
-	client  coreo.Interface
+	client  command.Interface
 	tokenID string
 }
 
-func newTokenDeleteCmd(client coreo.Interface, out io.Writer) *cobra.Command {
+func newTokenDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
 	tokenDelete := &tokenDeleteCmd{
 		out:    out,
 		client: client,

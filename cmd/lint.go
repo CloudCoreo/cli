@@ -56,7 +56,7 @@ func newLintCmd(out io.Writer) *cobra.Command {
 	return cmd
 }
 
-var errLintNoComposite = errors.New("No composite found for linting (missing Config.yaml)")
+var errLintNoComposite = errors.New("no composite found for linting (missing Config.yaml)")
 
 func (l *lintCmd) run() error {
 	var lowestTolerance int

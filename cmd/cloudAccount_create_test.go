@@ -19,13 +19,13 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/pkg/errors"
 )
 
 func TestCloudAccountCreateCmd(t *testing.T) {
-	mockCloudAccount := func(cloudName, teamID, cloudID string) *client.CloudAccount {
-		return &client.CloudAccount{
+	mockCloudAccount := func(cloudName, teamID, cloudID string) *command.CloudAccount {
+		return &command.CloudAccount{
 			ID:     cloudID,
 			TeamID: teamID,
 			Name:   cloudName,
@@ -37,7 +37,7 @@ func TestCloudAccountCreateCmd(t *testing.T) {
 		desc  string
 		flags []string
 		args  []string
-		resp  []*client.CloudAccount
+		resp  []*command.CloudAccount
 		json  bool
 		err   bool
 		xout  string
@@ -47,10 +47,10 @@ func TestCloudAccountCreateCmd(t *testing.T) {
 			desc: "create cloud command with valid flags",
 			flags: []string{
 				"--name", "CloudName",
-				"--key", "CloudKey",
-				"--secret", "CloudSecret",
+				"--external-id", "CloudExternalId",
+				"--arn", "CloudArn",
 			},
-			resp: []*client.CloudAccount{
+			resp: []*command.CloudAccount{
 				mockCloudAccount("ID1", "Team1", "CloudName1"),
 				mockCloudAccount("ID2", "Team2", "CloudName2"),
 			},

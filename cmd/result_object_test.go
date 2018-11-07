@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/pkg/errors"
 )
 
@@ -65,9 +65,9 @@ const iamInactiveKeyNoRotationObjectOutput = `[
 `
 
 func TestResultObjectCmd(t *testing.T) {
-	mockObject := func(id string, info client.Info,
-		tInfo client.TeamInfo, cInfo client.CloudAccountInfo, runId string) *client.ResultObject {
-		return &client.ResultObject{
+	mockObject := func(id string, info command.Info,
+		tInfo command.TeamInfo, cInfo command.CloudAccountInfo, runId string) *command.ResultObject {
+		return &command.ResultObject{
 			ID:    id,
 			Info:  info,
 			TInfo: tInfo,
@@ -81,7 +81,7 @@ func TestResultObjectCmd(t *testing.T) {
 		desc  string
 		flags []string
 		args  []string
-		resp  []*client.ResultObject
+		resp  []*command.ResultObject
 		json  bool
 		err   bool
 		xout  string
@@ -90,10 +90,10 @@ func TestResultObjectCmd(t *testing.T) {
 			cmds:  "coreo result object",
 			desc:  "Show violating objects",
 			flags: []string{},
-			resp: []*client.ResultObject{
+			resp: []*command.ResultObject{
 				mockObject(
 					"a7288f05-157a-4043-ab1a-f55709457807",
-					client.Info{
+					command.Info{
 						SuggestedAction: "It is recommended that CMK key rotation be enabled.",
 						Link:            "http://kb.cloudcoreo.com/mydoc_kms-key-rotates.html",
 						Description:     "AWS Key Management Service (KMS) allows customers to rotate the backing key which is key material stored within the KMS which is tied to the key ID of the Customer Created customer master key (CMK). It is the backing key that is used to perform cryptographic operations such as encryption and decryption. Automated key rotation currently retains all prior backing keys so that decryption of encrypted data can take place transparently.",
@@ -105,11 +105,11 @@ func TestResultObjectCmd(t *testing.T) {
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:55.111+00:00",
 					},
-					client.TeamInfo{
+					command.TeamInfo{
 						Name: "zechen2",
 						ID:   "5bb6a4956365930011a41a0b",
 					},
-					client.CloudAccountInfo{
+					command.CloudAccountInfo{
 						Name: "new-test",
 						ID:   "530342348278",
 					},
@@ -121,10 +121,10 @@ func TestResultObjectCmd(t *testing.T) {
 			cmds:  "coreo result object",
 			desc:  "Show violating objects",
 			flags: []string{},
-			resp: []*client.ResultObject{
+			resp: []*command.ResultObject{
 				mockObject(
 					"coreo-team-5b6c76cc2bc8452fe4586bce",
-					client.Info{
+					command.Info{
 						SuggestedAction: "If you regularly use the AWS access keys, we recommend that you also regularly rotate or delete them.",
 						Link:            "http://kb.cloudcoreo.com/mydoc_iam-inactive-key-no-rotation.html",
 						Description:     "User has inactive keys that have not been rotated in the last 90 days.",
@@ -136,11 +136,11 @@ func TestResultObjectCmd(t *testing.T) {
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:54.448+00:00",
 					},
-					client.TeamInfo{
+					command.TeamInfo{
 						Name: "zechen2",
 						ID:   "5bb6a4956365930011a41a0b",
 					},
-					client.CloudAccountInfo{
+					command.CloudAccountInfo{
 						Name: "new-test",
 						ID:   "530342348278",
 					},

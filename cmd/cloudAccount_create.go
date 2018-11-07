@@ -19,33 +19,37 @@ import (
 
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
 )
 
 type cloudCreateCmd struct {
 	out            io.Writer
-	client         coreo.Interface
+	client         command.Interface
 	teamID         string
-	cloudID        string
-	resourceKey    string
-	resourceSecret string
 	resourceName   string
+	roleName       string
+	externalID     string
+	roleArn        string
+	awsProfile     string
+	awsProfilePath string
 }
 
-func newCloudCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
+func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	cloudCreate := &cloudCreateCmd{
 		out:    out,
 		client: client,
 	}
 
 	cmd := &cobra.Command{
-		Use:   content.CmdAddUse,
-		Short: content.CmdCloudAddShort,
-		Long:  content.CmdCloudAddLong,
+		Use:     content.CmdAddUse,
+		Short:   content.CmdCloudAddShort,
+		Long:    content.CmdCloudAddLong,
+		Example: content.CmdCloudAddExample,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			if err := util.CheckCloudAddFlags(cloudCreate.resourceName, cloudCreate.resourceKey, cloudCreate.resourceSecret); err != nil {
+			if err := util.CheckCloudAddFlags(cloudCreate.externalID, cloudCreate.roleArn, cloudCreate.roleName); err != nil {
 				return err
 			}
 
@@ -64,16 +68,26 @@ func newCloudCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
 
 	f := cmd.Flags()
 
-	f.StringVarP(&cloudCreate.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
-	f.StringVarP(&cloudCreate.resourceKey, content.CmdFlagKeyLong, content.CmdFlagKeyShort, "", content.CmdFlagKeyDescription)
-	f.StringVarP(&cloudCreate.resourceSecret, content.CmdFlagSecretLong, content.CmdFlagSecretShort, "", content.CmdFlagSecretDescription)
 	f.StringVarP(&cloudCreate.resourceName, content.CmdFlagNameLong, content.CmdFlagNameShort, "", content.CmdFlagNameDescription)
-
+	f.StringVarP(&cloudCreate.roleName, content.CmdFlagRoleName, "", "", content.CmdFlagRoleNameDescription)
+	f.StringVarP(&cloudCreate.roleArn, content.CmdFlagRoleArn, "", "", content.CmdFlagRoleArnDescription)
+	f.StringVarP(&cloudCreate.externalID, content.CmdFlagRoleExternalID, "", "", content.CmdFlagRoleExternalIDDescription)
+	f.StringVarP(&cloudCreate.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
+	f.StringVarP(&cloudCreate.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	return cmd
 }
 
 func (t *cloudCreateCmd) run() error {
-	cloud, err := t.client.CreateCloudAccount(t.teamID, t.resourceKey, t.resourceSecret, t.resourceName)
+	input := &command.CreateCloudAccountInput{
+		TeamID:         t.teamID,
+		CloudName:      t.resourceName,
+		RoleName:       t.roleName,
+		ExternalID:     t.externalID,
+		RoleArn:        t.roleArn,
+		AwsProfile:     t.awsProfile,
+		AwsProfilePath: t.awsProfilePath,
+	}
+	cloud, err := t.client.CreateCloudAccount(input)
 	if err != nil {
 		return err
 	}

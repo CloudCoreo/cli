@@ -19,13 +19,13 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/pkg/errors"
 )
 
 func TestTeamShowCmd(t *testing.T) {
-	mockTeam := func(teamName, teamID, teamDescription string) *client.Team {
-		return &client.Team{
+	mockTeam := func(teamName, teamID, teamDescription string) *command.Team {
+		return &command.Team{
 			ID:              "ID1",
 			TeamDescription: "TeamDescription1",
 			TeamName:        "TeamName1",
@@ -37,7 +37,7 @@ func TestTeamShowCmd(t *testing.T) {
 		desc  string
 		flags []string
 		args  []string
-		resp  []*client.Team
+		resp  []*command.Team
 		json  bool
 		err   bool
 		xout  string
@@ -46,7 +46,7 @@ func TestTeamShowCmd(t *testing.T) {
 			cmds:  "coreo team show",
 			desc:  "get a particular team",
 			flags: []string{""},
-			resp: []*client.Team{
+			resp: []*command.Team{
 				mockTeam("ID1", "TeamDescription1", "TeamName1"),
 				mockTeam("ID2", "TeamDescription2", "TeamName2"),
 			},

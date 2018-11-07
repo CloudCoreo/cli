@@ -19,6 +19,8 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/CloudCoreo/cli/pkg/command"
+
 	"fmt"
 
 	"github.com/CloudCoreo/cli/client/content"
@@ -140,7 +142,7 @@ func (suite *DoTestSuite) TestDo() {
 	defer ts.Close()
 
 	client, _ := MakeClient("APIkey", "secretKey", ts.URL)
-	team := &Team{}
+	team := &command.Team{}
 	err := client.Do(context.Background(), "POST", ts.URL, nil, &team)
 	assert.Nil(suite.T(), err, "Do shouldn't return error.")
 	assert.Equal(suite.T(), "teamID", team.ID)

@@ -48,6 +48,7 @@ var (
 func newRootCmd(out io.Writer) *cobra.Command {
 	cobra.OnInitialize(initConfig)
 	cmd := &cobra.Command{
+		// The first word of Use is the name of this command
 		Use:          content.CmdCoreoUse,
 		Short:        content.CmdCoreoShort,
 		Long:         content.CmdCoreoLong,
@@ -83,6 +84,7 @@ func newRootCmd(out io.Writer) *cobra.Command {
 		newResultCmd(out),
 		// Hidden documentation generator command: 'coreo docs'
 		newDocsCmd(out),
+		newEventCmd(out),
 	)
 
 	return cmd
@@ -117,6 +119,20 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Println("Error reading config file:", viper.ConfigFileUsed())
 	}
+
+	/*
+		if key == content.None && viper.Get("default.api_key").(string) != "" {
+			key = viper.Get("default.api_key").(string)
+		}
+
+		if secret == content.None && viper.Get("default.secret_key").(string) != "" {
+			secret = viper.Get("default.secret_key").(string)
+		}
+
+		if teamID == content.None && viper.Get("default.team_id").(string) != "" {
+			teamID = viper.Get("default.team_id").(string)
+		}
+	*/
 }
 
 func setupCoreoConfig(cmd *cobra.Command, args []string) error {

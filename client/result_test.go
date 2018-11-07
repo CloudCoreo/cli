@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/CloudCoreo/cli/cmd/content"
+
 	"github.com/jharlap/httpstub"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
@@ -65,22 +67,95 @@ const kmsKeyRotatesObjectOutput = `[{
 		"run_id": "1050436168129818625"
 	}]`
 
-func TestGetResultRule(t *testing.T) {
+func TestGetAllResultRuleSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/result/rule").WithMethod("GET").WithBody(iamInactiveKeyNoRotationRuleOutput).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	_, err := client.getAllResultRule(context.Background())
-	assert.Nil(t, err, "GetResultRule shouldn't return error")
+	assert.Nil(t, err, "GetAllResultRule shouldn't return error")
 }
 
-func TestGetResultObject(t *testing.T) {
+func TestGetAllResultObjectSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/result/object").WithMethod("GET").WithBody(kmsKeyRotatesObjectOutput).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	_, err := client.getAllResultObject(context.Background())
+	assert.Nil(t, err, "GetAllResultObject shouldn't return error")
+}
+
+func TestGetAllResultRuleFailureNoViolatedRule(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/result/rule").WithMethod("GET").WithBody("[]").WithStatus(http.StatusOK)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.getAllResultRule(context.Background())
+	assert.NotNil(t, err, "GetAllResultRule should return error.")
+	assert.Equal(t, "No violated rule", err.Error())
+}
+
+func TestGetAllResultRuleFailureBadRequest(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/result/rule").WithMethod("GET").WithBody(iamInactiveKeyNoRotationRuleOutput).WithStatus(http.StatusBadRequest)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.getAllResultRule(context.Background())
+	assert.NotNil(t, err, "GetAllResultRule should return error.")
+}
+
+func TestGetAllResultObjectFailureBadRequest(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/result/object").WithMethod("GET").WithBody(kmsKeyRotatesObjectOutput).WithStatus(http.StatusBadRequest)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.getAllResultObject(context.Background())
+	assert.NotNil(t, err, "GetAllResultObject should return error.")
+}
+
+func TestGetResultRuleSuccess(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/result/rule").WithMethod("GET").WithBody(iamInactiveKeyNoRotationRuleOutput).WithStatus(http.StatusOK)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.ShowResultRule(context.Background(), "5bb6a4956365930011a41a0b", "530342348278", "Medium")
+	assert.Nil(t, err, "GetResultRule shouldn't return error")
+}
+
+func TestShowResultObjectSuccess(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/result/object").WithMethod("GET").WithBody(kmsKeyRotatesObjectOutput).WithStatus(http.StatusOK)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.ShowResultObject(context.Background(), content.None, content.None, content.None)
 	assert.Nil(t, err, "GetResultObject shouldn't return error")
+}
+
+func TestGetResultRuleFailureNoViolatedRule(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/result/rule").WithMethod("GET").WithBody("[]").WithStatus(http.StatusOK)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.ShowResultRule(context.Background(), "5bb6a4956365930011a41a0b", "530342348278", "Medium")
+	assert.NotNil(t, err, "GetResultRule should return error.")
+	assert.Equal(t, "No violated rule", err.Error())
+}
+
+func TestShowResultObjectFailureNoViolatedObject(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/result/object").WithMethod("GET").WithBody("[]").WithStatus(http.StatusOK)
+	defer ts.Close()
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.ShowResultObject(context.Background(), content.None, content.None, content.None)
+	assert.NotNil(t, err, "GetResultObject should return error.")
+	assert.Equal(t, "No violated object", err.Error())
 }

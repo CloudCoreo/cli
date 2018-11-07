@@ -16,6 +16,7 @@ package coreo
 
 import (
 	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/pkg/command"
 )
 
 // Client struct
@@ -43,14 +44,14 @@ func (c *Client) MakeClient() (*client.Client, error) {
 }
 
 //ListTeams get list of teams
-func (c *Client) ListTeams() ([]*client.Team, error) {
+func (c *Client) ListTeams() ([]*command.Team, error) {
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	teams, err := client.GetTeams(ctx)
+	teams, err := clt.GetTeams(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -59,14 +60,14 @@ func (c *Client) ListTeams() ([]*client.Team, error) {
 }
 
 //ShowTeamByID show team with ID
-func (c *Client) ShowTeamByID(teamID string) (*client.Team, error) {
+func (c *Client) ShowTeamByID(teamID string) (*command.Team, error) {
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	team, err := client.GetTeamByID(ctx, teamID)
+	team, err := clt.GetTeamByID(ctx, teamID)
 	if err != nil {
 		return nil, err
 	}
@@ -75,14 +76,14 @@ func (c *Client) ShowTeamByID(teamID string) (*client.Team, error) {
 }
 
 //CreateTeam Create a new team
-func (c *Client) CreateTeam(teamName, teamDescription string) (*client.Team, error) {
+func (c *Client) CreateTeam(teamName, teamDescription string) (*command.Team, error) {
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	team, err := client.CreateTeam(ctx, teamName, teamDescription)
+	team, err := clt.CreateTeam(ctx, teamName, teamDescription)
 	if err != nil {
 		return nil, err
 	}
@@ -91,14 +92,14 @@ func (c *Client) CreateTeam(teamName, teamDescription string) (*client.Team, err
 }
 
 //ListTokens get tokens list
-func (c *Client) ListTokens() ([]*client.Token, error) {
+func (c *Client) ListTokens() ([]*command.Token, error) {
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	tokens, err := client.GetTokens(ctx)
+	tokens, err := clt.GetTokens(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -107,14 +108,14 @@ func (c *Client) ListTokens() ([]*client.Token, error) {
 }
 
 //ShowTokenByID show token by ID
-func (c *Client) ShowTokenByID(tokenID string) (*client.Token, error) {
+func (c *Client) ShowTokenByID(tokenID string) (*command.Token, error) {
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	token, err := client.GetTokenByID(ctx, tokenID)
+	token, err := clt.GetTokenByID(ctx, tokenID)
 	if err != nil {
 		return nil, err
 	}
@@ -125,12 +126,12 @@ func (c *Client) ShowTokenByID(tokenID string) (*client.Token, error) {
 //DeleteTokenByID Delete token by ID
 func (c *Client) DeleteTokenByID(tokenID string) error {
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return err
 	}
 
-	err = client.DeleteTokenByID(ctx, tokenID)
+	err = clt.DeleteTokenByID(ctx, tokenID)
 	if err != nil {
 		return err
 	}
@@ -139,14 +140,14 @@ func (c *Client) DeleteTokenByID(tokenID string) error {
 }
 
 //ListCloudAccounts Get list of cloud accounts
-func (c *Client) ListCloudAccounts(teamID string) ([]*client.CloudAccount, error) {
+func (c *Client) ListCloudAccounts(teamID string) ([]*command.CloudAccount, error) {
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	cloudAccounts, err := client.GetCloudAccounts(ctx, teamID)
+	cloudAccounts, err := clt.GetCloudAccounts(ctx, teamID)
 	println("Get cloud accounts ")
 	if err != nil {
 		return nil, err
@@ -156,14 +157,14 @@ func (c *Client) ListCloudAccounts(teamID string) ([]*client.CloudAccount, error
 }
 
 //ShowCloudAccountByID show cloud account by ID
-func (c *Client) ShowCloudAccountByID(teamID, cloudID string) (*client.CloudAccount, error) {
+func (c *Client) ShowCloudAccountByID(teamID, cloudID string) (*command.CloudAccount, error) {
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	cloudAccount, err := client.GetCloudAccountByID(ctx, teamID, cloudID)
+	cloudAccount, err := clt.GetCloudAccountByID(ctx, teamID, cloudID)
 	if err != nil {
 		return nil, err
 	}
@@ -172,14 +173,13 @@ func (c *Client) ShowCloudAccountByID(teamID, cloudID string) (*client.CloudAcco
 }
 
 //CreateCloudAccount Create cloud account
-func (c *Client) CreateCloudAccount(teamID, resourceKey, resourceSecret, resourceName string) (*client.CloudAccount, error) {
+func (c *Client) CreateCloudAccount(input *command.CreateCloudAccountInput) (*command.CloudAccount, error) {
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
-
-	cloudAccount, err := client.CreateCloudAccount(ctx, teamID, resourceKey, resourceSecret, resourceName)
+	cloudAccount, err := clt.CreateCloudAccount(ctx, input)
 	if err != nil {
 		return nil, err
 	}
@@ -191,12 +191,12 @@ func (c *Client) CreateCloudAccount(teamID, resourceKey, resourceSecret, resourc
 //DeleteCloudAccountByID Delete cloud by ID
 func (c *Client) DeleteCloudAccountByID(teamID, cloudID string) error {
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return err
 	}
 
-	err = client.DeleteCloudAccountByID(ctx, teamID, cloudID)
+	err = clt.DeleteCloudAccountByID(ctx, teamID, cloudID)
 	if err != nil {
 		return err
 	}
@@ -206,15 +206,15 @@ func (c *Client) DeleteCloudAccountByID(teamID, cloudID string) error {
 
 //ShowResultRule shows violated rules. If the filter condition (teamID, cloudID in this case) is valid,
 //rules will be filtered. Otherwise return all violation rules under this user account.
-func (c *Client) ShowResultRule(teamID, cloudID, level string) ([]*client.ResultRule, error) {
+func (c *Client) ShowResultRule(teamID, cloudID, level string) ([]*command.ResultRule, error) {
 	//TODO
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	result, err := client.ShowResultRule(ctx, teamID, cloudID, level)
+	result, err := clt.ShowResultRule(ctx, teamID, cloudID, level)
 	if err != nil {
 		return nil, err
 	}
@@ -224,18 +224,27 @@ func (c *Client) ShowResultRule(teamID, cloudID, level string) ([]*client.Result
 
 //ShowResultObject shows violated objects. If the filter condition (teamID, cloudID in this case) is valid,
 //objects will be filtered. Otherwise return all violation objects under this user account.
-func (c *Client) ShowResultObject(teamID, cloudID, level string) ([]*client.ResultObject, error) {
+func (c *Client) ShowResultObject(teamID, cloudID, level string) ([]*command.ResultObject, error) {
 	//TODO
 	ctx := NewContext()
-	client, err := c.MakeClient()
+	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	result, err := client.ShowResultObject(ctx, teamID, cloudID, level)
+	result, err := clt.ShowResultObject(ctx, teamID, cloudID, level)
 	if err != nil {
 		return nil, err
 	}
 
 	return result, nil
+}
+
+func (c *Client) SetupEventStream(input *command.SetupEventStreamInput) error {
+	clt, err := c.MakeClient()
+	if err != nil {
+		return err
+	}
+
+	return clt.SetupEventStream(input)
 }

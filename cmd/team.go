@@ -19,6 +19,7 @@ import (
 
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
 )
@@ -40,10 +41,10 @@ func newTeamCmd(out io.Writer) *cobra.Command {
 
 type teamListCmd struct {
 	out    io.Writer
-	client coreo.Interface
+	client command.Interface
 }
 
-func newTeamListCmd(client coreo.Interface, out io.Writer) *cobra.Command {
+func newTeamListCmd(client command.Interface, out io.Writer) *cobra.Command {
 	teamList := &teamListCmd{
 		out:    out,
 		client: client,

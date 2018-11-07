@@ -18,23 +18,15 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"time"
+
+	"github.com/CloudCoreo/cli/pkg/command"
 
 	"github.com/CloudCoreo/cli/client/content"
 )
 
-// Token struct
-type Token struct {
-	Name         string    `json:"name"`
-	Description  string    `json:"description"`
-	CreationDate time.Time `json:"creationDate"`
-	Links        []Link    `json:"links"`
-	ID           string    `json:"id"`
-}
-
 // GetTokens method for token command
-func (c *Client) GetTokens(ctx context.Context) ([]*Token, error) {
-	tokens := []*Token{}
+func (c *Client) GetTokens(ctx context.Context) ([]*command.Token, error) {
+	tokens := []*command.Token{}
 	u, err := c.GetUser(ctx)
 
 	if err != nil {
@@ -60,14 +52,14 @@ func (c *Client) GetTokens(ctx context.Context) ([]*Token, error) {
 }
 
 // GetTokenByID method for token command
-func (c *Client) GetTokenByID(ctx context.Context, tokenID string) (*Token, error) {
+func (c *Client) GetTokenByID(ctx context.Context, tokenID string) (*command.Token, error) {
 	tokens, err := c.GetTokens(ctx)
 
 	if err != nil {
 		return nil, err
 	}
 
-	token := &Token{}
+	token := &command.Token{}
 
 	for _, t := range tokens {
 		if t.ID == tokenID {
@@ -84,9 +76,9 @@ func (c *Client) GetTokenByID(ctx context.Context, tokenID string) (*Token, erro
 }
 
 // CreateToken method to create a token object
-func (c *Client) CreateToken(ctx context.Context, name, description string) (*Token, error) {
+func (c *Client) CreateToken(ctx context.Context, name, description string) (*command.Token, error) {
 	u, err := c.GetUser(ctx)
-	token := &Token{}
+	token := &command.Token{}
 	if err != nil {
 		return nil, err
 	}

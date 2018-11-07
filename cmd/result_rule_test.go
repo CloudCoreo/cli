@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/CloudCoreo/cli/client"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/pkg/errors"
 )
 
@@ -73,9 +73,9 @@ const S3AllUserWriteRuleOutput = `[
 `
 
 func TestResultRuleCmd(t *testing.T) {
-	mockRule := func(id string, info client.Info,
-		tInfo []client.TeamInfo, cInfo []client.CloudAccountInfo, object int) *client.ResultRule {
-		return &client.ResultRule{
+	mockRule := func(id string, info command.Info,
+		tInfo []command.TeamInfo, cInfo []command.CloudAccountInfo, object int) *command.ResultRule {
+		return &command.ResultRule{
 			ID:     id,
 			Info:   info,
 			TInfo:  tInfo,
@@ -89,7 +89,7 @@ func TestResultRuleCmd(t *testing.T) {
 		desc  string
 		flags []string
 		args  []string
-		resp  []*client.ResultRule
+		resp  []*command.ResultRule
 		json  bool
 		err   bool
 		xout  string
@@ -98,10 +98,10 @@ func TestResultRuleCmd(t *testing.T) {
 			cmds:  "coreo result object",
 			desc:  "Show violating objects",
 			flags: []string{},
-			resp: []*client.ResultRule{
+			resp: []*command.ResultRule{
 				mockRule(
 					"iam-inactive-key-no-rotation",
-					client.Info{
+					command.Info{
 						SuggestedAction: "If you regularly use the AWS access keys, we recommend that you also regularly rotate or delete them.",
 						Link:            "http://kb.cloudcoreo.com/mydoc_iam-inactive-key-no-rotation.html",
 						Description:     "User has inactive keys that have not been rotated in the last 90 days.",
@@ -113,13 +113,13 @@ func TestResultRuleCmd(t *testing.T) {
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:54.448+00:00",
 					},
-					[]client.TeamInfo{
+					[]command.TeamInfo{
 						{
 							Name: "zechen2",
 							ID:   "5bb6a4956365930011a41a0b",
 						},
 					},
-					[]client.CloudAccountInfo{
+					[]command.CloudAccountInfo{
 						{
 							Name: "new-test",
 							ID:   "530342348278",
@@ -133,10 +133,10 @@ func TestResultRuleCmd(t *testing.T) {
 			cmds:  "coreo result object",
 			desc:  "Show violating objects",
 			flags: []string{},
-			resp: []*client.ResultRule{
+			resp: []*command.ResultRule{
 				mockRule(
 					"s3-allusers-write",
-					client.Info{
+					command.Info{
 						SuggestedAction: "Remove the entry from the bucket permissions that allows everyone to write.",
 						Link:            "http://kb.cloudcoreo.com/mydoc_s3-allusers-write.html",
 						Description:     "Bucket has permissions (ACL) which let all users write to the bucket.",
@@ -148,13 +148,13 @@ func TestResultRuleCmd(t *testing.T) {
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:55.387+00:00",
 					},
-					[]client.TeamInfo{
+					[]command.TeamInfo{
 						{
 							Name: "zechen2",
 							ID:   "5bb6a4956365930011a41a0b",
 						},
 					},
-					[]client.CloudAccountInfo{
+					[]command.CloudAccountInfo{
 						{
 							Name: "new-test",
 							ID:   "530342348278",

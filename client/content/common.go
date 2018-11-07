@@ -16,6 +16,9 @@ const (
 	//ErrorFailedToDeleteCloudAccount error
 	ErrorFailedToDeleteCloudAccount = "Failed to delete cloud account with ID %s under team ID %s."
 
+	//ErrorMissingRoleInformation error
+	ErrorMissingRoleInformation = "Adding cloud account falied, you need to provide either rolearn and external id or new role name"
+
 	//ErrorFailedToCreateComposite error
 	ErrorFailedToCreateComposite = "Failed to create composite under team ID %s."
 

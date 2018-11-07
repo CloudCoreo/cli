@@ -18,17 +18,17 @@ import (
 	"io"
 
 	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/spf13/cobra"
 
 	"fmt"
 
 	"github.com/CloudCoreo/cli/cmd/util"
-	"github.com/CloudCoreo/cli/pkg/coreo"
 )
 
 type configureCmd struct {
 	out         io.Writer
-	client      coreo.Interface
+	client      command.Interface
 	teamID      string
 	compositeID string
 }
@@ -40,9 +40,10 @@ func newConfigureCmd(out io.Writer) *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:   content.CmdConfigureUse,
-		Short: content.CmdConfigureShort,
-		Long:  content.CmdConfigureLong,
+		Use:     content.CmdConfigureUse,
+		Short:   content.CmdConfigureShort,
+		Long:    content.CmdConfigureLong,
+		Example: content.CmdConfigureExample,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return configure.run()
 		},
@@ -64,29 +65,15 @@ func (t *configureCmd) run() error {
 	userSecretKey := ""
 	userTeamID := ""
 
-	if key != "None" {
-		userAPIkey = key
-	}
+	// load from config
+	apiKeyValue := util.GetValueFromConfig(apiKey, true)
+	secretKeyValue := util.GetValueFromConfig(secretKey, true)
+	teamIDValue := util.GetValueFromConfig(teamIDKey, false)
 
-	if secret != "None" {
-		userSecretKey = secret
-	}
-
-	if teamID != "None" {
-		userTeamID = teamID
-	}
-
-	if userAPIkey == "" && userSecretKey == "" && userTeamID == "" {
-		// load from config
-		apiKeyValue := util.GetValueFromConfig(apiKey, true)
-		secretKeyValue := util.GetValueFromConfig(secretKey, true)
-		teamIDValue := util.GetValueFromConfig(teamIDKey, false)
-
-		// prompt user for input
-		getValueFromUser(&userAPIkey, fmt.Sprintf(content.CmdConfigurePromptAPIKEY, apiKeyValue))
-		getValueFromUser(&userSecretKey, fmt.Sprintf(content.CmdConfigurePromptSecretKEY, secretKeyValue))
-		getValueFromUser(&userTeamID, fmt.Sprintf(content.CmdConfigurePromptTeamID, teamIDValue))
-	}
+	// prompt user for input
+	getValueFromUser(&userAPIkey, fmt.Sprintf(content.CmdConfigurePromptAPIKEY, apiKeyValue))
+	getValueFromUser(&userSecretKey, fmt.Sprintf(content.CmdConfigurePromptSecretKEY, secretKeyValue))
+	getValueFromUser(&userTeamID, fmt.Sprintf(content.CmdConfigurePromptTeamID, teamIDValue))
 
 	// replace values in config
 	util.UpdateConfig(apiKey, userAPIkey)
