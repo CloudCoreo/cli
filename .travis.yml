@@ -1,6 +1,6 @@
 language: go
 go:
-  - 1.7
+  - 1.10
 gobuild_args: -ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT"
 install:
   - go get github.com/mattn/goveralls
