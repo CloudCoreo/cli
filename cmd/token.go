@@ -19,6 +19,7 @@ import (
 
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
 )
@@ -40,10 +41,10 @@ func newTokenCmd(out io.Writer) *cobra.Command {
 
 type tokenListCmd struct {
 	out    io.Writer
-	client coreo.Interface
+	client command.Interface
 }
 
-func newTokenListCmd(client coreo.Interface, out io.Writer) *cobra.Command {
+func newTokenListCmd(client command.Interface, out io.Writer) *cobra.Command {
 	tokenList := &tokenListCmd{
 		out:    out,
 		client: client,

@@ -19,18 +19,19 @@ import (
 
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
 )
 
 type teamCreateCmd struct {
 	out             io.Writer
-	client          coreo.Interface
+	client          command.Interface
 	teamName        string
 	teamDescription string
 }
 
-func newTeamCreateCmd(client coreo.Interface, out io.Writer) *cobra.Command {
+func newTeamCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	teamCreate := &teamCreateCmd{
 		out:    out,
 		client: client,

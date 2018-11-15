@@ -14,7 +14,9 @@
 
 package client
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Link struct
 type Link struct {

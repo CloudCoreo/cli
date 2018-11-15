@@ -18,8 +18,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/CloudCoreo/cli/cmd/content"
 	"os"
+
+	"github.com/CloudCoreo/cli/cmd/content"
 )
 
 func checkFlag(flag, error string) error {
@@ -55,17 +56,9 @@ func CheckCloudShowOrDeleteFlag(cloudID string, verbose bool) error {
 }
 
 // CheckCloudAddFlags flag check for cloud add command
-func CheckCloudAddFlags(resourceName, resourceKey, resourceSecret string) error {
-	if err := checkFlag(resourceName, content.ErrorNameMissing); err != nil {
-		return err
-	}
-
-	if err := checkFlag(resourceKey, content.ErrorKeyMissing); err != nil {
-		return err
-	}
-
-	if err := checkFlag(resourceSecret, content.ErrorSecretMissing); err != nil {
-		return err
+func CheckCloudAddFlags(externalID, roleArn, roleName string) error {
+	if (externalID == "" || roleArn == "") && roleName == "" {
+		return fmt.Errorf("Please either provide both externalID and roleArn or the name of the new role ")
 	}
 
 	return nil
@@ -83,7 +76,6 @@ func CheckTokenShowOrDeleteFlag(tokenID string, verbose bool) error {
 
 	return nil
 }
-
 
 // CheckLayersFlags flag check for composite layer command
 func CheckLayersFlags(name, gitRepoURL string) error {

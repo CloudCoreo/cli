@@ -81,10 +81,6 @@ func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level st
 			res = append(res, result[i])
 		}
 	}
-
-	if len(res) == 0 {
-		return nil, NewError("No violated object")
-	}
 	return res, nil
 }
 
@@ -97,7 +93,7 @@ func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID, level stri
 		return nil, NewError(err.Error())
 	}
 
-	targetLevels := strings.Split(strings.Replace(level, " ", "", -1), ",")
+	targetLevels := strings.Split(strings.Replace(level, " ", "", -1), "|")
 	for i := range result {
 		if (teamID == content.None || hasTeamID(result[i].TInfo, teamID)) &&
 			(cloudID == content.None || hasCloudID(result[i].CInfo, cloudID)) &&
@@ -105,16 +101,51 @@ func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID, level stri
 			res = append(res, result[i])
 		}
 	}
-
-	if len(res) == 0 {
-		return nil, NewError("No violated rule")
-	}
 	return res, nil
 }
 
+func (c *Client) getResultLinks(ctx context.Context) ([]Link, error) {
+	u, err := c.GetUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	resultLink, err := GetLinkByRef(u.Links, "result")
+	if err != nil {
+		return nil, err
+	}
+
+	link := []Link{}
+	err = c.Do(ctx, "GET", resultLink.Href, nil, &link)
+	if err != nil {
+		return nil, err
+	}
+
+	return link, nil
+}
+
+func (c *Client) getResultLinkByRef(ctx context.Context, ref string) (*Link, error) {
+	links, err := c.getResultLinks(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	link, err := GetLinkByRef(links, ref)
+	if err != nil {
+		return nil, err
+	}
+
+	return &link, err
+}
 func (c *Client) getAllResultObject(ctx context.Context) ([]*ResultObject, error) {
 	result := []*ResultObject{}
-	err := c.Do(ctx, "GET", c.endpoint+"/result/object", nil, &result)
+
+	link, err := c.getResultLinkByRef(ctx, "object")
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, "GET", link.Href, nil, &result)
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
@@ -127,7 +158,13 @@ func (c *Client) getAllResultObject(ctx context.Context) ([]*ResultObject, error
 
 func (c *Client) getAllResultRule(ctx context.Context) ([]*ResultRule, error) {
 	result := []*ResultRule{}
-	err := c.Do(ctx, "GET", c.endpoint+"/result/rule", nil, &result)
+
+	link, err := c.getResultLinkByRef(ctx, "rule")
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, "GET", link.Href, nil, &result)
 	if err != nil {
 		return nil, NewError(err.Error())
 	}

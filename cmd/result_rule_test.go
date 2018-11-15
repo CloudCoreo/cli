@@ -5,34 +5,35 @@ import (
 	"testing"
 
 	"github.com/CloudCoreo/cli/client"
+
 	"github.com/pkg/errors"
 )
 
 const iamInactiveKeyNoRotationRuleOutput = `[
 	{
-		"id": "iam-inactive-key-no-rotation",
+		"id": "fake-id1",
 		"info": {
-			"suggested_action": "If you regularly use the AWS access keys, we recommend that you also regularly rotate or delete them.",
-			"link": "http://kb.cloudcoreo.com/mydoc_iam-inactive-key-no-rotation.html",
-			"description": "User has inactive keys that have not been rotated in the last 90 days.",
-			"display_name": "User Has Access Keys Inactive and Un-rotated",
+			"suggested_action": "fake suggestion",
+			"link": "fake link",
+			"description": "fake description",
+			"display_name": "fake-display-name",
 			"level": "Medium",
 			"service": "iam",
-			"name": "iam-inactive-key-no-rotation",
+			"name": "fake-name",
 			"region": "global",
 			"include_violations_in_count": true,
 			"timestamp": "2018-10-11T17:21:54.448+00:00"
 		},
 		"teams": [
 			{
-				"name": "zechen2",
-				"id": "5bb6a4956365930011a41a0b"
+				"name": "fake-team-name",
+				"id": "fake-team-id"
 			}
 		],
 		"accounts": [
 			{
-				"name": "new-test",
-				"id": "530342348278"
+				"name": "fake-account-name",
+				"id": "fake-account-id"
 			}
 		],
 		"objects": 1528
@@ -42,29 +43,29 @@ const iamInactiveKeyNoRotationRuleOutput = `[
 
 const S3AllUserWriteRuleOutput = `[
 	{
-		"id": "s3-allusers-write",
+		"id": "fake-id2",
 		"info": {
-			"suggested_action": "Remove the entry from the bucket permissions that allows everyone to write.",
-			"link": "http://kb.cloudcoreo.com/mydoc_s3-allusers-write.html",
-			"description": "Bucket has permissions (ACL) which let all users write to the bucket.",
-			"display_name": "All users can write to the affected bucket",
+			"suggested_action": "fake suggestion",
+			"link": "fake link",
+			"description": "fake description",
+			"display_name": "fake-display-name",
 			"level": "High",
 			"service": "s3",
-			"name": "s3-allusers-write",
+			"name": "fake-name",
 			"region": "us-east-1",
 			"include_violations_in_count": true,
 			"timestamp": "2018-10-11T17:21:55.387+00:00"
 		},
 		"teams": [
 			{
-				"name": "zechen2",
-				"id": "5bb6a4956365930011a41a0b"
+				"name": "fake-team-name",
+				"id": "fake-team-id"
 			}
 		],
 		"accounts": [
 			{
-				"name": "new-test",
-				"id": "530342348278"
+				"name": "fake-account-name",
+				"id": "fake-account-id"
 			}
 		],
 		"objects": 2
@@ -100,29 +101,29 @@ func TestResultRuleCmd(t *testing.T) {
 			flags: []string{},
 			resp: []*client.ResultRule{
 				mockRule(
-					"iam-inactive-key-no-rotation",
+					"fake-id1",
 					client.Info{
-						SuggestedAction: "If you regularly use the AWS access keys, we recommend that you also regularly rotate or delete them.",
-						Link:            "http://kb.cloudcoreo.com/mydoc_iam-inactive-key-no-rotation.html",
-						Description:     "User has inactive keys that have not been rotated in the last 90 days.",
-						DisplayName:     "User Has Access Keys Inactive and Un-rotated",
+						SuggestedAction: "fake suggestion",
+						Link:            "fake link",
+						Description:     "fake description",
+						DisplayName:     "fake-display-name",
 						Level:           "Medium",
 						Service:         "iam",
-						Name:            "iam-inactive-key-no-rotation",
+						Name:            "fake-name",
 						Region:          "global",
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:54.448+00:00",
 					},
 					[]client.TeamInfo{
 						{
-							Name: "zechen2",
-							ID:   "5bb6a4956365930011a41a0b",
+							Name: "fake-team-name",
+							ID:   "fake-team-id",
 						},
 					},
 					[]client.CloudAccountInfo{
 						{
-							Name: "new-test",
-							ID:   "530342348278",
+							Name: "fake-account-name",
+							ID:   "fake-account-id",
 						},
 					},
 					1528),
@@ -135,29 +136,29 @@ func TestResultRuleCmd(t *testing.T) {
 			flags: []string{},
 			resp: []*client.ResultRule{
 				mockRule(
-					"s3-allusers-write",
+					"fake-id2",
 					client.Info{
-						SuggestedAction: "Remove the entry from the bucket permissions that allows everyone to write.",
-						Link:            "http://kb.cloudcoreo.com/mydoc_s3-allusers-write.html",
-						Description:     "Bucket has permissions (ACL) which let all users write to the bucket.",
-						DisplayName:     "All users can write to the affected bucket",
+						SuggestedAction: "fake suggestion",
+						Link:            "fake link",
+						Description:     "fake description",
+						DisplayName:     "fake-display-name",
 						Level:           "High",
 						Service:         "s3",
-						Name:            "s3-allusers-write",
+						Name:            "fake-name",
 						Region:          "us-east-1",
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:55.387+00:00",
 					},
 					[]client.TeamInfo{
 						{
-							Name: "zechen2",
-							ID:   "5bb6a4956365930011a41a0b",
+							Name: "fake-team-name",
+							ID:   "fake-team-id",
 						},
 					},
 					[]client.CloudAccountInfo{
 						{
-							Name: "new-test",
-							ID:   "530342348278",
+							Name: "fake-account-name",
+							ID:   "fake-account-id",
 						},
 					},
 					2),
