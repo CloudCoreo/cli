@@ -14,23 +14,29 @@
 
 package command
 
+import "github.com/CloudCoreo/cli/client"
+
 // Interface for Coreo client for mocking in tests
 type Interface interface {
-	ListTeams() ([]*Team, error)
-	ShowTeamByID(teamID string) (*Team, error)
-	CreateTeam(teamName, teamDescripton string) (*Team, error)
+	ListTeams() ([]*client.Team, error)
+	ShowTeamByID(teamID string) (*client.Team, error)
+	CreateTeam(teamName, teamDescripton string) (*client.Team, error)
 
-	ListTokens() ([]*Token, error)
-	ShowTokenByID(tokenID string) (*Token, error)
+	ListTokens() ([]*client.Token, error)
+	ShowTokenByID(tokenID string) (*client.Token, error)
 	DeleteTokenByID(tokenID string) error
 
-	ListCloudAccounts(teamID string) ([]*CloudAccount, error)
-	ShowCloudAccountByID(teamID, cloudID string) (*CloudAccount, error)
-	CreateCloudAccount(input *CreateCloudAccountInput) (*CloudAccount, error)
+	ListCloudAccounts(teamID string) ([]*client.CloudAccount, error)
+	ShowCloudAccountByID(teamID, cloudID string) (*client.CloudAccount, error)
+	CreateCloudAccount(input *client.CreateCloudAccountInput) (*client.CloudAccount, error)
 	DeleteCloudAccountByID(teamID, cloudID string) error
 
-	ShowResultObject(teamID, cloudID, level string) ([]*ResultObject, error)
-	ShowResultRule(teamID, cloudID, level string) ([]*ResultRule, error)
+	ShowResultObject(teamID, cloudID, level string) ([]*client.ResultObject, error)
+	ShowResultRule(teamID, cloudID, level string) ([]*client.ResultRule, error)
 
+	GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error)
+}
+
+type CloudProvider interface {
 	SetupEventStream(input *SetupEventStreamInput) error
 }

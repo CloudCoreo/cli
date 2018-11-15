@@ -15,26 +15,27 @@
 package main
 
 import (
-	"github.com/CloudCoreo/cli/pkg/command"
+	"github.com/CloudCoreo/cli/client"
 )
 
 type fakeReleaseClient struct {
-	teams         []*command.Team
-	tokens        []*command.Token
-	cloudAccounts []*command.CloudAccount
-	objects       []*command.ResultObject
-	rules         []*command.ResultRule
+	teams         []*client.Team
+	tokens        []*client.Token
+	cloudAccounts []*client.CloudAccount
+	objects       []*client.ResultObject
+	rules         []*client.ResultRule
+	config        client.EventStreamConfig
 	err           error
 }
 
-func (c *fakeReleaseClient) ListTeams() ([]*command.Team, error) {
+func (c *fakeReleaseClient) ListTeams() ([]*client.Team, error) {
 	resp := c.teams
 
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ShowTeamByID(teamID string) (*command.Team, error) {
-	resp := &command.Team{}
+func (c *fakeReleaseClient) ShowTeamByID(teamID string) (*client.Team, error) {
+	resp := &client.Team{}
 	if len(c.teams) > 0 {
 
 		resp = c.teams[0]
@@ -43,8 +44,8 @@ func (c *fakeReleaseClient) ShowTeamByID(teamID string) (*command.Team, error) {
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) CreateTeam(teamName, teamDescription string) (*command.Team, error) {
-	resp := &command.Team{}
+func (c *fakeReleaseClient) CreateTeam(teamName, teamDescription string) (*client.Team, error) {
+	resp := &client.Team{}
 	if len(c.teams) > 0 {
 		resp = c.teams[0]
 	}
@@ -52,14 +53,14 @@ func (c *fakeReleaseClient) CreateTeam(teamName, teamDescription string) (*comma
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ListTokens() ([]*command.Token, error) {
+func (c *fakeReleaseClient) ListTokens() ([]*client.Token, error) {
 	resp := c.tokens
 
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ShowTokenByID(tokenID string) (*command.Token, error) {
-	resp := &command.Token{}
+func (c *fakeReleaseClient) ShowTokenByID(tokenID string) (*client.Token, error) {
+	resp := &client.Token{}
 	if len(c.tokens) > 0 {
 
 		resp = c.tokens[0]
@@ -72,14 +73,14 @@ func (c *fakeReleaseClient) DeleteTokenByID(tokenID string) error {
 	return c.err
 }
 
-func (c *fakeReleaseClient) ListCloudAccounts(teamID string) ([]*command.CloudAccount, error) {
+func (c *fakeReleaseClient) ListCloudAccounts(teamID string) ([]*client.CloudAccount, error) {
 	resp := c.cloudAccounts
 
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ShowCloudAccountByID(teamID, cloudID string) (*command.CloudAccount, error) {
-	resp := &command.CloudAccount{}
+func (c *fakeReleaseClient) ShowCloudAccountByID(teamID, cloudID string) (*client.CloudAccount, error) {
+	resp := &client.CloudAccount{}
 	if len(c.cloudAccounts) > 0 {
 
 		resp = c.cloudAccounts[0]
@@ -88,8 +89,8 @@ func (c *fakeReleaseClient) ShowCloudAccountByID(teamID, cloudID string) (*comma
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) CreateCloudAccount(input *command.CreateCloudAccountInput) (*command.CloudAccount, error) {
-	resp := &command.CloudAccount{}
+func (c *fakeReleaseClient) CreateCloudAccount(input *client.CreateCloudAccountInput) (*client.CloudAccount, error) {
+	resp := &client.CloudAccount{}
 	if len(c.cloudAccounts) > 0 {
 
 		resp = c.cloudAccounts[0]
@@ -102,16 +103,17 @@ func (c *fakeReleaseClient) DeleteCloudAccountByID(teamID, cloudID string) error
 	return c.err
 }
 
-func (c *fakeReleaseClient) ShowResultRule(teamID, cloudID, level string) ([]*command.ResultRule, error) {
+func (c *fakeReleaseClient) ShowResultRule(teamID, cloudID, level string) ([]*client.ResultRule, error) {
 	resp := c.rules
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level string) ([]*command.ResultObject, error) {
+func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level string) ([]*client.ResultObject, error) {
 	resp := c.objects
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) SetupEventStream(input *command.SetupEventStreamInput) error {
-	return c.err
+func (c *fakeReleaseClient) GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error) {
+	resp := c.config
+	return &resp, c.err
 }

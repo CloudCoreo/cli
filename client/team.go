@@ -18,15 +18,24 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/CloudCoreo/cli/pkg/command"
-
 	"bytes"
 
 	"github.com/CloudCoreo/cli/client/content"
 )
 
+// Team for team information
+type Team struct {
+	TeamName        string      `json:"teamName"`
+	OwnerID         string      `json:"ownerId"`
+	TeamIcon        string      `json:"teamIcon"`
+	TeamDescription interface{} `json:"teamDescription"`
+	Default         bool        `json:"default"`
+	Links           []Link      `json:"links"`
+	ID              string      `json:"id"`
+}
+
 // GetTeams method to get Teams info array object
-func (c *Client) GetTeams(ctx context.Context) ([]*command.Team, error) {
+func (c *Client) GetTeams(ctx context.Context) ([]*Team, error) {
 	u, err := c.GetUser(ctx)
 
 	if err != nil {
@@ -38,7 +47,7 @@ func (c *Client) GetTeams(ctx context.Context) ([]*command.Team, error) {
 		return nil, err
 	}
 
-	t := []*command.Team{}
+	t := []*Team{}
 	err = c.Do(ctx, "GET", teamLink.Href, nil, &t)
 	if err != nil {
 		return nil, err
@@ -48,13 +57,13 @@ func (c *Client) GetTeams(ctx context.Context) ([]*command.Team, error) {
 }
 
 // GetTeamByID method to get Team info object by team ID
-func (c *Client) GetTeamByID(ctx context.Context, teamID string) (*command.Team, error) {
+func (c *Client) GetTeamByID(ctx context.Context, teamID string) (*Team, error) {
 	teams, err := c.GetTeams(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	team := &command.Team{}
+	team := &Team{}
 	for _, t := range teams {
 		if t.ID == teamID {
 			team = t
@@ -70,7 +79,7 @@ func (c *Client) GetTeamByID(ctx context.Context, teamID string) (*command.Team,
 }
 
 // CreateTeam method to create a new team
-func (c *Client) CreateTeam(ctx context.Context, teamName, teamDescription string) (*command.Team, error) {
+func (c *Client) CreateTeam(ctx context.Context, teamName, teamDescription string) (*Team, error) {
 
 	u, err := c.GetUser(ctx)
 
@@ -87,7 +96,7 @@ func (c *Client) CreateTeam(ctx context.Context, teamName, teamDescription strin
 
 	var jsonStr = []byte(teamPayLoad)
 
-	team := &command.Team{}
+	team := &Team{}
 	err = c.Do(ctx, "POST", teamLink.Href, bytes.NewBuffer(jsonStr), &team)
 	if err != nil {
 		return nil, err

@@ -17,19 +17,17 @@ package client
 import (
 	"context"
 	"time"
-
-	"github.com/CloudCoreo/cli/pkg/command"
 )
 
 // User struct for api payload
 type User struct {
-	Username        string         `json:"username"`
-	Email           string         `json:"email"`
-	GravatarIconURL string         `json:"gravatarIconUrl"`
-	CreatedAt       time.Time      `json:"createdAt"`
-	DefaultTeamID   string         `json:"defaultTeamId"`
-	Links           []command.Link `json:"links"`
-	ID              string         `json:"id"`
+	Username        string    `json:"username"`
+	Email           string    `json:"email"`
+	GravatarIconURL string    `json:"gravatarIconUrl"`
+	CreatedAt       time.Time `json:"createdAt"`
+	DefaultTeamID   string    `json:"defaultTeamId"`
+	Links           []Link    `json:"links"`
+	ID              string    `json:"id"`
 }
 
 // GetUser method for getting user info command

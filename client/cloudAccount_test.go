@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/CloudCoreo/cli/pkg/command"
-
 	"github.com/jharlap/httpstub"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
@@ -105,11 +103,16 @@ const CloudAccountJSONPayload = `[
 				"ref": "team",
 				"method": "GET",
 				"href": "https://app.cloudcoreo.com/api/teams/teamID"
+			},
+			{
+				"ref": "setup",
+				"method": "GET",
+				"href": "%s/api/cloudaccounts/cloudAccountID/event/setup"
+
 			}
 		],
 		"id": "cloudAccountID"
-	}
-]`
+	}]`
 
 const CloudAccountJSONPayloadMissingSelfData = `[{
 		"teamId": "teamID",
@@ -158,7 +161,7 @@ func TestGetCloudAccountsFailureInvalidTeamResponse(t *testing.T) {
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	_, err := client.GetCloudAccounts(context.Background(), "teamID")
 	assert.NotNil(t, err, "GetCloudAccounts should return error.")
-	assert.Equal(t, "json: cannot unmarshal object into Go value of type []*command.Team", err.Error())
+	assert.Equal(t, "json: cannot unmarshal object into Go value of type []*client.Team", err.Error())
 }
 
 func TestGetCloudAccountsFailureInvalidCloudAccountresponse(t *testing.T) {
@@ -171,7 +174,7 @@ func TestGetCloudAccountsFailureInvalidCloudAccountresponse(t *testing.T) {
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	_, err := client.GetCloudAccounts(context.Background(), "teamID")
 	assert.NotNil(t, err, "GetCloudAccounts should return error.")
-	assert.Equal(t, "json: cannot unmarshal object into Go value of type []*command.CloudAccount", err.Error())
+	assert.Equal(t, "json: cannot unmarshal object into Go value of type []*client.CloudAccount", err.Error())
 }
 
 func TestGetCloudAccountsFailureMissingCloudAccountsLink(t *testing.T) {
@@ -247,7 +250,7 @@ func TestCreateCloudAccountSuccess(t *testing.T) {
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
 
-	link := command.Link{
+	link := Link{
 		Href: ts.URL + "/api/teams/teamID/cloudaccounts",
 	}
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
@@ -269,7 +272,7 @@ func TestCreateCloudAccountFailureBadRequest(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	input := &command.CreateCloudAccountInput{
+	input := &CreateCloudAccountInput{
 		TeamID:          "teamID",
 		AccessKeyID:     "accessKeyID",
 		SecretAccessKey: "secretAccessKey",
@@ -287,7 +290,7 @@ func TestCreateCloudAccountFailedToParseUser(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	input := &command.CreateCloudAccountInput{
+	input := &CreateCloudAccountInput{
 		TeamID:          "teamID",
 		AccessKeyID:     "accessKeyID",
 		SecretAccessKey: "secretAccessKey",
@@ -305,7 +308,7 @@ func TestCreateCloudAccountFailedToParseCloudAccountLink(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	input := &command.CreateCloudAccountInput{
+	input := &CreateCloudAccountInput{
 		TeamID:          "teamID",
 		AccessKeyID:     "accessKeyID",
 		SecretAccessKey: "secretAccessKey",
@@ -313,7 +316,7 @@ func TestCreateCloudAccountFailedToParseCloudAccountLink(t *testing.T) {
 	}
 	_, err := client.CreateCloudAccount(context.Background(), input)
 	assert.NotNil(t, err, "CreateCloudAccount should return error.")
-	assert.Equal(t, "json: cannot unmarshal object into Go value of type []*command.Team", err.Error())
+	assert.Equal(t, "json: cannot unmarshal object into Go value of type []*client.Team", err.Error())
 }
 
 func TestCreateCloudAccountsFailureMissingCloudAccountsLink(t *testing.T) {
@@ -324,7 +327,7 @@ func TestCreateCloudAccountsFailureMissingCloudAccountsLink(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	input := &command.CreateCloudAccountInput{
+	input := &CreateCloudAccountInput{
 		TeamID:          "teamID",
 		AccessKeyID:     "accessKeyID",
 		SecretAccessKey: "secretAccessKey",
@@ -343,7 +346,7 @@ func TestCreateCloudAccountFailureCloudAccountNotCreated(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	input := &command.CreateCloudAccountInput{
+	input := &CreateCloudAccountInput{
 		TeamID:          "teamID",
 		AccessKeyID:     "accessKeyID",
 		SecretAccessKey: "secretAccessKey",
@@ -357,7 +360,7 @@ func TestCreateCloudAccountFailureCloudAccountNotCreated(t *testing.T) {
 func TestDeleteCloudAccountByIDSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -370,7 +373,7 @@ func TestDeleteCloudAccountByIDSuccess(t *testing.T) {
 func TestDeleteCloudAccountByIDFailedToParseUser(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(``).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -383,7 +386,7 @@ func TestDeleteCloudAccountByIDFailedToParseUser(t *testing.T) {
 func TestDeleteCloudAccountByIDFailedToParseLink(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(teamCloudAccountJSONPayloadMissingCloudAccountLink).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -425,7 +428,7 @@ func TestDeleteCloudAccountByIDFailureMissingCloudAccountsLink(t *testing.T) {
 func TestDeleteCloudAccountByIDAccountFailureBadRequest(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusBadRequest)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -438,7 +441,7 @@ func TestDeleteCloudAccountByIDAccountFailureBadRequest(t *testing.T) {
 func TestDeleteCloudAccountByIDFailureInvalidCloudID(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusBadRequest)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()

@@ -19,12 +19,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
-
-	"github.com/CloudCoreo/cli/pkg/command"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -33,8 +30,29 @@ import (
 	"github.com/CloudCoreo/cli/client/content"
 )
 
-const cloudCoreoAccountID = "530342348278"
-const securityAuditPolicyArn = "arn:aws:iam::aws:policy/SecurityAudit"
+// CloudAccount Information
+type CloudAccount struct {
+	TeamID   string `json:"teamId"`
+	Name     string `json:"name"`
+	RoleID   string `json:"roleId"`
+	RoleName string `json:"roleName"`
+	Links    []Link `json:"links"`
+	ID       string `json:"id"`
+}
+
+// CreateCloudAccountInput for function CreateCloudAccount
+type CreateCloudAccountInput struct {
+	TeamID          string
+	AccessKeyID     string
+	SecretAccessKey string
+	CloudName       string
+	RoleName        string
+	ExternalID      string
+	RoleArn         string
+	AwsProfile      string
+	AwsProfilePath  string
+	Policy          string
+}
 
 // CloudPayLoad ...
 type CloudPayLoad struct {
@@ -49,7 +67,7 @@ type CloudPayLoad struct {
 }
 
 type sendCloudCreateRequestInput struct {
-	cloudLink       command.Link
+	cloudLink       Link
 	externalID      string
 	cloudName       string
 	accessKeyID     string
@@ -72,6 +90,7 @@ type createNewRoleInput struct {
 	awsAccount string
 	externalID string
 	roleName   string
+	policy     string
 }
 
 func (c *Client) createAssumeRolePolicyDocument(awsAccount string, externalID string) string {
@@ -95,8 +114,8 @@ func (c *Client) createAssumeRolePolicyDocument(awsAccount string, externalID st
 }
 
 // GetCloudAccounts method for cloud command
-func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]*command.CloudAccount, error) {
-	clouds := []*command.CloudAccount{}
+func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]*CloudAccount, error) {
+	clouds := []*CloudAccount{}
 	teams, err := c.GetTeams(ctx)
 
 	if err != nil {
@@ -126,8 +145,8 @@ func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]*comman
 }
 
 // GetCloudAccountByID method getting cloud account by user ID
-func (c *Client) GetCloudAccountByID(ctx context.Context, teamID, cloudID string) (*command.CloudAccount, error) {
-	cloudAccount := &command.CloudAccount{}
+func (c *Client) GetCloudAccountByID(ctx context.Context, teamID, cloudID string) (*CloudAccount, error) {
+	cloudAccount := &CloudAccount{}
 
 	cloudAccounts, err := c.GetCloudAccounts(ctx, teamID)
 
@@ -158,15 +177,15 @@ func (c *Client) createNewRole(ctx context.Context, input *createNewRoleInput, s
 		return nil, err
 	}
 	roleArn := result.Role.Arn
-	c.attachRolePolicy(svc, securityAuditPolicyArn, input.roleName)
+	c.attachRolePolicy(svc, input.policy, input.roleName)
 	return roleArn, nil
 }
 
-func (c *Client) sendCloudCreateRequest(ctx context.Context, input *sendCloudCreateRequestInput) (*command.CloudAccount, error) {
+func (c *Client) sendCloudCreateRequest(ctx context.Context, input *sendCloudCreateRequestInput) (*CloudAccount, error) {
 	// Connect with webapp to add the new cloud account into team
 	// Do not include space in cloudPayLoad!!! Otherwise the whitespace would be removed at some point and
 	// the authentication would fail!!!
-	cloudAccount := &command.CloudAccount{}
+	cloudAccount := &CloudAccount{}
 	cloudPayLoad := CloudPayLoad{
 		Name:         input.cloudName,
 		Arn:          input.roleArn,
@@ -206,7 +225,7 @@ func (c *Client) checkRolePolicy(roleName, policy string, sess *session.Session)
 	return false, nil
 }
 
-func (c *Client) newSession(input *command.CreateCloudAccountInput) (*session.Session, error) {
+func (c *Client) newSession(input *CreateCloudAccountInput) (*session.Session, error) {
 	var sess *session.Session
 	var err error
 	if input.AwsProfile != "" {
@@ -224,8 +243,8 @@ func (c *Client) newSession(input *command.CreateCloudAccountInput) (*session.Se
 }
 
 // CreateCloudAccount method to create a cloud object
-func (c *Client) CreateCloudAccount(ctx context.Context, input *command.CreateCloudAccountInput) (*command.CloudAccount, error) {
-	var cloudAccount = &command.CloudAccount{}
+func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccountInput) (*CloudAccount, error) {
+	var cloudAccount = &CloudAccount{}
 	teams, err := c.GetTeams(ctx)
 	if err != nil {
 		return nil, err
@@ -251,14 +270,14 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *command.CreateCl
 				externalID = input.ExternalID
 
 				// Check whether SecurityAudit is Enabled
-				roleNames := strings.Split(input.RoleArn, `/`)
-				boolean, err := c.checkRolePolicy(roleNames[len(roleNames)-1], "SecurityAudit", sess)
-				if err != nil {
-					return nil, err
-				}
-				if !boolean {
-					return nil, NewError("SecurityAudit is not enable in role " + *roleArn)
-				}
+				// roleNames := strings.Split(input.RoleArn, `/`)
+				// boolean, err := c.checkRolePolicy(roleNames[len(roleNames)-1], "SecurityAudit", sess)
+				// if err != nil {
+				//	 return nil, err
+				// }
+				// if !boolean {
+				// 	 return nil, NewError("SecurityAudit is not enable in role " + *roleArn)
+				// }
 			} else if input.RoleName != "" {
 				// Create a new role for the user
 				ref, err := GetLinkByRef(team.Links, "defaultid")
@@ -270,6 +289,7 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *command.CreateCl
 					roleName:   input.RoleName,
 					externalID: externalID,
 					awsAccount: defaultid.AccountID,
+					policy:     input.Policy,
 				}
 				roleArn, err = c.createNewRole(ctx, createNewRoleInput, sess)
 
@@ -281,7 +301,7 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *command.CreateCl
 				return nil, NewError(content.ErrorMissingRoleInformation)
 			}
 
-			input := &sendCloudCreateRequestInput{
+			cloudCreateInput := &sendCloudCreateRequestInput{
 				cloudLink:       cloudLink,
 				externalID:      externalID,
 				cloudName:       input.CloudName,
@@ -294,8 +314,11 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *command.CreateCl
 				isDraft:         false,
 				provider:        "AWS",
 			}
-			cloudAccount, err = c.sendCloudCreateRequest(ctx, input)
+			cloudAccount, err = c.sendCloudCreateRequest(ctx, cloudCreateInput)
 			if err != nil {
+				if input.RoleName != "" {
+					c.deleteRole(ctx, sess, input.RoleName, input.Policy)
+				}
 				return nil, err
 			}
 			break
@@ -318,6 +341,27 @@ func (c *Client) createNewAwsRole(awsAccount, externalID, roleName string, svc *
 		return nil, err
 	}
 	return result, nil
+}
+
+func (c *Client) deleteRole(ctx context.Context, sess *session.Session, roleName, policyArn string) {
+	svc := iam.New(sess)
+	detachPolicyInput := &iam.DetachRolePolicyInput{
+		PolicyArn: aws.String(policyArn),
+		RoleName:  aws.String(roleName),
+	}
+	_, err := svc.DetachRolePolicy(detachPolicyInput)
+	if err != nil {
+		fmt.Println("Detach role policy " + policyArn + "for " + roleName + " failed, " + err.Error())
+		return
+	}
+
+	deleteRoleInput := &iam.DeleteRoleInput{
+		RoleName: aws.String(roleName),
+	}
+	_, err = svc.DeleteRole(deleteRoleInput)
+	if err != nil {
+		fmt.Println("Delete role " + roleName + " failed, " + err.Error())
+	}
 }
 
 func (c *Client) attachRolePolicy(svc *iam.IAM, policyArn, roleName string) (*iam.AttachRolePolicyOutput, error) {

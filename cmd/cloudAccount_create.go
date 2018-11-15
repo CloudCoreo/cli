@@ -17,6 +17,8 @@ package main
 import (
 	"io"
 
+	"github.com/CloudCoreo/cli/client"
+
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/CloudCoreo/cli/pkg/command"
@@ -34,6 +36,7 @@ type cloudCreateCmd struct {
 	roleArn        string
 	awsProfile     string
 	awsProfilePath string
+	policy         string
 }
 
 func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -74,11 +77,12 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&cloudCreate.externalID, content.CmdFlagRoleExternalID, "", "", content.CmdFlagRoleExternalIDDescription)
 	f.StringVarP(&cloudCreate.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&cloudCreate.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
+	f.StringVarP(&cloudCreate.policy, content.CmdFlagAwsPolicy, "", content.CmdFlagAwsPolicyDefault, content.CmdFlagAwsPolicyDescription)
 	return cmd
 }
 
 func (t *cloudCreateCmd) run() error {
-	input := &command.CreateCloudAccountInput{
+	input := &client.CreateCloudAccountInput{
 		TeamID:         t.teamID,
 		CloudName:      t.resourceName,
 		RoleName:       t.roleName,
@@ -86,6 +90,7 @@ func (t *cloudCreateCmd) run() error {
 		RoleArn:        t.roleArn,
 		AwsProfile:     t.awsProfile,
 		AwsProfilePath: t.awsProfilePath,
+		Policy:         t.policy,
 	}
 	cloud, err := t.client.CreateCloudAccount(input)
 	if err != nil {

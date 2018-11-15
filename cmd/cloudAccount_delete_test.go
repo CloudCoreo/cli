@@ -19,13 +19,14 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/CloudCoreo/cli/pkg/command"
+	"github.com/CloudCoreo/cli/client"
+
 	"github.com/pkg/errors"
 )
 
 func TestCloudAccountDeleteCmd(t *testing.T) {
-	mockCloudAccount := func(cloudName, teamID, cloudID string) *command.CloudAccount {
-		return &command.CloudAccount{
+	mockCloudAccount := func(cloudName, teamID, cloudID string) *client.CloudAccount {
+		return &client.CloudAccount{
 			ID:     cloudID,
 			TeamID: teamID,
 			Name:   cloudName,
@@ -37,7 +38,7 @@ func TestCloudAccountDeleteCmd(t *testing.T) {
 		desc  string
 		flags []string
 		args  []string
-		resp  []*command.CloudAccount
+		resp  []*client.CloudAccount
 		json  bool
 		err   bool
 		xout  string
@@ -48,7 +49,7 @@ func TestCloudAccountDeleteCmd(t *testing.T) {
 			flags: []string{
 				"--cloud-id", "123123",
 			},
-			resp: []*command.CloudAccount{
+			resp: []*client.CloudAccount{
 				mockCloudAccount("ID1", "Team1", "CloudName1"),
 				mockCloudAccount("ID2", "Team2", "CloudName2"),
 			},

@@ -16,13 +16,18 @@ package client
 
 import (
 	"fmt"
-
-	"github.com/CloudCoreo/cli/pkg/command"
 )
 
+// Link struct
+type Link struct {
+	Ref    string `json:"ref"`
+	Method string `json:"method"`
+	Href   string `json:"href"`
+}
+
 //GetLinkByRef get link object for given property
-func GetLinkByRef(links []command.Link, ref string) (command.Link, error) {
-	link := command.Link{}
+func GetLinkByRef(links []Link, ref string) (Link, error) {
+	link := Link{}
 
 	for _, l := range links {
 		if l.Ref == ref {

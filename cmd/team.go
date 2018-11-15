@@ -54,6 +54,7 @@ func newTeamListCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Use:               content.CmdListUse,
 		Short:             content.CmdTeamListShort,
 		Long:              content.CmdTeamListLong,
+		Example:           content.CmdTeamListExample,
 		PersistentPreRunE: setupCoreoCredentials,
 		RunE: func(cmd *cobra.Command, args []string) error {
 

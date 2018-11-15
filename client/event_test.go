@@ -1,45 +1,44 @@
 package client
 
 import (
+	"context"
+	"fmt"
+	"net/http"
 	"testing"
 
 	"github.com/jharlap/httpstub"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewTagListSuccess(t *testing.T) {
+const EventConfigureResponse = `{
+"templateURL": "fakeURL",
+"topicName": "fakeName",
+"stackName": "fakeStackName",
+"devtimeQueueArn": "fakeDevtimeQueueArn",
+"version": "1",
+"monitorRule": "fakeMonitorRule"}`
+
+func TestGetSetupConfigSuccess(t *testing.T) {
 	ts := httpstub.New()
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/cloudaccounts/cloudAccountID/event/setup").WithMethod("GET").WithBody(EventConfigureResponse).WithStatus(http.StatusOK)
 	defer ts.Close()
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	tag := client.newTagList()
-	assert.Equal(t, "Version", *tag[0].Key)
-	assert.Equal(t, "LastUpdatedTime", *tag[1].Key)
+	config, err := client.GetSetupConfig(context.Background(), "teamID", "cloudAccountID")
+	assert.Nil(t, err, "getSetupConfig shouldn't return error")
+	assert.Equal(t, "fakeStackName", config.StackName)
 }
 
-func TestNewParameterListSuccess(t *testing.T) {
+func TestGetSetupConfigFailure(t *testing.T) {
 	ts := httpstub.New()
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/cloudaccounts/cloudAccountID/event/setup").WithMethod("GET").WithBody("").WithStatus(http.StatusBadRequest)
 	defer ts.Close()
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	parameterList := client.newParameterList()
-	assert.Equal(t, "CloudCoreoDevTimeQueueArn", *parameterList[0].ParameterKey)
-	assert.Equal(t, cloudCoreoDevTimeQueueArn, *parameterList[0].ParameterValue)
-}
-
-func TestNewCreateStackInput(t *testing.T) {
-	ts := httpstub.New()
-	defer ts.Close()
-	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	input := client.newCreateStackInput()
-	assert.Equal(t, stackName, *input.StackName)
-	assert.Equal(t, templateURL, *input.TemplateURL)
-	assert.Equal(t, "DO_NOTHING", *input.OnFailure)
-}
-
-func TestNewUpdateStackInput(t *testing.T) {
-	ts := httpstub.New()
-	defer ts.Close()
-	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	input := client.newUpdateStackInput()
-	assert.Equal(t, stackName, *input.StackName)
-	assert.Equal(t, templateURL, *input.TemplateURL)
+	_, err := client.GetSetupConfig(context.Background(), "teamID", "cloudAccountID")
+	assert.NotNil(t, err, "getSetupConfig should return error")
 }

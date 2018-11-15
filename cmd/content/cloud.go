@@ -90,6 +90,9 @@ Add a cloud account. The result would be shown as the following if successful.
 	CmdFlagAwsProfilePathDescription = "The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. " +
 		"If the env value is empty will default to current user's home directory.\n" + "  Linux/OSX: \"$HOME/.aws/credentials\"\n" + "  Windows:   \"%USERPROFILE%\\.aws\\credentials\""
 
+	CmdFlagAwsPolicy            = "policy-arn"
+	CmdFlagAwsPolicyDefault     = "arn:aws:iam::aws:policy/SecurityAudit"
+	CmdFlagAwsPolicyDescription = "The arn of the policy you'd like to attach for role creation, SecurityAudit policy arn by default"
 	//CmdFlagRoleExternalIDDescription is description for flag --external-id
 	CmdFlagRoleExternalIDDescription = "The external-id used to assume the provided role"
 

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/CloudCoreo/cli/pkg/aws"
+
 	"github.com/CloudCoreo/cli/pkg/coreo"
 
 	"github.com/CloudCoreo/cli/cmd/content"
@@ -14,9 +16,12 @@ import (
 
 type eventSetupCmd struct {
 	client         command.Interface
+	cloud          command.CloudProvider
 	out            io.Writer
 	awsProfile     string
 	awsProfilePath string
+	cloudID        string
+	teamID         string
 }
 
 func newEventSetupCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -37,26 +42,36 @@ func newEventSetupCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.APIKey(key),
 					coreo.SecretKey(secret))
 			}
+			if eventSetup.cloud == nil {
+				eventSetup.cloud = aws.NewAwsSetup()
+			}
 			return eventSetup.run()
 		},
 	}
+	eventSetup.teamID = teamID
 	f := cmd.Flags()
 	f.StringVarP(&eventSetup.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&eventSetup.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
-
+	f.StringVarP(&eventSetup.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
 	return cmd
 }
 
 func (t *eventSetupCmd) run() error {
-	input := &command.SetupEventStreamInput{
-		AwsProfile:     t.awsProfile,
-		AwsProfilePath: t.awsProfilePath,
-	}
-	err := t.client.SetupEventStream(input)
+
+	config, err := t.client.GetEventStreamConfig(t.teamID, t.cloudID)
 	if err != nil {
 		return err
 	}
 
+	input := &command.SetupEventStreamInput{
+		AwsProfile:     t.awsProfile,
+		AwsProfilePath: t.awsProfilePath,
+		Config:         config,
+	}
+	err = t.cloud.SetupEventStream(input)
+	if err != nil {
+		return err
+	}
 	fmt.Fprintln(t.out, "Setup event stream successfully!")
 	return nil
 }
