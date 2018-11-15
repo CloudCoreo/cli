@@ -14,14 +14,41 @@
 
 package content
 
-const(
+const (
+	//CmdResultUse ...
 	CmdResultUse = "result"
+
+	//CmdResultShort ...
 	CmdResultShort = "Show the violation results"
+
+	//CmdResultLong ...
 	CmdResultLong = "Show the violation results"
+
+	//CmdResultRuleUse ...
 	CmdResultRuleUse = "rule"
+
+	//CmdResultRuleShort ...
 	CmdResultRuleShort = "Show violating rules"
+
+	//CmdResultRuleLong ...
 	CmdResultRuleLong = "Show violating rules"
+
+	//CmdResultObjectUse ...
 	CmdResultObjectUse = "object"
+
+	//CmdResultObjectShort ...
 	CmdResultObjectShort = "Show violating objects"
+
+	//CmdResultObjectLong ...
 	CmdResultObjectLong = "Show violating objects"
+
+	//CmdResultRuleExample ...
+	CmdResultRuleExample = `  coreo result rule --severity "High|Medium"
+  coreo result rule --severity "High|Low"
+  coreo result rule --cloud-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
+
+	//CmdResultObjectExample ...
+	CmdResultObjectExample = `coreo result object --severity "High|Medium"
+  coreo result object --severity "High|Low"
+  coreo result object --cloud-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
 )

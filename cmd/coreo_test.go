@@ -23,7 +23,8 @@ type fakeReleaseClient struct {
 	tokens        []*client.Token
 	cloudAccounts []*client.CloudAccount
 	objects       []*client.ResultObject
-	rules 		  []*client.ResultRule
+	rules         []*client.ResultRule
+	config        client.EventStreamConfig
 	err           error
 }
 
@@ -88,7 +89,7 @@ func (c *fakeReleaseClient) ShowCloudAccountByID(teamID, cloudID string) (*clien
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) CreateCloudAccount(teamID, resourceKey, resourceSecret, resourceName string) (*client.CloudAccount, error) {
+func (c *fakeReleaseClient) CreateCloudAccount(input *client.CreateCloudAccountInput) (*client.CloudAccount, error) {
 	resp := &client.CloudAccount{}
 	if len(c.cloudAccounts) > 0 {
 
@@ -102,12 +103,17 @@ func (c *fakeReleaseClient) DeleteCloudAccountByID(teamID, cloudID string) error
 	return c.err
 }
 
-func (c *fakeReleaseClient) ShowResultRule(teamID, cloudID, level string) ([]* client.ResultRule, error) {
+func (c *fakeReleaseClient) ShowResultRule(teamID, cloudID, level string) ([]*client.ResultRule, error) {
 	resp := c.rules
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level string) ([]* client.ResultObject, error) {
+func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level string) ([]*client.ResultObject, error) {
 	resp := c.objects
 	return resp, c.err
+}
+
+func (c *fakeReleaseClient) GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error) {
+	resp := c.config
+	return &resp, c.err
 }

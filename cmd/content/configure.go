@@ -33,8 +33,10 @@ Note:  the  values  you  provide  for the Coreo Access Key ID and the Coreo
 Secret Access Key will  be  written  to  the  shared  credentials  file
 ($HOME/.cloudcoreo/profiles.yaml).
 
-Sample usage:
-  coreo configure
+`
+
+	//CmdConfigureExample is examples for coreo configure command
+	CmdConfigureExample = `  coreo configure
   coreo configure --api-key COREO_API_KEY --api-secret COREO_API_SECRET --team-id COREO_TEAM_ID
   coreo configure list`
 

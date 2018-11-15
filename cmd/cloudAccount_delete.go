@@ -17,6 +17,8 @@ package main
 import (
 	"io"
 
+	"github.com/CloudCoreo/cli/pkg/command"
+
 	"fmt"
 
 	"github.com/CloudCoreo/cli/cmd/content"
@@ -27,12 +29,12 @@ import (
 
 type cloudDeleteCmd struct {
 	out     io.Writer
-	client  coreo.Interface
+	client  command.Interface
 	teamID  string
 	cloudID string
 }
 
-func newCloudDeleteCmd(client coreo.Interface, out io.Writer) *cobra.Command {
+func newCloudDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
 	cloudDelete := &cloudDeleteCmd{
 		out:    out,
 		client: client,

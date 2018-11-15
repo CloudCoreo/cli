@@ -19,17 +19,18 @@ import (
 
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
 )
 
 type tokenShowCmd struct {
 	out     io.Writer
-	client  coreo.Interface
+	client  command.Interface
 	tokenID string
 }
 
-func newTokenShowCmd(client coreo.Interface, out io.Writer) *cobra.Command {
+func newTokenShowCmd(client command.Interface, out io.Writer) *cobra.Command {
 	tokenShow := &tokenShowCmd{
 		out:    out,
 		client: client,

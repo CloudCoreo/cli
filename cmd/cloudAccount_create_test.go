@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/CloudCoreo/cli/client"
+
 	"github.com/pkg/errors"
 )
 
@@ -47,8 +48,8 @@ func TestCloudAccountCreateCmd(t *testing.T) {
 			desc: "create cloud command with valid flags",
 			flags: []string{
 				"--name", "CloudName",
-				"--key", "CloudKey",
-				"--secret", "CloudSecret",
+				"--external-id", "CloudExternalId",
+				"--arn", "CloudArn",
 			},
 			resp: []*client.CloudAccount{
 				mockCloudAccount("ID1", "Team1", "CloudName1"),

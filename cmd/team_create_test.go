@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/CloudCoreo/cli/client"
+
 	"github.com/pkg/errors"
 )
 

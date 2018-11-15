@@ -23,7 +23,7 @@ import (
 	"github.com/CloudCoreo/cli/client/content"
 )
 
-// Team struct for api payload
+// Team for team information
 type Team struct {
 	TeamName        string      `json:"teamName"`
 	OwnerID         string      `json:"ownerId"`

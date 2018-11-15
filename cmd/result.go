@@ -18,15 +18,8 @@ import (
 	"io"
 
 	"github.com/CloudCoreo/cli/cmd/content"
-	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
 )
-
-type resultCmd struct {
-	client  coreo.Interface
-	teamID  string
-	cloudID string
-}
 
 //Return result command. If teamID and cloudID are not specified,
 //will return all violations under the user account
