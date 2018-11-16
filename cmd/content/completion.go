@@ -15,14 +15,14 @@
 package content
 
 const (
-//CmdCompletionUse docs command
-CmdCompletionUse = "completion"
+	//CmdCompletionUse docs command
+	CmdCompletionUse = "completion"
 
-//CmdCompletionShort short description
-CmdCompletionShort = "Generate bash autocompletions script"
+	//CmdCompletionShort short description
+	CmdCompletionShort = "Generate bash autocompletions script"
 
-//CmdCompletionLong long description
-CmdCompletionLong = `
+	//CmdCompletionLong long description
+	CmdCompletionLong = `
 Generate bash autocompletions script for Coreo.
 
 This command can generate shell autocompletions.

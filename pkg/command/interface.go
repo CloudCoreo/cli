@@ -37,6 +37,7 @@ type Interface interface {
 	GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error)
 }
 
+//CloudProvider for adding cloud account
 type CloudProvider interface {
 	SetupEventStream(input *SetupEventStreamInput) error
 }
