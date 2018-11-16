@@ -30,6 +30,7 @@ const (
 	//CmdTeamListLong long description
 	CmdTeamListLong = `Show list of team.`
 
+	//CmdTeamListExample is the use case for command team list
 	CmdTeamListExample = "coreo team list"
 
 	//CmdTeamShowShort short description
