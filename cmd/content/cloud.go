@@ -42,6 +42,12 @@ Add a cloud account. The result would be shown as the following if successful.
              *********************           ************           ************************
          -----------------------------  -----------------------  -----------------------------
 `
+	//CmdCloudScanShort short description
+	CmdCloudScanShort = "Scan your root account and create skeletons"
+
+	//CmdCloudScanLong long description
+	CmdCloudScanLong = "Scan your root account, get organization and create skeletons for each account"
+
 	//CmdCloudAddExample ...
 	CmdCloudAddExample = `  coreo cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE
   coreo cloud add --name YOUR_NEW_ACCOUNT_NAME --arn YOUR_ROLE_ARN --external-id EXTERNAL_ID_OF_YOUR_ROLE`

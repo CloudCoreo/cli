@@ -249,3 +249,13 @@ func (c *Client) GetEventStreamConfig(teamID, cloudID string) (*client.EventStre
 
 	return clt.GetSetupConfig(ctx, teamID, cloudID)
 }
+
+func (c *Client) GetRoleCreationInfo(input *client.CreateCloudAccountInput) (*client.RoleCreationInfo, error) {
+	ctx := NewContext()
+	clt, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	return clt.GetRoleCreationInfo(ctx, input)
+}

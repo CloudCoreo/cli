@@ -17,6 +17,8 @@ package main
 import (
 	"io"
 
+	"github.com/CloudCoreo/cli/pkg/aws"
+
 	"github.com/CloudCoreo/cli/client"
 
 	"github.com/CloudCoreo/cli/cmd/content"
@@ -29,6 +31,7 @@ import (
 type cloudCreateCmd struct {
 	out            io.Writer
 	client         command.Interface
+	cloud          command.CloudProvider
 	teamID         string
 	resourceName   string
 	roleName       string
@@ -63,6 +66,10 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.SecretKey(secret))
 			}
 
+			if cloudCreate.cloud == nil {
+				cloudCreate.cloud = aws.NewService(cloudCreate.awsProfile, cloudCreate.awsProfilePath, "")
+			}
+
 			cloudCreate.teamID = teamID
 
 			return cloudCreate.run()
@@ -83,17 +90,31 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 
 func (t *cloudCreateCmd) run() error {
 	input := &client.CreateCloudAccountInput{
-		TeamID:         t.teamID,
-		CloudName:      t.resourceName,
-		RoleName:       t.roleName,
-		ExternalID:     t.externalID,
-		RoleArn:        t.roleArn,
-		AwsProfile:     t.awsProfile,
-		AwsProfilePath: t.awsProfilePath,
-		Policy:         t.policy,
+		TeamID:     t.teamID,
+		CloudName:  t.resourceName,
+		RoleName:   t.roleName,
+		ExternalID: t.externalID,
+		RoleArn:    t.roleArn,
+		Policy:     t.policy,
 	}
+	if t.roleName != "" {
+		info, err := t.client.GetRoleCreationInfo(input)
+		if err != nil {
+			return err
+		}
+		arn, externalId, err := t.cloud.CreateNewRole(info)
+
+		if err != nil {
+			return err
+		}
+
+		input.RoleArn = arn
+		input.ExternalID = externalId
+	}
+
 	cloud, err := t.client.CreateCloudAccount(input)
 	if err != nil {
+		t.cloud.DeleteRole(t.roleName, t.policy)
 		return err
 	}
 

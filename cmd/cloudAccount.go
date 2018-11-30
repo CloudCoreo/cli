@@ -37,6 +37,7 @@ func newCloudAccountCmd(out io.Writer) *cobra.Command {
 	cmd.AddCommand(newCloudShowCmd(nil, out))
 	cmd.AddCommand(newCloudDeleteCmd(nil, out))
 	cmd.AddCommand(newCloudCreateCmd(nil, out))
+	cmd.AddCommand(newCloudScanCmd(nil, out))
 
 	return cmd
 }

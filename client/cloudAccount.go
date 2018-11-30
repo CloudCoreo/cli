@@ -19,13 +19,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"time"
-
-	"github.com/aws/aws-sdk-go/aws/credentials"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/iam"
 
 	"github.com/CloudCoreo/cli/client/content"
 )
@@ -49,8 +42,6 @@ type CreateCloudAccountInput struct {
 	RoleName        string
 	ExternalID      string
 	RoleArn         string
-	AwsProfile      string
-	AwsProfilePath  string
 	Policy          string
 }
 
@@ -86,13 +77,14 @@ type defaultID struct {
 	Domain     string `json:"domain"`
 }
 
-type createNewRoleInput struct {
-	awsAccount string
-	externalID string
-	roleName   string
-	policy     string
+type RoleCreationInfo struct {
+	AwsAccount string
+	ExternalID string
+	RoleName   string
+	Policy     string
 }
 
+/*
 func (c *Client) createAssumeRolePolicyDocument(awsAccount string, externalID string) string {
 	return `{
 	"Version": "2012-10-17",
@@ -112,6 +104,7 @@ func (c *Client) createAssumeRolePolicyDocument(awsAccount string, externalID st
 	]
 }`
 }
+*/
 
 // GetCloudAccounts method for cloud command
 func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]*CloudAccount, error) {
@@ -168,18 +161,20 @@ func (c *Client) GetCloudAccountByID(ctx context.Context, teamID, cloudID string
 	return cloudAccount, nil
 }
 
-func (c *Client) createNewRole(ctx context.Context, input *createNewRoleInput, sess *session.Session) (*string, error) {
+/*
+func (c *Client) createNewRole(ctx context.Context, input *RoleCreationInfo, sess *session.Session) (*string, error) {
 	svc := iam.New(sess)
 
 	// Create a new session for iam
-	result, err := c.createNewAwsRole(input.awsAccount, input.externalID, input.roleName, svc)
+	result, err := c.createNewAwsRole(input.AwsAccount, input.ExternalID, input.RoleName, svc)
 	if err != nil {
 		return nil, err
 	}
 	roleArn := result.Role.Arn
-	c.attachRolePolicy(svc, input.policy, input.roleName)
+	c.attachRolePolicy(svc, input.Policy, input.RoleName)
 	return roleArn, nil
 }
+*/
 
 func (c *Client) sendCloudCreateRequest(ctx context.Context, input *sendCloudCreateRequestInput) (*CloudAccount, error) {
 	// Connect with webapp to add the new cloud account into team
@@ -209,6 +204,7 @@ func (c *Client) sendCloudCreateRequest(ctx context.Context, input *sendCloudCre
 	return cloudAccount, nil
 }
 
+/*
 func (c *Client) checkRolePolicy(roleName, policy string, sess *session.Session) (bool, error) {
 	svc := iam.New(sess)
 	input := &iam.ListAttachedRolePoliciesInput{}
@@ -224,7 +220,9 @@ func (c *Client) checkRolePolicy(roleName, policy string, sess *session.Session)
 	}
 	return false, nil
 }
+*/
 
+/*
 func (c *Client) newSession(input *CreateCloudAccountInput) (*session.Session, error) {
 	var sess *session.Session
 	var err error
@@ -241,6 +239,36 @@ func (c *Client) newSession(input *CreateCloudAccountInput) (*session.Session, e
 	}
 	return sess, nil
 }
+*/
+
+func (c *Client) GetRoleCreationInfo(ctx context.Context, input *CreateCloudAccountInput) (*RoleCreationInfo, error) {
+	teams, err := c.GetTeams(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, team := range teams {
+		if team.ID == input.TeamID {
+			ref, err := GetLinkByRef(team.Links, "defaultid")
+
+			if err != nil {
+				return nil, err
+			}
+
+			defaultId := defaultID{}
+			c.Do(ctx, "GET", ref.Href, nil, &defaultId)
+
+			createNewRoleInfo := &RoleCreationInfo{
+				RoleName:   input.RoleName,
+				ExternalID: input.TeamID + "-" + defaultId.ExternalID,
+				AwsAccount: defaultId.AccountID,
+				Policy:     input.Policy,
+			}
+
+			return createNewRoleInfo, nil
+		}
+	}
+}
 
 // CreateCloudAccount method to create a cloud object
 func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccountInput) (*CloudAccount, error) {
@@ -251,63 +279,68 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 	}
 	for _, team := range teams {
 		if team.ID == input.TeamID {
-			var roleArn *string
-			var externalID string
+			/*
+				var roleArn *string
+				var externalID string
 
-			// Check aws credentials
-			sess, err := c.newSession(input)
-			if err != nil {
-				return nil, err
-			}
+
+				// Check aws credentials
+				sess, err := c.newSession(input)
+				if err != nil {
+					return nil, err
+				}
+			*/
 
 			cloudLink, err := GetLinkByRef(team.Links, "cloudAccounts")
 			if err != nil {
 				return nil, NewError(err.Error())
 			}
-			// Check whether the rolearn and externalID are provided
-			if input.RoleArn != "" && input.ExternalID != "" {
-				roleArn = &input.RoleArn
-				externalID = input.ExternalID
+			/*
+				// Check whether the rolearn and externalID are provided
+				if input.RoleArn != "" && input.ExternalID != "" {
+					roleArn = &input.RoleArn
+					externalID = input.ExternalID
 
-				// Check whether SecurityAudit is Enabled
-				// roleNames := strings.Split(input.RoleArn, `/`)
-				// boolean, err := c.checkRolePolicy(roleNames[len(roleNames)-1], "SecurityAudit", sess)
-				// if err != nil {
-				//	 return nil, err
-				// }
-				// if !boolean {
-				// 	 return nil, NewError("SecurityAudit is not enable in role " + *roleArn)
-				// }
-			} else if input.RoleName != "" {
-				// Create a new role for the user
-				ref, err := GetLinkByRef(team.Links, "defaultid")
-				defaultid := defaultID{}
-				c.Do(ctx, "GET", ref.Href, nil, &defaultid)
-				externalID = input.TeamID + "-" + defaultid.ExternalID
+					// Check whether SecurityAudit is Enabled
+					// roleNames := strings.Split(input.RoleArn, `/`)
+					// boolean, err := c.checkRolePolicy(roleNames[len(roleNames)-1], "SecurityAudit", sess)
+					// if err != nil {
+					//	 return nil, err
+					// }
+					// if !boolean {
+					// 	 return nil, NewError("SecurityAudit is not enable in role " + *roleArn)
+					// }
+				} else if input.RoleName != "" {
+					// Create a new role for the user
+					ref, err := GetLinkByRef(team.Links, "defaultid")
+					defaultid := defaultID{}
+					c.Do(ctx, "GET", ref.Href, nil, &defaultid)
+					externalID = input.TeamID + "-" + defaultid.ExternalID
 
-				createNewRoleInput := &createNewRoleInput{
-					roleName:   input.RoleName,
-					externalID: externalID,
-					awsAccount: defaultid.AccountID,
-					policy:     input.Policy,
+					createNewRoleInput := &RoleCreationInfo{
+						RoleName:   input.RoleName,
+						ExternalID: externalID,
+						AwsAccount: defaultid.AccountID,
+						Policy:     input.Policy,
+					}
+					roleArn, err = c.createNewRole(ctx, createNewRoleInput, sess)
+
+					if err != nil {
+						return nil, NewError(err.Error())
+					}
+					time.Sleep(10 * time.Second)
+				} else {
+					return nil, NewError(content.ErrorMissingRoleInformation)
 				}
-				roleArn, err = c.createNewRole(ctx, createNewRoleInput, sess)
-
-				if err != nil {
-					return nil, NewError(err.Error())
-				}
-				time.Sleep(10 * time.Second)
-			} else {
-				return nil, NewError(content.ErrorMissingRoleInformation)
-			}
+			*/
 
 			cloudCreateInput := &sendCloudCreateRequestInput{
 				cloudLink:       cloudLink,
-				externalID:      externalID,
+				externalID:      input.ExternalID,
 				cloudName:       input.CloudName,
 				accessKeyID:     input.AccessKeyID,
 				secretAccessKey: input.SecretAccessKey,
-				roleArn:         *roleArn,
+				roleArn:         input.RoleArn,
 				scanEnabled:     true,
 				scanInterval:    "Daily",
 				scanRegion:      "All",
@@ -315,12 +348,14 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 				provider:        "AWS",
 			}
 			cloudAccount, err = c.sendCloudCreateRequest(ctx, cloudCreateInput)
-			if err != nil {
-				if input.RoleName != "" {
-					c.deleteRole(ctx, sess, input.RoleName, input.Policy)
+			/*
+				if err != nil {
+					if input.RoleName != "" {
+						c.deleteRole(ctx, sess, input.RoleName, input.Policy)
+					}
+					return nil, err
 				}
-				return nil, err
-			}
+			*/
 			break
 		}
 	}
@@ -330,6 +365,7 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 	return cloudAccount, nil
 }
 
+/*
 func (c *Client) createNewAwsRole(awsAccount, externalID, roleName string, svc *iam.IAM) (*iam.CreateRoleOutput, error) {
 	input := &iam.CreateRoleInput{
 		AssumeRolePolicyDocument: aws.String(c.createAssumeRolePolicyDocument(awsAccount, externalID)),
@@ -342,7 +378,9 @@ func (c *Client) createNewAwsRole(awsAccount, externalID, roleName string, svc *
 	}
 	return result, nil
 }
+*/
 
+/*
 func (c *Client) deleteRole(ctx context.Context, sess *session.Session, roleName, policyArn string) {
 	svc := iam.New(sess)
 	detachPolicyInput := &iam.DetachRolePolicyInput{
@@ -363,7 +401,9 @@ func (c *Client) deleteRole(ctx context.Context, sess *session.Session, roleName
 		fmt.Println("Delete role " + roleName + " failed, " + err.Error())
 	}
 }
+*/
 
+/*
 func (c *Client) attachRolePolicy(svc *iam.IAM, policyArn, roleName string) (*iam.AttachRolePolicyOutput, error) {
 	input := &iam.AttachRolePolicyInput{
 		PolicyArn: aws.String(policyArn),
@@ -373,6 +413,7 @@ func (c *Client) attachRolePolicy(svc *iam.IAM, policyArn, roleName string) (*ia
 	result, err := svc.AttachRolePolicy(input)
 	return result, err
 }
+*/
 
 // DeleteCloudAccountByID method to delete cloud object
 func (c *Client) DeleteCloudAccountByID(ctx context.Context, teamID, cloudID string) error {
