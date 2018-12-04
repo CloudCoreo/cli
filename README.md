@@ -63,6 +63,7 @@ $ coreo
 ## Docs
 
 Get started with [Coreo commands](docs/coreo/coreo.md), setup for [Coreo bash completion](docs/bash-completion.md)
+Get the access keys on [our website](https://app.cloudcoreo.com/main/settings/cli) 
 
 ## Community, discussion, contribution, and support
 
