@@ -16,10 +16,10 @@ type RoleService struct {
 	AwsProfile     string
 }
 
-func NewRoleService(awsProfile, awsProfilePath string) *RoleService {
+func NewRoleService(input *NewServiceInput) *RoleService {
 	return &RoleService{
-		AwsProfile:     awsProfile,
-		AwsProfilePath: awsProfilePath,
+		AwsProfile:     input.AwsProfile,
+		AwsProfilePath: input.AwsProfilePath,
 	}
 }
 

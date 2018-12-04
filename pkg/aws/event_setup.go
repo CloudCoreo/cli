@@ -19,10 +19,10 @@ type SetupService struct {
 }
 
 //NewAwsSetup returns a pointer to a setup struct object
-func NewSetupService(awsProfile, awsProfilePath string) *SetupService {
+func NewSetupService(input *NewServiceInput) *SetupService {
 	return &SetupService{
-		awsProfile:     awsProfile,
-		awsProfilePath: awsProfilePath,
+		awsProfile:     input.AwsProfile,
+		awsProfilePath: input.AwsProfilePath,
 	}
 }
 

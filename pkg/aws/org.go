@@ -17,21 +17,21 @@ type OrgService struct {
 	orgService *organizations.Organizations
 }
 
-func NewOrgService(awsProfile, awsProfilePath, roleArn, policy, roleSessionName string, duration int64) (awsService *OrgService) {
+func NewOrgService(input *NewServiceInput) (awsService *OrgService) {
 	var sess *session.Session
-	if awsProfile != "" {
-		sess = session.Must(session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(awsProfilePath, awsProfile)}))
+	if input.AwsProfile != "" {
+		sess = session.Must(session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(input.AwsProfilePath, input.AwsProfile)}))
 	} else {
 		sess = session.Must(session.NewSession())
 	}
 
-	if roleArn != "" {
+	if input.RoleArn != "" {
 		stsSvc := sts.New(sess)
 		stsInput := &sts.AssumeRoleInput{
-			DurationSeconds: aws.Int64(duration),
-			Policy:          aws.String(policy),
-			RoleArn:         aws.String(roleArn),
-			RoleSessionName: aws.String(roleSessionName),
+			DurationSeconds: aws.Int64(input.Duration),
+			Policy:          aws.String(input.Policy),
+			RoleArn:         aws.String(input.RoleArn),
+			RoleSessionName: aws.String(input.RoleSessionName),
 		}
 
 		sresult, serr := stsSvc.AssumeRole(stsInput)
@@ -182,6 +182,8 @@ func (svc *OrgService) DescribeGroup(id string) (response *command.OrgNode, err 
 		Type:       "ORGANIZATIONAL_UNIT",
 		Properties: make(map[string]string),
 	}
+	response.Properties["Arn"] = *ouResp.OrganizationalUnit.Arn
+
 	return response, nil
 }
 
@@ -203,6 +205,10 @@ func (svc *OrgService) DescribeAccount(id string) (response *command.OrgNode, er
 	}
 	response.Properties["Email"] = *accResp.Account.Email
 	response.Properties["AccountType"] = "standard"
+	response.Properties["Arn"] = *accResp.Account.Arn
+	response.Properties["Status"] = *accResp.Account.Status
+	response.Properties["JoinedMethod"] = *accResp.Account.JoinedMethod
+	response.Properties["JoinedTimeStamp"] = accResp.Account.JoinedTimestamp.String()
 	return response, nil
 }
 

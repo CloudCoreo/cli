@@ -41,7 +41,7 @@ type Interface interface {
 //CloudProvider for adding cloud account
 type CloudProvider interface {
 	SetupEventStream(input *client.EventStreamConfig) error
-	GetOrgTree(input *GetOrgTreeInput) ([]*TreeNode, error)
+	GetOrgTree() ([]*TreeNode, error)
 	CreateNewRole(input *client.RoleCreationInfo) (arn string, externalID string, err error)
 	DeleteRole(roleName, policyArn string)
 }

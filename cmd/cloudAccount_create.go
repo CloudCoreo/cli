@@ -67,7 +67,11 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 			}
 
 			if cloudCreate.cloud == nil {
-				cloudCreate.cloud = aws.NewService(cloudCreate.awsProfile, cloudCreate.awsProfilePath, "")
+				newServiceInput := &aws.NewServiceInput{
+					AwsProfile:     cloudCreate.awsProfile,
+					AwsProfilePath: cloudCreate.awsProfilePath,
+				}
+				cloudCreate.cloud = aws.NewService(newServiceInput)
 			}
 
 			cloudCreate.teamID = teamID
@@ -96,6 +100,7 @@ func (t *cloudCreateCmd) run() error {
 		ExternalID: t.externalID,
 		RoleArn:    t.roleArn,
 		Policy:     t.policy,
+		IsDraft:    false,
 	}
 	if t.roleName != "" {
 		info, err := t.client.GetRoleCreationInfo(input)

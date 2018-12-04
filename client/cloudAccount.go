@@ -35,14 +35,15 @@ type CloudAccount struct {
 
 // CreateCloudAccountInput for function CreateCloudAccount
 type CreateCloudAccountInput struct {
-	TeamID          string
-	AccessKeyID     string
-	SecretAccessKey string
-	CloudName       string
-	RoleName        string
-	ExternalID      string
-	RoleArn         string
-	Policy          string
+	TeamID     string
+	CloudName  string
+	RoleName   string
+	ExternalID string
+	RoleArn    string
+	Policy     string
+	IsDraft    bool
+	Email      string
+	UserName   string
 }
 
 // CloudPayLoad ...
@@ -55,6 +56,8 @@ type CloudPayLoad struct {
 	ExternalID   string `json:"externalId"`
 	IsDraft      bool   `json:"isDraft"`
 	Provider     string `json:"provider"`
+	Email        string `json:"email"`
+	UserName     string `json:"username"`
 }
 
 type sendCloudCreateRequestInput struct {
@@ -69,6 +72,8 @@ type sendCloudCreateRequestInput struct {
 	scanRegion      string
 	isDraft         bool
 	provider        string
+	email           string
+	username        string
 }
 
 type defaultID struct {
@@ -190,6 +195,8 @@ func (c *Client) sendCloudCreateRequest(ctx context.Context, input *sendCloudCre
 		ExternalID:   input.externalID,
 		IsDraft:      input.isDraft,
 		Provider:     input.provider,
+		Email:        input.email,
+		UserName:     input.username,
 	}
 
 	jsonStr, err := json.Marshal(cloudPayLoad)
@@ -268,6 +275,7 @@ func (c *Client) GetRoleCreationInfo(ctx context.Context, input *CreateCloudAcco
 			return createNewRoleInfo, nil
 		}
 	}
+	return nil, NewError("No team id match")
 }
 
 // CreateCloudAccount method to create a cloud object
@@ -333,19 +341,21 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 					return nil, NewError(content.ErrorMissingRoleInformation)
 				}
 			*/
-
+			if input.RoleArn == "" {
+				return nil, NewError(content.ErrorMissingRoleInformation)
+			}
 			cloudCreateInput := &sendCloudCreateRequestInput{
-				cloudLink:       cloudLink,
-				externalID:      input.ExternalID,
-				cloudName:       input.CloudName,
-				accessKeyID:     input.AccessKeyID,
-				secretAccessKey: input.SecretAccessKey,
-				roleArn:         input.RoleArn,
-				scanEnabled:     true,
-				scanInterval:    "Daily",
-				scanRegion:      "All",
-				isDraft:         false,
-				provider:        "AWS",
+				cloudLink:    cloudLink,
+				externalID:   input.ExternalID,
+				cloudName:    input.CloudName,
+				roleArn:      input.RoleArn,
+				scanEnabled:  true,
+				scanInterval: "Daily",
+				scanRegion:   "All",
+				isDraft:      input.IsDraft,
+				provider:     "AWS",
+				email:        input.Email,
+				username:     input.UserName,
 			}
 			cloudAccount, err = c.sendCloudCreateRequest(ctx, cloudCreateInput)
 			/*

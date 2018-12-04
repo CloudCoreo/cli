@@ -22,11 +22,11 @@ type NewServiceInput struct {
 	Duration        int64
 }
 
-func NewService(awsProfile, awsProfilePath, roleArn string) *Service {
+func NewService(input *NewServiceInput) *Service {
 	return &Service{
-		setup: NewSetupService(awsProfile, awsProfilePath),
-		org:   NewOrgService(awsProfile, awsProfilePath),
-		role:  NewRoleService(awsProfile, awsProfilePath),
+		setup: NewSetupService(input),
+		org:   NewOrgService(input),
+		role:  NewRoleService(input),
 	}
 }
 
@@ -34,7 +34,7 @@ func (s *Service) SetupEventStream(input *client.EventStreamConfig) error {
 	return s.setup.SetupEventStream(input)
 }
 
-func (s *Service) GetOrgTree(input *command.GetOrgTreeInput) ([]*command.TreeNode, error) {
+func (s *Service) GetOrgTree() ([]*command.TreeNode, error) {
 	return s.org.GetOrganizationTree()
 }
 

@@ -43,7 +43,11 @@ func newEventSetupCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.SecretKey(secret))
 			}
 			if eventSetup.cloud == nil {
-				eventSetup.cloud = aws.NewService(eventSetup.awsProfile, eventSetup.awsProfilePath, "")
+				newServiceInput := &aws.NewServiceInput{
+					AwsProfile:     eventSetup.awsProfile,
+					AwsProfilePath: eventSetup.awsProfilePath,
+				}
+				eventSetup.cloud = aws.NewService(newServiceInput)
 			}
 			return eventSetup.run()
 		},
