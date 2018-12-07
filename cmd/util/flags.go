@@ -79,21 +79,12 @@ func CheckTokenShowOrDeleteFlag(tokenID string, verbose bool) error {
 
 // CheckLayersFlags flag check for composite layer command
 func CheckLayersFlags(name, gitRepoURL string) error {
-	if err := checkGitRepoURL(gitRepoURL); err != nil {
-
-		return err
-	}
-
-	return nil
+	return checkGitRepoURL(gitRepoURL)
 }
 
 // CheckExtendFlags flag check for composite extend command
 func CheckExtendFlags(gitRepoURL string) error {
-	if err := checkGitRepoURL(gitRepoURL); err != nil {
-		return err
-	}
-
-	return nil
+	return checkGitRepoURL(gitRepoURL)
 }
 
 // CheckTeamIDFlag flag check for team id
@@ -148,11 +139,7 @@ func CheckTeamAddFlags(teamName, teamDescription string) error {
 		return err
 	}
 
-	if err := checkFlag(teamDescription, content.ErrorTeamDescriptionRequired); err != nil {
-		return err
-	}
-
-	return nil
+	return checkFlag(teamDescription, content.ErrorTeamDescriptionRequired)
 }
 
 //CheckArgsCount check for args

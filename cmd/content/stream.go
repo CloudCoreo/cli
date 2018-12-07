@@ -21,5 +21,6 @@ const CmdEventShort = "Manage event stream"
 //CmdEventLong is the long version description for coreo event command
 const CmdEventLong = "Manage event stream"
 
+//CmdEventSetupExample is the use case for command event setup
 const CmdEventSetupExample = `  coreo event setup
   coreo event setup --aws-profile YOUR_AWS_PROFILE`
