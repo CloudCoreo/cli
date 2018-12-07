@@ -56,9 +56,18 @@ func newCloudScanCmd(client command.Interface, out io.Writer) *cobra.Command {
 				}
 				cloudScan.cloud = aws.NewService(newServiceInput)
 			}
+
+			cloudScan.teamID = teamID
 			return cloudScan.run()
 		},
 	}
+	f := cmd.Flags()
+	f.StringVarP(&cloudScan.roleArn, content.CmdFlagRoleArn, "", "", content.CmdFlagRoleArnDescription)
+	f.StringVarP(&cloudScan.policy, content.CmdFlagAwsAssumeRolePolicy, "", "", content.CmdFlagAwsAssumeRolePolicyDescription)
+	f.StringVarP(&cloudScan.roleSessionName, content.CmdFlagRoleSessionName, "", "", content.CmdFlagRoleSessionNameDescription)
+	f.Int64Var(&cloudScan.duration, content.CmdFlagDuration, 3600, content.CmdFlagDurationDescription)
+	f.StringVarP(&cloudScan.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
+	f.StringVarP(&cloudScan.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 
 	return cmd
 }

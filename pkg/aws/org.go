@@ -36,7 +36,7 @@ func NewOrgService(input *NewServiceInput) (awsService *OrgService) {
 
 		sresult, serr := stsSvc.AssumeRole(stsInput)
 		if serr != nil {
-			fmt.Println("Unable to assume role")
+			fmt.Println("Unable to assume role" + serr.Error())
 		}
 
 		res, err := NewOrgServiceWithCreds(sresult.Credentials)
@@ -74,7 +74,7 @@ func (svc *OrgService) DescribeOrganization() (response *command.Organization, e
 	if orgErr != nil {
 		return nil, orgErr
 	}
-	fmt.Println(orgResp)
+	// fmt.Println(orgResp)
 
 	accInput := &organizations.DescribeAccountInput{
 		AccountId: aws.String(*orgResp.Organization.MasterAccountId),

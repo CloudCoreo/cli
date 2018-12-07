@@ -147,7 +147,6 @@ func (c *Client) ListCloudAccounts(teamID string) ([]*client.CloudAccount, error
 	}
 
 	cloudAccounts, err := clt.GetCloudAccounts(ctx, teamID)
-	println("Get cloud accounts ")
 	if err != nil {
 		return nil, err
 	}

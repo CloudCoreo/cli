@@ -82,6 +82,14 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagRoleExternalID is flag for external-id used to assume the provided role
 	CmdFlagRoleExternalID = "external-id"
 
+	CmdFlagRoleSessionName = "role-session"
+
+	CmdFlagRoleSessionNameDescription = "The session name to assume the role"
+
+	CmdFlagDuration = "duartion"
+
+	CmdFlagDurationDescription = "The duration for session in seconds"
+
 	//CmdFlagAwsProfile = "aws-profile"
 	CmdFlagAwsProfile = "aws-profile"
 
@@ -104,6 +112,12 @@ Add a cloud account. The result would be shown as the following if successful.
 
 	//CmdFlagAwsPolicyDescription describes flag policy-arn
 	CmdFlagAwsPolicyDescription = "The arn of the policy you'd like to attach for role creation, SecurityAudit policy arn by default"
+
+	CmdFlagAwsAssumeRolePolicy = "policy"
+
+	CmdFlagAwsAssumeRolePolicyDescription = "The policy you'd like to use to assume that role"
+
+	CmdFlagAwsAssumeRolePolicyDefault = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"organizations:*\",\"Resource\":\"*\"}]}"
 
 	//CmdFlagRoleExternalIDDescription is description for flag --external-id
 	CmdFlagRoleExternalIDDescription = "The external-id used to assume the provided role"

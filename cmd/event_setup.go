@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/CloudCoreo/cli/cmd/util"
+
 	"github.com/CloudCoreo/cli/pkg/aws"
 
 	"github.com/CloudCoreo/cli/pkg/coreo"
@@ -36,6 +38,10 @@ func newEventSetupCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Long:    content.CmdEventSetupLong,
 		Example: content.CmdEventSetupExample,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			// Check for --cloud-id
+			if err := util.CheckCloudShowOrDeleteFlag(eventSetup.cloudID, verbose); err != nil {
+				return err
+			}
 			if eventSetup.client == nil {
 				eventSetup.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),

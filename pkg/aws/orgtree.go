@@ -29,7 +29,6 @@ func PrintTree(root *command.TreeNode) {
 	if root == nil {
 		return
 	}
-
 	dummy := &command.TreeNode{}
 	queue := make([]*command.TreeNode, 0)
 	queue = append(queue, root)
@@ -116,14 +115,14 @@ func (svc *OrgService) GetOrganizationTree() ([]*command.TreeNode, error) {
 	// Collect information about the organization and master account
 	org, orgErr := svc.DescribeOrganization()
 	if orgErr != nil {
-		fmt.Println("Failed to get org information -", orgErr)
+		// fmt.Println("Failed to get org information -", orgErr)
 		return nil, orgErr
 	}
 	fmt.Println(org)
 
 	roots, rootsErr := svc.GetRoots()
 	if rootsErr != nil {
-		fmt.Println("Failed to get roots for the organization -", rootsErr)
+		// fmt.Println("Failed to get roots for the organization -", rootsErr)
 		return nil, rootsErr
 	}
 
