@@ -88,7 +88,8 @@ The most commonly used coreo commands are:
 |event     | Manage event stream                           | setup|
 |help      | Help about any command|
 |version   | Print the version number of Coreo CLI|
--------------       
+-------------      
+ 
 ## Configurable variables
 |Variable | Option | Environment Variable | Description |
 | ------ | ------ | :--------:| :-------- |
@@ -101,6 +102,7 @@ The most commonly used coreo commands are:
 |profile | --profile | $COREO_PROFILE | Coreo profile to use. Overrides $COREO_PROFILE, default "default" |
 |team-id | --team-id | | Coreo team id, will read team-id in configure file by default|
 |verbose | --verbose | | Enable verbose output
+
 The values passing by flags will override environment variables.  
 Flags for specific commands are listed in Docs section.
 
