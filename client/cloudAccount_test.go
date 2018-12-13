@@ -273,10 +273,8 @@ func TestCreateCloudAccountFailureBadRequest(t *testing.T) {
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	input := &CreateCloudAccountInput{
-		TeamID:          "teamID",
-		AccessKeyID:     "accessKeyID",
-		SecretAccessKey: "secretAccessKey",
-		CloudName:       "cloudName",
+		TeamID:    "teamID",
+		CloudName: "cloudName",
 	}
 	_, err := client.CreateCloudAccount(context.Background(), input)
 	assert.NotNil(t, err, "CreateCloudAccount should return error.")
@@ -291,10 +289,8 @@ func TestCreateCloudAccountFailedToParseUser(t *testing.T) {
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	input := &CreateCloudAccountInput{
-		TeamID:          "teamID",
-		AccessKeyID:     "accessKeyID",
-		SecretAccessKey: "secretAccessKey",
-		CloudName:       "cloudName",
+		TeamID:    "teamID",
+		CloudName: "cloudName",
 	}
 	_, err := client.CreateCloudAccount(context.Background(), input)
 	assert.NotNil(t, err, "CreateCloudAccount should return error.")
@@ -309,10 +305,8 @@ func TestCreateCloudAccountFailedToParseCloudAccountLink(t *testing.T) {
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	input := &CreateCloudAccountInput{
-		TeamID:          "teamID",
-		AccessKeyID:     "accessKeyID",
-		SecretAccessKey: "secretAccessKey",
-		CloudName:       "cloudName",
+		TeamID:    "teamID",
+		CloudName: "cloudName",
 	}
 	_, err := client.CreateCloudAccount(context.Background(), input)
 	assert.NotNil(t, err, "CreateCloudAccount should return error.")
@@ -328,10 +322,8 @@ func TestCreateCloudAccountsFailureMissingCloudAccountsLink(t *testing.T) {
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	input := &CreateCloudAccountInput{
-		TeamID:          "teamID",
-		AccessKeyID:     "accessKeyID",
-		SecretAccessKey: "secretAccessKey",
-		CloudName:       "cloudName",
+		TeamID:    "teamID",
+		CloudName: "cloudName",
 	}
 	_, err := client.CreateCloudAccount(context.Background(), input)
 	assert.NotNil(t, err, "CreateCloudAccount should return error.")
@@ -347,10 +339,8 @@ func TestCreateCloudAccountFailureCloudAccountNotCreated(t *testing.T) {
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	input := &CreateCloudAccountInput{
-		TeamID:          "teamID",
-		AccessKeyID:     "accessKeyID",
-		SecretAccessKey: "secretAccessKey",
-		CloudName:       "cloudName",
+		TeamID:    "teamID",
+		CloudName: "cloudName",
 	}
 	_, err := client.CreateCloudAccount(context.Background(), input)
 	assert.NotNil(t, err, "CreateCloudAccount should return error.")
@@ -450,4 +440,11 @@ func TestDeleteCloudAccountByIDFailureInvalidCloudID(t *testing.T) {
 	err := client.DeleteCloudAccountByID(context.Background(), "teamID", "InvalidCloudAccountID")
 	assert.NotNil(t, err, "DeleteCloudAccountByID should return error.")
 	assert.Equal(t, "Failed to delete cloud account with ID InvalidCloudAccountID under team ID teamID.", err.Error())
+}
+
+func TestGetRoleCreationInfo(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/me").WithMethod("GET").WithBody(`{}`).WithStatus(http.StatusOK)
 }

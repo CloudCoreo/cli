@@ -96,24 +96,6 @@ const kmsKeyRotatesObjectOutput = `[{
 		"run_id": "run-id"
 	}]`
 
-const rolePolicy = `{
-	"Version": "2012-10-17",
-	"Statement": [
-		{
-			"Effect": "Allow",
-			"Principal": {
-				"AWS": "arn:aws:iam::` + "accountID" + `:root"
-			},
-			"Action": "sts:AssumeRole",
-			"Condition": {
-				"StringEquals": {
-					"sts:ExternalId": "` + "externalID" + `"
-				}
-			}
-		}
-	]
-}`
-
 func TestGetAllResultRuleSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForResult, ts.URL)).WithStatus(http.StatusOK)
@@ -223,13 +205,4 @@ func TestShowResultObjectFailureNoViolatedObject(t *testing.T) {
 	_, err := client.ShowResultObject(context.Background(), content.None, content.None, content.None)
 	assert.NotNil(t, err, "GetResultObject should return error.")
 	assert.Equal(t, "No violated object", err.Error())
-}
-
-func TestCreateAssumeRolePolicyDocument(t *testing.T) {
-	ts := httpstub.New()
-	defer ts.Close()
-
-	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	res := client.createAssumeRolePolicyDocument("accountID", "externalID")
-	assert.Equal(t, rolePolicy, res)
 }

@@ -16,6 +16,7 @@ package main
 
 import (
 	"io"
+	"time"
 
 	"github.com/CloudCoreo/cli/pkg/aws"
 
@@ -40,6 +41,10 @@ type cloudCreateCmd struct {
 	awsProfile     string
 	awsProfilePath string
 	policy         string
+	isDraft        bool
+	userName       string
+	email          string
+	environment    string
 }
 
 func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -89,18 +94,25 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&cloudCreate.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&cloudCreate.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	f.StringVarP(&cloudCreate.policy, content.CmdFlagAwsPolicy, "", content.CmdFlagAwsPolicyDefault, content.CmdFlagAwsPolicyDescription)
+	f.BoolVarP(&cloudCreate.isDraft, content.CmdFlagIsDraft, "", false, content.CmdFlagIsDraftDescription)
+	f.StringVarP(&cloudCreate.email, content.CmdFlagEmail, "", "", content.CmdFlagEmailDescription)
+	f.StringVarP(&cloudCreate.userName, content.CmdFlagUserName, "", "", content.CmdFlagUserNameDescription)
+	f.StringVarP(&cloudCreate.environment, content.CmdFlagEnvironmentLong, content.CmdFlagEnvironmentShort, "", content.CmdFlagEnvironmentDescription)
 	return cmd
 }
 
 func (t *cloudCreateCmd) run() error {
 	input := &client.CreateCloudAccountInput{
-		TeamID:     t.teamID,
-		CloudName:  t.resourceName,
-		RoleName:   t.roleName,
-		ExternalID: t.externalID,
-		RoleArn:    t.roleArn,
-		Policy:     t.policy,
-		IsDraft:    false,
+		TeamID:      t.teamID,
+		CloudName:   t.resourceName,
+		RoleName:    t.roleName,
+		ExternalID:  t.externalID,
+		RoleArn:     t.roleArn,
+		Policy:      t.policy,
+		IsDraft:     t.isDraft,
+		Email:       t.email,
+		UserName:    t.userName,
+		Environment: t.environment,
 	}
 	if t.roleName != "" {
 		info, err := t.client.GetRoleCreationInfo(input)
@@ -108,7 +120,7 @@ func (t *cloudCreateCmd) run() error {
 			return err
 		}
 		arn, externalId, err := t.cloud.CreateNewRole(info)
-
+		time.Sleep(10 * time.Second)
 		if err != nil {
 			return err
 		}

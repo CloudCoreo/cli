@@ -113,6 +113,22 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagAwsPolicyDescription describes flag policy-arn
 	CmdFlagAwsPolicyDescription = "The arn of the policy you'd like to attach for role creation, SecurityAudit policy arn by default"
 
+	CmdFlagIsDraft = "draft"
+
+	CmdFlagIsDraftDescription = "Create a draft"
+
+	CmdFlagUserName = "user-name"
+
+	CmdFlagUserNameDescription = "User name of account owner"
+
+	CmdFlagEnvironmentShort       = "e"
+	CmdFlagEnvironmentLong        = "env"
+	CmdFlagEnvironmentDescription = "Environment label for cloud account, four options available: Production, Staging, Development, Test"
+
+	CmdFlagEmail = "email"
+
+	CmdFlagEmailDescription = "Email address of account owner"
+
 	CmdFlagAwsAssumeRolePolicy = "policy"
 
 	CmdFlagAwsAssumeRolePolicyDescription = "The policy you'd like to use to assume that role"

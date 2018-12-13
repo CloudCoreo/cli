@@ -26,10 +26,11 @@ type eventSetupCmd struct {
 	teamID         string
 }
 
-func newEventSetupCmd(client command.Interface, out io.Writer) *cobra.Command {
+func newEventSetupCmd(client command.Interface, provider command.CloudProvider, out io.Writer) *cobra.Command {
 	eventSetup := &eventSetupCmd{
 		client: client,
 		out:    out,
+		cloud:  provider,
 	}
 
 	cmd := &cobra.Command{
@@ -73,13 +74,6 @@ func (t *eventSetupCmd) run() error {
 		return err
 	}
 
-	/*
-		input := &command.SetupEventStreamInput{
-			AwsProfile:     t.awsProfile,
-			AwsProfilePath: t.awsProfilePath,
-			Config:         config,
-		}
-	*/
 	err = t.cloud.SetupEventStream(config)
 	if err != nil {
 		return err
