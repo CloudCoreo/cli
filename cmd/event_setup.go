@@ -45,10 +45,12 @@ func newEventSetupCmd(client command.Interface, out io.Writer) *cobra.Command {
 			if eventSetup.cloud == nil {
 				eventSetup.cloud = aws.NewAwsSetup()
 			}
+
+			eventSetup.teamID = teamID
+
 			return eventSetup.run()
 		},
 	}
-	eventSetup.teamID = teamID
 	f := cmd.Flags()
 	f.StringVarP(&eventSetup.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&eventSetup.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
