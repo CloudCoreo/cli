@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/CloudCoreo/cli/cmd/content"
-	"github.com/magiconair/properties/assert"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/CloudCoreo/cli/client"
 	"github.com/pkg/errors"

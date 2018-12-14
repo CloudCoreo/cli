@@ -117,7 +117,7 @@ Add a cloud account. The result would be shown as the following if successful.
 
 	CmdFlagIsDraftDescription = "Create a draft"
 
-	CmdFlagUserName = "user-name"
+	CmdFlagUserName = "username"
 
 	CmdFlagUserNameDescription = "User name of account owner"
 

@@ -134,6 +134,11 @@ Manage Cloud Accounts
         | external id| --external-id | The external id used to assume provided role|
         | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
         |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
+        |draft| --draft| Will add a draft account with this flag|
+        |Environment| --env| Environment label for the cloud account to add, must be one of these: Production, Staging, Development, Test"|
+        |email|--email|The email address of account owner|
+        |username|--username| The username of account owner|
+        
     * You need to either use your own role or let CLI create one for you. 
         * To use your own role, you need to pass the role arn and external id to CLI. 
         * To make CLI create one for you, you need to pass the role name to CLI
