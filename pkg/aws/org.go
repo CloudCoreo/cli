@@ -59,10 +59,6 @@ func NewOrgService(input *NewServiceInput) (awsService *OrgService) {
 func NewOrgServiceWithCreds(creds *sts.Credentials) (awsService *OrgService, err error) {
 	sess := session.Must(session.NewSession())
 
-	// sess := session.Must(session.NewSessionWithOptions(session.Options{
-
-	// 	SharedConfigState: session.SharedConfigEnable,
-	// }))
 	provider := NewAssumeRoleCredentialsProvider(creds)
 	svc := organizations.New(sess, &aws.Config{Credentials: credentials.NewCredentials(provider)})
 	return &OrgService{svc}, nil
@@ -75,7 +71,6 @@ func (svc *OrgService) DescribeOrganization() (response *command.Organization, e
 	if orgErr != nil {
 		return nil, orgErr
 	}
-	// fmt.Println(orgResp)
 
 	accInput := &organizations.DescribeAccountInput{
 		AccountId: aws.String(*orgResp.Organization.MasterAccountId),

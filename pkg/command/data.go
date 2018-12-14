@@ -38,18 +38,3 @@ type GetOrgTreeInput struct {
 	AwsProfilePath string
 	RoleArn        string
 }
-
-// // Account struct
-// type Account struct {
-// 	ID         string
-// 	Name       string
-// 	Email      string
-// 	Properties map[string]string
-// }
-
-// // Group struct
-// type Group struct {
-// 	ID         string
-// 	Name       string
-// 	Properties map[string]string
-// }

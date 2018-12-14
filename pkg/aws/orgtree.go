@@ -62,10 +62,6 @@ func (svc *OrgService) buildOrgTree(root *command.TreeNode, rootID string) {
 	for _, element := range children {
 		switch element.Type {
 		case "ORGANIZATIONAL_UNIT":
-			// ouResp, ouErr := svc.DescribeGroup(element.ID)
-			// if ouErr != nil {
-			// 	fmt.Printf("Failed to get information about ou - %s; err - %s", element.ID, ouErr)
-			// }
 			node, isRoot := AddChildNode(element, root)
 			if node == nil || isRoot == true {
 				fmt.Printf("Unexpected failure while adding ou id - %s to parent", element.ID)
@@ -73,10 +69,6 @@ func (svc *OrgService) buildOrgTree(root *command.TreeNode, rootID string) {
 			}
 			svc.buildOrgTree(node, element.ID)
 		case "ACCOUNT":
-			// accResp, accErr := svc.DescribeAccount(element.ID)
-			// if accErr != nil {
-			// 	fmt.Printf("Failed to get information about accound - %s; err - %s", element.ID, accErr)
-			// }
 			node, isRoot := AddChildNode(element, root)
 			if node == nil || isRoot == true {
 				fmt.Printf("Unexpected failure while adding node id - %s to parent", element.ID)
@@ -91,39 +83,16 @@ func (svc *OrgService) buildOrgTree(root *command.TreeNode, rootID string) {
 
 // GetOrganizationTree returns an array of treenode roots
 func (svc *OrgService) GetOrganizationTree() ([]*command.TreeNode, error) {
-	/*
-		stsSvc := sts.New(session.New())
-		stsInput := &sts.AssumeRoleInput{
-			DurationSeconds: aws.Int64(3600),
-			Policy:          aws.String("{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"organizations:*\",\"Resource\":\"*\"}]}"),
-			RoleArn:         aws.String("arn:aws:iam::116462199383:role/VMW_Rosetta_Role"),
-			RoleSessionName: aws.String("AwsOrganizationsDemo"),
-		}
-
-		sresult, serr := stsSvc.AssumeRole(stsInput)
-		if serr != nil {
-			fmt.Println("Unable to assume role")
-		}
-
-
-		svc, err := NewOrgServiceWithCreds(sresult.Credentials)
-		if err != nil {
-			fmt.Println("Unable to initialize AWS Service -", err)
-			return nil, err
-		}
-	*/
 
 	// Collect information about the organization and master account
 	org, orgErr := svc.DescribeOrganization()
 	if orgErr != nil {
-		// fmt.Println("Failed to get org information -", orgErr)
 		return nil, orgErr
 	}
 	fmt.Println(org)
 
 	roots, rootsErr := svc.GetRoots()
 	if rootsErr != nil {
-		// fmt.Println("Failed to get roots for the organization -", rootsErr)
 		return nil, rootsErr
 	}
 
@@ -131,7 +100,6 @@ func (svc *OrgService) GetOrganizationTree() ([]*command.TreeNode, error) {
 	for _, element := range roots {
 		root, isRoot := AddChildNode(element, nil)
 		if root == nil || isRoot == false {
-			// fmt.Println("Unable to add organization root to tree")
 			return nil, errors.New("Unable to add organization root to tree")
 		}
 		// Begin creating our organization tree by adding accounts and ou's to the root
