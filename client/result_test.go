@@ -206,3 +206,34 @@ func TestShowResultObjectFailureNoViolatedObject(t *testing.T) {
 	assert.NotNil(t, err, "GetResultObject should return error.")
 	assert.Equal(t, "No violated object", err.Error())
 }
+
+func TestNoTeamID(t *testing.T) {
+	teamInfo := []TeamInfo{
+		{
+			Name: "name",
+			ID:   "teamID",
+		},
+	}
+	res := hasTeamID(teamInfo, "teamid")
+	assert.Equal(t, false, res, "TestNoTeamID should return false")
+}
+
+func TestNoCloudID(t *testing.T) {
+	cloudInfo := []CloudAccountInfo{
+		{
+			Name: "name",
+			ID:   "cloudID",
+		},
+	}
+	res := hasCloudID(cloudInfo, "cloudid")
+	assert.Equal(t, false, res, "TestNoCloudID should return false")
+}
+
+func TestNoLevel(t *testing.T) {
+	targetLevel := []string{
+		"High",
+	}
+
+	res := hasLevel(targetLevel, "Medium")
+	assert.Equal(t, false, res, "TestNoLevel should return false")
+}

@@ -19,6 +19,9 @@ import (
 	"regexp"
 	"testing"
 
+	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/magiconair/properties/assert"
+
 	"github.com/CloudCoreo/cli/client"
 	"github.com/pkg/errors"
 )
@@ -86,4 +89,10 @@ func TestTokenListCmd(t *testing.T) {
 		}
 		buf.Reset()
 	}
+}
+
+func TestNewTokenCmd(t *testing.T) {
+	var buf bytes.Buffer
+	cmd := newTokenCmd(&buf)
+	assert.Equal(t, content.CmdTokenUse, cmd.Use)
 }

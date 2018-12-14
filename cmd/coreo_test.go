@@ -28,6 +28,7 @@ type fakeReleaseClient struct {
 	config        client.EventStreamConfig
 	err           error
 	info          client.RoleCreationInfo
+	regions       []string
 }
 
 func (c *fakeReleaseClient) ListTeams() ([]*client.Team, error) {
@@ -116,7 +117,9 @@ func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level string) ([]*
 }
 
 func (c *fakeReleaseClient) GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error) {
-	return &client.EventStreamConfig{}, c.err
+	return &client.EventStreamConfig{
+		Regions: c.regions,
+	}, c.err
 }
 
 func (c *fakeReleaseClient) GetRoleCreationInfo(input *client.CreateCloudAccountInput) (*client.RoleCreationInfo, error) {

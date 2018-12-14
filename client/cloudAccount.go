@@ -248,14 +248,7 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 			if err != nil {
 				return nil, err
 			}
-			/*
-				if err != nil {
-					if input.RoleName != "" {
-						c.deleteRole(ctx, sess, input.RoleName, input.Policy)
-					}
-					return nil, err
-				}
-			*/
+
 			break
 		}
 	}

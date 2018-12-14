@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/pkg/errors"
+
 	"github.com/CloudCoreo/cli/cmd/util"
 
 	"github.com/CloudCoreo/cli/pkg/aws"
@@ -76,6 +78,9 @@ func (t *eventSetupCmd) run() error {
 		return err
 	}
 
+	if len(config.Regions) == 0 {
+		return errors.New("No regions returned")
+	}
 	err = t.cloud.SetupEventStream(config)
 	if err != nil {
 		return err

@@ -60,7 +60,7 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Example: content.CmdCloudAddExample,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			if err := util.CheckCloudAddFlags(cloudCreate.externalID, cloudCreate.roleArn, cloudCreate.roleName); err != nil {
+			if err := util.CheckCloudAddFlags(cloudCreate.externalID, cloudCreate.roleArn, cloudCreate.roleName, cloudCreate.environment); err != nil {
 				return err
 			}
 
@@ -131,7 +131,9 @@ func (t *cloudCreateCmd) run() error {
 
 	cloud, err := t.client.CreateCloudAccount(input)
 	if err != nil {
-		t.cloud.DeleteRole(t.roleName, t.policy)
+		if t.roleName != "" {
+			t.cloud.DeleteRole(t.roleName, t.policy)
+		}
 		return err
 	}
 
