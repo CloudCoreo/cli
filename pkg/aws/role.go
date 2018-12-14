@@ -11,11 +11,13 @@ import (
 	"github.com/aws/aws-sdk-go/service/iam"
 )
 
+// RoleService interacts with aws role
 type RoleService struct {
 	AwsProfilePath string
 	AwsProfile     string
 }
 
+// NewRoleService returns a new RoleService
 func NewRoleService(input *NewServiceInput) *RoleService {
 	return &RoleService{
 		AwsProfile:     input.AwsProfile,
@@ -43,6 +45,7 @@ func (c *RoleService) createAssumeRolePolicyDocument(awsAccount string, external
 }`
 }
 
+// CreateNewRole created a role with specified policy attached
 func (c *RoleService) CreateNewRole(input *client.RoleCreationInfo) (arn string, externalID string, err error) {
 	sess, err := c.newSession()
 	svc := iam.New(sess)
@@ -104,6 +107,7 @@ func (c *RoleService) newSession() (*session.Session, error) {
 	return sess, nil
 }
 
+// DeleteRole will remove the role created before if the cloud account add fails
 func (c *RoleService) DeleteRole(roleName, policyArn string) error {
 	sess, err := c.newSession()
 

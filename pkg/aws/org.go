@@ -12,11 +12,12 @@ import (
 	"github.com/aws/aws-sdk-go/service/sts"
 )
 
-// Service which connects to AWS organizations
+// OrgService which connects to AWS organizations
 type OrgService struct {
 	orgService *organizations.Organizations
 }
 
+// NewOrgService returns a new orgservice with the credentials provided
 func NewOrgService(input *NewServiceInput) (awsService *OrgService) {
 	var sess *session.Session
 	if input.AwsProfile != "" {
@@ -54,7 +55,7 @@ func NewOrgService(input *NewServiceInput) (awsService *OrgService) {
 	}
 }
 
-// New initializes a connection to the AWS organization service
+// NewOrgServiceWithCreds initializes a connection to the AWS organization service
 func NewOrgServiceWithCreds(creds *sts.Credentials) (awsService *OrgService, err error) {
 	sess := session.Must(session.NewSession())
 

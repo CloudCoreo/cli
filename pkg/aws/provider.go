@@ -12,7 +12,7 @@ type AssumeRoleCredentialsProvider struct {
 	AssumeRoleCredentials *sts.Credentials
 }
 
-// NewAssumeRoleCredentialsProvider ...
+// NewAssumeRoleCredentialsProvider returns a new AssumeRoleCredentialsProvider
 func NewAssumeRoleCredentialsProvider(credentials *sts.Credentials) *AssumeRoleCredentialsProvider {
 	return &AssumeRoleCredentialsProvider{
 		AssumeRoleCredentials: credentials,
@@ -30,7 +30,7 @@ func (c AssumeRoleCredentialsProvider) Retrieve() (credentials.Value, error) {
 
 }
 
-// IsExpired ...
+// IsExpired check whether the credentials are expired
 func (c AssumeRoleCredentialsProvider) IsExpired() bool {
 	return c.AssumeRoleCredentials.Expiration.After(time.Now())
 

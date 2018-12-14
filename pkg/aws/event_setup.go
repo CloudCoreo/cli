@@ -18,7 +18,7 @@ type SetupService struct {
 	awsProfile     string
 }
 
-//NewAwsSetup returns a pointer to a setup struct object
+//NewSetupService returns a pointer to a setup struct object
 func NewSetupService(input *NewServiceInput) *SetupService {
 	return &SetupService{
 		awsProfile:     input.AwsProfile,

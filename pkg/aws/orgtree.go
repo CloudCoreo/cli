@@ -89,6 +89,7 @@ func (svc *OrgService) buildOrgTree(root *command.TreeNode, rootID string) {
 	}
 }
 
+// GetOrganizationTree returns an array of treenode roots
 func (svc *OrgService) GetOrganizationTree() ([]*command.TreeNode, error) {
 	/*
 		stsSvc := sts.New(session.New())
