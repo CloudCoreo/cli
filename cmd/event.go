@@ -14,6 +14,6 @@ func newEventCmd(out io.Writer) *cobra.Command {
 		Long:              content.CmdEventLong,
 		PersistentPreRunE: setupCoreoConfig,
 	}
-	cmd.AddCommand(newEventSetupCmd(nil, out))
+	cmd.AddCommand(newEventSetupCmd(nil, nil, out))
 	return cmd
 }

@@ -60,6 +60,15 @@ func TestTokenDeleteCmd(t *testing.T) {
 			args: []string{""},
 			err:  true,
 		},
+		{
+			cmds: "coreo token delete",
+			desc: "delete a particular token",
+			flags: []string{
+				"--token-id", "123",
+			},
+			args: []string{""},
+			err:  true,
+		},
 	}
 
 	var buf bytes.Buffer

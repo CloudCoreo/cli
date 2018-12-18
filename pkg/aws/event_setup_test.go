@@ -11,7 +11,7 @@ import (
 )
 
 func TestNewTagListSuccess(t *testing.T) {
-	setup := NewAwsSetup()
+	setup := NewSetupService(&NewServiceInput{})
 	input := &command.SetupEventStreamInput{
 		Config: &client.EventStreamConfig{
 			TemplateURL:     "fake-url",
@@ -28,7 +28,7 @@ func TestNewTagListSuccess(t *testing.T) {
 }
 
 func TestNewParameterListSuccess(t *testing.T) {
-	setup := NewAwsSetup()
+	setup := NewSetupService(&NewServiceInput{})
 	input := &command.SetupEventStreamInput{
 		Config: &client.EventStreamConfig{
 			TemplateURL:     "fake-url",
@@ -45,7 +45,7 @@ func TestNewParameterListSuccess(t *testing.T) {
 }
 
 func TestNewCreateStackInputSuccess(t *testing.T) {
-	setup := NewAwsSetup()
+	setup := NewSetupService(&NewServiceInput{})
 	input := &command.SetupEventStreamInput{
 		Config: &client.EventStreamConfig{
 			TemplateURL:     "fake-url",
@@ -63,7 +63,7 @@ func TestNewCreateStackInputSuccess(t *testing.T) {
 }
 
 func TestNewUpdateStackInputSuccess(t *testing.T) {
-	setup := NewAwsSetup()
+	setup := NewSetupService(&NewServiceInput{})
 	input := &command.SetupEventStreamInput{
 		Config: &client.EventStreamConfig{
 			TemplateURL:     "fake-url",

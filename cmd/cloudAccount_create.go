@@ -16,6 +16,9 @@ package main
 
 import (
 	"io"
+	"time"
+
+	"github.com/CloudCoreo/cli/pkg/aws"
 
 	"github.com/CloudCoreo/cli/client"
 
@@ -29,6 +32,7 @@ import (
 type cloudCreateCmd struct {
 	out            io.Writer
 	client         command.Interface
+	cloud          command.CloudProvider
 	teamID         string
 	resourceName   string
 	roleName       string
@@ -37,6 +41,10 @@ type cloudCreateCmd struct {
 	awsProfile     string
 	awsProfilePath string
 	policy         string
+	isDraft        bool
+	userName       string
+	email          string
+	environment    string
 }
 
 func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -52,7 +60,7 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Example: content.CmdCloudAddExample,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			if err := util.CheckCloudAddFlags(cloudCreate.externalID, cloudCreate.roleArn, cloudCreate.roleName); err != nil {
+			if err := util.CheckCloudAddFlags(cloudCreate.externalID, cloudCreate.roleArn, cloudCreate.roleName, cloudCreate.environment); err != nil {
 				return err
 			}
 
@@ -61,6 +69,14 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.Host(apiEndpoint),
 					coreo.APIKey(key),
 					coreo.SecretKey(secret))
+			}
+
+			if cloudCreate.cloud == nil {
+				newServiceInput := &aws.NewServiceInput{
+					AwsProfile:     cloudCreate.awsProfile,
+					AwsProfilePath: cloudCreate.awsProfilePath,
+				}
+				cloudCreate.cloud = aws.NewService(newServiceInput)
 			}
 
 			cloudCreate.teamID = teamID
@@ -78,22 +94,46 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&cloudCreate.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&cloudCreate.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	f.StringVarP(&cloudCreate.policy, content.CmdFlagAwsPolicy, "", content.CmdFlagAwsPolicyDefault, content.CmdFlagAwsPolicyDescription)
+	f.BoolVarP(&cloudCreate.isDraft, content.CmdFlagIsDraft, "", false, content.CmdFlagIsDraftDescription)
+	f.StringVarP(&cloudCreate.email, content.CmdFlagEmail, "", "", content.CmdFlagEmailDescription)
+	f.StringVarP(&cloudCreate.userName, content.CmdFlagUserName, "", "", content.CmdFlagUserNameDescription)
+	f.StringVarP(&cloudCreate.environment, content.CmdFlagEnvironmentLong, content.CmdFlagEnvironmentShort, "", content.CmdFlagEnvironmentDescription)
 	return cmd
 }
 
 func (t *cloudCreateCmd) run() error {
 	input := &client.CreateCloudAccountInput{
-		TeamID:         t.teamID,
-		CloudName:      t.resourceName,
-		RoleName:       t.roleName,
-		ExternalID:     t.externalID,
-		RoleArn:        t.roleArn,
-		AwsProfile:     t.awsProfile,
-		AwsProfilePath: t.awsProfilePath,
-		Policy:         t.policy,
+		TeamID:      t.teamID,
+		CloudName:   t.resourceName,
+		RoleName:    t.roleName,
+		ExternalID:  t.externalID,
+		RoleArn:     t.roleArn,
+		Policy:      t.policy,
+		IsDraft:     t.isDraft,
+		Email:       t.email,
+		UserName:    t.userName,
+		Environment: t.environment,
 	}
+	if t.roleName != "" {
+		info, err := t.client.GetRoleCreationInfo(input)
+		if err != nil {
+			return err
+		}
+		arn, externalId, err := t.cloud.CreateNewRole(info)
+		time.Sleep(10 * time.Second)
+		if err != nil {
+			return err
+		}
+
+		input.RoleArn = arn
+		input.ExternalID = externalId
+	}
+
 	cloud, err := t.client.CreateCloudAccount(input)
 	if err != nil {
+		if t.roleName != "" {
+			t.cloud.DeleteRole(t.roleName, t.policy)
+		}
 		return err
 	}
 

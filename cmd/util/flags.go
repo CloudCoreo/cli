@@ -16,8 +16,6 @@ package util
 
 import (
 	"fmt"
-	"strings"
-
 	"os"
 
 	"github.com/CloudCoreo/cli/cmd/content"
@@ -26,16 +24,6 @@ import (
 func checkFlag(flag, error string) error {
 	if flag == "" {
 		return fmt.Errorf(error)
-	}
-
-	return nil
-}
-
-func checkGitRepoURL(gitRepoURL string) error {
-	if gitRepoURL == "" {
-		return fmt.Errorf(content.ErrorGitRepoURLMissing)
-	} else if !strings.Contains(gitRepoURL, "git@") {
-		return fmt.Errorf(content.ErrorInvalidGitRepoURL)
 	}
 
 	return nil
@@ -56,11 +44,20 @@ func CheckCloudShowOrDeleteFlag(cloudID string, verbose bool) error {
 }
 
 // CheckCloudAddFlags flag check for cloud add command
-func CheckCloudAddFlags(externalID, roleArn, roleName string) error {
+func CheckCloudAddFlags(externalID, roleArn, roleName, environment string) error {
 	if (externalID == "" || roleArn == "") && roleName == "" {
 		return fmt.Errorf("Please either provide both externalID and roleArn or the name of the new role ")
 	}
+	envSet := map[string]bool{
+		"Production":  true,
+		"Staging":     true,
+		"Development": true,
+		"Test":        true,
+	}
 
+	if !envSet[environment] && environment != "" {
+		return fmt.Errorf("Environment must be one of those: Production, Staging, Development, Test ")
+	}
 	return nil
 }
 
@@ -75,16 +72,6 @@ func CheckTokenShowOrDeleteFlag(tokenID string, verbose bool) error {
 	}
 
 	return nil
-}
-
-// CheckLayersFlags flag check for composite layer command
-func CheckLayersFlags(name, gitRepoURL string) error {
-	return checkGitRepoURL(gitRepoURL)
-}
-
-// CheckExtendFlags flag check for composite extend command
-func CheckExtendFlags(gitRepoURL string) error {
-	return checkGitRepoURL(gitRepoURL)
 }
 
 // CheckTeamIDFlag flag check for team id
