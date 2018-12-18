@@ -53,17 +53,16 @@ func (a *SetupService) SetupEventStream(input *client.EventStreamConfig) error {
 
 	for _, region := range regions {
 		// Set up event stream
-		res, err := a.checkStack(sess, region, input)
-		if err != nil {
-			return err
-		}
+		res := a.checkStack(sess, region, input)
 		if res {
+			fmt.Println("Updating stack in " + region)
 			err := a.updateStack(sess, region, input)
 			if err != nil {
 				return client.NewError(err.Error() + " in region" + region)
 			}
 			fmt.Println("Successfully updated stack on region " + region)
 		} else {
+			fmt.Println("Installing stack in " + region)
 			err := a.installStack(sess, region, input)
 			if err != nil {
 				return client.NewError(err.Error() + " in region" + region)
@@ -169,17 +168,16 @@ func (a *SetupService) installStack(sess *session.Session, region string, config
 	return err
 }
 
-func (a *SetupService) checkStack(sess *session.Session, region string, config *client.EventStreamConfig) (bool, error) {
+func (a *SetupService) checkStack(sess *session.Session, region string, config *client.EventStreamConfig) bool {
 	cloudFormation := cloudformation.New(sess, aws.NewConfig().WithRegion(region))
 	input := &cloudformation.DescribeStacksInput{StackName: &config.StackName}
 	output, err := cloudFormation.DescribeStacks(input)
-
 	if err != nil {
-		return false, err
+		return false
 	}
 	if len(output.Stacks) >= 1 {
-		return true, nil
+		return true
 	}
 
-	return false, nil
+	return false
 }
