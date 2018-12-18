@@ -96,24 +96,6 @@ const kmsKeyRotatesObjectOutput = `[{
 		"run_id": "run-id"
 	}]`
 
-const rolePolicy = `{
-	"Version": "2012-10-17",
-	"Statement": [
-		{
-			"Effect": "Allow",
-			"Principal": {
-				"AWS": "arn:aws:iam::` + "accountID" + `:root"
-			},
-			"Action": "sts:AssumeRole",
-			"Condition": {
-				"StringEquals": {
-					"sts:ExternalId": "` + "externalID" + `"
-				}
-			}
-		}
-	]
-}`
-
 func TestGetAllResultRuleSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForResult, ts.URL)).WithStatus(http.StatusOK)
@@ -225,11 +207,33 @@ func TestShowResultObjectFailureNoViolatedObject(t *testing.T) {
 	assert.Equal(t, "No violated object", err.Error())
 }
 
-func TestCreateAssumeRolePolicyDocument(t *testing.T) {
-	ts := httpstub.New()
-	defer ts.Close()
+func TestNoTeamID(t *testing.T) {
+	teamInfo := []TeamInfo{
+		{
+			Name: "name",
+			ID:   "teamID",
+		},
+	}
+	res := hasTeamID(teamInfo, "teamid")
+	assert.Equal(t, false, res, "TestNoTeamID should return false")
+}
 
-	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	res := client.createAssumeRolePolicyDocument("accountID", "externalID")
-	assert.Equal(t, rolePolicy, res)
+func TestNoCloudID(t *testing.T) {
+	cloudInfo := []CloudAccountInfo{
+		{
+			Name: "name",
+			ID:   "cloudID",
+		},
+	}
+	res := hasCloudID(cloudInfo, "cloudid")
+	assert.Equal(t, false, res, "TestNoCloudID should return false")
+}
+
+func TestNoLevel(t *testing.T) {
+	targetLevel := []string{
+		"High",
+	}
+
+	res := hasLevel(targetLevel, "Medium")
+	assert.Equal(t, false, res, "TestNoLevel should return false")
 }

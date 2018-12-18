@@ -201,6 +201,9 @@ const (
 	//CmdAddUse add cmd
 	CmdAddUse = "add"
 
+	//CmdScanUse scan cmd
+	CmdScanUse = "scan"
+
 	//CmdDeleteUse delete cmd
 	CmdDeleteUse = "delete [flags]"
 

@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/pkg/errors"
+
+	"github.com/CloudCoreo/cli/cmd/util"
+
 	"github.com/CloudCoreo/cli/pkg/aws"
 
 	"github.com/CloudCoreo/cli/pkg/coreo"
@@ -24,10 +28,11 @@ type eventSetupCmd struct {
 	teamID         string
 }
 
-func newEventSetupCmd(client command.Interface, out io.Writer) *cobra.Command {
+func newEventSetupCmd(client command.Interface, provider command.CloudProvider, out io.Writer) *cobra.Command {
 	eventSetup := &eventSetupCmd{
 		client: client,
 		out:    out,
+		cloud:  provider,
 	}
 
 	cmd := &cobra.Command{
@@ -36,6 +41,10 @@ func newEventSetupCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Long:    content.CmdEventSetupLong,
 		Example: content.CmdEventSetupExample,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			// Check for --cloud-id
+			if err := util.CheckCloudShowOrDeleteFlag(eventSetup.cloudID, verbose); err != nil {
+				return err
+			}
 			if eventSetup.client == nil {
 				eventSetup.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
@@ -43,7 +52,11 @@ func newEventSetupCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.SecretKey(secret))
 			}
 			if eventSetup.cloud == nil {
-				eventSetup.cloud = aws.NewAwsSetup()
+				newServiceInput := &aws.NewServiceInput{
+					AwsProfile:     eventSetup.awsProfile,
+					AwsProfilePath: eventSetup.awsProfilePath,
+				}
+				eventSetup.cloud = aws.NewService(newServiceInput)
 			}
 
 			eventSetup.teamID = teamID
@@ -65,12 +78,10 @@ func (t *eventSetupCmd) run() error {
 		return err
 	}
 
-	input := &command.SetupEventStreamInput{
-		AwsProfile:     t.awsProfile,
-		AwsProfilePath: t.awsProfilePath,
-		Config:         config,
+	if len(config.Regions) == 0 {
+		return errors.New("No regions returned")
 	}
-	err = t.cloud.SetupEventStream(input)
+	err = t.cloud.SetupEventStream(config)
 	if err != nil {
 		return err
 	}

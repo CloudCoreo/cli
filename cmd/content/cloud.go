@@ -42,6 +42,12 @@ Add a cloud account. The result would be shown as the following if successful.
              *********************           ************           ************************
          -----------------------------  -----------------------  -----------------------------
 `
+	//CmdCloudScanShort short description
+	CmdCloudScanShort = "Scan your root account and create skeletons"
+
+	//CmdCloudScanLong long description
+	CmdCloudScanLong = "Scan your root account, get organization and create skeletons for each account"
+
 	//CmdCloudAddExample ...
 	CmdCloudAddExample = `  coreo cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE
   coreo cloud add --name YOUR_NEW_ACCOUNT_NAME --arn YOUR_ROLE_ARN --external-id EXTERNAL_ID_OF_YOUR_ROLE`
@@ -76,6 +82,14 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagRoleExternalID is flag for external-id used to assume the provided role
 	CmdFlagRoleExternalID = "external-id"
 
+	CmdFlagRoleSessionName = "role-session"
+
+	CmdFlagRoleSessionNameDescription = "The session name to assume the role"
+
+	CmdFlagDuration = "duartion"
+
+	CmdFlagDurationDescription = "The duration for session in seconds"
+
 	//CmdFlagAwsProfile = "aws-profile"
 	CmdFlagAwsProfile = "aws-profile"
 
@@ -98,6 +112,28 @@ Add a cloud account. The result would be shown as the following if successful.
 
 	//CmdFlagAwsPolicyDescription describes flag policy-arn
 	CmdFlagAwsPolicyDescription = "The arn of the policy you'd like to attach for role creation, SecurityAudit policy arn by default"
+
+	CmdFlagIsDraft = "draft"
+
+	CmdFlagIsDraftDescription = "Create a draft"
+
+	CmdFlagUserName = "username"
+
+	CmdFlagUserNameDescription = "User name of account owner"
+
+	CmdFlagEnvironmentShort       = "e"
+	CmdFlagEnvironmentLong        = "environment"
+	CmdFlagEnvironmentDescription = "Environment label for cloud account, four options available: Production, Staging, Development, Test"
+
+	CmdFlagEmail = "email"
+
+	CmdFlagEmailDescription = "Email address of account owner"
+
+	CmdFlagAwsAssumeRolePolicy = "policy"
+
+	CmdFlagAwsAssumeRolePolicyDescription = "The policy you'd like to use to assume that role"
+
+	CmdFlagAwsAssumeRolePolicyDefault = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"organizations:*\",\"Resource\":\"*\"}]}"
 
 	//CmdFlagRoleExternalIDDescription is description for flag --external-id
 	CmdFlagRoleExternalIDDescription = "The external-id used to assume the provided role"

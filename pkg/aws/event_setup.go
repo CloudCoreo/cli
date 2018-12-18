@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/CloudCoreo/cli/client"
-	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -13,25 +12,28 @@ import (
 	"github.com/aws/aws-sdk-go/service/cloudtrail"
 )
 
-//Setup is the struct implements CloudProvider interface for aws
-type Setup struct {
-	filename string
-	profile  string
+//SetupService  is the struct implements CloudProvider interface for aws
+type SetupService struct {
+	awsProfilePath string
+	awsProfile     string
 }
 
-//NewAwsSetup returns a pointer to a setup struct object
-func NewAwsSetup() *Setup {
-	return &Setup{}
+//NewSetupService returns a pointer to a setup struct object
+func NewSetupService(input *NewServiceInput) *SetupService {
+	return &SetupService{
+		awsProfile:     input.AwsProfile,
+		awsProfilePath: input.AwsProfilePath,
+	}
 }
 
 //SetupEventStream sets up event stream for aws account
-func (a *Setup) SetupEventStream(input *command.SetupEventStreamInput) error {
-	regions := input.Config.Regions
+func (a *SetupService) SetupEventStream(input *client.EventStreamConfig) error {
+	regions := input.Regions
 
 	var sess *session.Session
 	var err error
-	if input.AwsProfile != "" {
-		sess, err = session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(input.AwsProfilePath, input.AwsProfile)})
+	if a.awsProfile != "" {
+		sess, err = session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(a.awsProfilePath, a.awsProfile)})
 		if err != nil {
 			return err
 		}
@@ -51,18 +53,17 @@ func (a *Setup) SetupEventStream(input *command.SetupEventStreamInput) error {
 
 	for _, region := range regions {
 		// Set up event stream
-		res, err := a.checkStack(sess, region, input.Config)
-		if err != nil {
-			return err
-		}
+		res := a.checkStack(sess, region, input)
 		if res {
-			err := a.updateStack(sess, region, input.Config)
+			fmt.Println("Updating stack in " + region)
+			err := a.updateStack(sess, region, input)
 			if err != nil {
 				return client.NewError(err.Error() + " in region" + region)
 			}
 			fmt.Println("Successfully updated stack on region " + region)
 		} else {
-			err := a.installStack(sess, region, input.Config)
+			fmt.Println("Installing stack in " + region)
+			err := a.installStack(sess, region, input)
 			if err != nil {
 				return client.NewError(err.Error() + " in region" + region)
 			}
@@ -73,7 +74,7 @@ func (a *Setup) SetupEventStream(input *command.SetupEventStreamInput) error {
 	return nil
 }
 
-func (a *Setup) checkCloudTrailForRegion(sess *session.Session, region string) (bool, error) {
+func (a *SetupService) checkCloudTrailForRegion(sess *session.Session, region string) (bool, error) {
 	// Set the Region to fetch CloudTrail information to region
 	// WithRegion returns a new Config pointer that can be chained with builder
 	// methods to set multiple configuration values inline without using pointers
@@ -101,14 +102,14 @@ func (a *Setup) checkCloudTrailForRegion(sess *session.Session, region string) (
 	}
 	return false, client.NewError("CloudTrail is not enabled in region " + region)
 }
-func (a *Setup) newTag(key, value string) *cloudformation.Tag {
+func (a *SetupService) newTag(key, value string) *cloudformation.Tag {
 	tag := &cloudformation.Tag{}
 	tag.SetKey(key)
 	tag.SetValue(value)
 	return tag
 }
 
-func (a *Setup) newTagList(config *client.EventStreamConfig) []*cloudformation.Tag {
+func (a *SetupService) newTagList(config *client.EventStreamConfig) []*cloudformation.Tag {
 	tags := make([]*cloudformation.Tag, 2)
 	keys := []string{"Version", "LastUpdatedTime"}
 	values := []string{config.Version, time.Now().Format(time.RFC850)}
@@ -118,14 +119,14 @@ func (a *Setup) newTagList(config *client.EventStreamConfig) []*cloudformation.T
 	return tags
 }
 
-func (a *Setup) newParameter(key, value string) *cloudformation.Parameter {
+func (a *SetupService) newParameter(key, value string) *cloudformation.Parameter {
 	parameter := &cloudformation.Parameter{}
 	parameter.SetParameterKey(key)
 	parameter.SetParameterValue(value)
 	return parameter
 }
 
-func (a *Setup) newParameterList(config *client.EventStreamConfig) []*cloudformation.Parameter {
+func (a *SetupService) newParameterList(config *client.EventStreamConfig) []*cloudformation.Parameter {
 	parameters := make([]*cloudformation.Parameter, 3)
 	keys := []string{"CloudCoreoDevTimeQueueArn", "CloudCoreoDevTimeTopicName", "CloudCoreoDevTimeMonitorRule"}
 	values := []string{config.DevtimeQueueArn, config.TopicName, config.MonitorRule}
@@ -136,7 +137,7 @@ func (a *Setup) newParameterList(config *client.EventStreamConfig) []*cloudforma
 	return parameters
 }
 
-func (a *Setup) newUpdateStackInput(config *client.EventStreamConfig) *cloudformation.UpdateStackInput {
+func (a *SetupService) newUpdateStackInput(config *client.EventStreamConfig) *cloudformation.UpdateStackInput {
 	input := &cloudformation.UpdateStackInput{}
 	input.SetTemplateURL(config.TemplateURL)
 	input.SetStackName(config.StackName)
@@ -145,13 +146,13 @@ func (a *Setup) newUpdateStackInput(config *client.EventStreamConfig) *cloudform
 	return input
 }
 
-func (a *Setup) updateStack(sess *session.Session, region string, config *client.EventStreamConfig) error {
+func (a *SetupService) updateStack(sess *session.Session, region string, config *client.EventStreamConfig) error {
 	cloudFormation := cloudformation.New(sess, aws.NewConfig().WithRegion(region))
 	_, err := cloudFormation.UpdateStack(a.newUpdateStackInput(config))
 	return err
 }
 
-func (a *Setup) newCreateStackInput(config *client.EventStreamConfig) *cloudformation.CreateStackInput {
+func (a *SetupService) newCreateStackInput(config *client.EventStreamConfig) *cloudformation.CreateStackInput {
 	input := &cloudformation.CreateStackInput{}
 	input.SetStackName(config.StackName)
 	input.SetTemplateURL(config.TemplateURL)
@@ -161,23 +162,22 @@ func (a *Setup) newCreateStackInput(config *client.EventStreamConfig) *cloudform
 	return input
 }
 
-func (a *Setup) installStack(sess *session.Session, region string, config *client.EventStreamConfig) error {
+func (a *SetupService) installStack(sess *session.Session, region string, config *client.EventStreamConfig) error {
 	cloudFormation := cloudformation.New(sess, aws.NewConfig().WithRegion(region))
 	_, err := cloudFormation.CreateStack(a.newCreateStackInput(config))
 	return err
 }
 
-func (a *Setup) checkStack(sess *session.Session, region string, config *client.EventStreamConfig) (bool, error) {
+func (a *SetupService) checkStack(sess *session.Session, region string, config *client.EventStreamConfig) bool {
 	cloudFormation := cloudformation.New(sess, aws.NewConfig().WithRegion(region))
 	input := &cloudformation.DescribeStacksInput{StackName: &config.StackName}
 	output, err := cloudFormation.DescribeStacks(input)
-
 	if err != nil {
-		return false, err
+		return false
 	}
 	if len(output.Stacks) >= 1 {
-		return true, nil
+		return true
 	}
 
-	return false, nil
+	return false
 }
