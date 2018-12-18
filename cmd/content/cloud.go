@@ -122,7 +122,7 @@ Add a cloud account. The result would be shown as the following if successful.
 	CmdFlagUserNameDescription = "User name of account owner"
 
 	CmdFlagEnvironmentShort       = "e"
-	CmdFlagEnvironmentLong        = "env"
+	CmdFlagEnvironmentLong        = "environment"
 	CmdFlagEnvironmentDescription = "Environment label for cloud account, four options available: Production, Staging, Development, Test"
 
 	CmdFlagEmail = "email"

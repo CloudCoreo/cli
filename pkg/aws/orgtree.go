@@ -104,7 +104,7 @@ func (svc *OrgService) GetOrganizationTree() ([]*command.TreeNode, error) {
 		}
 		// Begin creating our organization tree by adding accounts and ou's to the root
 		svc.buildOrgTree(root, element.ID)
-		PrintTree(root)
+		// PrintTree(root)
 		res = append(res, root)
 	}
 
