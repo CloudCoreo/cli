@@ -21,11 +21,11 @@ Use CLI to...
 Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.20/coreo_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.20/coreo_darwin_amd64)
 
 ```sh
-$ mkdir coreo && cd coreo
-$ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.20/coreo_darwin_amd64
-$ chmod +x coreo
-$ export PATH=$PATH:${PWD}   # Add current dir where coreo has been downloaded to
-$ coreo
+ mkdir coreo && cd coreo
+ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.20/coreo_darwin_amd64
+ chmod +x coreo
+ export PATH=$PATH:${PWD}   # Add current dir where coreo has been downloaded to
+ coreo
 ```
 
 ### Linux
@@ -33,11 +33,11 @@ $ coreo
 Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.20/coreo_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.20/coreo_linux_amd64)
 
 ```sh
-$ mkdir coreo && cd coreo
-$ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.20/coreo_linux_amd64
-$ chmod +x coreo
-$ export PATH=$PATH:${PWD}   # Add current dir where coreo has been downloaded to
-$ coreo
+ mkdir coreo && cd coreo
+ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.20/coreo_linux_amd64
+ chmod +x coreo
+ export PATH=$PATH:${PWD}   # Add current dir where coreo has been downloaded to
+ coreo
 ```
 
 ### Windows
@@ -54,10 +54,10 @@ C:\Users\Username\Downloads> coreo.exe
 Build instructions are as follows (see [install golang](https://docs.minio.io/docs/how-to-install-golang) for setting up a working golang environment):
 
 ```sh
-$ go get -d github.com/CloudCoreo/cli
-$ cd $GOPATH/src/github.com/CloudCoreo/cli/cmd
-$ go build -o $GOPATH/bin/coreo
-$ coreo
+ go get -d github.com/CloudCoreo/cli
+ cd $GOPATH/src/github.com/CloudCoreo/cli/cmd
+ go build -o $GOPATH/bin/coreo
+ coreo
 ```
 ## Getting started
 Get your access keys on [VMware Secure State](https://app.cloudcoreo.com/main/settings/cli).
@@ -71,7 +71,7 @@ And then type you access key information and default team id as well. You may ch
 
 ## Usage
 ```sh
-$coreo <command> [--help] [--verbose] [--json] [<args>]
+coreo <command> [--help] [--verbose] [--json] [<args>]
 ```
 
 The most commonly used coreo commands are:
@@ -109,8 +109,8 @@ Flags for specific commands are listed in Docs section.
 ## Example
 You may use CLI to do scriptable onboarding with two commands:
 ```sh
-    $ coreo cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE [--aws-profile PROFILE_NAME] [–aws-profile-path PROFILE_PATH] [--policy-arn YOUR_POLICY_ARN] [--team-id YOUR_TEAM_ID] 
-    $ coreo event setup --cloud-id YOUR_CLOUD_ID [--aws-profile PROFILE_NAME] [--aws-profile-path PROFILE_PATH] [--team-id YOUR_TEAM_ID]  
+ coreo cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE [--aws-profile PROFILE_NAME] [–aws-profile-path PROFILE_PATH] [--policy-arn YOUR_POLICY_ARN] [--team-id YOUR_TEAM_ID] 
+ coreo event setup --cloud-id YOUR_CLOUD_ID [--aws-profile PROFILE_NAME] [--aws-profile-path PROFILE_PATH] [--team-id YOUR_TEAM_ID]  
 ```
 If the team-id flag is omitted, CLI will use the default team id in configuration. If default team id is not set, an error will be returned.
 ## Docs
