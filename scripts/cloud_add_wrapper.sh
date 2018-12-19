@@ -17,6 +17,8 @@ while read account_name account_id environment profile; do
 	done <<< "$accounts"
 	if [ $is_exist = true ]; then
 		echo "Cloud account with name $account_name already exist, skip for this account"
+		cloud_id=$(coreo cloud list --json --team-id $team_id | jq  -r '.[] | select(.name=="'$account_name'")|.id')
+		coreo event setup --team-id $team_id --cloud-id $cloud_id --aws-profile $profile
 		continue
 	fi
 	cloud_id=$(coreo cloud add --team-id $team_id --name $account_name --role $role_name --aws-profile $profile --environment $environment --json | jq -r .id)
