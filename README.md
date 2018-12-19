@@ -22,7 +22,7 @@ Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.
 
 ```sh
  mkdir coreo && cd coreo
- wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.20/coreo_darwin_amd64
+ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.21/coreo_darwin_amd64
  chmod +x coreo
  export PATH=$PATH:${PWD}   # Add current dir where coreo has been downloaded to
  coreo
@@ -34,7 +34,7 @@ Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.
 
 ```sh
  mkdir coreo && cd coreo
- wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.20/coreo_linux_amd64
+ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.21/coreo_linux_amd64
  chmod +x coreo
  export PATH=$PATH:${PWD}   # Add current dir where coreo has been downloaded to
  coreo
