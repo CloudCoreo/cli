@@ -86,6 +86,10 @@ Add a cloud account. The result would be shown as the following if successful.
 
 	CmdFlagRoleSessionNameDescription = "The session name to assume the role"
 
+	CmdFlagIgnoreMissingTrails = "ignore-missing-trails"
+
+	CmdFlagIgnoreMissingTrailsDescription = "CLI will continue on event steam setup even if CloudTrail is not enabled in all regions"
+
 	CmdFlagDuration = "duartion"
 
 	CmdFlagDurationDescription = "The duration for session in seconds"
