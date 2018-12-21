@@ -82,16 +82,22 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagRoleExternalID is flag for external-id used to assume the provided role
 	CmdFlagRoleExternalID = "external-id"
 
+	//CmdFlagRoleSessionName is the name of session for cloud scan command
 	CmdFlagRoleSessionName = "role-session"
 
+	//CmdFlagRoleSessionNameDescription is the description of flag roleSessionName
 	CmdFlagRoleSessionNameDescription = "The session name to assume the role"
 
+	//CmdFlagIgnoreMissingTrails will make CLI skip on current region of which cloudTrail is not enabled and go on.
 	CmdFlagIgnoreMissingTrails = "ignore-missing-trails"
 
+	//CmdFlagIgnoreMissingTrailsDescription describes the usage of CmdFlagIgnoreMissingTrails flag
 	CmdFlagIgnoreMissingTrailsDescription = "CLI will continue on event steam setup even if CloudTrail is not enabled in all regions"
 
+	//CmdFlagDuration is the duration of session keys for cloud scan command
 	CmdFlagDuration = "duartion"
 
+	//CmdFlagDurationDescription describes the flag duration
 	CmdFlagDurationDescription = "The duration for session in seconds"
 
 	//CmdFlagAwsProfile = "aws-profile"
@@ -117,26 +123,40 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagAwsPolicyDescription describes flag policy-arn
 	CmdFlagAwsPolicyDescription = "The arn of the policy you'd like to attach for role creation, SecurityAudit policy arn by default"
 
+	//CmdFlagIsDraft will add a draft account
 	CmdFlagIsDraft = "draft"
 
+	//CmdFlagIsDraftDescription describes the usage of draft flag
 	CmdFlagIsDraftDescription = "Create a draft"
 
+	//CmdFlagUserName is the owner username when adding a cloud account, optional
 	CmdFlagUserName = "username"
 
+	//CmdFlagUserNameDescription describes the username flag
 	CmdFlagUserNameDescription = "User name of account owner"
 
-	CmdFlagEnvironmentShort       = "e"
-	CmdFlagEnvironmentLong        = "environment"
+	//CmdFlagEnvironmentShort is the short flag for environment flag
+	CmdFlagEnvironmentShort = "e"
+
+	//CmdFlagEnvironmentLong is the long flag for environment flag
+	CmdFlagEnvironmentLong = "environment"
+
+	//CmdFlagEnvironmentDescription describes the usage of environment flag
 	CmdFlagEnvironmentDescription = "Environment label for cloud account, four options available: Production, Staging, Development, Test"
 
+	//CmdFlagEmail is the owner email when adding cloud accounts, optional
 	CmdFlagEmail = "email"
 
+	//CmdFlagEmailDescription describes the usage of email flag
 	CmdFlagEmailDescription = "Email address of account owner"
 
+	//CmdFlagAwsAssumeRolePolicy is the flag for assume role policy
 	CmdFlagAwsAssumeRolePolicy = "policy"
 
+	//CmdFlagAwsAssumeRolePolicyDescription describes the usage of flag policy
 	CmdFlagAwsAssumeRolePolicyDescription = "The policy you'd like to use to assume that role"
 
+	//CmdFlagAwsAssumeRolePolicyDefault is the default assume role policy value
 	CmdFlagAwsAssumeRolePolicyDefault = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"organizations:*\",\"Resource\":\"*\"}]}"
 
 	//CmdFlagRoleExternalIDDescription is description for flag --external-id
