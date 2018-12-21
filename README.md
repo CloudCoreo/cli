@@ -18,11 +18,11 @@ Use CLI to...
 
 ### OSX
 
-Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.21/coreo_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.21/coreo_darwin_amd64)
+Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.22/coreo_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.22/coreo_darwin_amd64)
 
 ```sh
  mkdir coreo && cd coreo
- wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.21/coreo_darwin_amd64
+ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.22/coreo_darwin_amd64
  chmod +x coreo
  export PATH=$PATH:${PWD}   # Add current dir where coreo has been downloaded to
  coreo
@@ -30,11 +30,11 @@ Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.
 
 ### Linux
 
-Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.21/coreo_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.21/coreo_linux_amd64)
+Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.22/coreo_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.22/coreo_linux_amd64)
 
 ```sh
  mkdir coreo && cd coreo
- wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.21/coreo_linux_amd64
+ wget -q -O coreo https://github.com/CloudCoreo/cli/releases/download/v0.0.22/coreo_linux_amd64
  chmod +x coreo
  export PATH=$PATH:${PWD}   # Add current dir where coreo has been downloaded to
  coreo
@@ -42,7 +42,7 @@ Download `coreo` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.
 
 ### Windows
 
-Download `coreo.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.21/coreo_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.21/coreo_windows_amd64.exe)
+Download `coreo.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.22/coreo_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.22/coreo_windows_amd64.exe)
 
 ```
 C:\Users\Username\Downloads> rename coreo_windows_amd64.exe coreo.exe
@@ -275,6 +275,7 @@ Manage event stream
         | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
         |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
         | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to show information for, this flag is required|
+        |ignore-missing-trails|--ignore-missing-trails| With this flag, CLI will skip regions of which CloudTrail in not enables and continue on other regions.|
 
 #### help
 Help about any command

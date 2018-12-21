@@ -14,15 +14,17 @@ import (
 
 //SetupService  is the struct implements CloudProvider interface for aws
 type SetupService struct {
-	awsProfilePath string
-	awsProfile     string
+	awsProfilePath     string
+	awsProfile         string
+	ignoreMissingTrail bool
 }
 
 //NewSetupService returns a pointer to a setup struct object
 func NewSetupService(input *NewServiceInput) *SetupService {
 	return &SetupService{
-		awsProfile:     input.AwsProfile,
-		awsProfilePath: input.AwsProfilePath,
+		awsProfile:         input.AwsProfile,
+		awsProfilePath:     input.AwsProfilePath,
+		ignoreMissingTrail: input.IgnoreCloudTrail,
 	}
 }
 
@@ -45,13 +47,17 @@ func (a *SetupService) SetupEventStream(input *client.EventStreamConfig) error {
 	}
 
 	for _, region := range regions {
+		// Check CloudTrail
 		_, err := a.checkCloudTrailForRegion(sess, region)
 		if err != nil {
-			return err
+			if a.ignoreMissingTrail {
+				fmt.Println("CloudTrail is not enabled in region " + region + ". Skip event stream setup for this region.")
+				continue
+			} else {
+				return err
+			}
 		}
-	}
 
-	for _, region := range regions {
 		// Set up event stream
 		res := a.checkStack(sess, region, input)
 		if res {

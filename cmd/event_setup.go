@@ -19,13 +19,14 @@ import (
 )
 
 type eventSetupCmd struct {
-	client         command.Interface
-	cloud          command.CloudProvider
-	out            io.Writer
-	awsProfile     string
-	awsProfilePath string
-	cloudID        string
-	teamID         string
+	client              command.Interface
+	cloud               command.CloudProvider
+	out                 io.Writer
+	awsProfile          string
+	awsProfilePath      string
+	cloudID             string
+	teamID              string
+	ignoreMissingTrails bool
 }
 
 func newEventSetupCmd(client command.Interface, provider command.CloudProvider, out io.Writer) *cobra.Command {
@@ -53,8 +54,9 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 			}
 			if eventSetup.cloud == nil {
 				newServiceInput := &aws.NewServiceInput{
-					AwsProfile:     eventSetup.awsProfile,
-					AwsProfilePath: eventSetup.awsProfilePath,
+					AwsProfile:       eventSetup.awsProfile,
+					AwsProfilePath:   eventSetup.awsProfilePath,
+					IgnoreCloudTrail: eventSetup.ignoreMissingTrails,
 				}
 				eventSetup.cloud = aws.NewService(newServiceInput)
 			}
@@ -68,6 +70,7 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 	f.StringVarP(&eventSetup.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&eventSetup.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	f.StringVarP(&eventSetup.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
+	f.BoolVarP(&eventSetup.ignoreMissingTrails, content.CmdFlagIgnoreMissingTrails, "", false, content.CmdFlagIgnoreMissingTrailsDescription)
 	return cmd
 }
 

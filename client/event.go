@@ -33,6 +33,10 @@ func (c *Client) GetSetupConfig(ctx context.Context, teamID, cloudID string) (*E
 	config := &EventStreamConfig{}
 
 	accounts, err := c.GetCloudAccountByID(ctx, teamID, cloudID)
+	if err != nil {
+		return nil, err
+	}
+
 	link, err := GetLinkByRef(accounts.Links, "setup")
 	if err != nil {
 		return nil, err
