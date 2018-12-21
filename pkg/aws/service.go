@@ -16,12 +16,13 @@ type Service struct {
 
 // NewServiceInput contains the info for creating a new Service
 type NewServiceInput struct {
-	AwsProfile      string
-	AwsProfilePath  string
-	RoleArn         string
-	Policy          string
-	RoleSessionName string
-	Duration        int64
+	AwsProfile       string
+	AwsProfilePath   string
+	RoleArn          string
+	Policy           string
+	RoleSessionName  string
+	Duration         int64
+	IgnoreCloudTrail bool
 }
 
 // NewService returns a new aws service group
