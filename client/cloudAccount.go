@@ -25,12 +25,13 @@ import (
 
 // CloudAccount Information
 type CloudAccount struct {
-	TeamID   string `json:"teamId"`
-	Name     string `json:"name"`
-	RoleID   string `json:"roleId"`
-	RoleName string `json:"roleName"`
-	Links    []Link `json:"links"`
-	ID       string `json:"id"`
+	TeamID    string `json:"teamId"`
+	Name      string `json:"name"`
+	RoleID    string `json:"roleId"`
+	RoleName  string `json:"roleName"`
+	Links     []Link `json:"links"`
+	ID        string `json:"id"`
+	AccountID string `json:"accountId"`
 }
 
 // CreateCloudAccountInput for function CreateCloudAccount

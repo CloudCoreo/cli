@@ -54,5 +54,7 @@ func (s *Service) DeleteRole(roleName, policyArn string) {
 	err := s.role.DeleteRole(roleName, policyArn)
 	if err != nil {
 		fmt.Println("Failed to delete role" + roleName + ", " + err.Error())
+	} else {
+		fmt.Println("Deleted role successfully!")
 	}
 }
