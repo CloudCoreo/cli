@@ -50,10 +50,10 @@ func (s *Service) CreateNewRole(input *client.RoleCreationInfo) (arn string, ext
 }
 
 // DeleteRole calls the DeleteRole function in RoleService
-func (s *Service) DeleteRole(roleName, policyArn string) {
-	err := s.role.DeleteRole(roleName, policyArn)
+func (s *Service) DeleteRole(roleName string) {
+	err := s.role.DeleteRole(roleName)
 	if err != nil {
-		fmt.Println("Failed to delete role" + roleName + ", " + err.Error())
+		fmt.Println(err.Error())
 	} else {
 		fmt.Println("Deleted role successfully!")
 	}

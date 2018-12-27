@@ -134,11 +134,10 @@ func (t *cloudCreateCmd) run() error {
 	if err != nil {
 		if t.roleName != "" {
 			fmt.Println("Cloud account creation failed! Will delete created role.")
-			t.cloud.DeleteRole(t.roleName, t.policy)
+			t.cloud.DeleteRole(t.roleName)
 		}
 		return err
 	}
-
 	util.PrintResult(
 		t.out,
 		cloud,

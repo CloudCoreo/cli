@@ -32,6 +32,7 @@ type CloudAccount struct {
 	Links     []Link `json:"links"`
 	ID        string `json:"id"`
 	AccountID string `json:"accountId"`
+	Arn       string `json:"arn"`
 }
 
 // CreateCloudAccountInput for function CreateCloudAccount
@@ -95,7 +96,8 @@ type RoleCreationInfo struct {
 
 // GetCloudAccounts method for cloud command
 func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]*CloudAccount, error) {
-	clouds := []*CloudAccount{}
+	// clouds := []*CloudAccount{}
+	clouds := make([]*CloudAccount, 0)
 	teams, err := c.GetTeams(ctx)
 
 	if err != nil {
@@ -179,6 +181,7 @@ func (c *Client) sendCloudCreateRequest(ctx context.Context, input *sendCloudCre
 	return cloudAccount, nil
 }
 
+// GetRoleCreationInfo returns the configuration for creating a new role
 func (c *Client) GetRoleCreationInfo(ctx context.Context, input *CreateCloudAccountInput) (*RoleCreationInfo, error) {
 	teams, err := c.GetTeams(ctx)
 	if err != nil {

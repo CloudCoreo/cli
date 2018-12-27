@@ -43,5 +43,5 @@ type CloudProvider interface {
 	SetupEventStream(input *client.EventStreamConfig) error
 	GetOrgTree() ([]*TreeNode, error)
 	CreateNewRole(input *client.RoleCreationInfo) (arn string, externalID string, err error)
-	DeleteRole(roleName, policyArn string)
+	DeleteRole(roleName string)
 }
