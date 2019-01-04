@@ -30,7 +30,7 @@ const (
 	hostEnvVar         = "VSS_API_ENDPOINT"
 	homeEnvVar         = "VSS_HOME"
 	profileEnvVar      = "VSS_PROFILE"
-	defaultAPIEndpoint = "https://app.cloudcoreo.com/api"
+	defaultAPIEndpoint = "https://app.securestate.vmware.com/api"
 	defaultProfile     = "default"
 )
 

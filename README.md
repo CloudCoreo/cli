@@ -59,7 +59,7 @@ Build instructions are as follows (see [install golang](https://docs.minio.io/do
  vss
 ```
 ## Getting started
-Get your access keys on [VMware Secure State](https://app.cloudcoreo.com/main/settings/cli).
+Get your access keys on [VMware Secure State](https://app.securestate.vmware.com/main/settings/cli).
 Go to the “Settings” menu and select the "Command-Line Interface”, then click the “Create Access Key” button. Your default team id is right below the access key id window.  
 
 You may need to configure your access key and default team id the first time using CLI but you can also skip this step and pass these to CLI using flags `--api-key, --api-secret, --team-id`. You may set up configuration using:
@@ -94,7 +94,7 @@ The most commonly used VSS commands are:
 | ------ | ------ | :--------:| :-------- |
 |api-key | --api-key| |Vss API Key, will read api-key in configure file by default| 
 |api-secret |--api-secret | |Vss API Secret, will read api-secret in configure file by default|
-|endpoint| --endpoint |$VSS_API_ENDPOINT| VSS API endpoint, default https://app.cloudcoreo.com/api |
+|endpoint| --endpoint |$VSS_API_ENDPOINT| VSS API endpoint, default https://app.securestate.vmware.com/api |
 |help    | --help, -h| | Get user manual for command
 |home    | --home | $VSS_HOME | Location of your VSS config. Overrides $VSS_HOME.
 |json    |--json | | Output in json format
