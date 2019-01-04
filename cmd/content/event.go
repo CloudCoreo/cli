@@ -25,10 +25,17 @@ const CmdEventLong = "Manage event stream"
 const CmdEventSetupExample = `  vss event setup
   vss event setup --aws-profile YOUR_AWS_PROFILE --cloud-id YOUR_CLOUD_ID`
 
+//CmdEventRemoveUse is the command name for command event remove
 const CmdEventRemoveUse = "remove"
+
+//CmdEventRemoveShort is the short version description for vss event remove command
 const CmdEventRemoveShort = "Remove event stream"
+
+//CmdEventRemoveLong is the long version description for vss event remove command
 const CmdEventRemoveLong = "Run this command to remove event stream." +
 	"You will need to run this script for each cloud account." +
 	"Make sure your aws credentials have been configured before run this command."
+
+//CmdEventRemoveExample is the use case for command event remove
 const CmdEventRemoveExample = `vss event remove
   vss event remove --aws-profile YOUR_AWS_PROFILE --cloud-id YOUR_CLOUD_ID`

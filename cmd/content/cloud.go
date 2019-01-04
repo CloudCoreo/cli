@@ -180,6 +180,9 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagLevelDescription is description for flag --severity
 	CmdFlagLevelDescription = "The severity level you'd like to show in violation results"
 
-	CmdFlagDeleteRole            = "role"
+	//CmdFlagDeleteRole is a flag to delete the role while deleting a cloud account
+	CmdFlagDeleteRole = "role"
+
+	//CmdFlagDeleteRoleDescription describes flag --role
 	CmdFLagDeleteRoleDescription = "Use this flag to delete the role while deleting a cloud account"
 )

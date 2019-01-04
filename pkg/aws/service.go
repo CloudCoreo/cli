@@ -61,6 +61,7 @@ func (s *Service) DeleteRole(roleName string) {
 	}
 }
 
+//RemoveEventStream perform the same function as event stream removal script
 func (s *Service) RemoveEventStream(input *client.EventRemoveConfig) error {
 	return s.remove.RemoveEventStream(input)
 }

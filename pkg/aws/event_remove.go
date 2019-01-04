@@ -18,6 +18,7 @@ type RemoveService struct {
 	awsProfile     string
 }
 
+// NewRemoveService returns an instance of RemoveService
 func NewRemoveService(input *NewServiceInput) *RemoveService {
 	return &RemoveService{
 		awsProfile:     input.AwsProfile,
@@ -53,6 +54,7 @@ func (a *RemoveService) snsPublish(sess *session.Session, arnType, region, cloud
 	return err
 }
 
+//RemoveEventStream perform the same function as event stream removal script
 func (a *RemoveService) RemoveEventStream(input *client.EventRemoveConfig) error {
 	regions := input.Regions
 	sess, err := a.newSession()
