@@ -35,6 +35,7 @@ type Interface interface {
 	ShowResultRule(teamID, cloudID, level string) ([]*client.ResultRule, error)
 
 	GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error)
+	GetEventRemoveConfig(teamID, cloudID string) (*client.EventRemoveConfig, error)
 	GetRoleCreationInfo(input *client.CreateCloudAccountInput) (*client.RoleCreationInfo, error)
 }
 
@@ -44,4 +45,5 @@ type CloudProvider interface {
 	GetOrgTree() ([]*TreeNode, error)
 	CreateNewRole(input *client.RoleCreationInfo) (arn string, externalID string, err error)
 	DeleteRole(roleName string)
+	RemoveEventStream(input *client.EventRemoveConfig) error
 }

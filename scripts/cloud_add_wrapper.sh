@@ -6,7 +6,7 @@ team_id="YOUR_TEAM_ID"
 role_name="securestate_role"
 while read account_name account_id environment profile; do
 	echo "creating role for account: $account_id"
-	accounts=$(coreo cloud list --json --team-id $team_id | jq -r .[].name)
+	accounts=$(vss cloud list --json --team-id $team_id | jq -r .[].name)
 	is_exist=false
 	while read account
 	do
@@ -17,11 +17,11 @@ while read account_name account_id environment profile; do
 	done <<< "$accounts"
 	if [ $is_exist = true ]; then
 		echo "Cloud account with name $account_name already exist, skip for this account"
-		cloud_id=$(coreo cloud list --json --team-id $team_id | jq  -r '.[] | select(.name=="'$account_name'")|.id')
-		coreo event setup --team-id $team_id --cloud-id $cloud_id --aws-profile $profile
+		cloud_id=$(vss cloud list --json --team-id $team_id | jq  -r '.[] | select(.name=="'$account_name'")|.id')
+		vss event setup --team-id $team_id --cloud-id $cloud_id --aws-profile $profile
 		continue
 	fi
-	cloud_id=$(coreo cloud add --team-id $team_id --name $account_name --role $role_name --aws-profile $profile --environment $environment --json | jq -r .id)
-	coreo event setup --team-id $team_id --cloud-id $cloud_id --aws-profile $profile
+	cloud_id=$(vss cloud add --team-id $team_id --name $account_name --role $role_name --aws-profile $profile --environment $environment --json | jq -r .id)
+	vss event setup --team-id $team_id --cloud-id $cloud_id --aws-profile $profile
 done
 unset IFS

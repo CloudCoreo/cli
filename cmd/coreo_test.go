@@ -122,6 +122,12 @@ func (c *fakeReleaseClient) GetEventStreamConfig(teamID, cloudID string) (*clien
 	}, c.err
 }
 
+func (c *fakeReleaseClient) GetEventRemoveConfig(teamID, cloudID string) (*client.EventRemoveConfig, error) {
+	return &client.EventRemoveConfig{
+		Regions: c.regions,
+	}, c.err
+}
+
 func (c *fakeReleaseClient) GetRoleCreationInfo(input *client.CreateCloudAccountInput) (*client.RoleCreationInfo, error) {
 	resp := c.info
 	return &resp, c.err
@@ -148,6 +154,9 @@ func (c *fakeCloudProvider) CreateNewRole(input *client.RoleCreationInfo) (arn s
 	return c.arn, c.externalID, c.err
 }
 
-func (c *fakeCloudProvider) DeleteRole(roleName, policyArn string) {
+func (c *fakeCloudProvider) DeleteRole(roleName string) {
 
+}
+func (c *fakeCloudProvider) RemoveEventStream(input *client.EventRemoveConfig) error {
+	return c.err
 }

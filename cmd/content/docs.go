@@ -32,16 +32,16 @@ const (
 
 	//CmdDocsLong long description
 	CmdDocsLong = `
-Generate documentation files for Coreo.
+Generate documentation files for VMware SecureState CLI.
 
-This command can generate documentation for Coreo in the following formats:
+This command can generate documentation for VMware SecureState CLI in the following formats:
 
 - Markdown
 - Man pages
 
 It can also generate bash autocompletions.
 
-	$ coreo docs markdown --dir mydocs/
+	$ vss docs markdown --dir mydocs/
 `
 	//ErrorDocGeneration description
 	ErrorDocGeneration = "unknown doc type %q. Try 'markdown' or 'man'"

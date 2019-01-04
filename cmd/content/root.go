@@ -24,8 +24,8 @@ const (
 	//TeamID team id
 	TeamID = "TEAM_ID"
 
-	//DefaultFolder defautl folder
-	DefaultFolder = ".cloudcoreo"
+	//DefaultFolder default folder
+	DefaultFolder = ".vss"
 
 	//DefaultFile default file
 	DefaultFile = "profiles.yaml"
@@ -39,35 +39,8 @@ const (
 	//Mask mask
 	Mask = "****************"
 
-	//ErrorMissingFile error
-	ErrorMissingFile = "Missing %s file, creating it.\n"
-
-	//ErrorDirectoryPathNotProvided error
-	ErrorDirectoryPathNotProvided = "Directory path not provided.\n"
-
-	//ErrorGitURLNotProvided error
-	ErrorGitURLNotProvided = "Git url not provided. Use flag -g\n"
-
-	//ErrorInvalidDirectory error
-	ErrorInvalidDirectory = "Error switching to directory to %s. Please make sure it's a valid directory.\n"
-
-	//ErrorGitSubmoduleFailed error
-	ErrorGitSubmoduleFailed = "git submodule add failed with:\n%s\n"
-
-	//ErrorGitRepoURLMissing error
-	ErrorGitRepoURLMissing = "A SSH git repo url is required: -g\n"
-
-	//ErrorInvalidGitRepoURL error
-	ErrorInvalidGitRepoURL = "Use a SSH git repo url for example : [-g git@github.com:CloudCoreo/audit-aws.git]\n"
-
-	//ErrorNameMissing error
-	ErrorNameMissing = "Name is required for this command. Use flag --name\n"
-
-	//ErrorKeyMissing error
-	ErrorKeyMissing = "Key is required for this command. Use flag --key\n"
-
 	//ErrorAPIKeyMissing error
-	ErrorAPIKeyMissing = "Coreo API Key is required for this command. Use flag --api-key\n"
+	ErrorAPIKeyMissing = "VMware SecureState API Key is required for this command. Use flag --api-key\n"
 
 	//ErrorSecretMissing error
 	ErrorSecretMissing = "Secret is required for this command. Use flag --secret\n"
@@ -79,7 +52,7 @@ const (
 	ErrorGitInitNotRan = "Not a git repository (or any of the parent directories): .git\n"
 
 	//ErrorNoUserProfileFound error
-	ErrorNoUserProfileFound = "No user profile found. Set profile using 'coreo configure' command"
+	ErrorNoUserProfileFound = "No user profile found. Set profile using 'vss configure' command"
 
 	//ErrorAcceptsNoArgs error
 	ErrorAcceptsNoArgs = "This command accepts no argument(s).\n"
@@ -133,19 +106,19 @@ const (
 	CmdFlagAPISecretLong = "api-secret"
 
 	//CmdFlagAPISecretDescription api secret flag description
-	CmdFlagAPISecretDescription = "Coreo API Secret"
+	CmdFlagAPISecretDescription = "VMware SecureState API Secret"
 
 	//CmdFlagAPIKeyLong api key flag long
 	CmdFlagAPIKeyLong = "api-key"
 
 	//CmdFlagAPIKeyDescription api key flag description
-	CmdFlagAPIKeyDescription = "Coreo API Key"
+	CmdFlagAPIKeyDescription = "VMware SecureState API Key"
 
 	//CmdFlagTeamIDLong team id long
 	CmdFlagTeamIDLong = "team-id"
 
 	//CmdFlagTeamIDDescription team id flag description
-	CmdFlagTeamIDDescription = "Coreo team id"
+	CmdFlagTeamIDDescription = "VMware SecureState team id"
 
 	//CmdFlagJSONLong json long
 	CmdFlagJSONLong = "json"
@@ -169,28 +142,28 @@ const (
 	CmdFlagConfigLong = "home"
 
 	//CmdFlagConfigDescription config flag description
-	CmdFlagConfigDescription = "Location of your Coreo config. Overrides $COREO_HOME."
+	CmdFlagConfigDescription = "Location of your VMware SecureState config. Overrides $VSS_HOME."
 
 	//CmdFlagProfileLong profile flag long
 	CmdFlagProfileLong = "profile"
 
 	//CmdFlagProfileDescription secret flag description
-	CmdFlagProfileDescription = "Coreo profile to use. Overrides $COREO_PROFILE."
+	CmdFlagProfileDescription = "VMware SecureState CLI profile to use. Overrides $VSS_PROFILE."
 
 	//CmdFlagAPIEndpointLong api endpoint flag long
 	CmdFlagAPIEndpointLong = "endpoint"
 
 	//CmdFlagAPIEndpointDescription api endpoint description
-	CmdFlagAPIEndpointDescription = "Coreo API endpoint. Overrides $CC_API_ENDPOINT."
+	CmdFlagAPIEndpointDescription = "VMware SecureState API endpoint. Overrides $VSS_API_ENDPOINT."
 
 	//CmdCoreoUse Coreo cmd
-	CmdCoreoUse = "coreo"
+	CmdCoreoUse = "vss"
 
 	//CmdCoreoShort Coreo short description
-	CmdCoreoShort = "CloudCoreo CLI"
+	CmdCoreoShort = "VMware SecureState CLI"
 
 	//CmdCoreoLong Coreo long description
-	CmdCoreoLong = `CloudCoreo CLI.`
+	CmdCoreoLong = `VMware SecureState CLI.`
 
 	//CmdConfigureUse configure cmd
 	CmdConfigureUse = "configure"

@@ -49,7 +49,6 @@ func (c *RoleService) createAssumeRolePolicyDocument(awsAccount string, external
 func (c *RoleService) CreateNewRole(input *client.RoleCreationInfo) (arn string, externalID string, err error) {
 	sess, err := c.newSession()
 	svc := iam.New(sess)
-
 	// Create a new session for iam
 	result, err := c.createNewAwsRole(input.AwsAccount, input.ExternalID, input.RoleName, svc)
 	if err != nil {
@@ -148,15 +147,6 @@ func (c *RoleService) DeleteRole(roleName string) error {
 			return errors.New("Detach role policy " + policyArn + "for " + roleName + " failed, " + err.Error())
 		}
 	}
-	/*
-		detachPolicyInput := &iam.DetachRolePolicyInput{
-			PolicyArn: aws.String(policyArn),
-			RoleName:  aws.String(roleName),
-		}
-		_, err = svc.DetachRolePolicy(detachPolicyInput)
-		if err != nil {
-			return errors.New("Detach role policy " + policyArn + "for " + roleName + " failed, " + err.Error())
-		}*/
 
 	deleteRoleInput := &iam.DeleteRoleInput{
 		RoleName: aws.String(roleName),

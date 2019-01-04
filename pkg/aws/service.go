@@ -9,28 +9,30 @@ import (
 
 // Service contains three aws service groups
 type Service struct {
-	setup *SetupService
-	org   *OrgService
-	role  *RoleService
+	setup  *SetupService
+	org    *OrgService
+	role   *RoleService
+	remove *RemoveService
 }
 
 // NewServiceInput contains the info for creating a new Service
 type NewServiceInput struct {
-	AwsProfile       string
-	AwsProfilePath   string
-	RoleArn          string
-	Policy           string
-	RoleSessionName  string
-	Duration         int64
-	IgnoreCloudTrail bool
+	AwsProfile          string
+	AwsProfilePath      string
+	RoleArn             string
+	Policy              string
+	RoleSessionName     string
+	Duration            int64
+	IgnoreMissingTrails bool
 }
 
 // NewService returns a new aws service group
 func NewService(input *NewServiceInput) *Service {
 	return &Service{
-		setup: NewSetupService(input),
-		org:   NewOrgService(input),
-		role:  NewRoleService(input),
+		setup:  NewSetupService(input),
+		org:    NewOrgService(input),
+		role:   NewRoleService(input),
+		remove: NewRemoveService(input),
 	}
 }
 
@@ -57,4 +59,8 @@ func (s *Service) DeleteRole(roleName string) {
 	} else {
 		fmt.Println("Deleted role successfully!")
 	}
+}
+
+func (s *Service) RemoveEventStream(input *client.EventRemoveConfig) error {
+	return s.remove.RemoveEventStream(input)
 }

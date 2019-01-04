@@ -43,12 +43,12 @@ const (
 	CmdResultObjectLong = "Show violating objects"
 
 	//CmdResultRuleExample ...
-	CmdResultRuleExample = `  coreo result rule --severity "High|Medium"
-  coreo result rule --severity "High|Low"
-  coreo result rule --cloud-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
+	CmdResultRuleExample = `  vss result rule --severity "High|Medium"
+  vss result rule --severity "High|Low"
+  vss result rule --cloud-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
 
 	//CmdResultObjectExample ...
-	CmdResultObjectExample = `coreo result object --severity "High|Medium"
-  coreo result object --severity "High|Low"
-  coreo result object --cloud-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
+	CmdResultObjectExample = `vss result object --severity "High|Medium"
+  vss result object --severity "High|Low"
+  vss result object --cloud-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
 )
