@@ -52,7 +52,7 @@ const (
 	CmdFlagTokenIDLong = "token-id"
 
 	//CmdFlagTokenIDDescription flag description
-	CmdFlagTokenIDDescription = "VMware SecureState token id"
+	CmdFlagTokenIDDescription = "VMware Secure State token id"
 
 	//InfoUsingTokenID informational using Token id
 	InfoUsingTokenID = "[ OK ] Using Token ID %s\n"

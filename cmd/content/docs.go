@@ -32,9 +32,9 @@ const (
 
 	//CmdDocsLong long description
 	CmdDocsLong = `
-Generate documentation files for VMware SecureState CLI.
+Generate documentation files for VMware Secure State CLI.
 
-This command can generate documentation for VMware SecureState CLI in the following formats:
+This command can generate documentation for VMware Secure State CLI in the following formats:
 
 - Markdown
 - Man pages
