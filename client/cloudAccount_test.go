@@ -116,6 +116,11 @@ const CloudAccountJSONPayload = `[
 				"method": "GET",
 				"href": "%s/api/cloudaccounts/cloudAccountID/event/setup"
 
+			},
+			{
+				"ref": "remove",
+				"method": "GET",
+				"href": "%s/api/cloudaccounts/cloudAccountID/event/remove"
 			}
 		],
 		"id": "cloudAccountID"
@@ -396,7 +401,7 @@ func TestCreateCloudAccountFailureCloudAccountNotCreated(t *testing.T) {
 func TestDeleteCloudAccountByIDSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -409,7 +414,7 @@ func TestDeleteCloudAccountByIDSuccess(t *testing.T) {
 func TestDeleteCloudAccountByIDFailedToParseUser(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(``).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -422,7 +427,7 @@ func TestDeleteCloudAccountByIDFailedToParseUser(t *testing.T) {
 func TestDeleteCloudAccountByIDFailedToParseLink(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(teamCloudAccountJSONPayloadMissingCloudAccountLink).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -464,7 +469,7 @@ func TestDeleteCloudAccountByIDFailureMissingCloudAccountsLink(t *testing.T) {
 func TestDeleteCloudAccountByIDAccountFailureBadRequest(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusBadRequest)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -477,7 +482,7 @@ func TestDeleteCloudAccountByIDAccountFailureBadRequest(t *testing.T) {
 func TestDeleteCloudAccountByIDFailureInvalidCloudID(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusBadRequest)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()

@@ -18,6 +18,11 @@ const EventConfigureResponse = `{
 "version": "1",
 "monitorRule": "fakeMonitorRule"}`
 
+const RemoveConfigureResponse = `{
+"topicName": "fakeName",
+"stackName": "fakeStackName",
+"arnType": "fakeArnType"}`
+
 const CloudAccountJSONPayloadNoSetup = `[
 	{
 		"teamId": "teamID",
@@ -41,7 +46,7 @@ const CloudAccountJSONPayloadNoSetup = `[
 
 func TestGetSetupConfigSuccess(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/cloudaccounts/cloudAccountID/event/setup").WithMethod("GET").WithBody(EventConfigureResponse).WithStatus(http.StatusOK)
@@ -54,7 +59,7 @@ func TestGetSetupConfigSuccess(t *testing.T) {
 
 func TestGetSetupConfigFailureWithNoResponse(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/cloudaccounts/cloudAccountID/event/setup").WithMethod("GET").WithBody("").WithStatus(http.StatusBadRequest)
@@ -75,4 +80,17 @@ func TestGetSetupConfigFailureWithNoLink(t *testing.T) {
 	_, err := client.GetSetupConfig(context.Background(), "teamID", "cloudAccountID")
 	assert.NotNil(t, err, "getSetupConfig should return error")
 	assert.Equal(t, "resource for given ID not found", err.Error())
+}
+
+func TestGetRemoveConfigSuccess(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/cloudaccounts/cloudAccountID/event/remove").WithMethod("GET").WithBody(RemoveConfigureResponse).WithStatus(http.StatusOK)
+
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	config, err := client.GetRemoveConfig(context.Background(), "teamID", "cloudAccountID")
+	assert.Nil(t, err, "getRemoveConfig shouldn't return error")
+	assert.Equal(t, "fakeStackName", config.StackName)
 }
