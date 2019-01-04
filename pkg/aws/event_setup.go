@@ -24,7 +24,7 @@ func NewSetupService(input *NewServiceInput) *SetupService {
 	return &SetupService{
 		awsProfile:         input.AwsProfile,
 		awsProfilePath:     input.AwsProfilePath,
-		ignoreMissingTrail: input.IgnoreCloudTrail,
+		ignoreMissingTrail: input.IgnoreMissingTrails,
 	}
 }
 

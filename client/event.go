@@ -28,6 +28,14 @@ type EventStreamConfig struct {
 	Regions         []string `json:"regions"`
 }
 
+type EventRemoveConfig struct {
+	StackName      string   `json:"stackName"`
+	TopicName      string   `json:"topicName"`
+	Regions        []string `json:"regions"`
+	ArnType        string   `json:"arnType"`
+	CloudAccountId string   `json:"cloudAccountId"`
+}
+
 //GetSetupConfig get the config for event stream setup from secure state
 func (c *Client) GetSetupConfig(ctx context.Context, teamID, cloudID string) (*EventStreamConfig, error) {
 	config := &EventStreamConfig{}
@@ -38,6 +46,25 @@ func (c *Client) GetSetupConfig(ctx context.Context, teamID, cloudID string) (*E
 	}
 
 	link, err := GetLinkByRef(accounts.Links, "setup")
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, "GET", link.Href, nil, config)
+	if err != nil {
+		return nil, err
+	}
+	return config, nil
+}
+
+func (c *Client) GetRemoveConfig(ctx context.Context, teamID, cloudID string) (*EventRemoveConfig, error) {
+	config := &EventRemoveConfig{}
+	accounts, err := c.GetCloudAccountByID(ctx, teamID, cloudID)
+	if err != nil {
+		return nil, err
+	}
+
+	link, err := GetLinkByRef(accounts.Links, "remove")
 	if err != nil {
 		return nil, err
 	}

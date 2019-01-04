@@ -49,8 +49,8 @@ Add a cloud account. The result would be shown as the following if successful.
 	CmdCloudScanLong = "Scan your root account, get organization and create skeletons for each account"
 
 	//CmdCloudAddExample ...
-	CmdCloudAddExample = `  coreo cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE
-  coreo cloud add --name YOUR_NEW_ACCOUNT_NAME --arn YOUR_ROLE_ARN --external-id EXTERNAL_ID_OF_YOUR_ROLE`
+	CmdCloudAddExample = `  vss cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE
+  vss cloud add --name YOUR_NEW_ACCOUNT_NAME --arn YOUR_ROLE_ARN --external-id EXTERNAL_ID_OF_YOUR_ROLE`
 
 	//CmdCloudShowShort short description
 	CmdCloudShowShort = "Show a cloud account"
@@ -163,7 +163,7 @@ Add a cloud account. The result would be shown as the following if successful.
 	CmdFlagRoleExternalIDDescription = "The external-id used to assume the provided role"
 
 	//CmdFlagCloudIDDescription flag description
-	CmdFlagCloudIDDescription = "Coreo cloud id"
+	CmdFlagCloudIDDescription = "Vss cloud id"
 
 	//InfoCloudAccountDeleted info
 	InfoCloudAccountDeleted = "Cloud account was deleted"
@@ -179,4 +179,10 @@ Add a cloud account. The result would be shown as the following if successful.
 
 	//CmdFlagLevelDescription is description for flag --severity
 	CmdFlagLevelDescription = "The severity level you'd like to show in violation results"
+
+	//CmdFlagDeleteRole is a flag to delete the role while deleting a cloud account
+	CmdFlagDeleteRole = "role"
+
+	//CmdFlagDeleteRoleDescription describes flag --role
+	CmdFLagDeleteRoleDescription = "Use this flag to delete the role while deleting a cloud account"
 )

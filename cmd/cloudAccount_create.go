@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"time"
 
@@ -132,11 +133,11 @@ func (t *cloudCreateCmd) run() error {
 	cloud, err := t.client.CreateCloudAccount(input)
 	if err != nil {
 		if t.roleName != "" {
-			t.cloud.DeleteRole(t.roleName, t.policy)
+			fmt.Println("Cloud account creation failed! Will delete created role.")
+			t.cloud.DeleteRole(t.roleName)
 		}
 		return err
 	}
-
 	util.PrintResult(
 		t.out,
 		cloud,
