@@ -40,7 +40,7 @@ const (
 	Mask = "****************"
 
 	//ErrorAPIKeyMissing error
-	ErrorAPIKeyMissing = "VMware SecureState API Key is required for this command. Use flag --api-key\n"
+	ErrorAPIKeyMissing = "VMware Secure State API Key is required for this command. Use flag --api-key\n"
 
 	//ErrorSecretMissing error
 	ErrorSecretMissing = "Secret is required for this command. Use flag --secret\n"
@@ -106,19 +106,19 @@ const (
 	CmdFlagAPISecretLong = "api-secret"
 
 	//CmdFlagAPISecretDescription api secret flag description
-	CmdFlagAPISecretDescription = "VMware SecureState API Secret"
+	CmdFlagAPISecretDescription = "VMware Secure State API Secret"
 
 	//CmdFlagAPIKeyLong api key flag long
 	CmdFlagAPIKeyLong = "api-key"
 
 	//CmdFlagAPIKeyDescription api key flag description
-	CmdFlagAPIKeyDescription = "VMware SecureState API Key"
+	CmdFlagAPIKeyDescription = "VMware Secure State API Key"
 
 	//CmdFlagTeamIDLong team id long
 	CmdFlagTeamIDLong = "team-id"
 
 	//CmdFlagTeamIDDescription team id flag description
-	CmdFlagTeamIDDescription = "VMware SecureState team id"
+	CmdFlagTeamIDDescription = "VMware Secure State team id"
 
 	//CmdFlagJSONLong json long
 	CmdFlagJSONLong = "json"
@@ -142,28 +142,28 @@ const (
 	CmdFlagConfigLong = "home"
 
 	//CmdFlagConfigDescription config flag description
-	CmdFlagConfigDescription = "Location of your VMware SecureState config. Overrides $VSS_HOME."
+	CmdFlagConfigDescription = "Location of your VMware Secure State config. Overrides $VSS_HOME."
 
 	//CmdFlagProfileLong profile flag long
 	CmdFlagProfileLong = "profile"
 
 	//CmdFlagProfileDescription secret flag description
-	CmdFlagProfileDescription = "VMware SecureState CLI profile to use. Overrides $VSS_PROFILE."
+	CmdFlagProfileDescription = "VMware Secure State CLI profile to use. Overrides $VSS_PROFILE."
 
 	//CmdFlagAPIEndpointLong api endpoint flag long
 	CmdFlagAPIEndpointLong = "endpoint"
 
 	//CmdFlagAPIEndpointDescription api endpoint description
-	CmdFlagAPIEndpointDescription = "VMware SecureState API endpoint. Overrides $VSS_API_ENDPOINT."
+	CmdFlagAPIEndpointDescription = "VMware Secure State API endpoint. Overrides $VSS_API_ENDPOINT."
 
 	//CmdCoreoUse Coreo cmd
 	CmdCoreoUse = "vss"
 
 	//CmdCoreoShort Coreo short description
-	CmdCoreoShort = "VMware SecureState CLI"
+	CmdCoreoShort = "VMware Secure State CLI"
 
 	//CmdCoreoLong Coreo long description
-	CmdCoreoLong = `VMware SecureState CLI.`
+	CmdCoreoLong = `VMware Secure State CLI.`
 
 	//CmdConfigureUse configure cmd
 	CmdConfigureUse = "configure"

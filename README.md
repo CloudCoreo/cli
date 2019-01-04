@@ -1,9 +1,9 @@
-# VMware SecureState CLI
+# VMware Secure State CLI
 
 [![Build Status](https://travis-ci.org/CloudCoreo/cli.svg?branch=master)](https://travis-ci.org/CloudCoreo/cli)
 [![Go Report Card](https://goreportcard.com/badge/github.com/CloudCoreo/cli)](https://goreportcard.com/report/github.com/CloudCoreo/cli)
 
-CLI is a tool for managing Vmware SecureState resources. 
+CLI is a tool for managing Vmware Secure State resources. 
 
 Use CLI to...
 
@@ -86,7 +86,7 @@ The most commonly used VSS commands are:
 |completion| Generate bash autocompletions script|
 |event     | Manage event stream                           | setup|
 |help      | Help about any command|
-|version   | Print the version number of VMware SecureState CLI|
+|version   | Print the version number of VMware Secure State CLI|
 -------------      
  
 ## Configurable variables
@@ -99,7 +99,7 @@ The most commonly used VSS commands are:
 |home    | --home | $VSS_HOME | Location of your VSS config. Overrides $VSS_HOME.
 |json    |--json | | Output in json format
 |profile | --profile | $VSS_PROFILE | VSS profile to use. Overrides $VSS_PROFILE, default "default" |
-|team-id | --team-id | | VMware SecureState team id, will read team-id in configure file by default|
+|team-id | --team-id | | VMware Secure State team id, will read team-id in configure file by default|
 |verbose | --verbose | | Enable verbose output
 
 The values passing by flags will override environment variables.  
@@ -291,7 +291,7 @@ Help about any command
 * Usage   
     * `vss help`
 #### version
-Print the version number of VMware SecureState CLI
+Print the version number of VMware Secure State CLI
 * Usage 
     * `vss version`
 ## Community, discussion, contribution, and support

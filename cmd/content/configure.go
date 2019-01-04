@@ -20,8 +20,8 @@ const (
 
 	//CmdConfigureLong long description
 	CmdConfigureLong = `Configure  CLI  options. If this command is run with no arguments,
-you will be prompted for configuration values such as your  VMware SecureState  Access
-Key  Id  and your  VMware SecureState  Secret  Access  Key.  You can configure a named pro-
+you will be prompted for configuration values such as your  VMware Secure State  Access
+Key  Id  and your  VMware Secure State  Secret  Access  Key.  You can configure a named pro-
 file using the --profile argument.  If your config file does not  exist
 (the default location is $HOME/.vss/profiles.yaml), the VSS CLI
 will create it for you.  To keep an existing value, hit enter when prompted
@@ -29,7 +29,7 @@ for the value. When  you  are prompted for information, the current value
 will be displayed in [brackets].  If the config item has no value,
 it be displayed as  [None].
 
-Note:  the  values  you  provide  for the VMware SecureState Access Key ID and the VMware SecureState
+Note:  the  values  you  provide  for the VMware Secure State Access Key ID and the VMware SecureState
 Secret Access Key will  be  written  to  the  shared  credentials  file
 ($HOME/.vss/profiles.yaml).
 
@@ -41,13 +41,13 @@ Secret Access Key will  be  written  to  the  shared  credentials  file
   vss configure list`
 
 	//CmdConfigurePromptAPIKEY prompt for api key
-	CmdConfigurePromptAPIKEY = "Enter your VMware SecureState api token key (available on https://app.cloudcoreo.com under Settings -> API Tokens) [%s]: "
+	CmdConfigurePromptAPIKEY = "Enter your VMware Secure State api token key (available on https://app.cloudcoreo.com under Settings -> API Tokens) [%s]: "
 
 	//CmdConfigurePromptSecretKEY prompt for secret key
-	CmdConfigurePromptSecretKEY = "Enter your VMware SecureState api token secret key (available on https://app.cloudcoreo.com under Settings -> API Tokens) [%s]: "
+	CmdConfigurePromptSecretKEY = "Enter your VMware Secure State api token secret key (available on https://app.cloudcoreo.com under Settings -> API Tokens) [%s]: "
 
 	//CmdConfigurePromptTeamID prompt for team ID
-	CmdConfigurePromptTeamID = "Enter your default VMware SecureState team ID (available on https://app.cloudcoreo.com under Settings -> Team) [%s]: "
+	CmdConfigurePromptTeamID = "Enter your default VMware Secure State team ID (available on https://app.cloudcoreo.com under Settings -> Team) [%s]: "
 
 	//CmdConfigureListShort short description
 	CmdConfigureListShort = "List all user profiles"
