@@ -77,11 +77,13 @@ func (t *cloudShowCmd) run() error {
 	util.PrintResult(
 		t.out,
 		cloud,
-		[]string{"ID", "Name", "TeamID"},
+		[]string{"ID", "Name", "TeamID", "AccountID", "Arn"},
 		map[string]string{
-			"ID":     "Cloud Account ID",
-			"Name":   "Cloud Account Name",
-			"TeamID": "Team ID",
+			"ID":        "Cloud Account ID",
+			"Name":      "Cloud Account Name",
+			"TeamID":    "Team ID",
+			"AccountID": "AWS account ID",
+			"Arn":       "AWS Role Arn",
 		},
 		jsonFormat,
 		verbose)

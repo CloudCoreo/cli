@@ -90,11 +90,12 @@ func (t *cloudListCmd) run() error {
 	util.PrintResult(
 		t.out,
 		b,
-		[]string{"ID", "Name", "TeamID"},
+		[]string{"ID", "Name", "TeamID", "AccountID"},
 		map[string]string{
-			"ID":     "Cloud Account ID",
-			"Name":   "Cloud Account Name",
-			"TeamID": "Team ID",
+			"ID":        "Cloud Account ID",
+			"Name":      "Cloud Account Name",
+			"TeamID":    "Team ID",
+			"AccountID": "AWS account ID",
 		},
 		jsonFormat,
 		verbose)

@@ -49,13 +49,11 @@ func (c *RoleService) createAssumeRolePolicyDocument(awsAccount string, external
 func (c *RoleService) CreateNewRole(input *client.RoleCreationInfo) (arn string, externalID string, err error) {
 	sess, err := c.newSession()
 	svc := iam.New(sess)
-
 	// Create a new session for iam
 	result, err := c.createNewAwsRole(input.AwsAccount, input.ExternalID, input.RoleName, svc)
 	if err != nil {
 		return "", "", err
 	}
-
 	roleArn := result.Role.Arn
 	_, err = c.attachRolePolicy(svc, input.Policy, input.RoleName)
 	if err != nil {
@@ -107,8 +105,7 @@ func (c *RoleService) newSession() (*session.Session, error) {
 	return sess, nil
 }
 
-// DeleteRole will remove the role created before if the cloud account add fails
-func (c *RoleService) DeleteRole(roleName, policyArn string) error {
+func (c *RoleService) DetachPolicy(roleName, policyArn string) error {
 	sess, err := c.newSession()
 
 	if err != nil {
@@ -123,6 +120,32 @@ func (c *RoleService) DeleteRole(roleName, policyArn string) error {
 	_, err = svc.DetachRolePolicy(detachPolicyInput)
 	if err != nil {
 		return errors.New("Detach role policy " + policyArn + "for " + roleName + " failed, " + err.Error())
+	}
+
+	return nil
+}
+
+// DeleteRole will remove the role created before if the cloud account add fails
+func (c *RoleService) DeleteRole(roleName string) error {
+	sess, err := c.newSession()
+
+	if err != nil {
+		return err
+	}
+
+	svc := iam.New(sess)
+
+	policies, err := c.getManagedRolePolicies(svc, roleName)
+	for _, policy := range policies {
+		policyArn := *(policy.PolicyArn)
+		detachPolicyInput := &iam.DetachRolePolicyInput{
+			PolicyArn: aws.String(policyArn),
+			RoleName:  aws.String(roleName),
+		}
+		_, err = svc.DetachRolePolicy(detachPolicyInput)
+		if err != nil {
+			return errors.New("Detach role policy " + policyArn + "for " + roleName + " failed, " + err.Error())
+		}
 	}
 
 	deleteRoleInput := &iam.DeleteRoleInput{
@@ -155,4 +178,17 @@ func (c *RoleService) checkRolePolicy(roleName, policy string) (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+func (c *RoleService) getManagedRolePolicies(svc *iam.IAM, roleName string) ([]*iam.AttachedPolicy, error) {
+	res := make([]*iam.AttachedPolicy, 0)
+
+	input := &iam.ListAttachedRolePoliciesInput{
+		RoleName: &roleName,
+	}
+	err := svc.ListAttachedRolePoliciesPages(input, func(output *iam.ListAttachedRolePoliciesOutput, last bool) bool {
+		res = append(res, output.AttachedPolicies...)
+		return true
+	})
+	return res, err
 }

@@ -54,9 +54,9 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 			}
 			if eventSetup.cloud == nil {
 				newServiceInput := &aws.NewServiceInput{
-					AwsProfile:       eventSetup.awsProfile,
-					AwsProfilePath:   eventSetup.awsProfilePath,
-					IgnoreCloudTrail: eventSetup.ignoreMissingTrails,
+					AwsProfile:          eventSetup.awsProfile,
+					AwsProfilePath:      eventSetup.awsProfilePath,
+					IgnoreMissingTrails: eventSetup.ignoreMissingTrails,
 				}
 				eventSetup.cloud = aws.NewService(newServiceInput)
 			}

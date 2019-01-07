@@ -19,8 +19,8 @@ const (
 	CmdVersionUse = "version"
 
 	//CmdVersionShort command
-	CmdVersionShort = "Print the version number of Coreo CLI"
+	CmdVersionShort = "Print the version number of VMware Secure State CLI"
 
 	//CmdVersionLong command
-	CmdVersionLong = `Print the version number of Coreo CLI.`
+	CmdVersionLong = `Print the version number of VMware Secure State CLI.`
 )

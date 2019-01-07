@@ -16,6 +16,9 @@ package main
 
 import (
 	"io"
+	"strings"
+
+	"github.com/CloudCoreo/cli/pkg/aws"
 
 	"github.com/CloudCoreo/cli/pkg/command"
 
@@ -28,10 +31,14 @@ import (
 )
 
 type cloudDeleteCmd struct {
-	out     io.Writer
-	client  command.Interface
-	teamID  string
-	cloudID string
+	out            io.Writer
+	client         command.Interface
+	cloud          command.CloudProvider
+	teamID         string
+	cloudID        string
+	deleteRole     bool
+	awsProfile     string
+	awsProfilePath string
 }
 
 func newCloudDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -57,6 +64,14 @@ func newCloudDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.SecretKey(secret))
 			}
 
+			if cloudDelete.deleteRole && (cloudDelete.cloud == nil) {
+				newServiceInput := &aws.NewServiceInput{
+					AwsProfile:     cloudDelete.awsProfile,
+					AwsProfilePath: cloudDelete.awsProfilePath,
+				}
+				cloudDelete.cloud = aws.NewService(newServiceInput)
+			}
+
 			cloudDelete.teamID = teamID
 
 			return cloudDelete.run()
@@ -66,11 +81,27 @@ func newCloudDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f := cmd.Flags()
 
 	f.StringVarP(&cloudDelete.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
+	f.BoolVarP(&cloudDelete.deleteRole, content.CmdFlagDeleteRole, "", false, content.CmdFLagDeleteRoleDescription)
+	f.StringVarP(&cloudDelete.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
+	f.StringVarP(&cloudDelete.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 
 	return cmd
 }
 
 func (t *cloudDeleteCmd) run() error {
+	var roleName string
+	if t.deleteRole {
+		cloud, err := t.client.ShowCloudAccountByID(t.teamID, t.cloudID)
+		if err != nil {
+			return err
+		}
+
+		roleNames := strings.Split(cloud.Arn, "/")
+		roleName = roleNames[len(roleNames)-1]
+
+		t.cloud.DeleteRole(roleName)
+	}
+
 	err := t.client.DeleteCloudAccountByID(t.teamID, t.cloudID)
 	if err != nil {
 		return err

@@ -27,10 +27,10 @@ import (
 )
 
 const (
-	hostEnvVar         = "CC_API_ENDPOINT"
-	homeEnvVar         = "COREO_HOME"
-	profileEnvVar      = "COREO_PROFILE"
-	defaultAPIEndpoint = "https://app.cloudcoreo.com/api"
+	hostEnvVar         = "VSS_API_ENDPOINT"
+	homeEnvVar         = "VSS_HOME"
+	profileEnvVar      = "VSS_PROFILE"
+	defaultAPIEndpoint = "https://app.securestate.vmware.com/api"
 	defaultProfile     = "default"
 )
 
@@ -119,20 +119,6 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Println("Error reading config file:", viper.ConfigFileUsed())
 	}
-
-	/*
-		if key == content.None && viper.Get("default.api_key").(string) != "" {
-			key = viper.Get("default.api_key").(string)
-		}
-
-		if secret == content.None && viper.Get("default.secret_key").(string) != "" {
-			secret = viper.Get("default.secret_key").(string)
-		}
-
-		if teamID == content.None && viper.Get("default.team_id").(string) != "" {
-			teamID = viper.Get("default.team_id").(string)
-		}
-	*/
 }
 
 func setupCoreoConfig(cmd *cobra.Command, args []string) error {

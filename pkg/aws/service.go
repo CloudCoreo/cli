@@ -9,28 +9,30 @@ import (
 
 // Service contains three aws service groups
 type Service struct {
-	setup *SetupService
-	org   *OrgService
-	role  *RoleService
+	setup  *SetupService
+	org    *OrgService
+	role   *RoleService
+	remove *RemoveService
 }
 
 // NewServiceInput contains the info for creating a new Service
 type NewServiceInput struct {
-	AwsProfile       string
-	AwsProfilePath   string
-	RoleArn          string
-	Policy           string
-	RoleSessionName  string
-	Duration         int64
-	IgnoreCloudTrail bool
+	AwsProfile          string
+	AwsProfilePath      string
+	RoleArn             string
+	Policy              string
+	RoleSessionName     string
+	Duration            int64
+	IgnoreMissingTrails bool
 }
 
 // NewService returns a new aws service group
 func NewService(input *NewServiceInput) *Service {
 	return &Service{
-		setup: NewSetupService(input),
-		org:   NewOrgService(input),
-		role:  NewRoleService(input),
+		setup:  NewSetupService(input),
+		org:    NewOrgService(input),
+		role:   NewRoleService(input),
+		remove: NewRemoveService(input),
 	}
 }
 
@@ -50,9 +52,16 @@ func (s *Service) CreateNewRole(input *client.RoleCreationInfo) (arn string, ext
 }
 
 // DeleteRole calls the DeleteRole function in RoleService
-func (s *Service) DeleteRole(roleName, policyArn string) {
-	err := s.role.DeleteRole(roleName, policyArn)
+func (s *Service) DeleteRole(roleName string) {
+	err := s.role.DeleteRole(roleName)
 	if err != nil {
-		fmt.Println("Failed to delete role" + roleName + ", " + err.Error())
+		fmt.Println(err.Error())
+	} else {
+		fmt.Println("Deleted role successfully!")
 	}
+}
+
+//RemoveEventStream perform the same function as event stream removal script
+func (s *Service) RemoveEventStream(input *client.EventRemoveConfig) error {
+	return s.remove.RemoveEventStream(input)
 }
