@@ -59,7 +59,7 @@ const iamInactiveKeyNoRotationRuleOutput = `[
 			{
 				"team": {
 					"name": "fake-name",
-					"id": "fake-id"
+					"id": "team-id"
 				}
 			}
 		],
