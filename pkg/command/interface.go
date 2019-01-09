@@ -31,7 +31,7 @@ type Interface interface {
 	CreateCloudAccount(input *client.CreateCloudAccountInput) (*client.CloudAccount, error)
 	DeleteCloudAccountByID(teamID, cloudID string) error
 
-	ShowResultObject(teamID, cloudID, level string) ([]*client.ResultObject, error)
+	ShowResultObject(teamID, cloudID, level string) (*client.ResultObjectWrapper, error)
 	ShowResultRule(teamID, cloudID, level string) ([]*client.ResultRule, error)
 
 	GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error)

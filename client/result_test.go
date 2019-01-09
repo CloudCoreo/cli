@@ -55,10 +55,12 @@ const iamInactiveKeyNoRotationRuleOutput = `[
 			"include_violations_in_count": true,
 			"timestamp": "2018-10-11T17:21:54.448+00:00"
 		},
-		"teams": [
+		"teamAndPlan": [
 			{
-				"name": "username",
-				"id": "team-id"
+				"team": {
+					"name": "fake-name",
+					"id": "team-id"
+				}
 			}
 		],
 		"accounts": [
@@ -71,7 +73,8 @@ const iamInactiveKeyNoRotationRuleOutput = `[
 	}
 ]`
 
-const kmsKeyRotatesObjectOutput = `[{
+const kmsKeyRotatesObjectOutput = `{
+	"violations": [{
 		"id": "fakeObjectId",
 		"rule_report": {
 			"suggested_action": "fake action",
@@ -94,7 +97,11 @@ const kmsKeyRotatesObjectOutput = `[{
 			"id": "account-id"
 		},
 		"run_id": "run-id"
-	}]`
+	}],
+	"totalItems": 10000}`
+
+const NoObjectOutput = `{
+	"totalItems": 10000}`
 
 func TestGetAllResultRuleSuccess(t *testing.T) {
 	ts := httpstub.New()
@@ -198,7 +205,7 @@ func TestShowResultObjectFailureNoViolatedObject(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForResult, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/result").WithMethod("GET").WithBody(fmt.Sprintf(resultJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
-	ts.Path("/api/object").WithMethod("GET").WithBody("[]").WithStatus(http.StatusOK)
+	ts.Path("/api/object").WithMethod("GET").WithBody(NoObjectOutput).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
@@ -208,13 +215,12 @@ func TestShowResultObjectFailureNoViolatedObject(t *testing.T) {
 }
 
 func TestNoTeamID(t *testing.T) {
-	teamInfo := []TeamInfo{
-		{
-			Name: "name",
-			ID:   "teamID",
-		},
+	teamInfo := &TeamInfo{
+		Name: "name",
+		ID:   "teamID",
 	}
-	res := hasTeamID(teamInfo, "teamid")
+	teamWrapper := []TeamInfoWrapper{{TeamInfo: teamInfo}}
+	res := hasTeamID(teamWrapper, "teamid")
 	assert.Equal(t, false, res, "TestNoTeamID should return false")
 }
 

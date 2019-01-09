@@ -32,6 +32,11 @@ type TeamInfo struct {
 	ID   string `json:"id"`
 }
 
+//TeamInfoWrapper is a wrapper for team Info
+type TeamInfoWrapper struct {
+	TeamInfo *TeamInfo `json:"team"`
+}
+
 //Info is the struct for rule_report
 type Info struct {
 	SuggestedAction          string `json:"suggested_action"`
@@ -50,37 +55,45 @@ type Info struct {
 type ResultRule struct {
 	ID     string             `json:"id"`
 	Info   Info               `json:"info"`
-	TInfo  []TeamInfo         `json:"teams"`
+	TInfo  []TeamInfoWrapper  `json:"teamAndPlan"`
 	CInfo  []CloudAccountInfo `json:"accounts"`
 	Object int                `json:"objects"`
 }
 
 // The ResultObject struct decodes json file returned by webapp
 type ResultObject struct {
-	ID    string           `json:"id"`
-	Info  Info             `json:"rule_report"`
-	TInfo TeamInfo         `json:"team"`
-	CInfo CloudAccountInfo `json:"cloud_account"`
-	RunID string           `json:"run_id"`
+	ID        string           `json:"id"`
+	Info      Info             `json:"rule_report"`
+	TInfo     TeamInfo         `json:"team"`
+	CInfo     CloudAccountInfo `json:"cloud_account"`
+	RunID     string           `json:"run_id"`
+	RiskScore int              `json:"riskScore"`
+}
+
+// ResultObjectWrapper contains an object array and number of total items
+type ResultObjectWrapper struct {
+	Objects    []*ResultObject `json:"violations"`
+	TotalItems *int            `json:"totalItems"`
 }
 
 //ShowResultObject shows violated objects. If the filter condition (teamID, cloudID in this case) is valid,
 //objects will be filtered. Otherwise return all violation objects under this user account.
-func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level string) ([]*ResultObject, error) {
+func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level string) (*ResultObjectWrapper, error) {
 	result, err := c.getAllResultObject(ctx)
-	res := []*ResultObject{}
+	res := new(ResultObjectWrapper)
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
 
 	targetLevels := strings.Split(strings.Replace(level, " ", "", -1), "|")
-	for i := range result {
-		if (teamID == content.None || result[i].TInfo.ID == teamID) &&
-			(cloudID == content.None || result[i].CInfo.ID == cloudID) &&
-			(level == content.None || hasLevel(targetLevels, result[i].Info.Level)) {
-			res = append(res, result[i])
+	for i := range result.Objects {
+		if (teamID == content.None || result.Objects[i].TInfo.ID == teamID) &&
+			(cloudID == content.None || result.Objects[i].CInfo.ID == cloudID) &&
+			(level == content.None || hasLevel(targetLevels, result.Objects[i].Info.Level)) {
+			res.Objects = append(res.Objects, result.Objects[i])
 		}
 	}
+	res.TotalItems = result.TotalItems
 	return res, nil
 }
 
@@ -137,20 +150,20 @@ func (c *Client) getResultLinkByRef(ctx context.Context, ref string) (*Link, err
 
 	return &link, err
 }
-func (c *Client) getAllResultObject(ctx context.Context) ([]*ResultObject, error) {
-	result := []*ResultObject{}
+func (c *Client) getAllResultObject(ctx context.Context) (*ResultObjectWrapper, error) {
+	result := new(ResultObjectWrapper)
 
 	link, err := c.getResultLinkByRef(ctx, "object")
 	if err != nil {
 		return nil, err
 	}
 
-	err = c.Do(ctx, "GET", link.Href, nil, &result)
+	err = c.Do(ctx, "GET", link.Href, nil, result)
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
 
-	if len(result) == 0 {
+	if len(result.Objects) == 0 {
 		return nil, NewError("No violated object")
 	}
 	return result, nil
@@ -174,9 +187,9 @@ func (c *Client) getAllResultRule(ctx context.Context) ([]*ResultRule, error) {
 	return result, nil
 }
 
-func hasTeamID(teamInfo []TeamInfo, teamID string) bool {
+func hasTeamID(teamInfo []TeamInfoWrapper, teamID string) bool {
 	for i := range teamInfo {
-		if teamInfo[i].ID == teamID {
+		if teamInfo[i].TeamInfo.ID == teamID {
 			return true
 		}
 	}

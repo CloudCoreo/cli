@@ -9,60 +9,68 @@ import (
 	"github.com/pkg/errors"
 )
 
-const kmsKeyRotatesObjectOutput = `[
-	{
-		"id": "fake-id1",
-		"rule_report": {
-			"suggested_action": "fake-suggestion",
-			"link": "fake-link",
-			"description": "fake description",
-			"display_name": "fake-display-name",
-			"level": "Medium",
-			"service": "kms",
-			"name": "fake-name",
-			"region": "us-east-1",
-			"include_violations_in_count": true,
-			"timestamp": "2018-10-11T17:21:55.111+00:00"
-		},
-		"team": {
-			"name": "fake-team-name",
-			"id": "fake-team-id"
-		},
-		"cloud_account": {
-			"name": "fake-account-name",
-			"id": "fake-account-id"
-		},
-		"run_id": "fake-run-id"
-	}
-]
+const kmsKeyRotatesObjectOutput = `{
+	"violations": [
+		{
+			"id": "fake-id1",
+			"rule_report": {
+				"suggested_action": "fake-suggestion",
+				"link": "fake-link",
+				"description": "fake description",
+				"display_name": "fake-display-name",
+				"level": "Medium",
+				"service": "kms",
+				"name": "fake-name",
+				"region": "us-east-1",
+				"include_violations_in_count": true,
+				"timestamp": "2018-10-11T17:21:55.111+00:00"
+			},
+			"team": {
+				"name": "fake-team-name",
+				"id": "fake-team-id"
+			},
+			"cloud_account": {
+				"name": "fake-account-name",
+				"id": "fake-account-id"
+			},
+			"run_id": "fake-run-id",
+			"riskScore": 0
+		}
+	],
+	"totalItems": 200
+}
 `
 
-const iamInactiveKeyNoRotationObjectOutput = `[
-	{
-		"id": "fake-id2",
-		"rule_report": {
-			"suggested_action": "fake-suggestion",
-			"link": "fake-link",
-			"description": "fake description",
-			"display_name": "fake-display-name",
-			"level": "Medium",
-			"service": "iam",
-			"name": "fake-name",
-			"region": "global",
-			"include_violations_in_count": true,
-			"timestamp": "2018-10-11T17:21:54.448+00:00"
-		},
-		"team": {
-			"name": "fake-team-name",
-			"id": "fake-team-id"
-		},
-		"cloud_account": {
-			"name": "fake-account-name",
-			"id": "fake-account-id"
-		},
-		"run_id": "fake-run-id"
-	}
-]
+const iamInactiveKeyNoRotationObjectOutput = `{
+	"violations": [
+		{
+			"id": "fake-id2",
+			"rule_report": {
+				"suggested_action": "fake-suggestion",
+				"link": "fake-link",
+				"description": "fake description",
+				"display_name": "fake-display-name",
+				"level": "Medium",
+				"service": "iam",
+				"name": "fake-name",
+				"region": "global",
+				"include_violations_in_count": true,
+				"timestamp": "2018-10-11T17:21:54.448+00:00"
+			},
+			"team": {
+				"name": "fake-team-name",
+				"id": "fake-team-id"
+			},
+			"cloud_account": {
+				"name": "fake-account-name",
+				"id": "fake-account-id"
+			},
+			"run_id": "fake-run-id",
+			"riskScore": 0
+		}
+	],
+	"totalItems": 100
+}
 `
 
 func TestResultObjectCmd(t *testing.T) {
@@ -77,12 +85,17 @@ func TestResultObjectCmd(t *testing.T) {
 		}
 	}
 
+	mockInt := func(num int) *int {
+		integer := num
+		return &integer
+	}
 	tests := []struct {
 		cmds  string
 		desc  string
 		flags []string
 		args  []string
 		resp  []*client.ResultObject
+		num   *int
 		json  bool
 		err   bool
 		xout  string
@@ -116,6 +129,7 @@ func TestResultObjectCmd(t *testing.T) {
 					},
 					"fake-run-id"),
 			},
+			num:  mockInt(200),
 			xout: kmsKeyRotatesObjectOutput,
 		},
 		{
@@ -147,13 +161,18 @@ func TestResultObjectCmd(t *testing.T) {
 					},
 					"fake-run-id"),
 			},
+			num:  mockInt(100),
 			xout: iamInactiveKeyNoRotationObjectOutput,
 		},
 	}
 
 	var buf bytes.Buffer
 	for _, test := range tests {
-		frc := &fakeReleaseClient{objects: test.resp}
+		objectWrapper := &client.ResultObjectWrapper{
+			Objects:    test.resp,
+			TotalItems: test.num,
+		}
+		frc := &fakeReleaseClient{objects: objectWrapper}
 		if test.err {
 			frc.err = errors.New("Error")
 		}

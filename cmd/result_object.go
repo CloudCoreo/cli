@@ -66,11 +66,6 @@ func (t *resultObjectCmd) run() error {
 	if err != nil {
 		return err
 	}
-	b := make([]interface{}, len(res))
-	for i := range res {
-		b[i] = res[i]
-	}
-	fmt.Fprintln(t.out, util.PrettyJSON(b))
-
+	fmt.Fprintln(t.out, util.PrettyJSON(*res))
 	return nil
 }

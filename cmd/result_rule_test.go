@@ -24,10 +24,12 @@ const iamInactiveKeyNoRotationRuleOutput = `[
 			"include_violations_in_count": true,
 			"timestamp": "2018-10-11T17:21:54.448+00:00"
 		},
-		"teams": [
+		"teamAndPlan": [
 			{
-				"name": "fake-team-name",
-				"id": "fake-team-id"
+				"team": {
+					"name": "fake-team-name",
+					"id": "fake-team-id"
+				}
 			}
 		],
 		"accounts": [
@@ -56,10 +58,12 @@ const S3AllUserWriteRuleOutput = `[
 			"include_violations_in_count": true,
 			"timestamp": "2018-10-11T17:21:55.387+00:00"
 		},
-		"teams": [
+		"teamAndPlan": [
 			{
-				"name": "fake-team-name",
-				"id": "fake-team-id"
+				"team": {
+					"name": "fake-team-name",
+					"id": "fake-team-id"
+				}
 			}
 		],
 		"accounts": [
@@ -79,7 +83,7 @@ func TestResultRuleCmd(t *testing.T) {
 		return &client.ResultRule{
 			ID:     id,
 			Info:   info,
-			TInfo:  tInfo,
+			TInfo:  []client.TeamInfoWrapper{{TeamInfo: &tInfo[0]}},
 			CInfo:  cInfo,
 			Object: object,
 		}
