@@ -23,7 +23,7 @@ type fakeReleaseClient struct {
 	teams         []*client.Team
 	tokens        []*client.Token
 	cloudAccounts []*client.CloudAccount
-	objects       []*client.ResultObject
+	objects       *client.ResultObjectWrapper
 	rules         []*client.ResultRule
 	config        client.EventStreamConfig
 	err           error
@@ -111,7 +111,7 @@ func (c *fakeReleaseClient) ShowResultRule(teamID, cloudID, level string) ([]*cl
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level string) ([]*client.ResultObject, error) {
+func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level string) (*client.ResultObjectWrapper, error) {
 	resp := c.objects
 	return resp, c.err
 }
