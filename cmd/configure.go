@@ -71,9 +71,9 @@ func (t *configureCmd) run() error {
 	teamIDValue := util.GetValueFromConfig(teamIDKey, false)
 
 	// prompt user for input
-	getValueFromUser(&userAPIkey, fmt.Sprintf(content.CmdConfigurePromptAPIKEY, apiKeyValue))
-	getValueFromUser(&userSecretKey, fmt.Sprintf(content.CmdConfigurePromptSecretKEY, secretKeyValue))
-	getValueFromUser(&userTeamID, fmt.Sprintf(content.CmdConfigurePromptTeamID, teamIDValue))
+	setValue(&userAPIkey, key, fmt.Sprintf(content.CmdConfigurePromptAPIKEY, apiKeyValue))
+	setValue(&userSecretKey, secret, fmt.Sprintf(content.CmdConfigurePromptSecretKEY, secretKeyValue))
+	setValue(&teamIDValue, teamID, fmt.Sprintf(content.CmdConfigurePromptTeamID, teamIDValue))
 
 	// replace values in config
 	util.UpdateConfig(apiKey, userAPIkey)
@@ -90,4 +90,12 @@ func (t *configureCmd) run() error {
 func getValueFromUser(userKey *string, prompt string) {
 	fmt.Print(prompt)
 	fmt.Scanln(userKey)
+}
+
+func setValue(userKey *string, current string, prompt string) {
+	if current != content.None {
+		*userKey = current
+	} else {
+		getValueFromUser(userKey, prompt)
+	}
 }
