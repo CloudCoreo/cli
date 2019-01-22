@@ -17,11 +17,11 @@ Use CLI to...
 
 ### OSX
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.25/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.25/vss_darwin_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.26/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.26/vss_darwin_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.25/vss_darwin_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.26/vss_darwin_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -29,11 +29,11 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.25
 
 ### Linux
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.25/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.25/vss_linux_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.26/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.26/vss_linux_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.25/vss_linux_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.26/vss_linux_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -41,7 +41,7 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.25
 
 ### Windows
 
-Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.25/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.25/vss_windows_amd64.exe)
+Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.26/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.26/vss_windows_amd64.exe)
 
 ```
 C:\Users\Username\Downloads> rename vss_windows_amd64.exe vss.exe
@@ -78,7 +78,7 @@ The most commonly used VSS commands are:
 
 |Command         |Usage      | Sub-commands|
 | --------   | :-------------:| :-------------:|
-|cloud     | Manage your cloud accounts                    | add, delete, list, scan, show|
+|cloud     | Manage your cloud accounts                    | add, delete, list, scan, show, update, test|
 |configure | Configure CLI options. You may also view your current configuration using 'list' subcommand| list|
 |team      | Manage your team                              | add, list, show|
 |result    | Get violation results                         | rule, object|
@@ -170,7 +170,37 @@ Manage Cloud Accounts
         |Variable | Option | Description |
         | ------ | ------ | :-------- |
         | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to show information for, this flag is required|
+* update
+    * Usage
+        * `vss cloud update --cloud-id YOUR_CLOUD_ID [flags]`
+    * Flags 
+    
+        |Variable | Option | Description |
+        | ------ | ------ | :-------- |
+        | arn | --arn |  The arn of the role to connect |
+        | name | --name| The name of the new cloud account you want to add, this flag is required |
+        | role | --role | The name of the role you want to create
+        | policy arn| --policy-arn | The arn of the policy you'd like to attach for role creation, SecurityAudit policy arn by default|
+        | external id| --external-id | The external id used to assume provided role|
+        | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
+        |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
+        |draft| --draft| Will update the account with draft status|
+        |Environment| --env| Environment label for the cloud account to add, must be one of these: Production, Staging, Development, Test"|
+        |email|--email|The email address of account owner|
+        |username|--username| The username of account owner|
+        | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to update information for, this flag is required|
+    * For role update, you may either provide your own role or let CLI create one
+    * You may need to use --draft flag if you still want to keep it as draft status, otherwise VSS CLI will switch it to non-draft status
         
+* test
+    * Usage
+        * `vss cloud test --cloud-id`
+        * Flags
+        
+            |Variable | Option | Description |
+            | ------ | ------ | :-------- |
+            | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to test role validation for, this flag is required|
+            
 #### configure
 Configure CLI options
 * Usage
