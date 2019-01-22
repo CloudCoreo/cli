@@ -120,14 +120,14 @@ func (t *cloudCreateCmd) run() error {
 		if err != nil {
 			return err
 		}
-		arn, externalId, err := t.cloud.CreateNewRole(info)
+		arn, externalID, err := t.cloud.CreateNewRole(info)
 		time.Sleep(10 * time.Second)
 		if err != nil {
 			return err
 		}
 
 		input.RoleArn = arn
-		input.ExternalID = externalId
+		input.ExternalID = externalID
 	}
 
 	cloud, err := t.client.CreateCloudAccount(input)

@@ -29,7 +29,9 @@ type Interface interface {
 	ListCloudAccounts(teamID string) ([]*client.CloudAccount, error)
 	ShowCloudAccountByID(teamID, cloudID string) (*client.CloudAccount, error)
 	CreateCloudAccount(input *client.CreateCloudAccountInput) (*client.CloudAccount, error)
+	UpdateCloudAccount(input *client.UpdateCloudAccountInput) (*client.CloudAccount, error)
 	DeleteCloudAccountByID(teamID, cloudID string) error
+	ReValidateRole(teamID, cloudID string) (*client.RoleReValidationResult, error)
 
 	ShowResultObject(teamID, cloudID, level string) (*client.ResultObjectWrapper, error)
 	ShowResultRule(teamID, cloudID, level string) ([]*client.ResultRule, error)

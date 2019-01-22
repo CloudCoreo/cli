@@ -20,15 +20,16 @@ import (
 )
 
 type fakeReleaseClient struct {
-	teams         []*client.Team
-	tokens        []*client.Token
-	cloudAccounts []*client.CloudAccount
-	objects       *client.ResultObjectWrapper
-	rules         []*client.ResultRule
-	config        client.EventStreamConfig
-	err           error
-	info          client.RoleCreationInfo
-	regions       []string
+	teams            []*client.Team
+	tokens           []*client.Token
+	cloudAccounts    []*client.CloudAccount
+	objects          *client.ResultObjectWrapper
+	rules            []*client.ResultRule
+	config           client.EventStreamConfig
+	err              error
+	info             client.RoleCreationInfo
+	regions          []string
+	validationResult client.RoleReValidationResult
 }
 
 func (c *fakeReleaseClient) ListTeams() ([]*client.Team, error) {
@@ -130,6 +131,20 @@ func (c *fakeReleaseClient) GetEventRemoveConfig(teamID, cloudID string) (*clien
 
 func (c *fakeReleaseClient) GetRoleCreationInfo(input *client.CreateCloudAccountInput) (*client.RoleCreationInfo, error) {
 	resp := c.info
+	return &resp, c.err
+}
+
+func (c *fakeReleaseClient) UpdateCloudAccount(input *client.UpdateCloudAccountInput) (*client.CloudAccount, error) {
+	resp := &client.CloudAccount{}
+	if len(c.cloudAccounts) > 0 {
+
+		resp = c.cloudAccounts[0]
+	}
+	return resp, c.err
+}
+
+func (c *fakeReleaseClient) ReValidateRole(teamID, cloudID string) (*client.RoleReValidationResult, error) {
+	resp := c.validationResult
 	return &resp, c.err
 }
 

@@ -20,19 +20,30 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/imdario/mergo"
+
 	"github.com/CloudCoreo/cli/client/content"
 )
 
 // CloudAccount Information
 type CloudAccount struct {
-	TeamID    string `json:"teamId"`
-	Name      string `json:"name"`
-	RoleID    string `json:"roleId"`
-	RoleName  string `json:"roleName"`
-	Links     []Link `json:"links"`
-	ID        string `json:"id"`
-	AccountID string `json:"accountId"`
-	Arn       string `json:"arn"`
+	TeamID       string   `json:"teamId"`
+	Name         string   `json:"name"`
+	RoleID       string   `json:"roleId"`
+	RoleName     string   `json:"roleName"`
+	Links        []Link   `json:"links"`
+	ID           string   `json:"id"`
+	AccountID    string   `json:"accountId"`
+	Arn          string   `json:"arn"`
+	ScanEnabled  bool     `json:"scanEnabled"`
+	ScanInterval string   `json:"scanInterval"`
+	ScanRegion   string   `json:"scanRegion"`
+	ExternalID   string   `json:"externalId"`
+	IsDraft      bool     `json:"isDraft"`
+	Provider     string   `json:"provider"`
+	Email        string   `json:"email"`
+	UserName     string   `json:"username"`
+	Environment  []string `json:"environment"`
 }
 
 // CreateCloudAccountInput for function CreateCloudAccount
@@ -47,6 +58,8 @@ type CreateCloudAccountInput struct {
 	Email       string
 	UserName    string
 	Environment string
+	ScanEnabled bool
+	Provider    string
 }
 
 // CloudPayLoad ...
@@ -62,23 +75,22 @@ type CloudPayLoad struct {
 	Email        string   `json:"email"`
 	UserName     string   `json:"username"`
 	Environment  []string `json:"environment"`
+	TeamID       string   `json:"teamId"`
 }
 
 type sendCloudCreateRequestInput struct {
-	cloudLink       Link
-	externalID      string
-	cloudName       string
-	accessKeyID     string
-	secretAccessKey string
-	roleArn         string
-	scanEnabled     bool
-	scanInterval    string
-	scanRegion      string
-	isDraft         bool
-	provider        string
-	email           string
-	username        string
-	environment     []string
+	cloudLink    Link
+	externalID   string
+	cloudName    string
+	roleArn      string
+	scanEnabled  bool
+	scanInterval string
+	scanRegion   string
+	isDraft      bool
+	provider     string
+	email        string
+	username     string
+	environment  []string
 }
 
 type defaultID struct {
@@ -92,6 +104,16 @@ type RoleCreationInfo struct {
 	ExternalID string
 	RoleName   string
 	Policy     string
+}
+
+type RoleReValidationResult struct {
+	Message string `json:"message"`
+	IsValid bool   `json:"isValid"`
+}
+
+type UpdateCloudAccountInput struct {
+	CreateCloudAccountInput
+	CloudId string
 }
 
 // GetCloudAccounts method for cloud command
@@ -291,4 +313,99 @@ func (c *Client) DeleteCloudAccountByID(ctx context.Context, teamID, cloudID str
 	}
 
 	return nil
+}
+
+func (c *Client) ReValidateRole(ctx context.Context, teamID, cloudID string) (*RoleReValidationResult, error) {
+	result := new(RoleReValidationResult)
+
+	accounts, err := c.GetCloudAccountByID(ctx, teamID, cloudID)
+	if err != nil {
+		return nil, err
+	}
+
+	link, err := GetLinkByRef(accounts.Links, "test")
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, "GET", link.Href, nil, result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *Client) UpdateCloudAccount(ctx context.Context, input *UpdateCloudAccountInput) (*CloudAccount, error) {
+	result := new(CloudAccount)
+	account, err := c.GetCloudAccountByID(ctx, input.TeamID, input.CloudId)
+	if err != nil {
+		return nil, err
+	}
+
+	link, err := GetLinkByRef(account.Links, "update")
+	if err != nil {
+		return nil, err
+	}
+
+	updateInfo, err := input.mergeAndGetJson(account)
+	if err != nil {
+		return nil, err
+	}
+	err = c.Do(ctx, "POST", link.Href, bytes.NewBuffer(updateInfo), result)
+	if err != nil {
+		return nil, err
+	}
+	return result, err
+}
+
+func (t *UpdateCloudAccountInput) mergeAndGetJson(account *CloudAccount) ([]byte, error) {
+	updateInfo := t.toCloudPayLoad()
+	err := mergo.Merge(updateInfo, *(account.toCloudPayLoad()))
+	if err != nil {
+		return nil, err
+	}
+	// mergo package will override false to true
+	updateInfo.IsDraft = t.IsDraft
+	// Add teamID to pass webapp check for cloud account creation
+	updateInfo.TeamID = t.TeamID
+	jsonStr, err := json.Marshal(updateInfo)
+	if err != nil {
+		return nil, err
+	}
+
+	return jsonStr, nil
+}
+
+func (t *UpdateCloudAccountInput) toCloudPayLoad() *CloudPayLoad {
+	cloudPayLoad := &CloudPayLoad{
+		Name:         t.CloudName,
+		Arn:          t.RoleArn,
+		ScanEnabled:  t.ScanEnabled,
+		ScanInterval: "Daily",
+		ScanRegion:   "All",
+		ExternalID:   t.ExternalID,
+		IsDraft:      t.IsDraft,
+		Provider:     t.Provider,
+		Email:        t.Email,
+		UserName:     t.UserName,
+		Environment:  []string{t.Environment},
+	}
+	return cloudPayLoad
+}
+
+func (t *CloudAccount) toCloudPayLoad() *CloudPayLoad {
+	cloudPayLoad := &CloudPayLoad{
+		Name:         t.Name,
+		Arn:          t.Arn,
+		ScanEnabled:  t.ScanEnabled,
+		ScanInterval: t.ScanInterval,
+		ScanRegion:   t.ScanRegion,
+		ExternalID:   t.ExternalID,
+		IsDraft:      t.IsDraft,
+		Provider:     t.Provider,
+		Email:        t.Email,
+		UserName:     t.UserName,
+		Environment:  t.Environment,
+	}
+	return cloudPayLoad
 }

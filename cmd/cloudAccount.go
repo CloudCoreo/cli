@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/CloudCoreo/cli/pkg/command"
@@ -38,6 +39,8 @@ func newCloudAccountCmd(out io.Writer) *cobra.Command {
 	cmd.AddCommand(newCloudDeleteCmd(nil, out))
 	cmd.AddCommand(newCloudCreateCmd(nil, out))
 	cmd.AddCommand(newCloudScanCmd(nil, out))
+	cmd.AddCommand(newCloudUpdateCmd(nil, out))
+	cmd.AddCommand(newCloudTestCmd(nil, out))
 
 	return cmd
 }
@@ -100,5 +103,58 @@ func (t *cloudListCmd) run() error {
 		jsonFormat,
 		verbose)
 
+	return nil
+}
+
+type cloudTestCmd struct {
+	out     io.Writer
+	client  command.Interface
+	teamID  string
+	cloudID string
+}
+
+func newCloudTestCmd(client command.Interface, out io.Writer) *cobra.Command {
+	cloudTest := &cloudTestCmd{
+		out:    out,
+		client: client,
+	}
+
+	cmd := &cobra.Command{
+		Use:   content.CmdTestUse,
+		Short: content.CmdCloudTestShort,
+		Long:  content.CmdCloudTestLong,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := util.CheckCloudShowOrDeleteFlag(cloudTest.cloudID, verbose); err != nil {
+				return err
+			}
+			if cloudTest.client == nil {
+				cloudTest.client = coreo.NewClient(
+					coreo.Host(apiEndpoint),
+					coreo.APIKey(key),
+					coreo.SecretKey(secret))
+			}
+
+			cloudTest.teamID = teamID
+			return cloudTest.run()
+		},
+	}
+
+	f := cmd.Flags()
+
+	f.StringVarP(&cloudTest.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
+
+	return cmd
+}
+
+func (t *cloudTestCmd) run() error {
+	res, err := t.client.ReValidateRole(t.teamID, t.cloudID)
+	if err != nil {
+		return err
+	}
+	if jsonFormat {
+		util.PrettyJSON(res)
+	} else {
+		fmt.Fprintln(t.out, res.Message)
+	}
 	return nil
 }
