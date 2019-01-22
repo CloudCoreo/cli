@@ -99,6 +99,7 @@ type defaultID struct {
 	Domain     string `json:"domain"`
 }
 
+//RoleCreationInfo contains the info required for role creation
 type RoleCreationInfo struct {
 	AwsAccount string
 	ExternalID string
@@ -106,11 +107,13 @@ type RoleCreationInfo struct {
 	Policy     string
 }
 
+//RoleReValidationResult is the result for role re-validation
 type RoleReValidationResult struct {
 	Message string `json:"message"`
 	IsValid bool   `json:"isValid"`
 }
 
+//UpdateCloudAccountInput is the info needed for update cloud account
 type UpdateCloudAccountInput struct {
 	CreateCloudAccountInput
 	CloudId string
@@ -315,6 +318,7 @@ func (c *Client) DeleteCloudAccountByID(ctx context.Context, teamID, cloudID str
 	return nil
 }
 
+//ReValidateRole checks role validation and re-validate it
 func (c *Client) ReValidateRole(ctx context.Context, teamID, cloudID string) (*RoleReValidationResult, error) {
 	result := new(RoleReValidationResult)
 
@@ -335,6 +339,7 @@ func (c *Client) ReValidateRole(ctx context.Context, teamID, cloudID string) (*R
 	return result, nil
 }
 
+//UpdateCloudAccount updates cloud account
 func (c *Client) UpdateCloudAccount(ctx context.Context, input *UpdateCloudAccountInput) (*CloudAccount, error) {
 	result := new(CloudAccount)
 	account, err := c.GetCloudAccountByID(ctx, input.TeamID, input.CloudId)

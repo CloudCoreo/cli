@@ -28,6 +28,7 @@ type EventStreamConfig struct {
 	Regions         []string `json:"regions"`
 }
 
+//EventRemoveConfig for event stream removal
 type EventRemoveConfig struct {
 	StackName      string   `json:"stackName"`
 	TopicName      string   `json:"topicName"`
@@ -57,6 +58,7 @@ func (c *Client) GetSetupConfig(ctx context.Context, teamID, cloudID string) (*E
 	return config, nil
 }
 
+//GetRemoveConfig get the config for event stream removal from secure state
 func (c *Client) GetRemoveConfig(ctx context.Context, teamID, cloudID string) (*EventRemoveConfig, error) {
 	config := &EventRemoveConfig{}
 	accounts, err := c.GetCloudAccountByID(ctx, teamID, cloudID)

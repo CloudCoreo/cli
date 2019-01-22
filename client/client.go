@@ -121,7 +121,7 @@ func (c *Client) buildRequest(method, urlPath string, body io.Reader) (*http.Req
 	if err != nil {
 		return nil, err
 	}
-	if method == "POST" || method == "PUT" {
+	if (method == "POST" || method == "PUT") && body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
 

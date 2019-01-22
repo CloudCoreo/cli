@@ -84,6 +84,7 @@ func newCloudUpdateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&cloudUpdate.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&cloudUpdate.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	f.StringVarP(&cloudUpdate.policy, content.CmdFlagAwsPolicy, "", content.CmdFlagAwsPolicyDefault, content.CmdFlagAwsPolicyDescription)
+	f.StringVarP(&cloudUpdate.roleName, content.CmdFlagRoleName, "", "", content.CmdFlagRoleNameDescription)
 
 	return cmd
 
@@ -101,6 +102,7 @@ func (t *cloudUpdateCmd) run() error {
 			Email:       t.email,
 			UserName:    t.userName,
 			Environment: t.environment,
+			Policy:      t.policy,
 		},
 		CloudId: t.cloudID,
 	}
