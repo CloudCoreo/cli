@@ -1,7 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"io"
+	"time"
+
+	"github.com/CloudCoreo/cli/pkg/aws"
 
 	"github.com/CloudCoreo/cli/client"
 	"github.com/CloudCoreo/cli/cmd/util"
@@ -15,19 +19,22 @@ import (
 )
 
 type cloudUpdateCmd struct {
-	out          io.Writer
-	client       command.Interface
-	cloud        command.CloudProvider
-	teamID       string
-	cloudID      string
-	resourceName string
-	roleName     string
-	externalID   string
-	roleArn      string
-	isDraft      bool
-	userName     string
-	email        string
-	environment  string
+	out            io.Writer
+	client         command.Interface
+	cloud          command.CloudProvider
+	teamID         string
+	cloudID        string
+	resourceName   string
+	roleName       string
+	externalID     string
+	roleArn        string
+	isDraft        bool
+	userName       string
+	email          string
+	environment    string
+	awsProfile     string
+	awsProfilePath string
+	policy         string
 }
 
 func newCloudUpdateCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -51,6 +58,15 @@ func newCloudUpdateCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.APIKey(key),
 					coreo.SecretKey(secret))
 			}
+
+			if cloudUpdate.cloud == nil {
+				newServiceInput := &aws.NewServiceInput{
+					AwsProfile:     cloudUpdate.awsProfile,
+					AwsProfilePath: cloudUpdate.awsProfilePath,
+				}
+				cloudUpdate.cloud = aws.NewService(newServiceInput)
+			}
+
 			cloudUpdate.teamID = teamID
 			return cloudUpdate.run()
 		},
@@ -65,6 +81,9 @@ func newCloudUpdateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&cloudUpdate.userName, content.CmdFlagUserName, "", "", content.CmdFlagUserNameDescription)
 	f.StringVarP(&cloudUpdate.environment, content.CmdFlagEnvironmentLong, content.CmdFlagEnvironmentShort, "", content.CmdFlagEnvironmentDescription)
 	f.StringVarP(&cloudUpdate.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
+	f.StringVarP(&cloudUpdate.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
+	f.StringVarP(&cloudUpdate.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
+	f.StringVarP(&cloudUpdate.policy, content.CmdFlagAwsPolicy, "", content.CmdFlagAwsPolicyDefault, content.CmdFlagAwsPolicyDescription)
 
 	return cmd
 
@@ -81,11 +100,32 @@ func (t *cloudUpdateCmd) run() error {
 			IsDraft:     t.isDraft,
 			Email:       t.email,
 			UserName:    t.userName,
-			Environment: t.environment},
+			Environment: t.environment,
+		},
 		CloudId: t.cloudID,
 	}
+
+	if t.roleName != "" {
+		info, err := t.client.GetRoleCreationInfo(&input.CreateCloudAccountInput)
+		if err != nil {
+			return err
+		}
+		arn, externalID, err := t.cloud.CreateNewRole(info)
+		time.Sleep(10 * time.Second)
+		if err != nil {
+			return err
+		}
+
+		input.RoleArn = arn
+		input.ExternalID = externalID
+	}
+
 	cloud, err := t.client.UpdateCloudAccount(input)
 	if err != nil {
+		if t.roleName != "" {
+			fmt.Println("Cloud account update failed! Will delete created role.")
+			t.cloud.DeleteRole(t.roleName)
+		}
 		return err
 	}
 	util.PrintResult(
