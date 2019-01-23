@@ -174,6 +174,12 @@ const (
 	//CmdAddUse add cmd
 	CmdAddUse = "add"
 
+	//CmdUpdateUse update cmd
+	CmdUpdateUse = "update"
+
+	//CmdTestUse test cmd
+	CmdTestUse = "test"
+
 	//CmdScanUse scan cmd
 	CmdScanUse = "scan"
 

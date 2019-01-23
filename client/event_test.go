@@ -46,7 +46,7 @@ const CloudAccountJSONPayloadNoSetup = `[
 
 func TestGetSetupConfigSuccess(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/cloudaccounts/cloudAccountID/event/setup").WithMethod("GET").WithBody(EventConfigureResponse).WithStatus(http.StatusOK)
@@ -59,7 +59,7 @@ func TestGetSetupConfigSuccess(t *testing.T) {
 
 func TestGetSetupConfigFailureWithNoResponse(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/cloudaccounts/cloudAccountID/event/setup").WithMethod("GET").WithBody("").WithStatus(http.StatusBadRequest)
@@ -84,7 +84,7 @@ func TestGetSetupConfigFailureWithNoLink(t *testing.T) {
 
 func TestGetRemoveConfigSuccess(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/cloudaccounts/cloudAccountID/event/remove").WithMethod("GET").WithBody(RemoveConfigureResponse).WithStatus(http.StatusOK)
@@ -97,7 +97,7 @@ func TestGetRemoveConfigSuccess(t *testing.T) {
 
 func TestGetRemoveConfigFailureWithNoResponse(t *testing.T) {
 	ts := httpstub.New()
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/cloudaccounts/cloudAccountID/event/remove").WithMethod("GET").WithBody("").WithStatus(http.StatusBadRequest)
