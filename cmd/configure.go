@@ -73,7 +73,7 @@ func (t *configureCmd) run() error {
 	// prompt user for input
 	setValue(&userAPIkey, key, fmt.Sprintf(content.CmdConfigurePromptAPIKEY, apiKeyValue))
 	setValue(&userSecretKey, secret, fmt.Sprintf(content.CmdConfigurePromptSecretKEY, secretKeyValue))
-	setValue(&teamIDValue, teamID, fmt.Sprintf(content.CmdConfigurePromptTeamID, teamIDValue))
+	setValue(&userTeamID, teamID, fmt.Sprintf(content.CmdConfigurePromptTeamID, teamIDValue))
 
 	// replace values in config
 	util.UpdateConfig(apiKey, userAPIkey)
