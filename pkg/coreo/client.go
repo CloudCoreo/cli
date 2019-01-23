@@ -186,6 +186,20 @@ func (c *Client) CreateCloudAccount(input *client.CreateCloudAccountInput) (*cli
 
 }
 
+func (c *Client) UpdateCloudAccount(input *client.UpdateCloudAccountInput) (*client.CloudAccount, error) {
+	ctx := NewContext()
+	clt, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+	cloudAccount, err := clt.UpdateCloudAccount(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return cloudAccount, nil
+}
+
 //DeleteCloudAccountByID Delete cloud by ID
 func (c *Client) DeleteCloudAccountByID(teamID, cloudID string) error {
 	ctx := NewContext()
@@ -200,6 +214,20 @@ func (c *Client) DeleteCloudAccountByID(teamID, cloudID string) error {
 	}
 
 	return nil
+}
+
+func (c *Client) ReValidateRole(teamID, cloudID string) (*client.RoleReValidationResult, error) {
+	ctx := NewContext()
+	clt, err := c.MakeClient()
+	if err != nil {
+		return nil, err
+	}
+	result, err := clt.ReValidateRole(ctx, teamID, cloudID)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 //ShowResultRule shows violated rules. If the filter condition (teamID, cloudID in this case) is valid,

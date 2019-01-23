@@ -30,6 +30,12 @@ const (
 	//CmdCloudListLong long description
 	CmdCloudListLong = `Show list of tokens.`
 
+	//CmdCloudTestShort short description
+	CmdCloudTestShort = "test role"
+
+	//CmdCloudTestLong long description
+	CmdCloudTestLong = "test whether role is valid"
+
 	//CmdCloudAddShort short description
 	CmdCloudAddShort = "Add a cloud account"
 
@@ -42,6 +48,12 @@ Add a cloud account. The result would be shown as the following if successful.
              *********************           ************           ************************
          -----------------------------  -----------------------  -----------------------------
 `
+	//CmdCloudUpdateShort short description
+	CmdCloudUpdateShort = "Update cloud account info"
+
+	//CmdCloudUpdateLong long description
+	CmdCloudUpdateLong = "Update cloud account info"
+
 	//CmdCloudScanShort short description
 	CmdCloudScanShort = "Scan your root account and create skeletons"
 

@@ -58,6 +58,10 @@ const teamCloudAccountJSONPayload = `[{
 		"id": "teamID"
 	}]`
 
+const revalidateRoleJSONPayload = `{
+	"isValid": true
+	}`
+
 const teamCloudAccountJSONPayloadMissingCloudAccountLink = `[{
 		"teamName": "gitUser-default",
 			"ownerId": "userID",
@@ -121,9 +125,20 @@ const CloudAccountJSONPayload = `[
 				"ref": "remove",
 				"method": "GET",
 				"href": "%s/api/cloudaccounts/cloudAccountID/event/remove"
+			},
+			{
+				"ref": "update",
+				"method": "POST",
+				"href": "%s/api/cloudaccounts/cloudAccountID/update"
+			},
+			{
+				"ref": "test",
+				"method": "GET",
+				"href": "%s/api/cloudaccounts/cloudAccountID/re-validate"
 			}
 		],
-		"id": "cloudAccountID"
+		"id": "cloudAccountID",
+		"email": "testEmail"
 	}]`
 
 const RoleCreationInfoJSONPayload = `{
@@ -273,10 +288,13 @@ func TestSendCloudCreateRequestSuccess(t *testing.T) {
 	}
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	input := &sendCloudCreateRequestInput{
-		cloudName:  "cloudName",
-		roleArn:    "default",
-		externalID: "default",
-		cloudLink:  link,
+		CloudInfo: CloudInfo{
+			Name:       "cloudName",
+			Arn:        "default",
+			ExternalID: "default",
+		},
+
+		cloudLink: link,
 	}
 	_, err := client.sendCloudCreateRequest(context.Background(), input)
 	assert.Nil(t, err, "CreateCloudAccount shouldn't return error.")
@@ -401,7 +419,7 @@ func TestCreateCloudAccountFailureCloudAccountNotCreated(t *testing.T) {
 func TestDeleteCloudAccountByIDSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -414,7 +432,7 @@ func TestDeleteCloudAccountByIDSuccess(t *testing.T) {
 func TestDeleteCloudAccountByIDFailedToParseUser(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(``).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -427,7 +445,7 @@ func TestDeleteCloudAccountByIDFailedToParseUser(t *testing.T) {
 func TestDeleteCloudAccountByIDFailedToParseLink(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusOK)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(teamCloudAccountJSONPayloadMissingCloudAccountLink).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -469,7 +487,7 @@ func TestDeleteCloudAccountByIDFailureMissingCloudAccountsLink(t *testing.T) {
 func TestDeleteCloudAccountByIDAccountFailureBadRequest(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusBadRequest)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -482,7 +500,7 @@ func TestDeleteCloudAccountByIDAccountFailureBadRequest(t *testing.T) {
 func TestDeleteCloudAccountByIDFailureInvalidCloudID(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/api/cloudaccounts/cloudAccountID").WithMethod("DELETE").WithBody(CloudAccountJSONPayload).WithStatus(http.StatusBadRequest)
-	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
 	defer ts.Close()
@@ -547,5 +565,42 @@ func TestGetRoleCreationInfoFailureDefaultIdLinkMissing(t *testing.T) {
 		TeamID: "teamID",
 	})
 	assert.NotNil(t, err, "GetRoleCreationInfo should return error.")
+	assert.Equal(t, "resource for given ID not found", err.Error())
+}
+
+func TestUpdateCloudAccountSuccess(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/api/cloudaccounts/cloudAccountID/update").WithMethod("POST").WithBody(createdCloudAccountJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
+	defer ts.Close()
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.UpdateCloudAccount(context.Background(), &UpdateCloudAccountInput{CreateCloudAccountInput: CreateCloudAccountInput{TeamID: "teamID"}, CloudId: "cloudAccountID"})
+	assert.Nil(t, err, "UpdateCloudAccount shouldn't return error.")
+}
+
+func TestReValidateRoleSuccess(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/api/cloudaccounts/cloudAccountID/re-validate").WithMethod("GET").WithBody(revalidateRoleJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(fmt.Sprintf(CloudAccountJSONPayload, ts.URL, ts.URL, ts.URL, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
+	defer ts.Close()
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.ReValidateRole(context.Background(), "teamID", "cloudAccountID")
+	assert.Nil(t, err, "ReValidateRole shouldn't return error.")
+}
+
+func TestReValidateRoleFaliureWithLinkMissing(t *testing.T) {
+	ts := httpstub.New()
+	ts.Path("/api/cloudaccounts/cloudAccountID/re-validate").WithMethod("GET").WithBody(revalidateRoleJSONPayload).WithStatus(http.StatusOK)
+	ts.Path("/api/teams/teamID/cloudaccounts").WithMethod("GET").WithBody(CloudAccountJSONPayloadMissingSelfData).WithStatus(http.StatusOK)
+	ts.Path("/api/users/userID/teams").WithMethod("GET").WithBody(fmt.Sprintf(teamCloudAccountJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
+	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForTeam, ts.URL)).WithStatus(http.StatusOK)
+	defer ts.Close()
+	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
+	_, err := client.ReValidateRole(context.Background(), "teamID", "cloudAccountID")
+	assert.NotNil(t, err, "ReValidateRole should return error.")
 	assert.Equal(t, "resource for given ID not found", err.Error())
 }
