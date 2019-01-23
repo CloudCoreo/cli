@@ -27,23 +27,12 @@ import (
 
 // CloudAccount Information
 type CloudAccount struct {
-	TeamID       string   `json:"teamId"`
-	Name         string   `json:"name"`
-	RoleID       string   `json:"roleId"`
-	RoleName     string   `json:"roleName"`
-	Links        []Link   `json:"links"`
-	ID           string   `json:"id"`
-	AccountID    string   `json:"accountId"`
-	Arn          string   `json:"arn"`
-	ScanEnabled  bool     `json:"scanEnabled"`
-	ScanInterval string   `json:"scanInterval"`
-	ScanRegion   string   `json:"scanRegion"`
-	ExternalID   string   `json:"externalId"`
-	IsDraft      bool     `json:"isDraft"`
-	Provider     string   `json:"provider"`
-	Email        string   `json:"email"`
-	UserName     string   `json:"username"`
-	Environment  []string `json:"environment"`
+	RoleID    string `json:"roleId"`
+	RoleName  string `json:"roleName"`
+	Links     []Link `json:"links"`
+	ID        string `json:"id"`
+	AccountID string `json:"accountId"`
+	CloudPayLoad
 }
 
 // CreateCloudAccountInput for function CreateCloudAccount
@@ -61,9 +50,7 @@ type CreateCloudAccountInput struct {
 	ScanEnabled bool
 	Provider    string
 }
-
-// CloudPayLoad ...
-type CloudPayLoad struct {
+type CloudInfo struct {
 	Name         string   `json:"name"`
 	Arn          string   `json:"arn"`
 	ScanEnabled  bool     `json:"scanEnabled"`
@@ -75,22 +62,17 @@ type CloudPayLoad struct {
 	Email        string   `json:"email"`
 	UserName     string   `json:"username"`
 	Environment  []string `json:"environment"`
-	TeamID       string   `json:"teamId"`
+}
+
+// CloudPayLoad ...
+type CloudPayLoad struct {
+	CloudInfo
+	TeamID string `json:"teamId"`
 }
 
 type sendCloudCreateRequestInput struct {
-	cloudLink    Link
-	externalID   string
-	cloudName    string
-	roleArn      string
-	scanEnabled  bool
-	scanInterval string
-	scanRegion   string
-	isDraft      bool
-	provider     string
-	email        string
-	username     string
-	environment  []string
+	cloudLink Link
+	CloudInfo
 }
 
 type defaultID struct {
@@ -181,17 +163,7 @@ func (c *Client) sendCloudCreateRequest(ctx context.Context, input *sendCloudCre
 	// the authentication would fail!!!
 	cloudAccount := &CloudAccount{}
 	cloudPayLoad := CloudPayLoad{
-		Name:         input.cloudName,
-		Arn:          input.roleArn,
-		ScanEnabled:  input.scanEnabled,
-		ScanInterval: input.scanInterval,
-		ScanRegion:   input.scanRegion,
-		ExternalID:   input.externalID,
-		IsDraft:      input.isDraft,
-		Provider:     input.provider,
-		Email:        input.email,
-		UserName:     input.username,
-		Environment:  input.environment,
+		CloudInfo: input.CloudInfo,
 	}
 
 	jsonStr, err := json.Marshal(cloudPayLoad)
@@ -258,20 +230,22 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 				return nil, NewError(content.ErrorMissingRoleInformation)
 			}
 			cloudCreateInput := &sendCloudCreateRequestInput{
-				cloudLink:    cloudLink,
-				externalID:   input.ExternalID,
-				cloudName:    input.CloudName,
-				roleArn:      input.RoleArn,
-				scanEnabled:  true,
-				scanInterval: "Daily",
-				scanRegion:   "All",
-				isDraft:      input.IsDraft,
-				provider:     "AWS",
-				email:        input.Email,
-				username:     input.UserName,
+				cloudLink: cloudLink,
+				CloudInfo: CloudInfo{
+					ExternalID:   input.ExternalID,
+					Name:         input.CloudName,
+					Arn:          input.RoleArn,
+					ScanEnabled:  true,
+					ScanInterval: "Daily",
+					ScanRegion:   "All",
+					IsDraft:      input.IsDraft,
+					Provider:     "AWS",
+					Email:        input.Email,
+					UserName:     input.UserName,
+				},
 			}
 			if input.Environment != "" {
-				cloudCreateInput.environment = []string{input.Environment}
+				cloudCreateInput.Environment = []string{input.Environment}
 			}
 			cloudAccount, err = c.sendCloudCreateRequest(ctx, cloudCreateInput)
 			if err != nil {
@@ -383,34 +357,38 @@ func (t *UpdateCloudAccountInput) mergeAndGetJson(account *CloudAccount) ([]byte
 
 func (t *UpdateCloudAccountInput) toCloudPayLoad() *CloudPayLoad {
 	cloudPayLoad := &CloudPayLoad{
-		Name:         t.CloudName,
-		Arn:          t.RoleArn,
-		ScanEnabled:  t.ScanEnabled,
-		ScanInterval: "Daily",
-		ScanRegion:   "All",
-		ExternalID:   t.ExternalID,
-		IsDraft:      t.IsDraft,
-		Provider:     t.Provider,
-		Email:        t.Email,
-		UserName:     t.UserName,
-		Environment:  []string{t.Environment},
+		CloudInfo: CloudInfo{
+			Name:         t.CloudName,
+			Arn:          t.RoleArn,
+			ScanEnabled:  t.ScanEnabled,
+			ScanInterval: "Daily",
+			ScanRegion:   "All",
+			ExternalID:   t.ExternalID,
+			IsDraft:      t.IsDraft,
+			Provider:     t.Provider,
+			Email:        t.Email,
+			UserName:     t.UserName,
+			Environment:  []string{t.Environment},
+		},
 	}
 	return cloudPayLoad
 }
 
 func (t *CloudAccount) toCloudPayLoad() *CloudPayLoad {
 	cloudPayLoad := &CloudPayLoad{
-		Name:         t.Name,
-		Arn:          t.Arn,
-		ScanEnabled:  t.ScanEnabled,
-		ScanInterval: t.ScanInterval,
-		ScanRegion:   t.ScanRegion,
-		ExternalID:   t.ExternalID,
-		IsDraft:      t.IsDraft,
-		Provider:     t.Provider,
-		Email:        t.Email,
-		UserName:     t.UserName,
-		Environment:  t.Environment,
+		CloudInfo: CloudInfo{
+			Name:         t.Name,
+			Arn:          t.Arn,
+			ScanEnabled:  t.ScanEnabled,
+			ScanInterval: t.ScanInterval,
+			ScanRegion:   t.ScanRegion,
+			ExternalID:   t.ExternalID,
+			IsDraft:      t.IsDraft,
+			Provider:     t.Provider,
+			Email:        t.Email,
+			UserName:     t.UserName,
+			Environment:  t.Environment,
+		},
 	}
 	return cloudPayLoad
 }

@@ -27,11 +27,12 @@ import (
 func TestCloudAccountShowCmd(t *testing.T) {
 	mockCloudAccount := func(cloudName, teamID, cloudID, accountId, arn string) *client.CloudAccount {
 		return &client.CloudAccount{
-			ID:        cloudID,
-			TeamID:    teamID,
-			Name:      cloudName,
+			ID: cloudID,
+			CloudPayLoad: client.CloudPayLoad{
+				TeamID:    teamID,
+				CloudInfo: client.CloudInfo{Name: cloudName, Arn: arn},
+			},
 			AccountID: accountId,
-			Arn:       arn,
 		}
 	}
 

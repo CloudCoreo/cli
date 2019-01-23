@@ -273,10 +273,13 @@ func TestSendCloudCreateRequestSuccess(t *testing.T) {
 	}
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	input := &sendCloudCreateRequestInput{
-		cloudName:  "cloudName",
-		roleArn:    "default",
-		externalID: "default",
-		cloudLink:  link,
+		CloudInfo: CloudInfo{
+			Name:       "cloudName",
+			Arn:        "default",
+			ExternalID: "default",
+		},
+
+		cloudLink: link,
 	}
 	_, err := client.sendCloudCreateRequest(context.Background(), input)
 	assert.Nil(t, err, "CreateCloudAccount shouldn't return error.")
