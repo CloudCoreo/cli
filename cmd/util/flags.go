@@ -45,9 +45,42 @@ func CheckCloudShowOrDeleteFlag(cloudID string, verbose bool) error {
 
 // CheckCloudAddFlags flag check for cloud add command
 func CheckCloudAddFlags(externalID, roleArn, roleName, environment string) error {
+
 	if (externalID == "" || roleArn == "") && roleName == "" {
 		return fmt.Errorf("Please either provide both externalID and roleArn or the name of the new role ")
 	}
+
+	// Check for environment set
+	envSet := map[string]bool{
+		"Production":  true,
+		"Staging":     true,
+		"Development": true,
+		"Test":        true,
+	}
+
+	if !envSet[environment] && environment != "" {
+		return fmt.Errorf("Environment must be one of those: Production, Staging, Development, Test ")
+	}
+	return nil
+}
+
+// CheckCloudAddFlags flag check for cloud add command when adding AWS cloud account
+func CheckCloudAddFlagsForAWS(externalID, roleArn, roleName, environment string) error {
+	if (externalID == "" || roleArn == "") && roleName == "" {
+		return fmt.Errorf("Please either provide both externalID and roleArn or the name of the new role ")
+	}
+	return checkEnvironment(environment)
+}
+
+// CheckCloudAddFlags flag check for cloud add command when adding azure cloud account
+func CheckCloudAddFlagsForAzure(keyValue, applicationID, directoryID, subscriptionID, environment string) error {
+	if keyValue == "" || applicationID == "" || directoryID == "" || subscriptionID == "" {
+		return fmt.Errorf("Please provide all the required info: Key Value, Application ID, Directory ID and Subscription ID ")
+	}
+	return checkEnvironment(environment)
+}
+
+func checkEnvironment(environment string) error {
 	envSet := map[string]bool{
 		"Production":  true,
 		"Staging":     true,

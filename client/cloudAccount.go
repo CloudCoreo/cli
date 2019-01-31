@@ -37,31 +37,39 @@ type CloudAccount struct {
 
 // CreateCloudAccountInput for function CreateCloudAccount
 type CreateCloudAccountInput struct {
-	TeamID      string
-	CloudName   string
-	RoleName    string
-	ExternalID  string
-	RoleArn     string
-	Policy      string
-	IsDraft     bool
-	Email       string
-	UserName    string
-	Environment string
-	ScanEnabled bool
-	Provider    string
+	TeamID         string
+	CloudName      string
+	RoleName       string
+	ExternalID     string
+	RoleArn        string
+	Policy         string
+	IsDraft        bool
+	Email          string
+	UserName       string
+	Environment    string
+	ScanEnabled    bool
+	Provider       string
+	KeyValue       string
+	ApplicationID  string
+	DirectoryID    string
+	SubscriptionID string
 }
 type CloudInfo struct {
-	Name         string   `json:"name"`
-	Arn          string   `json:"arn"`
-	ScanEnabled  bool     `json:"scanEnabled"`
-	ScanInterval string   `json:"scanInterval"`
-	ScanRegion   string   `json:"scanRegion"`
-	ExternalID   string   `json:"externalId"`
-	IsDraft      bool     `json:"isDraft"`
-	Provider     string   `json:"provider"`
-	Email        string   `json:"email"`
-	UserName     string   `json:"username"`
-	Environment  []string `json:"environment"`
+	Name           string   `json:"name"`
+	Arn            string   `json:"arn"`
+	ScanEnabled    bool     `json:"scanEnabled"`
+	ScanInterval   string   `json:"scanInterval"`
+	ScanRegion     string   `json:"scanRegion"`
+	ExternalID     string   `json:"externalId"`
+	IsDraft        bool     `json:"isDraft"`
+	Provider       string   `json:"provider"`
+	Email          string   `json:"email"`
+	UserName       string   `json:"username"`
+	Environment    []string `json:"environment"`
+	KeyValue       string   `json:"key"`
+	ApplicationID  string   `json:"appId"`
+	DirectoryID    string   `json:"directoryId"`
+	SubscriptionID string   `json:"subscriptionId"`
 }
 
 // CloudPayLoad ...
@@ -226,22 +234,26 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 				return nil, NewError(err.Error())
 			}
 
-			if input.RoleArn == "" {
+			if input.Provider == "AWS" && input.RoleArn == "" {
 				return nil, NewError(content.ErrorMissingRoleInformation)
 			}
 			cloudCreateInput := &sendCloudCreateRequestInput{
 				cloudLink: cloudLink,
 				CloudInfo: CloudInfo{
-					ExternalID:   input.ExternalID,
-					Name:         input.CloudName,
-					Arn:          input.RoleArn,
-					ScanEnabled:  true,
-					ScanInterval: "Daily",
-					ScanRegion:   "All",
-					IsDraft:      input.IsDraft,
-					Provider:     "AWS",
-					Email:        input.Email,
-					UserName:     input.UserName,
+					ExternalID:     input.ExternalID,
+					Name:           input.CloudName,
+					Arn:            input.RoleArn,
+					ScanEnabled:    true,
+					ScanInterval:   "Daily",
+					ScanRegion:     "All",
+					IsDraft:        input.IsDraft,
+					Provider:       input.Provider,
+					Email:          input.Email,
+					UserName:       input.UserName,
+					KeyValue:       input.KeyValue,
+					ApplicationID:  input.ApplicationID,
+					DirectoryID:    input.DirectoryID,
+					SubscriptionID: input.SubscriptionID,
 				},
 			}
 			if input.Environment != "" {

@@ -83,7 +83,7 @@ func TestCheckTeamAddFlagsFailureNoTeamDescription(t *testing.T) {
 }
 
 func TestCheckCloudAddFlagsFailure(t *testing.T) {
-	err := CheckCloudAddFlags("", "", "", "")
+	err := CheckCloudAddFlagsForAWS("", "", "", "")
 	assert.NotNil(t, err, "TestCloudAddFlagsFailure should return error")
 	assert.Equal(t, "Please either provide both externalID and roleArn or the name of the new role ", err.Error())
 }
