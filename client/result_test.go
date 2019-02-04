@@ -40,8 +40,8 @@ const resultJSONPayload = `[
 			"href": "%s/api/object"
 		}]`
 
-const iamInactiveKeyNoRotationRuleOutput = `[
-	{
+const iamInactiveKeyNoRotationRuleOutput = `{
+"rules":[{
 		"id": "fake-rule-name",
 		"info": {
 			"suggested_action": "fake-suggestion",
@@ -71,7 +71,7 @@ const iamInactiveKeyNoRotationRuleOutput = `[
 		],
 		"objects": 1528
 	}
-]`
+]}`
 
 const kmsKeyRotatesObjectOutput = `{
 	"violations": [{
@@ -131,7 +131,7 @@ func TestGetAllResultRuleFailureNoViolatedRule(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForResult, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/result").WithMethod("GET").WithBody(fmt.Sprintf(resultJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
-	ts.Path("/api/rule").WithMethod("GET").WithBody("[]").WithStatus(http.StatusOK)
+	ts.Path("/api/rule").WithMethod("GET").WithBody(`{"rules":[]}`).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
@@ -192,7 +192,7 @@ func TestGetResultRuleFailureNoViolatedRule(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForResult, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/result").WithMethod("GET").WithBody(fmt.Sprintf(resultJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
-	ts.Path("/api/rule").WithMethod("GET").WithBody("[]").WithStatus(http.StatusOK)
+	ts.Path("/api/rule").WithMethod("GET").WithBody(`{"rules":[]}`).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
