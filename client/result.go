@@ -76,6 +76,10 @@ type ResultObjectWrapper struct {
 	TotalItems *int            `json:"totalItems"`
 }
 
+type ResultRuleWrapper struct {
+	Rules []*ResultRule `json:"rules"`
+}
+
 //ShowResultObject shows violated objects. If the filter condition (teamID, cloudID in this case) is valid,
 //objects will be filtered. Otherwise return all violation objects under this user account.
 func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level string) (*ResultObjectWrapper, error) {
@@ -170,21 +174,21 @@ func (c *Client) getAllResultObject(ctx context.Context) (*ResultObjectWrapper, 
 }
 
 func (c *Client) getAllResultRule(ctx context.Context) ([]*ResultRule, error) {
-	result := []*ResultRule{}
+	result := new(ResultRuleWrapper)
 
 	link, err := c.getResultLinkByRef(ctx, "rule")
 	if err != nil {
 		return nil, err
 	}
 
-	err = c.Do(ctx, "GET", link.Href, nil, &result)
+	err = c.Do(ctx, "GET", link.Href, nil, result)
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
-	if len(result) == 0 {
+	if len(result.Rules) == 0 {
 		return nil, NewError("No violated rule")
 	}
-	return result, nil
+	return result.Rules, nil
 }
 
 func hasTeamID(teamInfo []TeamInfoWrapper, teamID string) bool {
