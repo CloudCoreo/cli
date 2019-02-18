@@ -51,17 +51,19 @@ type CreateCloudAccountInput struct {
 	Provider    string
 }
 type CloudInfo struct {
-	Name         string   `json:"name"`
-	Arn          string   `json:"arn"`
-	ScanEnabled  bool     `json:"scanEnabled"`
-	ScanInterval string   `json:"scanInterval"`
-	ScanRegion   string   `json:"scanRegion"`
-	ExternalID   string   `json:"externalId"`
-	IsDraft      bool     `json:"isDraft"`
-	Provider     string   `json:"provider"`
-	Email        string   `json:"email"`
-	UserName     string   `json:"username"`
-	Environment  []string `json:"environment"`
+	Name                string   `json:"name"`
+	Arn                 string   `json:"arn"`
+	ScanEnabled         bool     `json:"scanEnabled"`
+	ScanInterval        string   `json:"scanInterval"`
+	ScanRegion          string   `json:"scanRegion"`
+	ExternalID          string   `json:"externalId"`
+	IsDraft             bool     `json:"isDraft"`
+	Provider            string   `json:"provider"`
+	Email               string   `json:"email"`
+	UserName            string   `json:"username"`
+	Environment         []string `json:"environment"`
+	IsValid             bool     `json:"isValid"`
+	LastValidationCheck string   `json:"lastValidationCheck"`
 }
 
 // CloudPayLoad ...
