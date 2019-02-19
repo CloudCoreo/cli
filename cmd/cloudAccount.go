@@ -153,7 +153,7 @@ func (t *cloudTestCmd) run() error {
 		return err
 	}
 	if jsonFormat {
-		util.PrettyJSON(res)
+		util.PrettyPrintJSON(res)
 	} else {
 		fmt.Fprintln(t.out, res.Message)
 	}
