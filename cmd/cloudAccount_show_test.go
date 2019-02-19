@@ -56,11 +56,11 @@ func TestCloudAccountShowCmd(t *testing.T) {
 				mockCloudAccount("ID1", "Team1", "CloudName1", "AccountID1", "Arn1"),
 				mockCloudAccount("ID2", "Team2", "CloudName2", "AccountID2", "Arn2"),
 			},
-			xout: "---------------------  -----------------------  ------------  -------------------  -----------------\n   " +
-				"Cloud Account ID       Cloud Account Name       Team ID       AWS account ID       AWS Role Arn  \n" +
-				"---------------------  -----------------------  ------------  -------------------  -----------------\n" +
-				"      CloudName1                 ID1                Team1          AccountID1             Arn1      \n" +
-				"---------------------  -----------------------  ------------  -------------------  -----------------\n\n",
+			xout: "---------------------  -----------------------  ------------  -------------------  -----------------  -------------\n   " +
+				"Cloud Account ID       Cloud Account Name       Team ID       AWS account ID       AWS Role Arn       Is Valid  \n" +
+				"---------------------  -----------------------  ------------  -------------------  -----------------  -------------\n" +
+				"      CloudName1                 ID1                Team1          AccountID1             Arn1            false    \n" +
+				"---------------------  -----------------------  ------------  -------------------  -----------------  -------------\n\n",
 		},
 		{
 			cmds: "coreo cloud show, failure",
