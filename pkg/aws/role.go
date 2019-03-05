@@ -2,6 +2,7 @@ package aws
 
 import (
 	"github.com/CloudCoreo/cli/client"
+	"github.com/aws/aws-sdk-go/service/sts"
 	"github.com/pkg/errors"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -13,15 +14,19 @@ import (
 
 // RoleService interacts with aws role
 type RoleService struct {
-	AwsProfilePath string
-	AwsProfile     string
+	awsProfilePath string
+	awsProfile     string
+	roleArn        string
+	externalID     string
 }
 
 // NewRoleService returns a new RoleService
 func NewRoleService(input *NewServiceInput) *RoleService {
 	return &RoleService{
-		AwsProfile:     input.AwsProfile,
-		AwsProfilePath: input.AwsProfilePath,
+		awsProfile:     input.AwsProfile,
+		awsProfilePath: input.AwsProfilePath,
+		roleArn:        input.RoleArn,
+		externalID:     input.ExternalID,
 	}
 }
 
@@ -88,11 +93,40 @@ func (c *RoleService) attachRolePolicy(svc *iam.IAM, policyArn, roleName string)
 	return result, err
 }
 
+func (c *RoleService) newSessionWithAssumingRole() (*session.Session, error) {
+	var sess *session.Session
+	var svc *sts.STS
+	input := &sts.AssumeRoleInput{
+		ExternalId:      &c.externalID,
+		RoleArn:         &c.roleArn,
+		DurationSeconds: aws.Int64(3600),
+		RoleSessionName: aws.String("VMwareSecureState"),
+	}
+	if c.awsProfile != "" {
+		svc = sts.New(session.Must(session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(c.awsProfilePath, c.awsProfile)})))
+
+	} else {
+		svc = sts.New(session.Must(session.NewSession()))
+	}
+	result, err := svc.AssumeRole(input)
+	if err != nil {
+		return nil, err
+	}
+	newCreds := credentials.NewStaticCredentials(*result.Credentials.AccessKeyId, *result.Credentials.SecretAccessKey, *result.Credentials.SessionToken)
+	sess = session.Must(session.NewSession(&aws.Config{Credentials: newCreds}))
+
+	return sess, nil
+}
+
 func (c *RoleService) newSession() (*session.Session, error) {
 	var sess *session.Session
 	var err error
-	if c.AwsProfile != "" {
-		sess, err = session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(c.AwsProfilePath, c.AwsProfile)})
+	if c.roleArn != "" {
+		return c.newSessionWithAssumingRole()
+	}
+
+	if c.awsProfile != "" {
+		sess, err = session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(c.awsProfilePath, c.awsProfile)})
 		if err != nil {
 			return nil, err
 		}

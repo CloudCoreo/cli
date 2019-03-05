@@ -91,6 +91,18 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagRoleArnDescription is description for --arn
 	CmdFlagRoleArnDescription = "The arn of the role to connect"
 
+	//CmdFlagAwsRoleArn is the arn of the role users would like to assume
+	CmdFlagAwsRoleArn = "aws-arn"
+
+	//CmdFlagAwsRoleArnDescription is the description for flag --aws-arn
+	CmdFlagAwsRoleArnDescription = "The arn of the role you'd like to assume"
+
+	//CmdFlagAwsExternalID is the external id of the role users would like to assume
+	CmdFlagAwsExternalID = "aws-external-id"
+
+	//CmdFlagAwsExternalIDDescription is the description for flag --aws-external-id
+	CmdFlagAwsExternalIDDescription = "The external id of the role you'd like to assume"
+
 	//CmdFlagRoleExternalID is flag for external-id used to assume the provided role
 	CmdFlagRoleExternalID = "external-id"
 

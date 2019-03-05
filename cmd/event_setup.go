@@ -27,6 +27,8 @@ type eventSetupCmd struct {
 	cloudID             string
 	teamID              string
 	ignoreMissingTrails bool
+	awsRoleArn          string
+	awsExternalID       string
 }
 
 func newEventSetupCmd(client command.Interface, provider command.CloudProvider, out io.Writer) *cobra.Command {
@@ -57,6 +59,8 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 					AwsProfile:          eventSetup.awsProfile,
 					AwsProfilePath:      eventSetup.awsProfilePath,
 					IgnoreMissingTrails: eventSetup.ignoreMissingTrails,
+					RoleArn:             eventSetup.awsRoleArn,
+					ExternalID:          eventSetup.awsExternalID,
 				}
 				eventSetup.cloud = aws.NewService(newServiceInput)
 			}
@@ -71,6 +75,8 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 	f.StringVarP(&eventSetup.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	f.StringVarP(&eventSetup.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
 	f.BoolVarP(&eventSetup.ignoreMissingTrails, content.CmdFlagIgnoreMissingTrails, "", false, content.CmdFlagIgnoreMissingTrailsDescription)
+	f.StringVarP(&eventSetup.awsRoleArn, content.CmdFlagAwsRoleArn, "", "", content.CmdFlagAwsRoleArnDescription)
+	f.StringVarP(&eventSetup.awsExternalID, content.CmdFlagAwsExternalID, "", "", content.CmdFlagAwsExternalIDDescription)
 	return cmd
 }
 

@@ -3,6 +3,8 @@ package aws
 import (
 	"fmt"
 
+	"github.com/aws/aws-sdk-go/service/sts"
+
 	"github.com/aws/aws-sdk-go/service/cloudformation"
 
 	"github.com/aws/aws-sdk-go/service/sns"
@@ -16,6 +18,8 @@ import (
 type RemoveService struct {
 	awsProfilePath string
 	awsProfile     string
+	roleArn        string
+	externalID     string
 }
 
 // NewRemoveService returns an instance of RemoveService
@@ -23,12 +27,43 @@ func NewRemoveService(input *NewServiceInput) *RemoveService {
 	return &RemoveService{
 		awsProfile:     input.AwsProfile,
 		awsProfilePath: input.AwsProfilePath,
+		roleArn:        input.RoleArn,
+		externalID:     input.ExternalID,
 	}
+}
+
+func (a *RemoveService) newSessionWithAssumingRole() (*session.Session, error) {
+	var sess *session.Session
+	var svc *sts.STS
+	input := &sts.AssumeRoleInput{
+		ExternalId:      &a.externalID,
+		RoleArn:         &a.roleArn,
+		DurationSeconds: aws.Int64(3600),
+		RoleSessionName: aws.String("VMwareSecureState"),
+	}
+	if a.awsProfile != "" {
+		svc = sts.New(session.Must(session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(a.awsProfilePath, a.awsProfile)})))
+
+	} else {
+		svc = sts.New(session.Must(session.NewSession()))
+	}
+	result, err := svc.AssumeRole(input)
+	if err != nil {
+		return nil, err
+	}
+	newCreds := credentials.NewStaticCredentials(*result.Credentials.AccessKeyId, *result.Credentials.SecretAccessKey, *result.Credentials.SessionToken)
+	sess = session.Must(session.NewSession(&aws.Config{Credentials: newCreds}))
+
+	return sess, nil
 }
 
 func (a *RemoveService) newSession() (*session.Session, error) {
 	var sess *session.Session
 	var err error
+	if a.roleArn != "" {
+		return a.newSessionWithAssumingRole()
+	}
+
 	if a.awsProfile != "" {
 		sess, err = session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(a.awsProfilePath, a.awsProfile)})
 		if err != nil {

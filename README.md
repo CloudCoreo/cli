@@ -17,11 +17,11 @@ Use CLI to...
 
 ### OSX
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.30/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.30/vss_darwin_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.31/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.31/vss_darwin_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.30/vss_darwin_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.31/vss_darwin_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -29,11 +29,11 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.30
 
 ### Linux
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.30/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.30/vss_linux_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.31/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.31/vss_linux_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.30/vss_linux_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.31/vss_linux_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -41,7 +41,7 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.30
 
 ### Windows
 
-Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.30/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.30/vss_windows_amd64.exe)
+Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.31/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.31/vss_windows_amd64.exe)
 
 ```
 C:\Users\Username\Downloads> rename vss_windows_amd64.exe vss.exe
@@ -137,6 +137,8 @@ Manage Cloud Accounts
         |Environment| --env| Environment label for the cloud account to add, must be one of these: Production, Staging, Development, Test"|
         |email|--email|The email address of account owner|
         |username|--username| The username of account owner|
+        |aws role arn| --aws-role-arn| The arn of the role you'd like to assume|
+        |aws external id|--aws-external-id |The external id of the role you'd like to assume|
         
     * You need to either use your own role or let CLI create one for you. 
         * To use your own role, you need to pass the role arn and external id to CLI. 
@@ -305,6 +307,8 @@ Manage event stream
         |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
         | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to add event stream for, this flag is required|
         |ignore-missing-trails|--ignore-missing-trails| With this flag, CLI will skip regions of which CloudTrail in not enables and continue on other regions.|
+        |aws role arn| --aws-role-arn| The arn of the role you'd like to assume|
+        |aws external id|--aws-external-id |The external id of the role you'd like to assume|
 
 * remove
     * Usage 
@@ -316,6 +320,9 @@ Manage event stream
         | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
         |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
         | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to remove event stream for, this flag is required|
+        |aws role arn| --aws-role-arn| The arn of the role you'd like to assume|
+        |aws external id|--aws-external-id |The external id of the role you'd like to assume|
+        
 #### help
 Help about any command
 * Usage   

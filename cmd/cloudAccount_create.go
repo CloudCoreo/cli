@@ -46,6 +46,8 @@ type cloudCreateCmd struct {
 	userName       string
 	email          string
 	environment    string
+	awsRoleArn     string
+	awsExternalID  string
 }
 
 func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -76,6 +78,8 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 				newServiceInput := &aws.NewServiceInput{
 					AwsProfile:     cloudCreate.awsProfile,
 					AwsProfilePath: cloudCreate.awsProfilePath,
+					RoleArn:        cloudCreate.awsRoleArn,
+					ExternalID:     cloudCreate.awsExternalID,
 				}
 				cloudCreate.cloud = aws.NewService(newServiceInput)
 			}
@@ -99,6 +103,8 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&cloudCreate.email, content.CmdFlagEmail, "", "", content.CmdFlagEmailDescription)
 	f.StringVarP(&cloudCreate.userName, content.CmdFlagUserName, "", "", content.CmdFlagUserNameDescription)
 	f.StringVarP(&cloudCreate.environment, content.CmdFlagEnvironmentLong, content.CmdFlagEnvironmentShort, "", content.CmdFlagEnvironmentDescription)
+	f.StringVarP(&cloudCreate.awsRoleArn, content.CmdFlagAwsRoleArn, "", "", content.CmdFlagAwsRoleArnDescription)
+	f.StringVarP(&cloudCreate.awsExternalID, content.CmdFlagAwsExternalID, "", "", content.CmdFlagAwsExternalIDDescription)
 	return cmd
 }
 

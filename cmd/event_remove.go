@@ -24,6 +24,8 @@ type eventRemoveCmd struct {
 	awsProfilePath string
 	cloudID        string
 	teamID         string
+	awsRoleArn     string
+	awsExternalID  string
 }
 
 func newEventRemoveCmd(client command.Interface, provider command.CloudProvider, out io.Writer) *cobra.Command {
@@ -53,6 +55,8 @@ func newEventRemoveCmd(client command.Interface, provider command.CloudProvider,
 				newServiceInput := &aws.NewServiceInput{
 					AwsProfile:     eventRemove.awsProfile,
 					AwsProfilePath: eventRemove.awsProfilePath,
+					RoleArn:        eventRemove.awsRoleArn,
+					ExternalID:     eventRemove.awsExternalID,
 				}
 				eventRemove.cloud = aws.NewService(newServiceInput)
 			}
@@ -65,6 +69,9 @@ func newEventRemoveCmd(client command.Interface, provider command.CloudProvider,
 	f.StringVarP(&eventRemove.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&eventRemove.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	f.StringVarP(&eventRemove.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
+	f.StringVarP(&eventRemove.awsRoleArn, content.CmdFlagAwsRoleArn, "", "", content.CmdFlagAwsRoleArnDescription)
+	f.StringVarP(&eventRemove.awsExternalID, content.CmdFlagAwsExternalID, "", "", content.CmdFlagAwsExternalIDDescription)
+
 	return cmd
 }
 
