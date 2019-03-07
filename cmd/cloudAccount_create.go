@@ -48,6 +48,11 @@ type cloudCreateCmd struct {
 	environment    string
 	awsRoleArn     string
 	awsExternalID  string
+	provider       string
+	keyValue       string
+	applicationID  string
+	directoryID    string
+	subscriptionID string
 }
 
 func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -63,8 +68,14 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Example: content.CmdCloudAddExample,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			if err := util.CheckCloudAddFlags(cloudCreate.externalID, cloudCreate.roleArn, cloudCreate.roleName, cloudCreate.environment); err != nil {
-				return err
+			if cloudCreate.provider == "AWS" {
+				if err := util.CheckCloudAddFlagsForAWS(cloudCreate.externalID, cloudCreate.roleArn, cloudCreate.roleName, cloudCreate.environment); err != nil {
+					return err
+				}
+			} else {
+				if err := util.CheckCloudAddFlagsForAzure(cloudCreate.keyValue, cloudCreate.applicationID, cloudCreate.directoryID, cloudCreate.subscriptionID, cloudCreate.environment); err != nil {
+					return err
+				}
 			}
 
 			if cloudCreate.client == nil {
@@ -105,21 +116,32 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&cloudCreate.environment, content.CmdFlagEnvironmentLong, content.CmdFlagEnvironmentShort, "", content.CmdFlagEnvironmentDescription)
 	f.StringVarP(&cloudCreate.awsRoleArn, content.CmdFlagAwsRoleArn, "", "", content.CmdFlagAwsRoleArnDescription)
 	f.StringVarP(&cloudCreate.awsExternalID, content.CmdFlagAwsExternalID, "", "", content.CmdFlagAwsExternalIDDescription)
+	f.StringVarP(&cloudCreate.provider, content.CmdFlagProvider, "", "AWS", content.CmdFlagProviderDescription)
+	f.StringVarP(&cloudCreate.keyValue, content.CmdFlagKeyValue, "", "", content.CmdFlagKeyValueDescription)
+	f.StringVarP(&cloudCreate.applicationID, content.CmdFlagApplicationID, "", "", content.CmdFlagApplicationIDDescription)
+	f.StringVarP(&cloudCreate.directoryID, content.CmdFlagDirectoryID, "", "", content.CmdFlagDirectoryIDDescription)
+	f.StringVarP(&cloudCreate.subscriptionID, content.CmdFlagSubscriptionID, "", "", content.CmdFlagSubscriptionIDDescription)
+
 	return cmd
 }
 
 func (t *cloudCreateCmd) run() error {
 	input := &client.CreateCloudAccountInput{
-		TeamID:      t.teamID,
-		CloudName:   t.resourceName,
-		RoleName:    t.roleName,
-		ExternalID:  t.externalID,
-		RoleArn:     t.roleArn,
-		Policy:      t.policy,
-		IsDraft:     t.isDraft,
-		Email:       t.email,
-		UserName:    t.userName,
-		Environment: t.environment,
+		TeamID:         t.teamID,
+		CloudName:      t.resourceName,
+		RoleName:       t.roleName,
+		ExternalID:     t.externalID,
+		RoleArn:        t.roleArn,
+		Policy:         t.policy,
+		IsDraft:        t.isDraft,
+		Email:          t.email,
+		UserName:       t.userName,
+		Environment:    t.environment,
+		Provider:       t.provider,
+		KeyValue:       t.keyValue,
+		ApplicationID:  t.applicationID,
+		DirectoryID:    t.directoryID,
+		SubscriptionID: t.subscriptionID,
 	}
 	if t.roleName != "" {
 		info, err := t.client.GetRoleCreationInfo(input)

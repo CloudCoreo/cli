@@ -119,7 +119,7 @@ func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level string) (*cl
 
 func (c *fakeReleaseClient) GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error) {
 	return &client.EventStreamConfig{
-		Regions: c.regions,
+		AWSEventStreamConfig: client.AWSEventStreamConfig{Regions: c.regions},
 	}, c.err
 }
 

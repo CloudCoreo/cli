@@ -168,6 +168,12 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagEnvironmentDescription describes the usage of environment flag
 	CmdFlagEnvironmentDescription = "Environment label for cloud account, four options available: Production, Staging, Development, Test"
 
+	//CmdFlagProvider is the cloud account provider
+	CmdFlagProvider = "provider"
+
+	//CmdFlagProviderDescription describes the usage of provider flag
+	CmdFlagProviderDescription = "Your cloud account provider, AWS or Azure"
+
 	//CmdFlagEmail is the owner email when adding cloud accounts, optional
 	CmdFlagEmail = "email"
 
@@ -209,4 +215,28 @@ Add a cloud account. The result would be shown as the following if successful.
 
 	//CmdFlagDeleteRoleDescription describes flag --role
 	CmdFLagDeleteRoleDescription = "Use this flag to delete the role while deleting a cloud account"
+
+	//CmdFlagKeyValue is the flag for key value
+	CmdFlagKeyValue = "key-value"
+
+	//CmdFlagKeyValueDescription is the description for flag --key-value
+	CmdFlagKeyValueDescription = "Key required for adding Azure cloud accounts"
+
+	//CmdFlagApplicationID is the flag for application ID
+	CmdFlagApplicationID = "application-id"
+
+	//CmdFlagApplicationIDDescription is the description for flag --application-id
+	CmdFlagApplicationIDDescription = "Application ID required for adding Azure cloud accounts"
+
+	//CmdFlagDirectoryID is the flag for directory ID
+	CmdFlagDirectoryID = "directory-id"
+
+	//CmdFlagDirectoryIDDescription is the description for flag --directory-id
+	CmdFlagDirectoryIDDescription = "Directory ID required for adding Azure cloud accounts"
+
+	//CmdFlagSubscriptionID is the flag for subscription ID
+	CmdFlagSubscriptionID = "subscription-id"
+
+	//CmdFlagSubscriptionID is the description for flag --subscription-id
+	CmdFlagSubscriptionIDDescription = "Subscription ID required for adding Azure cloud accounts"
 )

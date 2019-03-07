@@ -39,3 +39,7 @@ const CmdEventRemoveLong = "Run this command to remove event stream." +
 //CmdEventRemoveExample is the use case for command event remove
 const CmdEventRemoveExample = `vss event remove
   vss event remove --aws-profile YOUR_AWS_PROFILE --cloud-id YOUR_CLOUD_ID`
+
+const CmdEventAuthFile = "auth-file"
+
+const CmdEventAuthFileDescription = "auth file for azure authentication"
