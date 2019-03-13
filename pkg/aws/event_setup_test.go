@@ -14,12 +14,14 @@ func TestNewTagListSuccess(t *testing.T) {
 	setup := NewSetupService(&NewServiceInput{})
 	input := &command.SetupEventStreamInput{
 		Config: &client.EventStreamConfig{
-			TemplateURL:     "fake-url",
-			TopicName:       "fake-topic",
-			StackName:       "fake-stack",
-			DevtimeQueueArn: "fake-devtime-queue-arn",
-			Version:         "fake-version",
-			MonitorRule:     "fake-monitor-rule",
+			AWSEventStreamConfig: client.AWSEventStreamConfig{
+				TemplateURL:     "fake-url",
+				TopicName:       "fake-topic",
+				StackName:       "fake-stack",
+				DevtimeQueueArn: "fake-devtime-queue-arn",
+				Version:         "fake-version",
+				MonitorRule:     "fake-monitor-rule",
+			},
 		},
 	}
 	tag := setup.newTagList(input.Config)
@@ -31,12 +33,14 @@ func TestNewParameterListSuccess(t *testing.T) {
 	setup := NewSetupService(&NewServiceInput{})
 	input := &command.SetupEventStreamInput{
 		Config: &client.EventStreamConfig{
-			TemplateURL:     "fake-url",
-			TopicName:       "fake-topic",
-			StackName:       "fake-stack",
-			DevtimeQueueArn: "fake-devtime-queue-arn",
-			Version:         "fake-version",
-			MonitorRule:     "fake-monitor-rule",
+			AWSEventStreamConfig: client.AWSEventStreamConfig{
+				TemplateURL:     "fake-url",
+				TopicName:       "fake-topic",
+				StackName:       "fake-stack",
+				DevtimeQueueArn: "fake-devtime-queue-arn",
+				Version:         "fake-version",
+				MonitorRule:     "fake-monitor-rule",
+			},
 		},
 	}
 	parameterList := setup.newParameterList(input.Config)
@@ -48,12 +52,14 @@ func TestNewCreateStackInputSuccess(t *testing.T) {
 	setup := NewSetupService(&NewServiceInput{})
 	input := &command.SetupEventStreamInput{
 		Config: &client.EventStreamConfig{
-			TemplateURL:     "fake-url",
-			TopicName:       "fake-topic",
-			StackName:       "fake-stack",
-			DevtimeQueueArn: "fake-devtime-queue-arn",
-			Version:         "fake-version",
-			MonitorRule:     "fake-monitor-rule",
+			AWSEventStreamConfig: client.AWSEventStreamConfig{
+				TemplateURL:     "fake-url",
+				TopicName:       "fake-topic",
+				StackName:       "fake-stack",
+				DevtimeQueueArn: "fake-devtime-queue-arn",
+				Version:         "fake-version",
+				MonitorRule:     "fake-monitor-rule",
+			},
 		},
 	}
 	createStackInput := setup.newCreateStackInput(input.Config)
@@ -66,12 +72,14 @@ func TestNewUpdateStackInputSuccess(t *testing.T) {
 	setup := NewSetupService(&NewServiceInput{})
 	input := &command.SetupEventStreamInput{
 		Config: &client.EventStreamConfig{
-			TemplateURL:     "fake-url",
-			TopicName:       "fake-topic",
-			StackName:       "fake-stack",
-			DevtimeQueueArn: "fake-devtime-queue-arn",
-			Version:         "fake-version",
-			MonitorRule:     "fake-monitor-rule",
+			AWSEventStreamConfig: client.AWSEventStreamConfig{
+				TemplateURL:     "fake-url",
+				TopicName:       "fake-topic",
+				StackName:       "fake-stack",
+				DevtimeQueueArn: "fake-devtime-queue-arn",
+				Version:         "fake-version",
+				MonitorRule:     "fake-monitor-rule",
+			},
 		},
 	}
 

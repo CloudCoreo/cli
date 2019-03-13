@@ -1,20 +1,16 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 
-	"github.com/pkg/errors"
-
-	"github.com/CloudCoreo/cli/cmd/util"
-
-	"github.com/CloudCoreo/cli/pkg/aws"
-
-	"github.com/CloudCoreo/cli/pkg/coreo"
-
 	"github.com/CloudCoreo/cli/cmd/content"
+	"github.com/CloudCoreo/cli/cmd/util"
+	"github.com/CloudCoreo/cli/pkg/aws"
+	"github.com/CloudCoreo/cli/pkg/azure"
 	"github.com/CloudCoreo/cli/pkg/command"
-
+	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
 )
 
@@ -27,6 +23,10 @@ type eventSetupCmd struct {
 	cloudID             string
 	teamID              string
 	ignoreMissingTrails bool
+	awsRoleArn          string
+	awsExternalID       string
+	authFile            string
+	region              string
 }
 
 func newEventSetupCmd(client command.Interface, provider command.CloudProvider, out io.Writer) *cobra.Command {
@@ -52,14 +52,6 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 					coreo.APIKey(key),
 					coreo.SecretKey(secret))
 			}
-			if eventSetup.cloud == nil {
-				newServiceInput := &aws.NewServiceInput{
-					AwsProfile:          eventSetup.awsProfile,
-					AwsProfilePath:      eventSetup.awsProfilePath,
-					IgnoreMissingTrails: eventSetup.ignoreMissingTrails,
-				}
-				eventSetup.cloud = aws.NewService(newServiceInput)
-			}
 
 			eventSetup.teamID = teamID
 
@@ -71,6 +63,10 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 	f.StringVarP(&eventSetup.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	f.StringVarP(&eventSetup.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
 	f.BoolVarP(&eventSetup.ignoreMissingTrails, content.CmdFlagIgnoreMissingTrails, "", false, content.CmdFlagIgnoreMissingTrailsDescription)
+	f.StringVarP(&eventSetup.awsRoleArn, content.CmdFlagAwsRoleArn, "", "", content.CmdFlagAwsRoleArnDescription)
+	f.StringVarP(&eventSetup.awsExternalID, content.CmdFlagAwsExternalID, "", "", content.CmdFlagAwsExternalIDDescription)
+	f.StringVarP(&eventSetup.authFile, content.CmdEventAuthFile, "", "", content.CmdEventAuthFileDescription)
+	f.StringVarP(&eventSetup.region, content.CmdEventRegion, "", "eastus", content.CmdEventRegionDescription)
 	return cmd
 }
 
@@ -81,7 +77,29 @@ func (t *eventSetupCmd) run() error {
 		return err
 	}
 
-	if len(config.Regions) == 0 {
+	if t.cloud == nil {
+		if config.Provider == "AWS" {
+			newServiceInput := &aws.NewServiceInput{
+				AwsProfile:          t.awsProfile,
+				AwsProfilePath:      t.awsProfilePath,
+				IgnoreMissingTrails: t.ignoreMissingTrails,
+				RoleArn:             t.awsRoleArn,
+				ExternalID:          t.awsExternalID,
+			}
+			t.cloud = aws.NewService(newServiceInput)
+		} else if config.Provider == "Azure" {
+			newServiceInput := &azure.NewServiceInput{
+				AuthFile: t.authFile,
+				Region:   t.region,
+			}
+			t.cloud = azure.NewService(newServiceInput)
+		} else {
+			return errors.New("unsupported provider type " + config.Provider + " ")
+		}
+
+	}
+
+	if config.Provider == "AWS" && len(config.Regions) == 0 {
 		return errors.New("No regions returned")
 	}
 	err = t.cloud.SetupEventStream(config)

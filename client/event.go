@@ -19,6 +19,12 @@ import (
 
 //EventStreamConfig for event stream setup
 type EventStreamConfig struct {
+	AWSEventStreamConfig
+	AzureEventStreamConfig
+	Provider string `json:"provider"`
+}
+
+type AWSEventStreamConfig struct {
 	TemplateURL     string   `json:"templateURL"`
 	TopicName       string   `json:"topicName"`
 	StackName       string   `json:"stackName"`
@@ -26,6 +32,19 @@ type EventStreamConfig struct {
 	Version         string   `json:"version"`
 	MonitorRule     string   `json:"monitorRule"`
 	Regions         []string `json:"regions"`
+}
+type AzureEventStreamConfig struct {
+	SubscriptionID       string `json:"subscriptionId"`
+	ActionDeployFile     string `json:"actionDeployFile"`
+	AlertDeployFile      string `json:"alertDeployFile"`
+	WebhookServiceUri    string `json:"webhookServiceUri"`
+	ResourceGroup        string `json:"resourceGroup"`
+	ActionDeploymentName string `json:"actionDeploymentName"`
+	AlertDeploymentName  string `json:"alertDeploymentName"`
+	ActionGroup          string `json:"actionGroup"`
+	ActionGroupShort     string `json:"actionGroupShort"`
+	WebhookReceiverName  string `json:"webhookReceiverName"`
+	AlertName            string `json:"alertName"`
 }
 
 //EventRemoveConfig for event stream removal

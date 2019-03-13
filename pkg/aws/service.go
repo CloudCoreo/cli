@@ -22,6 +22,7 @@ type NewServiceInput struct {
 	RoleArn             string
 	Policy              string
 	RoleSessionName     string
+	ExternalID          string
 	Duration            int64
 	IgnoreMissingTrails bool
 }

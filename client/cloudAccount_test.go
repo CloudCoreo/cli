@@ -326,7 +326,8 @@ func TestCreateCloudAccountFailureMissingRoleArn(t *testing.T) {
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
 	_, err := client.CreateCloudAccount(context.Background(), &CreateCloudAccountInput{
-		TeamID: "teamID",
+		TeamID:   "teamID",
+		Provider: "AWS",
 	})
 	assert.NotNil(t, err, "CreateCloudAccount should return error.")
 	assert.Equal(t, content.ErrorMissingRoleInformation, err.Error())
@@ -410,6 +411,7 @@ func TestCreateCloudAccountFailureCloudAccountNotCreated(t *testing.T) {
 	input := &CreateCloudAccountInput{
 		TeamID:    "teamID",
 		CloudName: "cloudName",
+		Provider:  "AWS",
 	}
 	_, err := client.CreateCloudAccount(context.Background(), input)
 	assert.NotNil(t, err, "CreateCloudAccount should return error.")

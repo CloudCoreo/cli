@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aws/aws-sdk-go/service/sts"
+
 	"github.com/CloudCoreo/cli/client"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -17,6 +19,8 @@ type SetupService struct {
 	awsProfilePath     string
 	awsProfile         string
 	ignoreMissingTrail bool
+	roleArn            string
+	externalID         string
 }
 
 //NewSetupService returns a pointer to a setup struct object
@@ -25,25 +29,64 @@ func NewSetupService(input *NewServiceInput) *SetupService {
 		awsProfile:         input.AwsProfile,
 		awsProfilePath:     input.AwsProfilePath,
 		ignoreMissingTrail: input.IgnoreMissingTrails,
+		roleArn:            input.RoleArn,
+		externalID:         input.ExternalID,
 	}
+}
+
+func (a *SetupService) newSessionWithAssumingRole() (*session.Session, error) {
+	var sess *session.Session
+	var svc *sts.STS
+	input := &sts.AssumeRoleInput{
+		ExternalId:      &a.externalID,
+		RoleArn:         &a.roleArn,
+		DurationSeconds: aws.Int64(3600),
+		RoleSessionName: aws.String("VMwareSecureState"),
+	}
+	if a.awsProfile != "" {
+		svc = sts.New(session.Must(session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(a.awsProfilePath, a.awsProfile)})))
+
+	} else {
+		svc = sts.New(session.Must(session.NewSession()))
+	}
+	result, err := svc.AssumeRole(input)
+	if err != nil {
+		return nil, err
+	}
+	newCreds := credentials.NewStaticCredentials(*result.Credentials.AccessKeyId, *result.Credentials.SecretAccessKey, *result.Credentials.SessionToken)
+	sess = session.Must(session.NewSession(&aws.Config{Credentials: newCreds}))
+
+	return sess, nil
+}
+
+func (a *SetupService) newSession() (*session.Session, error) {
+	var sess *session.Session
+	var err error
+	if a.roleArn != "" {
+		return a.newSessionWithAssumingRole()
+	}
+
+	if a.awsProfile != "" {
+		sess, err = session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(a.awsProfilePath, a.awsProfile)})
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		sess, err = session.NewSession()
+		if err != nil {
+			return nil, err
+		}
+	}
+	return sess, nil
 }
 
 //SetupEventStream sets up event stream for aws account
 func (a *SetupService) SetupEventStream(input *client.EventStreamConfig) error {
 	regions := input.Regions
 
-	var sess *session.Session
-	var err error
-	if a.awsProfile != "" {
-		sess, err = session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(a.awsProfilePath, a.awsProfile)})
-		if err != nil {
-			return err
-		}
-	} else {
-		sess, err = session.NewSession()
-		if err != nil {
-			return err
-		}
+	sess, err := a.newSession()
+	if err != nil {
+		return err
 	}
 
 	for _, region := range regions {

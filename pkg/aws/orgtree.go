@@ -83,7 +83,10 @@ func (svc *OrgService) buildOrgTree(root *command.TreeNode, rootID string) {
 
 // GetOrganizationTree returns an array of treenode roots
 func (svc *OrgService) GetOrganizationTree() ([]*command.TreeNode, error) {
-
+	err := svc.init()
+	if err != nil {
+		return nil, err
+	}
 	// Collect information about the organization and master account
 	org, orgErr := svc.DescribeOrganization()
 	if orgErr != nil {
