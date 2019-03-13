@@ -26,6 +26,7 @@ type eventSetupCmd struct {
 	awsRoleArn          string
 	awsExternalID       string
 	authFile            string
+	region              string
 }
 
 func newEventSetupCmd(client command.Interface, provider command.CloudProvider, out io.Writer) *cobra.Command {
@@ -65,6 +66,7 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 	f.StringVarP(&eventSetup.awsRoleArn, content.CmdFlagAwsRoleArn, "", "", content.CmdFlagAwsRoleArnDescription)
 	f.StringVarP(&eventSetup.awsExternalID, content.CmdFlagAwsExternalID, "", "", content.CmdFlagAwsExternalIDDescription)
 	f.StringVarP(&eventSetup.authFile, content.CmdEventAuthFile, "", "", content.CmdEventAuthFileDescription)
+	f.StringVarP(&eventSetup.region, content.CmdEventRegion, "", "eastus", content.CmdEventRegionDescription)
 	return cmd
 }
 
@@ -85,11 +87,14 @@ func (t *eventSetupCmd) run() error {
 				ExternalID:          t.awsExternalID,
 			}
 			t.cloud = aws.NewService(newServiceInput)
-		} else {
+		} else if config.Provider == "Azure" {
 			newServiceInput := &azure.NewServiceInput{
 				AuthFile: t.authFile,
+				Region:   t.region,
 			}
 			t.cloud = azure.NewService(newServiceInput)
+		} else {
+			return errors.New("unsupported provider type " + config.Provider + " ")
 		}
 
 	}

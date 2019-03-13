@@ -7,6 +7,7 @@ import (
 
 type NewServiceInput struct {
 	AuthFile string
+	Region   string
 }
 
 type Service struct {

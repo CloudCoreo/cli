@@ -16,11 +16,15 @@ import (
 )
 
 type SetupService struct {
-	AuthFile string
+	authFile string
+	region   string
 }
 
 func NewSetupService(input *NewServiceInput) *SetupService {
-	return &SetupService{AuthFile: input.AuthFile}
+	return &SetupService{
+		authFile: input.AuthFile,
+		region:   input.Region,
+	}
 }
 func (a *SetupService) SetupEventStream(input *client.EventStreamConfig) error {
 	ctx := context.Background()
@@ -44,14 +48,14 @@ func (a *SetupService) createResourceGroup(ctx context.Context, input *client.Ev
 	if err != nil {
 		return err
 	}
-	_, err = groupsClient.CreateOrUpdate(ctx, input.ResourceGroup, resources.Group{Location: to.StringPtr("eastus")})
+	_, err = groupsClient.CreateOrUpdate(ctx, input.ResourceGroup, resources.Group{Location: to.StringPtr(a.region)})
 	return err
 }
 
 func (a *SetupService) getGroupsClient(input *client.EventStreamConfig) (*resources.GroupsClient, error) {
 	groupsClient := resources.NewGroupsClient(input.SubscriptionID)
-	if a.AuthFile != "" {
-		au, err := auth.NewAuthorizerFromFile(a.AuthFile)
+	if a.authFile != "" {
+		au, err := auth.NewAuthorizerFromFile(a.authFile)
 		if err != nil {
 			return nil, err
 		}
@@ -68,8 +72,8 @@ func (a *SetupService) getGroupsClient(input *client.EventStreamConfig) (*resour
 
 func (a *SetupService) getDeploymentsClient(input *client.EventStreamConfig) (*resources.DeploymentsClient, error) {
 	deploymentsClient := resources.NewDeploymentsClient(input.SubscriptionID)
-	if a.AuthFile != "" {
-		au, err := auth.NewAuthorizerFromFile(a.AuthFile)
+	if a.authFile != "" {
+		au, err := auth.NewAuthorizerFromFile(a.authFile)
 		if err != nil {
 			return nil, err
 		}

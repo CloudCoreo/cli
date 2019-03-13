@@ -43,3 +43,7 @@ const CmdEventRemoveExample = `vss event remove
 const CmdEventAuthFile = "auth-file"
 
 const CmdEventAuthFileDescription = "auth file for azure authentication"
+
+const CmdEventRegion = "region"
+
+const CmdEventRegionDescription = "The region in which you'd like to create Azure resource group in"
