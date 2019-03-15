@@ -14,54 +14,68 @@ import (
 
 // OrgService which connects to AWS organizations
 type OrgService struct {
-	orgService *organizations.Organizations
+	orgService      *organizations.Organizations
+	duration        int64
+	policy          string
+	roleArn         string
+	roleSessionName string
+	awsProfilePath  string
+	awsProfile      string
 }
 
-// NewOrgService returns a new orgservice with the credentials provided
 func NewOrgService(input *NewServiceInput) (awsService *OrgService) {
+	return &OrgService{
+		duration:        input.Duration,
+		policy:          input.Policy,
+		roleArn:         input.RoleArn,
+		roleSessionName: input.RoleSessionName,
+		awsProfile:      input.AwsProfile,
+		awsProfilePath:  input.AwsProfilePath,
+	}
+}
+
+func (svc *OrgService) init() error {
 	var sess *session.Session
-	if input.AwsProfile != "" {
-		sess = session.Must(session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(input.AwsProfilePath, input.AwsProfile)}))
+	if svc.awsProfile != "" {
+		sess = session.Must(session.NewSession(&aws.Config{Credentials: credentials.NewSharedCredentials(svc.awsProfilePath, svc.awsProfile)}))
 	} else {
 		sess = session.Must(session.NewSession())
 	}
 
-	if input.RoleArn != "" {
+	if svc.roleArn != "" {
 		stsSvc := sts.New(sess)
 		stsInput := &sts.AssumeRoleInput{
-			DurationSeconds: aws.Int64(input.Duration),
-			Policy:          aws.String(input.Policy),
-			RoleArn:         aws.String(input.RoleArn),
-			RoleSessionName: aws.String(input.RoleSessionName),
+			DurationSeconds: aws.Int64(svc.duration),
+			Policy:          aws.String(svc.policy),
+			RoleArn:         aws.String(svc.roleArn),
+			RoleSessionName: aws.String(svc.roleSessionName),
 		}
 
 		sresult, serr := stsSvc.AssumeRole(stsInput)
 		if serr != nil {
-			fmt.Println("Unable to assume role" + serr.Error())
+			return serr
 		}
 
-		res, err := NewOrgServiceWithCreds(sresult.Credentials)
+		res, err := newOrgServiceWithCreds(sresult.Credentials)
 		if err != nil {
-			fmt.Println("Unable to initialize AWS Service -", err)
-			return nil
+			fmt.Println("Unable to initialize AWS Service")
+			return err
 		}
-
-		return res
+		svc.orgService = res
+		return nil
 	}
 
-	svc := organizations.New(sess)
-	return &OrgService{
-		orgService: svc,
-	}
+	svc.orgService = organizations.New(sess)
+	return nil
 }
 
 // NewOrgServiceWithCreds initializes a connection to the AWS organization service
-func NewOrgServiceWithCreds(creds *sts.Credentials) (awsService *OrgService, err error) {
+func newOrgServiceWithCreds(creds *sts.Credentials) (*organizations.Organizations, error) {
 	sess := session.Must(session.NewSession())
 
 	provider := NewAssumeRoleCredentialsProvider(creds)
 	svc := organizations.New(sess, &aws.Config{Credentials: credentials.NewCredentials(provider)})
-	return &OrgService{svc}, nil
+	return svc, nil
 }
 
 // DescribeOrganization provides the details of an organization
