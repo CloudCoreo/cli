@@ -57,7 +57,7 @@ func newResultRuleCmd(client command.Interface, out io.Writer) *cobra.Command {
 		},
 	}
 	f := cmd.Flags()
-	f.StringVar(&resultRule.cloudID, content.CmdFlagCloudIDLong, content.None, content.CmdFlagCloudIDDescription)
+	f.StringVar(&resultRule.cloudID, content.CmdFlagCloudAccountID, content.None, content.CmdFlagCloudAccountIDDescription)
 	f.StringVar(&resultRule.level, content.CmdFlagLevelLong, content.None, content.CmdFlagLevelDescription)
 	return cmd
 }
