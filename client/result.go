@@ -55,11 +55,11 @@ type Info struct {
 
 // ResultRule struct decodes json file returned by webapp
 type ResultRule struct {
-	ID     string             `json:"id"`
-	Info   Info               `json:"info"`
-	TInfo  []TeamInfoWrapper  `json:"teamAndPlan"`
-	CInfo  []CloudAccountInfo `json:"accounts"`
-	Object int                `json:"objects"`
+	ID     string            `json:"id"`
+	Info   Info              `json:"info"`
+	TInfo  []TeamInfoWrapper `json:"teamAndPlan"`
+	CInfo  []string          `json:"accounts"`
+	Object int               `json:"objects"`
 }
 
 // The ResultObject struct decodes json file returned by webapp
@@ -80,7 +80,7 @@ type ResultObjectWrapper struct {
 }
 
 type ResultRuleWrapper struct {
-	Rules []*ResultRule `json:"rules"`
+	Rules []*ResultRule `json:"result"`
 }
 
 type resultObjectRequest struct {
@@ -252,9 +252,9 @@ func hasTeamID(teamInfo []TeamInfoWrapper, teamID string) bool {
 	return false
 }
 
-func hasCloudID(cloudInfo []CloudAccountInfo, cloudID string) bool {
+func hasCloudID(cloudInfo []string, cloudID string) bool {
 	for i := range cloudInfo {
-		if cloudInfo[i].ID == cloudID {
+		if cloudInfo[i] == cloudID {
 			return true
 		}
 	}
