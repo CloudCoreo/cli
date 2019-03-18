@@ -25,13 +25,13 @@ import (
 
 // Team for team information
 type Team struct {
-	TeamName        string      `json:"teamName"`
-	OwnerID         string      `json:"ownerId"`
-	TeamIcon        string      `json:"teamIcon"`
-	TeamDescription interface{} `json:"teamDescription"`
-	Default         bool        `json:"default"`
-	Links           []Link      `json:"links"`
-	ID              string      `json:"id"`
+	TeamName        string `json:"teamName"`
+	OwnerID         string `json:"ownerId"`
+	TeamIcon        string `json:"teamIcon"`
+	TeamDescription string `json:"teamDescription"`
+	Default         bool   `json:"default"`
+	Links           []Link `json:"links"`
+	ID              string `json:"id"`
 }
 
 // GetTeams method to get Teams info array object
