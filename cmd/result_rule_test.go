@@ -33,10 +33,7 @@ const iamInactiveKeyNoRotationRuleOutput = `[
 			}
 		],
 		"accounts": [
-			{
-				"name": "fake-account-name",
-				"id": "fake-account-id"
-			}
+			"fake-account-id"
 		],
 		"objects": 1528
 	}
@@ -67,10 +64,7 @@ const S3AllUserWriteRuleOutput = `[
 			}
 		],
 		"accounts": [
-			{
-				"name": "fake-account-name",
-				"id": "fake-account-id"
-			}
+			"fake-account-id"
 		],
 		"objects": 2
 	}
@@ -79,7 +73,7 @@ const S3AllUserWriteRuleOutput = `[
 
 func TestResultRuleCmd(t *testing.T) {
 	mockRule := func(id string, info client.Info,
-		tInfo []client.TeamInfo, cInfo []client.CloudAccountInfo, object int) *client.ResultRule {
+		tInfo []client.TeamInfo, cInfo []string, object int) *client.ResultRule {
 		return &client.ResultRule{
 			ID:     id,
 			Info:   info,
@@ -124,11 +118,8 @@ func TestResultRuleCmd(t *testing.T) {
 							ID:   "fake-team-id",
 						},
 					},
-					[]client.CloudAccountInfo{
-						{
-							Name: "fake-account-name",
-							ID:   "fake-account-id",
-						},
+					[]string{
+						"fake-account-id",
 					},
 					1528),
 			},
@@ -159,12 +150,7 @@ func TestResultRuleCmd(t *testing.T) {
 							ID:   "fake-team-id",
 						},
 					},
-					[]client.CloudAccountInfo{
-						{
-							Name: "fake-account-name",
-							ID:   "fake-account-id",
-						},
-					},
+					[]string{"fake-account-id"},
 					2),
 			},
 			xout: S3AllUserWriteRuleOutput,

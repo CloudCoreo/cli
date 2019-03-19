@@ -117,7 +117,7 @@ func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID, level stri
 	for i := range result {
 		if (teamID == content.None || hasTeamID(result[i].TInfo, teamID)) &&
 			(cloudID == content.None || hasCloudID(result[i].CInfo, cloudID)) &&
-			(level == content.None || hasLevel(targetLevels, result[i].Info.Level)) {
+			(level == "" || hasLevel(targetLevels, result[i].Info.Level)) {
 			res = append(res, result[i])
 		}
 	}

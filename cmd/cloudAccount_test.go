@@ -54,12 +54,12 @@ func TestCloudAccountListCmd(t *testing.T) {
 				mockCloudAccount("ID1", "Team1", "CloudName1", "AccountID1"),
 				mockCloudAccount("ID2", "Team2", "CloudName2", "AccountID2"),
 			},
-			xout: "---------------------  -----------------------  ------------  -------------------  ------------\n   " +
-				"Cloud Account ID       Cloud Account Name       Team ID       AWS account ID       IsDraft  \n" +
-				"---------------------  -----------------------  ------------  -------------------  ------------\n" +
-				"      CloudName1                 ID1                Team1          AccountID1          false   \n\n" +
-				"      CloudName2                 ID2                Team2          AccountID2          false   \n" +
-				"---------------------  -----------------------  ------------  -------------------  ------------\n\n",
+			xout: "---------------  -----------------------  ------------  ---------------------  ------------  -------------\n       " +
+				"ID           Cloud Account Name       Team ID       Cloud account ID       IsDraft       Provider  \n" +
+				"---------------  -----------------------  ------------  ---------------------  ------------  -------------\n" +
+				"   CloudName1              ID1                Team1           AccountID1           false                  \n\n" +
+				"   CloudName2              ID2                Team2           AccountID2           false                  \n" +
+				"---------------  -----------------------  ------------  ---------------------  ------------  -------------\n\n",
 		},
 		{
 			cmds: "coreo cloud list, failure",
