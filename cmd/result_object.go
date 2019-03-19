@@ -56,8 +56,8 @@ func newResultObjectCmd(client command.Interface, out io.Writer) *cobra.Command 
 		},
 	}
 	f := cmd.Flags()
-	f.StringVar(&resultObject.cloudID, content.CmdFlagCloudIDLong, content.None, content.CmdFlagCloudIDDescription)
-	f.StringVar(&resultObject.level, content.CmdFlagLevelLong, content.None, content.CmdFlagLevelDescription)
+	f.StringVar(&resultObject.cloudID, content.CmdFlagCloudAccountID, content.None, content.CmdFlagCloudAccountIDDescription)
+	f.StringVar(&resultObject.level, content.CmdFlagLevelLong, "", content.CmdFlagLevelDescription)
 	return cmd
 }
 

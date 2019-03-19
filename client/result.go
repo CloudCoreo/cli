@@ -14,7 +14,9 @@
 package client
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"strings"
 
 	"github.com/CloudCoreo/cli/cmd/content"
@@ -53,11 +55,11 @@ type Info struct {
 
 // ResultRule struct decodes json file returned by webapp
 type ResultRule struct {
-	ID     string             `json:"id"`
-	Info   Info               `json:"info"`
-	TInfo  []TeamInfoWrapper  `json:"teamAndPlan"`
-	CInfo  []CloudAccountInfo `json:"accounts"`
-	Object int                `json:"objects"`
+	ID     string            `json:"id"`
+	Info   Info              `json:"info"`
+	TInfo  []TeamInfoWrapper `json:"teamAndPlan"`
+	CInfo  []string          `json:"accounts"`
+	Object int               `json:"objects"`
 }
 
 // The ResultObject struct decodes json file returned by webapp
@@ -74,30 +76,31 @@ type ResultObject struct {
 type ResultObjectWrapper struct {
 	Objects    []*ResultObject `json:"violations"`
 	TotalItems *int            `json:"totalItems"`
+	ScrollID   string          `json:"scrollId"`
 }
 
 type ResultRuleWrapper struct {
-	Rules []*ResultRule `json:"rules"`
+	Rules []*ResultRule `json:"result"`
+}
+
+type resultObjectRequest struct {
+	RemoveScrollID bool   `json:"removeScrollId"`
+	ScrollID       string `json:"scrollId"`
 }
 
 //ShowResultObject shows violated objects. If the filter condition (teamID, cloudID in this case) is valid,
 //objects will be filtered. Otherwise return all violation objects under this user account.
 func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level string) (*ResultObjectWrapper, error) {
-	result, err := c.getAllResultObject(ctx)
-	res := new(ResultObjectWrapper)
+	targetLevels := strings.Split(strings.Replace(level, " ", "", -1), "|")
+	result, err := c.getAllResultObjects(ctx, teamID, cloudID, targetLevels)
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
+	res := new(ResultObjectWrapper)
+	res.Objects = result
+	var num = len(result)
+	res.TotalItems = &num
 
-	targetLevels := strings.Split(strings.Replace(level, " ", "", -1), "|")
-	for i := range result.Objects {
-		if (teamID == content.None || result.Objects[i].TInfo.ID == teamID) &&
-			(cloudID == content.None || result.Objects[i].CInfo.ID == cloudID) &&
-			(level == content.None || hasLevel(targetLevels, result.Objects[i].Info.Level)) {
-			res.Objects = append(res.Objects, result.Objects[i])
-		}
-	}
-	res.TotalItems = result.TotalItems
 	return res, nil
 }
 
@@ -114,7 +117,7 @@ func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID, level stri
 	for i := range result {
 		if (teamID == content.None || hasTeamID(result[i].TInfo, teamID)) &&
 			(cloudID == content.None || hasCloudID(result[i].CInfo, cloudID)) &&
-			(level == content.None || hasLevel(targetLevels, result[i].Info.Level)) {
+			(level == "" || hasLevel(targetLevels, result[i].Info.Level)) {
 			res = append(res, result[i])
 		}
 	}
@@ -154,21 +157,70 @@ func (c *Client) getResultLinkByRef(ctx context.Context, ref string) (*Link, err
 
 	return &link, err
 }
-func (c *Client) getAllResultObject(ctx context.Context) (*ResultObjectWrapper, error) {
-	result := new(ResultObjectWrapper)
 
+func (c *Client) getAllResultObjects(ctx context.Context, teamID, cloudID string, targetLevels []string) ([]*ResultObject, error) {
 	link, err := c.getResultLinkByRef(ctx, "object")
 	if err != nil {
 		return nil, err
 	}
+	// buffer used to store objects
+	buf := make([]*ResultObject, 0, 200)
+	res := make([]*ResultObject, 0)
 
-	err = c.Do(ctx, "GET", link.Href, nil, result)
+	var scrollId string
+	var cur = 0
+	var totalItems = 0
+
+	for cur == 0 || cur < totalItems {
+		tmp, err := c.getResultObjects(ctx, scrollId, link.Href, buf)
+		if err != nil {
+			return res, err
+		}
+		if cur == 0 {
+			totalItems = *(tmp.TotalItems)
+			scrollId = tmp.ScrollID
+		}
+
+		res = append(res, c.filter(tmp.Objects, teamID, cloudID, targetLevels)...)
+		if len(tmp.Objects) < 200 {
+			break
+		}
+
+		cur += len(tmp.Objects)
+	}
+	return res, nil
+}
+
+func (c *Client) filter(objects []*ResultObject, teamID, cloudID string, targetLevels []string) []*ResultObject {
+	// Use two pointers to filter results
+	if len(objects) == 0 {
+		return objects
+	}
+	var i, j = 0, 0
+	for ; i < len(objects); i++ {
+		if (teamID == content.None || objects[i].TInfo.ID == teamID) &&
+			(cloudID == content.None || objects[i].CInfo.ID == cloudID) &&
+			(len(targetLevels) == 0 || hasLevel(targetLevels, objects[i].Info.Level)) {
+			objects[j] = objects[i]
+			j++
+		}
+	}
+	return objects[:j]
+}
+
+//getResultObject returns at most 200 objects, this is chunk design in webapp
+func (c *Client) getResultObjects(ctx context.Context, scrollId, href string, buf []*ResultObject) (*ResultObjectWrapper, error) {
+	result := new(ResultObjectWrapper)
+	result.Objects = buf
+	requestBody := resultObjectRequest{RemoveScrollID: false, ScrollID: scrollId}
+	jsonStr, err := json.Marshal(requestBody)
 	if err != nil {
-		return nil, NewError(err.Error())
+		return nil, err
 	}
 
-	if len(result.Objects) == 0 {
-		return nil, NewError("No violated object")
+	err = c.Do(ctx, "POST", href, bytes.NewBuffer(jsonStr), &result)
+	if err != nil {
+		return nil, err
 	}
 	return result, nil
 }
@@ -200,9 +252,9 @@ func hasTeamID(teamInfo []TeamInfoWrapper, teamID string) bool {
 	return false
 }
 
-func hasCloudID(cloudInfo []CloudAccountInfo, cloudID string) bool {
+func hasCloudID(cloudInfo []string, cloudID string) bool {
 	for i := range cloudInfo {
-		if cloudInfo[i].ID == cloudID {
+		if cloudInfo[i] == cloudID {
 			return true
 		}
 	}

@@ -41,7 +41,7 @@ const resultJSONPayload = `[
 		}]`
 
 const iamInactiveKeyNoRotationRuleOutput = `{
-"rules":[{
+"result":[{
 		"id": "fake-rule-name",
 		"info": {
 			"suggested_action": "fake-suggestion",
@@ -64,10 +64,7 @@ const iamInactiveKeyNoRotationRuleOutput = `{
 			}
 		],
 		"accounts": [
-			{
-				"name": "new-test",
-				"id": "account-id"
-			}
+			"account-id"
 		],
 		"objects": 1528
 	}
@@ -119,11 +116,11 @@ func TestGetAllResultObjectSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForResult, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/result").WithMethod("GET").WithBody(fmt.Sprintf(resultJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
-	ts.Path("/api/object").WithMethod("GET").WithBody(kmsKeyRotatesObjectOutput).WithStatus(http.StatusOK)
+	ts.Path("/api/object").WithMethod("POST").WithBody(kmsKeyRotatesObjectOutput).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.getAllResultObject(context.Background())
+	_, err := client.getAllResultObjects(context.Background(), content.None, content.None, []string{})
 	assert.Nil(t, err, "GetAllResultObject shouldn't return error")
 }
 
@@ -160,7 +157,7 @@ func TestGetAllResultObjectFailureBadRequest(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.getAllResultObject(context.Background())
+	_, err := client.getAllResultObjects(context.Background(), content.None, content.None, []string{})
 	assert.NotNil(t, err, "GetAllResultObject should return error.")
 }
 
@@ -180,11 +177,11 @@ func TestShowResultObjectSuccess(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForResult, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/result").WithMethod("GET").WithBody(fmt.Sprintf(resultJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
-	ts.Path("/api/object").WithMethod("GET").WithBody(kmsKeyRotatesObjectOutput).WithStatus(http.StatusOK)
+	ts.Path("/api/object").WithMethod("POST").WithBody(kmsKeyRotatesObjectOutput).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.ShowResultObject(context.Background(), content.None, content.None, content.None)
+	_, err := client.ShowResultObject(context.Background(), content.None, content.None, "")
 	assert.Nil(t, err, "GetResultObject shouldn't return error")
 }
 
@@ -205,13 +202,12 @@ func TestShowResultObjectFailureNoViolatedObject(t *testing.T) {
 	ts := httpstub.New()
 	ts.Path("/me").WithMethod("GET").WithBody(fmt.Sprintf(userJSONPayloadForResult, ts.URL)).WithStatus(http.StatusOK)
 	ts.Path("/api/users/userID/result").WithMethod("GET").WithBody(fmt.Sprintf(resultJSONPayload, ts.URL, ts.URL)).WithStatus(http.StatusOK)
-	ts.Path("/api/object").WithMethod("GET").WithBody(NoObjectOutput).WithStatus(http.StatusOK)
+	ts.Path("/api/object").WithMethod("POST").WithBody(NoObjectOutput).WithStatus(http.StatusOK)
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.ShowResultObject(context.Background(), content.None, content.None, content.None)
-	assert.NotNil(t, err, "GetResultObject should return error.")
-	assert.Equal(t, "No violated object", err.Error())
+	_, err := client.ShowResultObject(context.Background(), content.None, content.None, "")
+	assert.Nil(t, err, "GetResultObject should not return error.")
 }
 
 func TestNoTeamID(t *testing.T) {
@@ -225,11 +221,8 @@ func TestNoTeamID(t *testing.T) {
 }
 
 func TestNoCloudID(t *testing.T) {
-	cloudInfo := []CloudAccountInfo{
-		{
-			Name: "name",
-			ID:   "cloudID",
-		},
+	cloudInfo := []string{
+		"name",
 	}
 	res := hasCloudID(cloudInfo, "cloudid")
 	assert.Equal(t, false, res, "TestNoCloudID should return false")
