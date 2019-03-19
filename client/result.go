@@ -91,7 +91,11 @@ type resultObjectRequest struct {
 //ShowResultObject shows violated objects. If the filter condition (teamID, cloudID in this case) is valid,
 //objects will be filtered. Otherwise return all violation objects under this user account.
 func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level string) (*ResultObjectWrapper, error) {
-	targetLevels := strings.Split(strings.Replace(level, " ", "", -1), "|")
+	var targetLevels = []string{}
+	if level != "" {
+		targetLevels = strings.Split(strings.Replace(level, " ", "", -1), "|")
+	}
+
 	result, err := c.getAllResultObjects(ctx, teamID, cloudID, targetLevels)
 	if err != nil {
 		return nil, NewError(err.Error())
