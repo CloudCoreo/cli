@@ -79,6 +79,10 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagCloudIDLong flag
 	CmdFlagCloudIDLong = "cloud-id"
 
+	CmdFlagCloudAccountID = "cloud-account-id"
+
+	CmdFlagCloudAccountIDDescription = "cloud account number"
+
 	//CmdFlagRoleName is the name of the role to add a cloud account
 	CmdFlagRoleName = "role"
 
