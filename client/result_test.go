@@ -120,7 +120,7 @@ func TestGetAllResultObjectSuccess(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.getAllResultObjects(context.Background(), content.None, content.None, []string{})
+	_, err := client.getAllResultObjects(context.Background(), content.None, content.None, "", "")
 	assert.Nil(t, err, "GetAllResultObject shouldn't return error")
 }
 
@@ -157,7 +157,7 @@ func TestGetAllResultObjectFailureBadRequest(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.getAllResultObjects(context.Background(), content.None, content.None, []string{})
+	_, err := client.getAllResultObjects(context.Background(), content.None, content.None, "", "")
 	assert.NotNil(t, err, "GetAllResultObject should return error.")
 }
 
@@ -181,7 +181,7 @@ func TestShowResultObjectSuccess(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.ShowResultObject(context.Background(), content.None, content.None, "")
+	_, err := client.ShowResultObject(context.Background(), content.None, content.None, "", "")
 	assert.Nil(t, err, "GetResultObject shouldn't return error")
 }
 
@@ -206,7 +206,7 @@ func TestShowResultObjectFailureNoViolatedObject(t *testing.T) {
 	defer ts.Close()
 
 	client, _ := MakeClient("ApiKey", "SecretKey", ts.URL)
-	_, err := client.ShowResultObject(context.Background(), content.None, content.None, "")
+	_, err := client.ShowResultObject(context.Background(), content.None, content.None, "", "")
 	assert.Nil(t, err, "GetResultObject should not return error.")
 }
 

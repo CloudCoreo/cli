@@ -76,7 +76,7 @@ type ResultObject struct {
 type ResultObjectWrapper struct {
 	Objects    []*ResultObject `json:"violations"`
 	TotalItems *int            `json:"totalItems"`
-	ScrollID   string          `json:"scrollId"`
+	ScrollID   string          `json:"scrollId,omitempty"`
 }
 
 type ResultRuleWrapper struct {
@@ -85,18 +85,22 @@ type ResultRuleWrapper struct {
 
 type resultObjectRequest struct {
 	RemoveScrollID bool   `json:"removeScrollId"`
-	ScrollID       string `json:"scrollId"`
+	ScrollID       string `json:"scrollId,omitempty"`
+	Filter         filter `json:"filter,omitempty"`
+}
+
+type filter struct {
+	CloudAccounts []string `json:"cloudAccounts,omitempty"`
+	Levels        []string `json:"levels,omitempty"`
+	Providers     []string `json:"providers,omitempty"`
+	Teams         []string `json:"teams,omitempty"`
 }
 
 //ShowResultObject shows violated objects. If the filter condition (teamID, cloudID in this case) is valid,
 //objects will be filtered. Otherwise return all violation objects under this user account.
-func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level string) (*ResultObjectWrapper, error) {
-	var targetLevels = []string{}
-	if level != "" {
-		targetLevels = strings.Split(strings.Replace(level, " ", "", -1), "|")
-	}
+func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level, provider string) (*ResultObjectWrapper, error) {
 
-	result, err := c.getAllResultObjects(ctx, teamID, cloudID, targetLevels)
+	result, err := c.getAllResultObjects(ctx, teamID, cloudID, level, provider)
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
@@ -162,7 +166,7 @@ func (c *Client) getResultLinkByRef(ctx context.Context, ref string) (*Link, err
 	return &link, err
 }
 
-func (c *Client) getAllResultObjects(ctx context.Context, teamID, cloudID string, targetLevels []string) ([]*ResultObject, error) {
+func (c *Client) getAllResultObjects(ctx context.Context, teamID, cloudID, level, provider string) ([]*ResultObject, error) {
 	link, err := c.getResultLinkByRef(ctx, "object")
 	if err != nil {
 		return nil, err
@@ -174,18 +178,23 @@ func (c *Client) getAllResultObjects(ctx context.Context, teamID, cloudID string
 	var scrollId string
 	var cur = 0
 	var totalItems = 0
+	var request *resultObjectRequest
 
 	for cur == 0 || cur < totalItems {
-		tmp, err := c.getResultObjects(ctx, scrollId, link.Href, buf)
+		if cur == 0 {
+			request = c.buildGetResultObjectsRequest(teamID, cloudID, level, scrollId, provider, false)
+		}
+		tmp, err := c.getResultObjects(ctx, request, link.Href, buf)
 		if err != nil {
 			return res, err
 		}
 		if cur == 0 {
 			totalItems = *(tmp.TotalItems)
 			scrollId = tmp.ScrollID
+			request = c.buildGetResultObjectsRequest(teamID, cloudID, level, scrollId, provider, false)
 		}
 
-		res = append(res, c.filter(tmp.Objects, teamID, cloudID, targetLevels)...)
+		res = append(res, tmp.Objects...)
 		if len(tmp.Objects) < 200 {
 			break
 		}
@@ -195,33 +204,39 @@ func (c *Client) getAllResultObjects(ctx context.Context, teamID, cloudID string
 	return res, nil
 }
 
-func (c *Client) filter(objects []*ResultObject, teamID, cloudID string, targetLevels []string) []*ResultObject {
-	// Use two pointers to filter results
-	if len(objects) == 0 {
-		return objects
+func (c *Client) buildGetResultObjectsRequest(teamID, cloudID, level, scrollId, provider string, removeScrollId bool) *resultObjectRequest {
+	request := resultObjectRequest{
+		RemoveScrollID: removeScrollId,
+		ScrollID:       scrollId,
+		Filter:         filter{},
 	}
-	var i, j = 0, 0
-	for ; i < len(objects); i++ {
-		if (teamID == content.None || objects[i].TInfo.ID == teamID) &&
-			(cloudID == content.None || objects[i].CInfo.ID == cloudID) &&
-			(len(targetLevels) == 0 || hasLevel(targetLevels, objects[i].Info.Level)) {
-			objects[j] = objects[i]
-			j++
-		}
+	if teamID != content.None {
+		request.Filter.Teams = []string{teamID}
 	}
-	return objects[:j]
+
+	if cloudID != content.None {
+		request.Filter.CloudAccounts = []string{cloudID}
+	}
+
+	if level != "" {
+		request.Filter.Levels = strings.Split(strings.Replace(level, " ", "", -1), "|")
+	}
+
+	if provider != "" {
+		request.Filter.Providers = []string{provider}
+	}
+	return &request
 }
 
 //getResultObject returns at most 200 objects, this is chunk design in webapp
-func (c *Client) getResultObjects(ctx context.Context, scrollId, href string, buf []*ResultObject) (*ResultObjectWrapper, error) {
+func (c *Client) getResultObjects(ctx context.Context, request *resultObjectRequest, href string, buf []*ResultObject) (*ResultObjectWrapper, error) {
 	result := new(ResultObjectWrapper)
 	result.Objects = buf
-	requestBody := resultObjectRequest{RemoveScrollID: false, ScrollID: scrollId}
-	jsonStr, err := json.Marshal(requestBody)
+	jsonStr, err := json.Marshal(*request)
 	if err != nil {
 		return nil, err
 	}
-
+	println(string(jsonStr))
 	err = c.Do(ctx, "POST", href, bytes.NewBuffer(jsonStr), &result)
 	if err != nil {
 		return nil, err

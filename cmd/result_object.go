@@ -26,11 +26,12 @@ import (
 )
 
 type resultObjectCmd struct {
-	client  command.Interface
-	teamID  string
-	cloudID string
-	out     io.Writer
-	level   string
+	client   command.Interface
+	teamID   string
+	cloudID  string
+	out      io.Writer
+	level    string
+	provider string
 }
 
 func newResultObjectCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -58,11 +59,12 @@ func newResultObjectCmd(client command.Interface, out io.Writer) *cobra.Command 
 	f := cmd.Flags()
 	f.StringVar(&resultObject.cloudID, content.CmdFlagCloudAccountID, content.None, content.CmdFlagCloudAccountIDDescription)
 	f.StringVar(&resultObject.level, content.CmdFlagLevelLong, "", content.CmdFlagLevelDescription)
+	f.StringVar(&resultObject.provider, content.CmdFlagProvider, "", content.CmdFlagProviderDescription)
 	return cmd
 }
 
 func (t *resultObjectCmd) run() error {
-	res, err := t.client.ShowResultObject(t.teamID, t.cloudID, t.level)
+	res, err := t.client.ShowResultObject(t.teamID, t.cloudID, t.level, t.provider)
 	if err != nil {
 		return err
 	}

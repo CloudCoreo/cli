@@ -37,8 +37,7 @@ const kmsKeyRotatesObjectOutput = `{
 			"riskScore": 0
 		}
 	],
-	"totalItems": 200,
-	"scrollId": ""
+	"totalItems": 200
 }
 `
 
@@ -70,8 +69,7 @@ const iamInactiveKeyNoRotationObjectOutput = `{
 			"riskScore": 0
 		}
 	],
-	"totalItems": 100,
-	"scrollId": ""
+	"totalItems": 100
 }
 `
 
