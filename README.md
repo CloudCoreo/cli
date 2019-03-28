@@ -248,7 +248,7 @@ Show violation results
         
          |Variable | Option | Description |
          | ------ | ------ | :-------- |
-         | cloud account id| --cloud-account-id| VMware Secure State cloud id of which account you'd like to show violation for, this flag is optional|
+         | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to show violation for, this flag is optional|
          | severity | --severity | The severity level you'd like to show in violation results |
     * By default you will get all violation objects under your account, three flag filters are provided: team-id, cloud-id and severity
     * Examples
