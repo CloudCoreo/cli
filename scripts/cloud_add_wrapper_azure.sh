@@ -1,13 +1,13 @@
 #!/bin/bash
-# account name, account id, environment, profile
+# account_name, application_id, key_value, subscription_id, environment
 # To use this script, execute `sh cloud_add.sh < input_file` in Terminal
 # This script assumes account name is unique, so you can run it multiple times if adding any account fails.
 IFS=", "
 team_id="YOUR_TEAM_ID"
-role_name="securestate_role"
+directory_id="YOUR_DIRECTORY_ID"
 accounts=$(vss cloud list --json --team-id $team_id | jq -r .[].name)
-while read account_name account_id environment profile; do
-	echo "creating role for account: $account_id"
+while read account_name application_id key_value subscription_id environment; do
+	echo "creating role for account: $subscription_id"
 	is_exist=false
 	while read account
 	do
@@ -19,10 +19,10 @@ while read account_name account_id environment profile; do
 	if [ $is_exist = true ]; then
 		echo "Cloud account with name $account_name already exist, skip for this account"
 		cloud_id=$(vss cloud list --json --team-id $team_id | jq  -r '.[] | select(.name=="'$account_name'")|.id')
-		vss event setup --team-id $team_id --cloud-id $cloud_id --aws-profile $profile
+		vss event setup --team-id $team_id --cloud-id $cloud_id
 		continue
 	fi
-	cloud_id=$(vss cloud add --team-id $team_id --name $account_name --role $role_name --aws-profile $profile --environment $environment --json | jq -r .id)
-	vss event setup --team-id $team_id --cloud-id $cloud_id --aws-profile $profile
+	cloud_id=$(vss cloud add --team-id $team_id --name $account_name --application-id $application_id --key-value $key_value --subscription-id $subscription_id --directory-id $directory_id  --environment $environment --json | jq -r .id)
+	vss event setup --team-id $team_id --cloud-id $cloud_id
 done
 unset IFS
