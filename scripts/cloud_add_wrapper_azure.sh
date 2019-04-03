@@ -7,7 +7,7 @@ team_id="YOUR_TEAM_ID"
 directory_id="YOUR_DIRECTORY_ID"
 accounts=$(vss cloud list --json --team-id $team_id | jq -r .[].name)
 while read account_name application_id key_value subscription_id environment; do
-	echo "creating role for account: $subscription_id"
+	echo "Adding account: $subscription_id"
 	is_exist=false
 	while read account
 	do
