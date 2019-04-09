@@ -32,3 +32,7 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[[constraint]]
+  name = "github.com/Azure/go-autorest"
+  version = "11.5.0"

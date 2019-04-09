@@ -18,6 +18,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/CloudCoreo/cli/client"
+
 	"github.com/CloudCoreo/cli/cmd/content"
 	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/CloudCoreo/cli/pkg/command"
@@ -26,11 +28,28 @@ import (
 )
 
 type resultObjectCmd struct {
-	client  command.Interface
-	teamID  string
-	cloudID string
-	out     io.Writer
-	level   string
+	client   command.Interface
+	teamID   string
+	cloudID  string
+	out      io.Writer
+	level    string
+	provider string
+	retry    uint
+}
+
+type Object struct {
+	ID string `json:"objectName"`
+	client.Info
+
+	RiskScore int             `json:"riskScore"`
+	TInfo     client.TeamInfo `json:"team"`
+}
+
+type ObjectWrapper struct {
+	AccountName   string   `json:"accountName,omitempty"`
+	AccountNumber string   `json:"accountNumber,omitempty"`
+	TotalItems    int      `json:"totalItems"`
+	Objects       []Object `json:"violations"`
 }
 
 func newResultObjectCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -56,16 +75,35 @@ func newResultObjectCmd(client command.Interface, out io.Writer) *cobra.Command 
 		},
 	}
 	f := cmd.Flags()
-	f.StringVar(&resultObject.cloudID, content.CmdFlagCloudAccountID, content.None, content.CmdFlagCloudAccountIDDescription)
+	f.StringVar(&resultObject.cloudID, content.CmdFlagCloudIDLong, content.None, content.CmdFlagCloudIDDescription)
 	f.StringVar(&resultObject.level, content.CmdFlagLevelLong, "", content.CmdFlagLevelDescription)
+	f.StringVar(&resultObject.provider, content.CmdFlagProvider, "", content.CmdFlagProviderDescription)
+	f.UintVar(&resultObject.retry, content.CmdFlagRetry, 1, content.CmdFlagRetryDescription)
 	return cmd
 }
 
 func (t *resultObjectCmd) run() error {
-	res, err := t.client.ShowResultObject(t.teamID, t.cloudID, t.level)
+	res, err := t.client.ShowResultObject(t.teamID, t.cloudID, t.level, t.provider, t.retry)
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(t.out, util.PrettyJSON(*res))
-	return nil
+	return t.prettyPrintObjects(res)
+}
+
+func (t *resultObjectCmd) prettyPrintObjects(wrappers []*client.ResultObjectWrapper) error {
+	result := make([]ObjectWrapper, len(wrappers))
+	for i, wrapper := range wrappers {
+		result[i].AccountName = wrapper.AccountName
+		result[i].AccountNumber = wrapper.AccountNumber
+		result[i].TotalItems = wrapper.TotalItems
+		result[i].Objects = make([]Object, len(wrapper.Objects))
+		for j, object := range wrapper.Objects {
+			result[i].Objects[j].TInfo = object.TInfo
+			result[i].Objects[j].RiskScore = object.RiskScore
+			result[i].Objects[j].ID = object.ID
+			result[i].Objects[j].Info = object.Info
+		}
+	}
+	_, err := fmt.Fprintln(t.out, util.PrettyJSON(result))
+	return err
 }
