@@ -24,14 +24,6 @@ import (
 	"github.com/CloudCoreo/cli/cmd/content"
 )
 
-/*
-//CloudAccountInfo records the info of a cloud account
-type CloudAccountInfo struct {
-	Name string `json:"name"`
-	ID   string `json:"id"`
-}
-*/
-
 //TeamInfo records the info of a team
 type TeamInfo struct {
 	Name string `json:"name"`
@@ -106,9 +98,13 @@ func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level, p
 	var res []*ResultObjectWrapper
 	if cloudID != content.None {
 		result, err := c.getResultObjects(ctx, teamID, cloudID, level, provider, retry)
-		return []*ResultObjectWrapper{result}, err
+		if err != nil {
+			return nil, err
+		}
+		return []*ResultObjectWrapper{result}, nil
 	} else {
 		var teams []*Team
+		//If teamID is None, then get all teams, otherwise only get team with <teamID>
 		teams, err := c.getTeamsForObjects(ctx, teamID)
 		if err != nil {
 			return nil, err
@@ -152,6 +148,7 @@ func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID, level stri
 	return res, nil
 }
 
+//If teamID is None, then return all teams, otherwise return teamID passed
 func (c *Client) getTeamsForObjects(ctx context.Context, teamID string) ([]*Team, error) {
 	if teamID != content.None {
 		return []*Team{{ID: teamID}}, nil
@@ -204,11 +201,12 @@ func (c *Client) getResultObjects(ctx context.Context, teamID, cloudID, level, p
 
 	var scrollId string
 	var cur = 0
+	var firstCall = true
 	var totalItems = 0
 	var request *resultObjectRequest
 
-	for cur == 0 || cur < totalItems {
-		if cur == 0 {
+	for firstCall || cur < totalItems {
+		if firstCall {
 			request = c.buildGetResultObjectsRequest(teamID, cloudID, level, scrollId, provider, false)
 		}
 		var err error
@@ -222,10 +220,11 @@ func (c *Client) getResultObjects(ctx context.Context, teamID, cloudID, level, p
 				return nil, err
 			}
 		}
-		if cur == 0 {
+		if firstCall {
 			totalItems = tmp.TotalItems
 			scrollId = tmp.ScrollID
 			request = c.buildGetResultObjectsRequest(teamID, cloudID, level, scrollId, provider, false)
+			firstCall = false
 		}
 
 		res = append(res, tmp.Objects...)
