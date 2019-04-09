@@ -67,7 +67,9 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Long:    content.CmdCloudAddLong,
 		Example: content.CmdCloudAddExample,
 		RunE: func(cmd *cobra.Command, args []string) error {
-
+			if err := util.CheckProviderFlag(cloudCreate.provider); err != nil {
+				return err
+			}
 			if cloudCreate.provider == "AWS" {
 				if err := util.CheckCloudAddFlagsForAWS(cloudCreate.externalID, cloudCreate.roleArn, cloudCreate.roleName, cloudCreate.environment); err != nil {
 					return err

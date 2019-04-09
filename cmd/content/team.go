@@ -63,5 +63,5 @@ const (
 	//ErrorTeamDescriptionRequired error
 	ErrorTeamDescriptionRequired = "Team description required for this command. Use flag --description\n"
 
-	ErrorProviderNotSupported = "Provider not supported, either input aws or azure\n"
+	ErrorProviderNotSupported = "Provider not supported, either input AWS or Azure\n"
 )

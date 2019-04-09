@@ -171,7 +171,7 @@ func CheckArgsCount(args []string) {
 }
 
 func CheckProviderFlag(provider string) error {
-	if provider != "aws" && provider != "azure" {
+	if provider != "AWS" && provider != "Azure" {
 		return fmt.Errorf(content.ErrorProviderNotSupported)
 	}
 	return nil

@@ -178,6 +178,10 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagProviderDescription describes the usage of provider flag
 	CmdFlagProviderDescription = "Your cloud account provider, AWS or Azure"
 
+	CmdFlagRetry = "retry"
+
+	CmdFlagRetryDescription = "Retry times when getting violation fails"
+
 	//CmdFlagEmail is the owner email when adding cloud accounts, optional
 	CmdFlagEmail = "email"
 
