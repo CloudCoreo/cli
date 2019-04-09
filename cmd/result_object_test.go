@@ -9,11 +9,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-const kmsKeyRotatesObjectOutput = `{
-	"violations": [
-		{
-			"id": "fake-id1",
-			"rule_report": {
+const kmsKeyRotatesObjectOutput = `[
+	{
+		"totalItems": 200,
+		"violations": [
+			{
+				"objectName": "fake-id1",
 				"suggested_action": "fake-suggestion",
 				"link": "fake-link",
 				"description": "fake description",
@@ -23,29 +24,24 @@ const kmsKeyRotatesObjectOutput = `{
 				"name": "fake-name",
 				"region": "us-east-1",
 				"include_violations_in_count": true,
-				"timestamp": "2018-10-11T17:21:55.111+00:00"
-			},
-			"team": {
-				"name": "fake-team-name",
-				"id": "fake-team-id"
-			},
-			"cloud_account": {
-				"name": "fake-account-name",
-				"id": "fake-account-id"
-			},
-			"run_id": "fake-run-id",
-			"riskScore": 0
-		}
-	],
-	"totalItems": 200
-}
+				"timestamp": "2018-10-11T17:21:55.111+00:00",
+				"riskScore": 0,
+				"team": {
+					"name": "fake-team-name",
+					"id": "fake-team-id"
+				}
+			}
+		]
+	}
+]
 `
 
-const iamInactiveKeyNoRotationObjectOutput = `{
-	"violations": [
-		{
-			"id": "fake-id2",
-			"rule_report": {
+const iamInactiveKeyNoRotationObjectOutput = `[
+	{
+		"totalItems": 100,
+		"violations": [
+			{
+				"objectName": "fake-id2",
 				"suggested_action": "fake-suggestion",
 				"link": "fake-link",
 				"description": "fake description",
@@ -55,33 +51,25 @@ const iamInactiveKeyNoRotationObjectOutput = `{
 				"name": "fake-name",
 				"region": "global",
 				"include_violations_in_count": true,
-				"timestamp": "2018-10-11T17:21:54.448+00:00"
-			},
-			"team": {
-				"name": "fake-team-name",
-				"id": "fake-team-id"
-			},
-			"cloud_account": {
-				"name": "fake-account-name",
-				"id": "fake-account-id"
-			},
-			"run_id": "fake-run-id",
-			"riskScore": 0
-		}
-	],
-	"totalItems": 100
-}
+				"timestamp": "2018-10-11T17:21:54.448+00:00",
+				"riskScore": 0,
+				"team": {
+					"name": "fake-team-name",
+					"id": "fake-team-id"
+				}
+			}
+		]
+	}
+]
 `
 
 func TestResultObjectCmd(t *testing.T) {
 	mockObject := func(id string, info client.Info,
-		tInfo client.TeamInfo, cInfo client.CloudAccountInfo, runId string) *client.ResultObject {
+		tInfo client.TeamInfo) *client.ResultObject {
 		return &client.ResultObject{
 			ID:    id,
 			Info:  info,
 			TInfo: tInfo,
-			CInfo: cInfo,
-			RunID: runId,
 		}
 	}
 
@@ -122,12 +110,7 @@ func TestResultObjectCmd(t *testing.T) {
 					client.TeamInfo{
 						Name: "fake-team-name",
 						ID:   "fake-team-id",
-					},
-					client.CloudAccountInfo{
-						Name: "fake-account-name",
-						ID:   "fake-account-id",
-					},
-					"fake-run-id"),
+					}),
 			},
 			num:  mockInt(200),
 			xout: kmsKeyRotatesObjectOutput,
@@ -154,12 +137,7 @@ func TestResultObjectCmd(t *testing.T) {
 					client.TeamInfo{
 						Name: "fake-team-name",
 						ID:   "fake-team-id",
-					},
-					client.CloudAccountInfo{
-						Name: "fake-account-name",
-						ID:   "fake-account-id",
-					},
-					"fake-run-id"),
+					}),
 			},
 			num:  mockInt(100),
 			xout: iamInactiveKeyNoRotationObjectOutput,
@@ -170,7 +148,7 @@ func TestResultObjectCmd(t *testing.T) {
 	for _, test := range tests {
 		objectWrapper := &client.ResultObjectWrapper{
 			Objects:    test.resp,
-			TotalItems: test.num,
+			TotalItems: *test.num,
 		}
 		frc := &fakeReleaseClient{objects: objectWrapper}
 		if test.err {

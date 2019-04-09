@@ -112,8 +112,8 @@ func (c *fakeReleaseClient) ShowResultRule(teamID, cloudID, level string) ([]*cl
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level, provider string) (*client.ResultObjectWrapper, error) {
-	resp := c.objects
+func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level, provider string, retry uint) ([]*client.ResultObjectWrapper, error) {
+	resp := []*client.ResultObjectWrapper{c.objects}
 	return resp, c.err
 }
 

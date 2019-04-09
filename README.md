@@ -17,11 +17,11 @@ Use CLI to...
 
 ### OSX
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.33/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.33/vss_darwin_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_darwin_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.33/vss_darwin_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_darwin_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -29,11 +29,11 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.33
 
 ### Linux
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.33/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.33/vss_linux_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_linux_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.33/vss_linux_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_linux_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -41,7 +41,7 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.33
 
 ### Windows
 
-Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.33/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.33/vss_windows_amd64.exe)
+Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_windows_amd64.exe)
 
 ```
 C:\Users\Username\Downloads> rename vss_windows_amd64.exe vss.exe
@@ -250,6 +250,7 @@ Show violation results
          | ------ | ------ | :-------- |
          | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to show violation for, this flag is optional|
          | severity | --severity | The severity level you'd like to show in violation results |
+         | retry | --retry | Retry times when getting violation fails |
     * By default you will get all violation objects under your account, three flag filters are provided: team-id, cloud-id and severity
     * Examples
          * `vss result object --severity "High|Medium"`    
@@ -268,7 +269,7 @@ Show violation results
     * Examples
         * `vss result rule --severity "High|Medium"`
         * `vss result rule --severity "High|Low"`
-        * `vss result rule --cloud-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
+        * `vss result rule --cloud-account-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
         
 #### token
 Manage API Tokens

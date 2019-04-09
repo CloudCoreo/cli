@@ -250,7 +250,7 @@ func (c *Client) ShowResultRule(teamID, cloudID, level string) ([]*client.Result
 
 //ShowResultObject shows violated objects. If the filter condition (teamID, cloudID in this case) is valid,
 //objects will be filtered. Otherwise return all violation objects under this user account.
-func (c *Client) ShowResultObject(teamID, cloudID, level, provider string) (*client.ResultObjectWrapper, error) {
+func (c *Client) ShowResultObject(teamID, cloudID, level, provider string, retry uint) ([]*client.ResultObjectWrapper, error) {
 	//TODO
 	ctx := NewContext()
 	clt, err := c.MakeClient()
@@ -258,7 +258,7 @@ func (c *Client) ShowResultObject(teamID, cloudID, level, provider string) (*cli
 		return nil, err
 	}
 
-	result, err := clt.ShowResultObject(ctx, teamID, cloudID, level, provider)
+	result, err := clt.ShowResultObject(ctx, teamID, cloudID, level, provider, retry)
 	if err != nil {
 		return nil, err
 	}
