@@ -53,6 +53,7 @@ type cloudCreateCmd struct {
 	applicationID  string
 	directoryID    string
 	subscriptionID string
+	tags           string
 }
 
 func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -123,6 +124,7 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&cloudCreate.applicationID, content.CmdFlagApplicationID, "", "", content.CmdFlagApplicationIDDescription)
 	f.StringVarP(&cloudCreate.directoryID, content.CmdFlagDirectoryID, "", "", content.CmdFlagDirectoryIDDescription)
 	f.StringVarP(&cloudCreate.subscriptionID, content.CmdFlagSubscriptionID, "", "", content.CmdFlagSubscriptionIDDescription)
+	f.StringVarP(&cloudCreate.tags, content.CmdFlagTags, "", "", content.CmdFlagTagsDescription)
 
 	return cmd
 }
@@ -144,6 +146,7 @@ func (t *cloudCreateCmd) run() error {
 		ApplicationID:  t.applicationID,
 		DirectoryID:    t.directoryID,
 		SubscriptionID: t.subscriptionID,
+		Tags:           t.tags,
 	}
 	if t.roleName != "" {
 		info, err := t.client.GetRoleCreationInfo(input)
@@ -168,14 +171,16 @@ func (t *cloudCreateCmd) run() error {
 		}
 		return err
 	}
+
 	util.PrintResult(
 		t.out,
 		cloud,
-		[]string{"ID", "Name", "TeamID"},
+		[]string{"ID", "Name", "TeamID", "Tags"},
 		map[string]string{
 			"ID":     "Cloud Account ID",
 			"Name":   "Cloud Account Name",
 			"TeamID": "Team ID",
+			"Tags":   "Tags",
 		},
 		jsonFormat,
 		verbose)

@@ -35,6 +35,7 @@ type cloudUpdateCmd struct {
 	awsProfile     string
 	awsProfilePath string
 	policy         string
+	tags           string
 }
 
 func newCloudUpdateCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -85,7 +86,7 @@ func newCloudUpdateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&cloudUpdate.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	f.StringVarP(&cloudUpdate.policy, content.CmdFlagAwsPolicy, "", content.CmdFlagAwsPolicyDefault, content.CmdFlagAwsPolicyDescription)
 	f.StringVarP(&cloudUpdate.roleName, content.CmdFlagRoleName, "", "", content.CmdFlagRoleNameDescription)
-
+	f.StringVarP(&cloudUpdate.tags, content.CmdFlagTags, "", "", content.CmdFlagTagsDescription)
 	return cmd
 
 }
@@ -103,6 +104,7 @@ func (t *cloudUpdateCmd) run() error {
 			UserName:    t.userName,
 			Environment: t.environment,
 			Policy:      t.policy,
+			Tags:        t.tags,
 		},
 		CloudId: t.cloudID,
 	}
