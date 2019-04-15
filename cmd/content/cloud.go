@@ -247,4 +247,8 @@ Add a cloud account. The result would be shown as the following if successful.
 
 	//CmdFlagSubscriptionID is the description for flag --subscription-id
 	CmdFlagSubscriptionIDDescription = "Subscription ID required for adding Azure cloud accounts"
+
+	CmdFlagTags = "tags"
+
+	CmdFlagTagsDescription = "Set tags for account"
 )

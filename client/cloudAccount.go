@@ -19,6 +19,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/imdario/mergo"
 
@@ -53,26 +54,27 @@ type CreateCloudAccountInput struct {
 	ApplicationID  string
 	DirectoryID    string
 	SubscriptionID string
+	Tags           string
 }
 type CloudInfo struct {
-	Name           string   `json:"name"`
-	Arn            string   `json:"arn"`
-	ScanEnabled    bool     `json:"scanEnabled"`
-	ScanInterval   string   `json:"scanInterval"`
-	ScanRegion     string   `json:"scanRegion"`
-	ExternalID     string   `json:"externalId"`
-	IsDraft        bool     `json:"isDraft"`
-	Provider       string   `json:"provider"`
-	Email          string   `json:"email"`
-	UserName       string   `json:"username"`
-	Environment    []string `json:"environment"`
-	KeyValue       string   `json:"key"`
-	ApplicationID  string   `json:"appId"`
-	DirectoryID    string   `json:"directoryId"`
-	SubscriptionID string   `json:"subscriptionId"`
-
-	IsValid             bool   `json:"isValid"`
-	LastValidationCheck string `json:"lastValidationCheck"`
+	Name                string   `json:"name,omitempty"`
+	Arn                 string   `json:"arn,omitempty"`
+	ScanEnabled         bool     `json:"scanEnabled"`
+	ScanInterval        string   `json:"scanInterval"`
+	ScanRegion          string   `json:"scanRegion"`
+	ExternalID          string   `json:"externalId,omitempty"`
+	IsDraft             bool     `json:"isDraft"`
+	Provider            string   `json:"provider"`
+	Email               string   `json:"email,omitempty"`
+	UserName            string   `json:"username,omitempty"`
+	Environment         []string `json:"environment,omitempty"`
+	KeyValue            string   `json:"key,omitempty"`
+	ApplicationID       string   `json:"appId,omitempty"`
+	DirectoryID         string   `json:"directoryId,omitempty"`
+	SubscriptionID      string   `json:"subscriptionId,omitempty"`
+	Tags                []string `json:"tags,omitempty"`
+	IsValid             bool     `json:"isValid"`
+	LastValidationCheck string   `json:"lastValidationCheck"`
 }
 
 // CloudPayLoad ...
@@ -261,6 +263,9 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 			}
 			if input.Environment != "" {
 				cloudCreateInput.Environment = []string{input.Environment}
+			}
+			if input.Tags != "" {
+				cloudCreateInput.Tags = strings.Split(input.Tags, "|")
 			}
 			cloudAccount, err = c.sendCloudCreateRequest(ctx, cloudCreateInput)
 			if err != nil {
