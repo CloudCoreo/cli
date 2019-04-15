@@ -53,6 +53,9 @@ C:\Users\Username\Downloads> vss.exe
 Build instructions are as follows (see [install golang](https://docs.minio.io/docs/how-to-install-golang) for setting up a working golang environment):
 
 ```sh
+ mkdir -p $GOPATH/src/github.com/CloudCoreo
+ cd $GOPATH/src/github.com/CloudCoreo
+ git clone https://github.com/CloudCoreo/cli.git
  go get -d github.com/CloudCoreo/cli
  cd $GOPATH/src/github.com/CloudCoreo/cli/cmd
  go build -o $GOPATH/bin/vss
