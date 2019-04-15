@@ -57,11 +57,11 @@ func TestCloudAccountCreateCmd(t *testing.T) {
 				mockCloudAccount("ID1", "Team1", "CloudName1"),
 				mockCloudAccount("ID2", "Team2", "CloudName2"),
 			},
-			xout: "---------------------  -----------------------  ------------\n   " +
-				"Cloud Account ID       Cloud Account Name       Team ID  \n" +
-				"---------------------  -----------------------  ------------\n" +
-				"      CloudName1                 ID1                Team1   \n" +
-				"---------------------  -----------------------  ------------\n\n",
+			xout: "---------------------  -----------------------  ------------  ---------\n   " +
+				"Cloud Account ID       Cloud Account Name       Team ID       Tags  \n" +
+				"---------------------  -----------------------  ------------  ---------\n" +
+				`      CloudName1                 ID1                Team1         \[\]   \n` +
+				"---------------------  -----------------------  ------------  ---------\n\n",
 		},
 		{
 			cmds:  "coreo cloud create",

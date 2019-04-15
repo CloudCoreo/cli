@@ -17,11 +17,11 @@ Use CLI to...
 
 ### OSX
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_darwin_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.35/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.35/vss_darwin_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_darwin_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.35/vss_darwin_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -29,11 +29,11 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.34
 
 ### Linux
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_linux_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.35/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.35/vss_linux_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_linux_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.35/vss_linux_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -41,7 +41,7 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.34
 
 ### Windows
 
-Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.34/vss_windows_amd64.exe)
+Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.35/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.35/vss_windows_amd64.exe)
 
 ```
 C:\Users\Username\Downloads> rename vss_windows_amd64.exe vss.exe
@@ -144,10 +144,14 @@ Manage Cloud Accounts
         | directory id |--directory-id| Directory ID is required for adding Azure Cloud Accounts |
         |aws role arn| --aws-role-arn| The arn of the role you'd like to assume|
         |aws external id|--aws-external-id |The external id of the role you'd like to assume|
+        | cloud account tags| --tags| Cloud account tags|
         
     * You need to either use your own role or let CLI create one for you. 
         * To use your own role, you need to pass the role arn and external id to CLI. 
         * To make CLI create one for you, you need to pass the role name to CLI
+    * Examples:
+        * `vss cloud add --team-id YOUR_TEAM_ID --name YOUR_NEW_ACCOUNT_NAME --provider AWS --role NAME_FOR_NEW_ROLE --aws-profile AWS_PROFILE --tags "key1:value1|key2:value2"`
+        * `vss cloud add --team-id YOUR_TEAM_ID --name YOUR_NEW_ACCOUNT_NAME --provider Azure --application-id AZURE_APPLICATION_ID --key-value KEY_VALUE --subscription-id SUBSCRIPTION_ID --directory-id DIRECTORY_ID`
         
 * delete
     * Usage
@@ -196,6 +200,7 @@ Manage Cloud Accounts
         |email|--email|The email address of account owner|
         |username|--username| The username of account owner|
         | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to update information for, this flag is required|
+        | cloud account tags| --tags| Cloud account tags|
     * For role update, you may either provide your own role or let CLI create one
     * You may need to use --draft flag if you still want to keep it as draft status, otherwise VSS CLI will switch it to non-draft status
         
