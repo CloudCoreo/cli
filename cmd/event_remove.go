@@ -79,21 +79,23 @@ func (t *eventRemoveCmd) run() error {
 		return err
 	}
 	if t.cloud == nil {
-		newServiceInput := &aws.NewServiceInput{
-			AwsProfile:     t.awsProfile,
-			AwsProfilePath: t.awsProfilePath,
-			RoleArn:        t.awsRoleArn,
-			ExternalID:     t.awsExternalID,
+		if config.Provider == "AWS" {
+			newServiceInput := &aws.NewServiceInput{
+				AwsProfile:     t.awsProfile,
+				AwsProfilePath: t.awsProfilePath,
+				RoleArn:        t.awsRoleArn,
+				ExternalID:     t.awsExternalID,
+			}
+			t.cloud = aws.NewService(newServiceInput)
+		} else if config.Provider == "Azure" {
+			newServiceInput := &azure.NewServiceInput{
+				AuthFile: t.authFile,
+				Region:   t.region,
+			}
+			t.cloud = azure.NewService(newServiceInput)
+		} else {
+			return errors.New("unsupported provider type " + config.Provider + " ")
 		}
-		t.cloud = aws.NewService(newServiceInput)
-	} else if config.Provider == "Azure" {
-		newServiceInput := &azure.NewServiceInput{
-			AuthFile: t.authFile,
-			Region:   t.region,
-		}
-		t.cloud = azure.NewService(newServiceInput)
-	} else {
-		return errors.New("unsupported provider type " + config.Provider + " ")
 	}
 
 	if config.Provider == "AWS" && len(config.Regions) == 0 {
