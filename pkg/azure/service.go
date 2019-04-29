@@ -11,13 +11,15 @@ type NewServiceInput struct {
 }
 
 type Service struct {
-	setup *SetupService
+	setup  *SetupService
+	remove *RemoveService
 }
 
 // NewService returns a new Azure service group
 func NewService(input *NewServiceInput) *Service {
 	return &Service{
-		setup: NewSetupService(input),
+		setup:  NewSetupService(input),
+		remove: NewRemoveService(input),
 	}
 }
 
@@ -43,5 +45,5 @@ func (s *Service) DeleteRole(roleName string) {
 
 //RemoveEventStream perform the same function as event stream removal script
 func (s *Service) RemoveEventStream(input *client.EventRemoveConfig) error {
-	return nil
+	return s.remove.RemoveEventStream(input)
 }
