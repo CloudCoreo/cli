@@ -125,7 +125,9 @@ func (c *fakeReleaseClient) GetEventStreamConfig(teamID, cloudID string) (*clien
 
 func (c *fakeReleaseClient) GetEventRemoveConfig(teamID, cloudID string) (*client.EventRemoveConfig, error) {
 	return &client.EventRemoveConfig{
-		Regions: c.regions,
+		AWSEventRemoveConfig: client.AWSEventRemoveConfig{
+			Regions: c.regions,
+		},
 	}, c.err
 }
 

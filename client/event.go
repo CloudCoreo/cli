@@ -49,11 +49,23 @@ type AzureEventStreamConfig struct {
 
 //EventRemoveConfig for event stream removal
 type EventRemoveConfig struct {
+	AWSEventRemoveConfig
+	AzureEventRemoveConfig
+	Provider string `json:"provider"`
+}
+
+type AWSEventRemoveConfig struct {
 	StackName      string   `json:"stackName"`
 	TopicName      string   `json:"topicName"`
 	Regions        []string `json:"regions"`
 	ArnType        string   `json:"arnType"`
 	CloudAccountId string   `json:"cloudAccountId"`
+}
+
+type AzureEventRemoveConfig struct {
+	SubscriptionID    string `json:"subscriptionId"`
+	ResourceGroup     string `json:"resourceGroup"`
+	WebhookServiceUri string `json:"webhookServiceUri"`
 }
 
 //GetSetupConfig get the config for event stream setup from secure state

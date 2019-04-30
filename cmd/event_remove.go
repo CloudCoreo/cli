@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/CloudCoreo/cli/pkg/azure"
+
 	"github.com/CloudCoreo/cli/pkg/aws"
+
 	"github.com/CloudCoreo/cli/pkg/coreo"
 
 	"github.com/CloudCoreo/cli/cmd/util"
@@ -26,6 +29,8 @@ type eventRemoveCmd struct {
 	teamID         string
 	awsRoleArn     string
 	awsExternalID  string
+	authFile       string
+	region         string
 }
 
 func newEventRemoveCmd(client command.Interface, provider command.CloudProvider, out io.Writer) *cobra.Command {
@@ -51,15 +56,6 @@ func newEventRemoveCmd(client command.Interface, provider command.CloudProvider,
 					coreo.APIKey(key),
 					coreo.SecretKey(secret))
 			}
-			if eventRemove.cloud == nil {
-				newServiceInput := &aws.NewServiceInput{
-					AwsProfile:     eventRemove.awsProfile,
-					AwsProfilePath: eventRemove.awsProfilePath,
-					RoleArn:        eventRemove.awsRoleArn,
-					ExternalID:     eventRemove.awsExternalID,
-				}
-				eventRemove.cloud = aws.NewService(newServiceInput)
-			}
 
 			eventRemove.teamID = teamID
 			return eventRemove.run()
@@ -71,6 +67,8 @@ func newEventRemoveCmd(client command.Interface, provider command.CloudProvider,
 	f.StringVarP(&eventRemove.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
 	f.StringVarP(&eventRemove.awsRoleArn, content.CmdFlagAwsRoleArn, "", "", content.CmdFlagAwsRoleArnDescription)
 	f.StringVarP(&eventRemove.awsExternalID, content.CmdFlagAwsExternalID, "", "", content.CmdFlagAwsExternalIDDescription)
+	f.StringVarP(&eventRemove.authFile, content.CmdEventAuthFile, "", "", content.CmdEventAuthFileDescription)
+	f.StringVarP(&eventRemove.region, content.CmdEventRegion, "", "eastus", content.CmdEventRegionDescription)
 
 	return cmd
 }
@@ -80,8 +78,27 @@ func (t *eventRemoveCmd) run() error {
 	if err != nil {
 		return err
 	}
+	if t.cloud == nil {
+		if config.Provider == "AWS" {
+			newServiceInput := &aws.NewServiceInput{
+				AwsProfile:     t.awsProfile,
+				AwsProfilePath: t.awsProfilePath,
+				RoleArn:        t.awsRoleArn,
+				ExternalID:     t.awsExternalID,
+			}
+			t.cloud = aws.NewService(newServiceInput)
+		} else if config.Provider == "Azure" {
+			newServiceInput := &azure.NewServiceInput{
+				AuthFile: t.authFile,
+				Region:   t.region,
+			}
+			t.cloud = azure.NewService(newServiceInput)
+		} else {
+			return errors.New("unsupported provider type " + config.Provider + " ")
+		}
+	}
 
-	if len(config.Regions) == 0 {
+	if config.Provider == "AWS" && len(config.Regions) == 0 {
 		return errors.New("No regions returned")
 	}
 
