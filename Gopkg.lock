@@ -196,14 +196,6 @@
   version = "v1.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:b4efcefd42be95aefefe8c599cb59fd812109caaea18c47928085998d5c58894"
-  name = "github.com/jharlap/httpstub"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "ac3849a1e58448eae65eb1f556f8f35dd5e3b993"
-
-[[projects]]
   digest = "1:e22af8c7518e1eab6f2eab2b7d7558927f816262586cd6ed9f349c97a6c285c4"
   name = "github.com/jmespath/go-jmespath"
   packages = ["."]
@@ -321,13 +313,9 @@
   version = "v1.2.1"
 
 [[projects]]
-  digest = "1:5110e3d4f130772fd39e6ce8208ad1955b242ccfcc8ad9d158857250579c82f4"
+  digest = "1:18752d0b95816a1b777505a97f71c7467a8445b8ffb55631a7bf779f6ba4fa83"
   name = "github.com/stretchr/testify"
-  packages = [
-    "assert",
-    "require",
-    "suite",
-  ]
+  packages = ["assert"]
   pruneopts = "UT"
   revision = "f35b8ab0b5a2cef36673838d662e249dd9c94686"
   version = "v1.2.2"
@@ -505,14 +493,11 @@
     "github.com/aws/aws-sdk-go/service/sts",
     "github.com/bndr/gotabulate",
     "github.com/imdario/mergo",
-    "github.com/jharlap/httpstub",
     "github.com/pkg/errors",
     "github.com/spf13/cobra",
     "github.com/spf13/cobra/doc",
     "github.com/spf13/viper",
     "github.com/stretchr/testify/assert",
-    "github.com/stretchr/testify/suite",
-    "golang.org/x/net/context",
     "golang.org/x/net/context/ctxhttp",
     "gopkg.in/yaml.v2",
   ]
