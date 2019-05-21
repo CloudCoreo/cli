@@ -232,7 +232,7 @@ func (c *Client) ReValidateRole(teamID, cloudID string) (*client.RoleReValidatio
 
 //ShowResultRule shows violated rules. If the filter condition (teamID, cloudID in this case) is valid,
 //rules will be filtered. Otherwise return all violation rules under this user account.
-func (c *Client) ShowResultRule(teamID, cloudID, level string) ([]*client.ResultRule, error) {
+func (c *Client) ShowResultRule(teamID, cloudID, level, provider string) ([]*client.ResultRule, error) {
 	//TODO
 	ctx := NewContext()
 	clt, err := c.MakeClient()
@@ -240,7 +240,7 @@ func (c *Client) ShowResultRule(teamID, cloudID, level string) ([]*client.Result
 		return nil, err
 	}
 
-	result, err := clt.ShowResultRule(ctx, teamID, cloudID, level)
+	result, err := clt.ShowResultRule(ctx, teamID, cloudID, level, provider)
 	if err != nil {
 		return nil, err
 	}

@@ -26,11 +26,12 @@ import (
 )
 
 type resultRuleCmd struct {
-	client  command.Interface
-	teamID  string
-	cloudID string
-	out     io.Writer
-	level   string
+	client   command.Interface
+	teamID   string
+	cloudID  string
+	out      io.Writer
+	level    string
+	provider string
 }
 
 func newResultRuleCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -59,11 +60,12 @@ func newResultRuleCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f := cmd.Flags()
 	f.StringVar(&resultRule.cloudID, content.CmdFlagCloudAccountID, content.None, content.CmdFlagCloudAccountIDDescription)
 	f.StringVar(&resultRule.level, content.CmdFlagLevelLong, "", content.CmdFlagLevelDescription)
+	f.StringVar(&resultRule.provider, content.CmdFlagProvider, "", content.CmdFlagProviderDescription)
 	return cmd
 }
 
 func (t *resultRuleCmd) run() error {
-	res, err := t.client.ShowResultRule(t.teamID, t.cloudID, t.level)
+	res, err := t.client.ShowResultRule(t.teamID, t.cloudID, t.level, t.provider)
 	if err != nil {
 		return err
 	}

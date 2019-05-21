@@ -82,7 +82,11 @@ type ResultRuleWrapper struct {
 type resultObjectRequest struct {
 	RemoveScrollID bool   `json:"removeScrollId"`
 	ScrollID       string `json:"scrollId,omitempty"`
-	Filter         filter `json:"filter,omitempty"`
+	Filter         filter `json:"filter"`
+}
+
+type resultRuleRequest struct {
+	Filter filter `json:"filter"`
 }
 
 type filter struct {
@@ -130,22 +134,14 @@ func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level, p
 
 //ShowResultRule show violated rules. If the filter condition (teamID, cloudID in this case) is valid,
 //rules will be filtered. Otherwise return all violation rules under this user account.
-func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID, level string) ([]*ResultRule, error) {
-	result, err := c.getAllResultRule(ctx)
-	res := []*ResultRule{}
+func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID, level, provider string) ([]*ResultRule, error) {
+	var request = &resultRuleRequest{}
+	request.Filter = c.buildFilter(teamID, cloudID, level, provider)
+	result, err := c.getAllResultRule(ctx, request)
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
-
-	targetLevels := strings.Split(strings.Replace(level, " ", "", -1), "|")
-	for i := range result {
-		if (teamID == content.None || hasTeamID(result[i].TInfo, teamID)) &&
-			(cloudID == content.None || hasCloudID(result[i].CInfo, cloudID)) &&
-			(level == "" || hasLevel(targetLevels, result[i].Info.Level)) {
-			res = append(res, result[i])
-		}
-	}
-	return res, nil
+	return result, nil
 }
 
 //If teamID is None, then return all teams, otherwise return teamID passed
@@ -252,24 +248,30 @@ func (c *Client) buildGetResultObjectsRequest(teamID, cloudID, level, scrollId, 
 	request := resultObjectRequest{
 		RemoveScrollID: removeScrollId,
 		ScrollID:       scrollId,
-		Filter:         filter{},
+		Filter:         c.buildFilter(teamID, cloudID, level, provider),
 	}
+	return &request
+}
+
+func (c *Client) buildFilter(teamID, cloudID, level, provider string) filter {
+	filter := filter{}
 	if teamID != content.None {
-		request.Filter.Teams = []string{teamID}
+		filter.Teams = []string{teamID}
 	}
 
 	if cloudID != content.None {
-		request.Filter.CloudAccounts = []string{cloudID}
+		filter.CloudAccounts = []string{cloudID}
 	}
 
 	if level != "" {
-		request.Filter.Levels = strings.Split(strings.Replace(level, " ", "", -1), "|")
+		filter.Levels = strings.Split(strings.Replace(level, " ", "", -1), "|")
 	}
 
 	if provider != "" {
-		request.Filter.Providers = []string{provider}
+		filter.Providers = []string{provider}
 	}
-	return &request
+
+	return filter
 }
 
 //getResultObject returns at most 200 objects, this is chunk design in webapp
@@ -287,15 +289,19 @@ func (c *Client) getResultObjectsPaginated(ctx context.Context, request *resultO
 	return result, nil
 }
 
-func (c *Client) getAllResultRule(ctx context.Context) ([]*ResultRule, error) {
+func (c *Client) getAllResultRule(ctx context.Context, request *resultRuleRequest) ([]*ResultRule, error) {
 	result := new(ResultRuleWrapper)
+	jsonStr, err := json.Marshal(*request)
+	if err != nil {
+		return nil, err
+	}
 
 	link, err := c.getResultLinkByRef(ctx, "rule")
 	if err != nil {
 		return nil, err
 	}
 
-	err = c.Do(ctx, "GET", link.Href, nil, result)
+	err = c.Do(ctx, "POST", link.Href, bytes.NewBuffer(jsonStr), result)
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
@@ -303,31 +309,4 @@ func (c *Client) getAllResultRule(ctx context.Context) ([]*ResultRule, error) {
 		return nil, NewError("No violated rule")
 	}
 	return result.Rules, nil
-}
-
-func hasTeamID(teamInfo []TeamInfoWrapper, teamID string) bool {
-	for i := range teamInfo {
-		if teamInfo[i].TeamInfo.ID == teamID {
-			return true
-		}
-	}
-	return false
-}
-
-func hasCloudID(cloudInfo []string, cloudID string) bool {
-	for i := range cloudInfo {
-		if cloudInfo[i] == cloudID {
-			return true
-		}
-	}
-	return false
-}
-
-func hasLevel(targetLevel []string, level string) bool {
-	for i := range targetLevel {
-		if targetLevel[i] == level {
-			return true
-		}
-	}
-	return false
 }
