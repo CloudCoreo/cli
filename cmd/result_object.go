@@ -40,9 +40,9 @@ type resultObjectCmd struct {
 type Object struct {
 	ID string `json:"objectName"`
 	client.Info
-
-	RiskScore int             `json:"riskScore"`
-	TInfo     client.TeamInfo `json:"team"`
+	RiskScore int    `json:"riskScore"`
+	TeamName  string `json:"teamName"`
+	TeamID    string `json:"teamID"`
 }
 
 type ObjectWrapper struct {
@@ -98,7 +98,8 @@ func (t *resultObjectCmd) prettyPrintObjects(wrappers []*client.ResultObjectWrap
 		result[i].TotalItems = wrapper.TotalItems
 		result[i].Objects = make([]Object, len(wrapper.Objects))
 		for j, object := range wrapper.Objects {
-			result[i].Objects[j].TInfo = object.TInfo
+			result[i].Objects[j].TeamName = object.TInfo.Name
+			result[i].Objects[j].TeamID = object.TInfo.ID
 			result[i].Objects[j].RiskScore = object.RiskScore
 			result[i].Objects[j].ID = object.ID
 			result[i].Objects[j].Info = object.Info
