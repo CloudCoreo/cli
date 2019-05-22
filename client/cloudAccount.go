@@ -367,6 +367,12 @@ func (t *UpdateCloudAccountInput) mergeAndGetJson(account *CloudAccount) ([]byte
 	updateInfo.IsDraft = t.IsDraft
 	// Add teamID to pass webapp check for cloud account creation
 	updateInfo.TeamID = t.TeamID
+	if t.Environment != "" {
+		updateInfo.Environment = []string{t.Environment}
+	}
+	if t.Tags != "" {
+		updateInfo.Tags = strings.Split(t.Tags, "|")
+	}
 	jsonStr, err := json.Marshal(updateInfo)
 	if err != nil {
 		return nil, err
@@ -385,11 +391,13 @@ func (t *UpdateCloudAccountInput) toCloudPayLoad() *CloudPayLoad {
 			ScanRegion:   "All",
 			ExternalID:   t.ExternalID,
 			IsDraft:      t.IsDraft,
-			Provider:     t.Provider,
 			Email:        t.Email,
 			UserName:     t.UserName,
 			Environment:  []string{t.Environment},
 		},
+	}
+	if t.Tags != "" {
+		cloudPayLoad.Tags = strings.Split(t.Tags, "|")
 	}
 	return cloudPayLoad
 }

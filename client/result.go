@@ -18,6 +18,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -76,9 +77,12 @@ type ResultObjectWrapper struct {
 }
 
 type ResultRuleWrapper struct {
-	Rules []*ResultRule `json:"result"`
+	ViolatingRules ViolatingRules `json:"result"`
 }
 
+type ViolatingRules struct {
+	Rules []*ResultRule `json:"violatingRules"`
+}
 type resultObjectRequest struct {
 	RemoveScrollID bool   `json:"removeScrollId"`
 	ScrollID       string `json:"scrollId,omitempty"`
@@ -107,27 +111,20 @@ func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level, p
 		}
 		return []*ResultObjectWrapper{result}, nil
 	} else {
-		var teams []*Team
-		//If teamID is None, then get all teams, otherwise only get team with <teamID>
-		teams, err := c.getTeamsForObjects(ctx, teamID)
-		if err != nil {
-			return nil, err
-		}
-		for _, team := range teams {
-			accounts, err := c.GetCloudAccounts(ctx, team.ID)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, err.Error())
-				continue
-			}
-			for _, account := range accounts {
-				result, err := c.getResultObjects(ctx, team.ID, account.ID, level, provider, retry)
-				if err != nil {
-					return nil, err
-				}
-				res = append(res, result)
 
-			}
+		accounts, err := c.GetCloudAccounts(ctx, teamID)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
 		}
+		for _, account := range accounts {
+			result, err := c.getResultObjects(ctx, teamID, account.ID, level, provider, retry)
+			if err != nil {
+				return nil, err
+			}
+			res = append(res, result)
+
+		}
+
 		return res, nil
 	}
 }
@@ -142,14 +139,6 @@ func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID, level, pro
 		return nil, NewError(err.Error())
 	}
 	return result, nil
-}
-
-//If teamID is None, then return all teams, otherwise return teamID passed
-func (c *Client) getTeamsForObjects(ctx context.Context, teamID string) ([]*Team, error) {
-	if teamID != content.None {
-		return []*Team{{ID: teamID}}, nil
-	}
-	return c.GetTeams(ctx)
 }
 
 func (c *Client) getResultLinks(ctx context.Context) ([]Link, error) {
@@ -290,7 +279,8 @@ func (c *Client) getResultObjectsPaginated(ctx context.Context, request *resultO
 }
 
 func (c *Client) getAllResultRule(ctx context.Context, request *resultRuleRequest) ([]*ResultRule, error) {
-	result := new(ResultRuleWrapper)
+	rules := make([]*ResultRule, 0)
+	var result *ResultRuleWrapper
 	jsonStr, err := json.Marshal(*request)
 	if err != nil {
 		return nil, err
@@ -301,12 +291,33 @@ func (c *Client) getAllResultRule(ctx context.Context, request *resultRuleReques
 		return nil, err
 	}
 
-	err = c.Do(ctx, "POST", link.Href, bytes.NewBuffer(jsonStr), result)
+	// Getting rules using a streaming mechanism
+	resp, err := c.makeRequest(ctx, "POST", link.Href, bytes.NewBuffer(jsonStr))
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
-	if len(result.Rules) == 0 {
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 300 {
+		message := new(bytes.Buffer)
+		message.ReadFrom(resp.Body)
+		msg := fmt.Sprintf("%s", message.String())
+		return nil, NewError(msg)
+	}
+
+	decoder := json.NewDecoder(resp.Body)
+	for {
+		if err = decoder.Decode(&result); err == io.EOF {
+			break
+		} else if err != nil {
+			return nil, err
+		}
+		rules = append(rules, result.ViolatingRules.Rules...)
+	}
+
+	if len(rules) == 0 {
 		return nil, NewError("No violated rule")
 	}
-	return result.Rules, nil
+	return rules, nil
 }

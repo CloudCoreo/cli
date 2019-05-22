@@ -85,12 +85,8 @@ func newClient(endpoint string, opts ...Option) *Client {
 // Do performs an HTTP request with a given context - the response will be decoded
 // into obj.
 func (c *Client) Do(ctx context.Context, method, path string, body io.Reader, obj interface{}) error {
-	req, err := c.buildRequest(method, path, body)
-	if err != nil {
-		return err
-	}
 
-	resp, err := ctxhttp.Do(ctx, &c.client, req)
+	resp, err := c.makeRequest(ctx, method, path, body)
 	if err != nil {
 		return err
 	}
@@ -114,6 +110,14 @@ func (c *Client) Do(ctx context.Context, method, path string, body io.Reader, ob
 	io.Copy(ioutil.Discard, resp.Body)
 
 	return err
+}
+
+func (c *Client) makeRequest(ctx context.Context, method, path string, body io.Reader) (*http.Response, error) {
+	req, err := c.buildRequest(method, path, body)
+	if err != nil {
+		return nil, err
+	}
+	return ctxhttp.Do(ctx, &c.client, req)
 }
 
 func (c *Client) buildRequest(method, urlPath string, body io.Reader) (*http.Request, error) {

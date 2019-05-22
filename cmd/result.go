@@ -28,7 +28,7 @@ func newResultCmd(out io.Writer) *cobra.Command {
 		Use:               content.CmdResultUse,
 		Short:             content.CmdResultShort,
 		Long:              content.CmdResultLong,
-		PersistentPreRunE: setupCoreoCredentials,
+		PersistentPreRunE: setupCoreoConfig,
 	}
 
 	cmd.AddCommand(newResultRuleCmd(nil, out))
