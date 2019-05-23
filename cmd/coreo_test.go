@@ -107,7 +107,7 @@ func (c *fakeReleaseClient) DeleteCloudAccountByID(teamID, cloudID string) error
 	return c.err
 }
 
-func (c *fakeReleaseClient) ShowResultRule(teamID, cloudID, level string) ([]*client.ResultRule, error) {
+func (c *fakeReleaseClient) ShowResultRule(teamID, cloudID, level, provider string) ([]*client.ResultRule, error) {
 	resp := c.rules
 	return resp, c.err
 }
