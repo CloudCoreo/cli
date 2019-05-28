@@ -384,20 +384,20 @@ func (t *UpdateCloudAccountInput) mergeAndGetJson(account *CloudAccount) ([]byte
 func (t *UpdateCloudAccountInput) toCloudPayLoad() *CloudPayLoad {
 	cloudPayLoad := &CloudPayLoad{
 		CloudInfo: CloudInfo{
-			Name:         t.CloudName,
-			Arn:          t.RoleArn,
-			ScanEnabled:  t.ScanEnabled,
-			ScanInterval: "Daily",
-			ScanRegion:   "All",
-			ExternalID:   t.ExternalID,
-			IsDraft:      t.IsDraft,
-			Email:        t.Email,
-			UserName:     t.UserName,
-			Environment:  []string{t.Environment},
+			Name:           t.CloudName,
+			Arn:            t.RoleArn,
+			ScanEnabled:    t.ScanEnabled,
+			ScanInterval:   "Daily",
+			ScanRegion:     "All",
+			ExternalID:     t.ExternalID,
+			IsDraft:        t.IsDraft,
+			Email:          t.Email,
+			UserName:       t.UserName,
+			SubscriptionID: t.SubscriptionID,
+			KeyValue:       t.KeyValue,
+			ApplicationID:  t.ApplicationID,
+			DirectoryID:    t.DirectoryID,
 		},
-	}
-	if t.Tags != "" {
-		cloudPayLoad.Tags = strings.Split(t.Tags, "|")
 	}
 	return cloudPayLoad
 }
@@ -405,17 +405,22 @@ func (t *UpdateCloudAccountInput) toCloudPayLoad() *CloudPayLoad {
 func (t *CloudAccount) toCloudPayLoad() *CloudPayLoad {
 	cloudPayLoad := &CloudPayLoad{
 		CloudInfo: CloudInfo{
-			Name:         t.Name,
-			Arn:          t.Arn,
-			ScanEnabled:  t.ScanEnabled,
-			ScanInterval: t.ScanInterval,
-			ScanRegion:   t.ScanRegion,
-			ExternalID:   t.ExternalID,
-			IsDraft:      t.IsDraft,
-			Provider:     t.Provider,
-			Email:        t.Email,
-			UserName:     t.UserName,
-			Environment:  t.Environment,
+			Name:           t.Name,
+			Arn:            t.Arn,
+			ScanEnabled:    t.ScanEnabled,
+			ScanInterval:   t.ScanInterval,
+			ScanRegion:     t.ScanRegion,
+			ExternalID:     t.ExternalID,
+			IsDraft:        t.IsDraft,
+			Provider:       t.Provider,
+			Email:          t.Email,
+			UserName:       t.UserName,
+			Environment:    t.Environment,
+			SubscriptionID: t.SubscriptionID,
+			KeyValue:       t.KeyValue,
+			ApplicationID:  t.ApplicationID,
+			DirectoryID:    t.DirectoryID,
+			Tags:           t.Tags,
 		},
 	}
 	return cloudPayLoad
