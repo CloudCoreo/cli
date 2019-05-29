@@ -53,18 +53,6 @@ func TestCheckAPIKeyFlagFailure(t *testing.T) {
 	assert.Equal(t, content.ErrorAPIKeyMissing, err.Error())
 }
 
-func TestCheckSecretKeyFlagSuccess(t *testing.T) {
-	res, err := CheckSecretKeyFlag("api-secret", "default")
-	assert.Nil(t, err, "TestCheckSecretKeyFlagSuccess shouldn't return error")
-	assert.Equal(t, "api-secret", res)
-}
-
-func TestCheckSecretKeyFlagFailure(t *testing.T) {
-	_, err := CheckSecretKeyFlag("None", "invalid")
-	assert.NotNil(t, err, "TestCheckSecretKeyFlagFailure should return error")
-	assert.Equal(t, content.ErrorAPISecretMissing, err.Error())
-}
-
 func TestCheckTeamAddFlagsSuccess(t *testing.T) {
 	err := CheckTeamAddFlags("teamName", "teamDescription")
 	assert.Nil(t, err, "TestCheckTeamAddFlagsSuccess shouldn't return error")

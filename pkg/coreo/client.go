@@ -39,7 +39,7 @@ func (c *Client) Option(opts ...Option) *Client {
 
 //MakeClient make client method
 func (c *Client) MakeClient() (*client.Client, error) {
-	return client.MakeClient(c.opts.apiKey, c.opts.secretKey, c.opts.host)
+	return client.MakeClient(c.opts.refreshToken, c.opts.host)
 }
 
 //ListTeams get list of teams
