@@ -268,7 +268,7 @@ Show violation results
          | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to show violation for, this flag is optional|
          | severity | --severity | The severity level you'd like to show in violation results |
          | retry | --retry | Retry times when getting violation fails |
-    * By default you will get all violation objects under your account, three flag filters are provided: team-id, cloud-id and severity
+    * By default you will get all violation objects under your team, three flag filters are provided: team-id, cloud-id and severity. If team-id is not specified, the team in your profile will be automatically loaded.
     * Examples
          * `vss result object --severity "High|Medium"`    
          * `vss result object --severity "High|Low"`  
@@ -282,7 +282,7 @@ Show violation results
         | ------ | ------ | :-------- |
         | cloud account| --cloud-account-id| VMware Secure State cloud id of which account you'd like to show violation for, this flag is optional|
         | severity | --severity | The severity level you'd like to show in violation results |
-    * By default you will get all violation rules under your account, three flag filters are provided: team-id, cloud-id and severity
+    * By default you will get all violation rules under your team, three flag filters are provided: team-id, cloud-id and severity. If team-id is not specified, the team in your profile will be automatically loaded.
     * Examples
         * `vss result rule --severity "High|Medium"`
         * `vss result rule --severity "High|Low"`
