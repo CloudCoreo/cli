@@ -72,11 +72,11 @@ func (a *Auth) getCspAuthToken() (*cspToken, error) {
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("Content-Length", strconv.Itoa(len(data.Encode())))
 	resp, err := http.DefaultClient.Do(req)
-	defer resp.Body.Close()
-
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode >= 300 {
 		message := new(bytes.Buffer)
 		message.ReadFrom(resp.Body)
