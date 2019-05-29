@@ -64,7 +64,7 @@ Build instructions are as follows (see [install golang](https://docs.minio.io/do
 ## Getting started
 Get your access keys on [VMware CSP User Portal](https://console.cloud.vmware.com/csp/gateway/portal/#/user/tokens).
 
-You use API tokens to authenticate yourself when you make authorized API connections. Previously called an OAuth Refresh token, an API token authorizes access per organization.
+You use API tokens to authenticate yourself when you make authorized API connections. An API token authorizes access per organization.
 
 You can generate more than one API token. A token is valid for six months, after which time you must regenerate it if you want to continue using APIs that rely on a token. If you feel the token has been compromised, you can revoke the token to prevent unauthorized access. You generate a new token to renew authorization.
 
@@ -78,7 +78,7 @@ Procedure
 You may need to configure your access key and default team id the first time using CLI but you can also skip this step and pass these to CLI using flags `--api-key, --team-id`. You may set up configuration using:
 	`vss  configure`
 	
-And then type you access key information and default team id as well. You may check you current configuration settings using
+And then type your access key information and default team id as well. You may check you current configuration settings using
 	`vss configure list`
 
 ## Usage
