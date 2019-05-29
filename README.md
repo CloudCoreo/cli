@@ -105,7 +105,7 @@ The most commonly used VSS commands are:
 ## Configurable variables
 |Variable | Option | Environment Variable | Description |
 | ------ | ------ | :--------:| :-------- |
-|api-key | --api-key| |Vss API Token, will read api-key in configure file by default| 
+|api-key | --api-key| |VSS API Token, will read api-key in configure file by default| 
 |endpoint| --endpoint |$VSS_API_ENDPOINT| VSS API endpoint, default https://app.securestate.vmware.com/api |
 |help    | --help, -h| | Get user manual for command
 |home    | --home | $VSS_HOME | Location of your VSS config. Overrides $VSS_HOME.
