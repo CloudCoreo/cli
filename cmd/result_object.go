@@ -66,8 +66,7 @@ func newResultObjectCmd(client command.Interface, out io.Writer) *cobra.Command 
 			if resultObject.client == nil {
 				resultObject.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
-					coreo.APIKey(key),
-					coreo.SecretKey(secret))
+					coreo.RefreshToken(key))
 			}
 
 			resultObject.teamID = teamID

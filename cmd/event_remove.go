@@ -53,8 +53,7 @@ func newEventRemoveCmd(client command.Interface, provider command.CloudProvider,
 			if eventRemove.client == nil {
 				eventRemove.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
-					coreo.APIKey(key),
-					coreo.SecretKey(secret))
+					coreo.RefreshToken(key))
 			}
 
 			eventRemove.teamID = teamID

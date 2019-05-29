@@ -38,7 +38,6 @@ var (
 	coreoHome   string
 	userProfile string
 	key         string
-	secret      string
 	teamID      string
 	apiEndpoint string
 	jsonFormat  bool
@@ -69,7 +68,6 @@ func newRootCmd(out io.Writer) *cobra.Command {
 	p.StringVar(&coreoHome, content.CmdFlagConfigLong, defaultCoreoHome(), content.CmdFlagConfigDescription)
 	p.StringVar(&userProfile, content.CmdFlagProfileLong, userProfileToUse, content.CmdFlagProfileDescription)
 	p.StringVar(&key, content.CmdFlagAPIKeyLong, content.None, content.CmdFlagAPIKeyDescription)
-	p.StringVar(&secret, content.CmdFlagAPISecretLong, content.None, content.CmdFlagAPISecretDescription)
 	p.StringVar(&teamID, content.CmdFlagTeamIDLong, content.None, content.CmdFlagTeamIDDescription)
 	p.StringVar(&apiEndpoint, content.CmdFlagAPIEndpointLong, envAPIEndpoint, content.CmdFlagAPIEndpointDescription)
 	p.BoolVar(&jsonFormat, content.CmdFlagJSONLong, false, content.CmdFlagJSONDescription)
@@ -144,13 +142,6 @@ func setupCoreoCredentials(cmd *cobra.Command, args []string) error {
 
 	}
 	key = apiKey
-
-	secretKey, err := util.CheckSecretKeyFlag(secret, userProfile)
-
-	if err != nil {
-		return err
-	}
-	secret = secretKey
 
 	if verbose {
 		fmt.Printf(content.InfoUsingProfile, userProfile)

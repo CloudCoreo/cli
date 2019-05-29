@@ -55,13 +55,13 @@ type Client struct {
 }
 
 // MakeClient make client
-func MakeClient(apiKey, secretKey, endpoint string) (*Client, error) {
+func MakeClient(refreshToken, endpoint string) (*Client, error) {
 
-	if apiKey == "None" || secretKey == "None" || apiKey == "" || secretKey == "" {
+	if refreshToken == "None" || refreshToken == "" {
 		return nil, NewError(content.ErrorMissingAPIOrSecretKey)
 	}
 
-	a := Auth{APIKey: apiKey, SecretKey: secretKey}
+	a := Auth{RefreshToken: refreshToken}
 	i := Interceptor(a.SignRequest)
 	c := newClient(endpoint, WithInterceptor(i))
 

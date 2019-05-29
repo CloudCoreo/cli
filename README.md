@@ -17,11 +17,11 @@ Use CLI to...
 
 ### OSX
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.37/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.37/vss_darwin_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.38/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.38/vss_darwin_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.37/vss_darwin_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.38/vss_darwin_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -29,11 +29,11 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.37
 
 ### Linux
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.37/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.37/vss_linux_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.38/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.38/vss_linux_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.37/vss_linux_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.38/vss_linux_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -41,7 +41,7 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.37
 
 ### Windows
 
-Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.37/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.37/vss_windows_amd64.exe)
+Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.38/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.38/vss_windows_amd64.exe)
 
 ```
 C:\Users\Username\Downloads> rename vss_windows_amd64.exe vss.exe
@@ -62,10 +62,20 @@ Build instructions are as follows (see [install golang](https://docs.minio.io/do
  vss
 ```
 ## Getting started
-Get your access keys on [VMware Secure State](https://app.securestate.vmware.com/main/settings/cli).
-Go to the “Settings” menu and select the "Command-Line Interface”, then click the “Create Access Key” button. Your default team id is right below the access key id window.  
+Get your access keys on [VMware CSP User Portal](https://console.cloud.vmware.com/csp/gateway/portal/#/user/tokens).
 
-You may need to configure your access key and default team id the first time using CLI but you can also skip this step and pass these to CLI using flags `--api-key, --api-secret, --team-id`. You may set up configuration using:
+You use API tokens to authenticate yourself when you make authorized API connections. Previously called an OAuth Refresh token, an API token authorizes access per organization.
+
+You can generate more than one API token. A token is valid for six months, after which time you must regenerate it if you want to continue using APIs that rely on a token. If you feel the token has been compromised, you can revoke the token to prevent unauthorized access. You generate a new token to renew authorization.
+
+Procedure
+1. On the VMware Cloud Services toolbar, click your user name and select My Account > API Tokens.
+2. Click New Token.
+3. Click Copy to Clipboard.
+4. Paste the token in a safe place so you can retrieve it to use later on.
+
+
+You may need to configure your access key and default team id the first time using CLI but you can also skip this step and pass these to CLI using flags `--api-key, --team-id`. You may set up configuration using:
 	`vss  configure`
 	
 And then type you access key information and default team id as well. You may check you current configuration settings using
@@ -95,8 +105,7 @@ The most commonly used VSS commands are:
 ## Configurable variables
 |Variable | Option | Environment Variable | Description |
 | ------ | ------ | :--------:| :-------- |
-|api-key | --api-key| |Vss API Key, will read api-key in configure file by default| 
-|api-secret |--api-secret | |Vss API Secret, will read api-secret in configure file by default|
+|api-key | --api-key| |Vss API Token, will read api-key in configure file by default| 
 |endpoint| --endpoint |$VSS_API_ENDPOINT| VSS API endpoint, default https://app.securestate.vmware.com/api |
 |help    | --help, -h| | Get user manual for command
 |home    | --home | $VSS_HOME | Location of your VSS config. Overrides $VSS_HOME.
@@ -223,7 +232,7 @@ Configure CLI options
     * `vss configure list` &nbsp; : list current configuration
 * Examples
     * `vss configure`
-    * `vss configure --api-key VSS_API_KEY --api-secret VSS_API_SECRET --team-id VSS_TEAM_ID`
+    * `vss configure --api-key VSS_API_TOKEN --team-id VSS_TEAM_ID`
     * `vss configure list`
     
 #### team

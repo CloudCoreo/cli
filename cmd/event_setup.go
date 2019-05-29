@@ -50,8 +50,7 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 			if eventSetup.client == nil {
 				eventSetup.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
-					coreo.APIKey(key),
-					coreo.SecretKey(secret))
+					coreo.RefreshToken(key))
 			}
 
 			eventSetup.teamID = teamID

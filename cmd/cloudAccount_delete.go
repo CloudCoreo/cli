@@ -60,8 +60,7 @@ func newCloudDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
 			if cloudDelete.client == nil {
 				cloudDelete.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
-					coreo.APIKey(key),
-					coreo.SecretKey(secret))
+					coreo.RefreshToken(key))
 			}
 
 			if cloudDelete.deleteRole && (cloudDelete.cloud == nil) {

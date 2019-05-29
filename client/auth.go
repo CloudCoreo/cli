@@ -16,40 +16,29 @@ package client
 
 import (
 	"bytes"
-	"crypto/hmac"
-	"crypto/md5"
-	"crypto/sha1"
-	"encoding/base64"
-	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strconv"
 	"strings"
-	"time"
 )
+
+const cspUrl = "https://console.cloud.vmware.com"
+const cspResource = "/csp/gateway/am/api/auth/api-tokens/authorize"
 
 // Auth struct for API and secret key
 type Auth struct {
-	APIKey, SecretKey string
+	RefreshToken string
 }
 
-func computeHmac1(message string, secret string) string {
-	key := []byte(secret)
-	h := hmac.New(sha1.New, key)
-	h.Write([]byte(message))
-	return base64.StdEncoding.EncodeToString(h.Sum(nil))
-}
-
-func getMD5Hash(body string) string {
-	hasher := md5.New()
-	hasher.Write([]byte(body))
-	return hex.EncodeToString(hasher.Sum(nil))
+type cspToken struct {
+	AccessToken string `json:"access_token"`
 }
 
 // SignRequest method to sign all requests
 func (a *Auth) SignRequest(req *http.Request) error {
-	method := req.Method
-
 	body := ""
 	if req.Body != nil {
 		buf := new(bytes.Buffer)
@@ -59,15 +48,46 @@ func (a *Auth) SignRequest(req *http.Request) error {
 		req.ContentLength = int64(len(body))
 	}
 
-	mediaType := req.Header.Get("Content-Type")
-	date := time.Now().UTC().Format(time.RFC3339)
-	apiKey := a.APIKey
-	secretKey := a.SecretKey
-
-	message := fmt.Sprintf("%s\n%s\n%s\n%s", method, getMD5Hash(body), mediaType, date)
-
-	req.Header.Add("Authorization", "Hmac "+apiKey+":"+computeHmac1(message, secretKey))
-	req.Header.Add("date", date)
-
+	cspToken, err := a.getCspAuthToken()
+	if err != nil {
+		return err
+	}
+	req.Header.Add("csp-auth-token", cspToken.AccessToken)
 	return nil
+}
+
+func (a *Auth) getCspAuthToken() (*cspToken, error) {
+	cspToken := new(cspToken)
+
+	data := url.Values{}
+	data.Set("refresh_token", a.RefreshToken)
+
+	url, _ := url.ParseRequestURI(cspUrl)
+	url.Path = cspResource
+
+	req, err := http.NewRequest("POST", url.String(), strings.NewReader(data.Encode()))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Length", strconv.Itoa(len(data.Encode())))
+	resp, err := http.DefaultClient.Do(req)
+	defer resp.Body.Close()
+
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode >= 300 {
+		message := new(bytes.Buffer)
+		message.ReadFrom(resp.Body)
+		msg := fmt.Sprintf("%s", message.String())
+		return nil, NewError(msg)
+	}
+
+	err = json.NewDecoder(resp.Body).Decode(cspToken)
+
+	if err != nil {
+		return nil, err
+	}
+	return cspToken, err
 }
