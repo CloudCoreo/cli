@@ -66,8 +66,7 @@ func newCloudListCmd(client command.Interface, out io.Writer) *cobra.Command {
 			if cloudList.client == nil {
 				cloudList.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
-					coreo.APIKey(key),
-					coreo.SecretKey(secret))
+					coreo.RefreshToken(key))
 			}
 
 			cloudList.teamID = teamID
@@ -133,8 +132,7 @@ func newCloudTestCmd(client command.Interface, out io.Writer) *cobra.Command {
 			if cloudTest.client == nil {
 				cloudTest.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
-					coreo.APIKey(key),
-					coreo.SecretKey(secret))
+					coreo.RefreshToken(key))
 			}
 
 			cloudTest.teamID = teamID

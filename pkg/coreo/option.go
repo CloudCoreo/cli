@@ -23,9 +23,8 @@ import (
 type Option func(*options)
 
 type options struct {
-	host      string
-	apiKey    string
-	secretKey string
+	host         string
+	refreshToken string
 }
 
 // Host specifies the host address of the Coreo API server.
@@ -35,17 +34,10 @@ func Host(host string) Option {
 	}
 }
 
-//APIKey specifies the apiKey of the Coreo API server request.
-func APIKey(apiKey string) Option {
+//RefreshToken specifies the refreshToken of the Coreo API server request.
+func RefreshToken(refreshToken string) Option {
 	return func(opts *options) {
-		opts.apiKey = apiKey
-	}
-}
-
-// SecretKey specifies the secretKey of the Coreo API server request.
-func SecretKey(secretKey string) Option {
-	return func(opts *options) {
-		opts.secretKey = secretKey
+		opts.refreshToken = refreshToken
 	}
 }
 

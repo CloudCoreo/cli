@@ -50,8 +50,7 @@ func newTeamCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 			if teamCreate.client == nil {
 				teamCreate.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
-					coreo.APIKey(key),
-					coreo.SecretKey(secret))
+					coreo.RefreshToken(key))
 			}
 
 			return teamCreate.run()

@@ -34,7 +34,7 @@ type Interface interface {
 	ReValidateRole(teamID, cloudID string) (*client.RoleReValidationResult, error)
 
 	ShowResultObject(teamID, cloudID, level, provider string, retry uint) ([]*client.ResultObjectWrapper, error)
-	ShowResultRule(teamID, cloudID, level string) ([]*client.ResultRule, error)
+	ShowResultRule(teamID, cloudID, level, provider string) ([]*client.ResultRule, error)
 
 	GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error)
 	GetEventRemoveConfig(teamID, cloudID string) (*client.EventRemoveConfig, error)

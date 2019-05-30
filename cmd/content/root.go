@@ -18,9 +18,6 @@ const (
 	//AccessKey api key
 	AccessKey = "API_KEY"
 
-	//SecretKey secret key
-	SecretKey = "SECRET_KEY"
-
 	//TeamID team id
 	TeamID = "TEAM_ID"
 

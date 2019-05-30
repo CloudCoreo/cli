@@ -41,8 +41,7 @@ func newCloudScanCmd(client command.Interface, out io.Writer) *cobra.Command {
 			if cloudScan.client == nil {
 				cloudScan.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
-					coreo.APIKey(key),
-					coreo.SecretKey(secret))
+					coreo.RefreshToken(key))
 			}
 
 			if cloudScan.cloud == nil {

@@ -69,13 +69,11 @@ func (t *configureListCmd) run() error {
 
 		//generate config keys based on user profile
 		apiKey := fmt.Sprintf("%s.%s", k, content.AccessKey)
-		secretKey := fmt.Sprintf("%s.%s", k, content.SecretKey)
 		teamIDKey := fmt.Sprintf("%s.%s", k, content.TeamID)
 
 		profile := &Profile{
 			ProfileName: k,
 			APIKey:      util.GetValueFromConfig(apiKey, true),
-			SecretKey:   util.GetValueFromConfig(secretKey, true),
 			TeamID:      util.GetValueFromConfig(teamIDKey, false),
 		}
 

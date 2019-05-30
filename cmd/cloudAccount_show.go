@@ -51,8 +51,7 @@ func newCloudShowCmd(client command.Interface, out io.Writer) *cobra.Command {
 			if cloudShow.client == nil {
 				cloudShow.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
-					coreo.APIKey(key),
-					coreo.SecretKey(secret))
+					coreo.RefreshToken(key))
 			}
 
 			cloudShow.teamID = teamID

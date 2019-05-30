@@ -61,8 +61,7 @@ func newTeamListCmd(client command.Interface, out io.Writer) *cobra.Command {
 			if teamList.client == nil {
 				teamList.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
-					coreo.APIKey(key),
-					coreo.SecretKey(secret))
+					coreo.RefreshToken(key))
 			}
 
 			return teamList.run()
