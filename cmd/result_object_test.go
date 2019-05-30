@@ -26,10 +26,8 @@ const kmsKeyRotatesObjectOutput = `[
 				"include_violations_in_count": true,
 				"timestamp": "2018-10-11T17:21:55.111+00:00",
 				"riskScore": 0,
-				"team": {
-					"name": "fake-team-name",
-					"id": "fake-team-id"
-				}
+				"teamName": "fake-team-name",
+				"teamID": "fake-team-id"
 			}
 		]
 	}
@@ -53,10 +51,8 @@ const iamInactiveKeyNoRotationObjectOutput = `[
 				"include_violations_in_count": true,
 				"timestamp": "2018-10-11T17:21:54.448+00:00",
 				"riskScore": 0,
-				"team": {
-					"name": "fake-team-name",
-					"id": "fake-team-id"
-				}
+				"teamName": "fake-team-name",
+				"teamID": "fake-team-id"
 			}
 		]
 	}

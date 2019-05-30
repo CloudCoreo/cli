@@ -84,8 +84,7 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 			if cloudCreate.client == nil {
 				cloudCreate.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
-					coreo.APIKey(key),
-					coreo.SecretKey(secret))
+					coreo.RefreshToken(key))
 			}
 
 			if cloudCreate.cloud == nil {

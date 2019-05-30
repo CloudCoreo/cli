@@ -18,6 +18,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -76,13 +77,20 @@ type ResultObjectWrapper struct {
 }
 
 type ResultRuleWrapper struct {
-	Rules []*ResultRule `json:"result"`
+	ViolatingRules ViolatingRules `json:"result"`
 }
 
+type ViolatingRules struct {
+	Rules []*ResultRule `json:"violatingRules"`
+}
 type resultObjectRequest struct {
 	RemoveScrollID bool   `json:"removeScrollId"`
 	ScrollID       string `json:"scrollId,omitempty"`
-	Filter         filter `json:"filter,omitempty"`
+	Filter         filter `json:"filter"`
+}
+
+type resultRuleRequest struct {
+	Filter filter `json:"filter"`
 }
 
 type filter struct {
@@ -103,57 +111,34 @@ func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level, p
 		}
 		return []*ResultObjectWrapper{result}, nil
 	} else {
-		var teams []*Team
-		//If teamID is None, then get all teams, otherwise only get team with <teamID>
-		teams, err := c.getTeamsForObjects(ctx, teamID)
-		if err != nil {
-			return nil, err
-		}
-		for _, team := range teams {
-			accounts, err := c.GetCloudAccounts(ctx, team.ID)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, err.Error())
-				continue
-			}
-			for _, account := range accounts {
-				result, err := c.getResultObjects(ctx, team.ID, account.ID, level, provider, retry)
-				if err != nil {
-					return nil, err
-				}
-				res = append(res, result)
 
-			}
+		accounts, err := c.GetCloudAccounts(ctx, teamID)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
 		}
+		for _, account := range accounts {
+			result, err := c.getResultObjects(ctx, teamID, account.ID, level, provider, retry)
+			if err != nil {
+				return nil, err
+			}
+			res = append(res, result)
+
+		}
+
 		return res, nil
 	}
 }
 
 //ShowResultRule show violated rules. If the filter condition (teamID, cloudID in this case) is valid,
 //rules will be filtered. Otherwise return all violation rules under this user account.
-func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID, level string) ([]*ResultRule, error) {
-	result, err := c.getAllResultRule(ctx)
-	res := []*ResultRule{}
+func (c *Client) ShowResultRule(ctx context.Context, teamID, cloudID, level, provider string) ([]*ResultRule, error) {
+	var request = &resultRuleRequest{}
+	request.Filter = c.buildFilter(teamID, cloudID, level, provider)
+	result, err := c.getAllResultRule(ctx, request)
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
-
-	targetLevels := strings.Split(strings.Replace(level, " ", "", -1), "|")
-	for i := range result {
-		if (teamID == content.None || hasTeamID(result[i].TInfo, teamID)) &&
-			(cloudID == content.None || hasCloudID(result[i].CInfo, cloudID)) &&
-			(level == "" || hasLevel(targetLevels, result[i].Info.Level)) {
-			res = append(res, result[i])
-		}
-	}
-	return res, nil
-}
-
-//If teamID is None, then return all teams, otherwise return teamID passed
-func (c *Client) getTeamsForObjects(ctx context.Context, teamID string) ([]*Team, error) {
-	if teamID != content.None {
-		return []*Team{{ID: teamID}}, nil
-	}
-	return c.GetTeams(ctx)
+	return result, nil
 }
 
 func (c *Client) getResultLinks(ctx context.Context) ([]Link, error) {
@@ -252,24 +237,30 @@ func (c *Client) buildGetResultObjectsRequest(teamID, cloudID, level, scrollId, 
 	request := resultObjectRequest{
 		RemoveScrollID: removeScrollId,
 		ScrollID:       scrollId,
-		Filter:         filter{},
+		Filter:         c.buildFilter(teamID, cloudID, level, provider),
 	}
+	return &request
+}
+
+func (c *Client) buildFilter(teamID, cloudID, level, provider string) filter {
+	filter := filter{}
 	if teamID != content.None {
-		request.Filter.Teams = []string{teamID}
+		filter.Teams = []string{teamID}
 	}
 
 	if cloudID != content.None {
-		request.Filter.CloudAccounts = []string{cloudID}
+		filter.CloudAccounts = []string{cloudID}
 	}
 
 	if level != "" {
-		request.Filter.Levels = strings.Split(strings.Replace(level, " ", "", -1), "|")
+		filter.Levels = strings.Split(strings.Replace(level, " ", "", -1), "|")
 	}
 
 	if provider != "" {
-		request.Filter.Providers = []string{provider}
+		filter.Providers = []string{provider}
 	}
-	return &request
+
+	return filter
 }
 
 //getResultObject returns at most 200 objects, this is chunk design in webapp
@@ -287,47 +278,46 @@ func (c *Client) getResultObjectsPaginated(ctx context.Context, request *resultO
 	return result, nil
 }
 
-func (c *Client) getAllResultRule(ctx context.Context) ([]*ResultRule, error) {
-	result := new(ResultRuleWrapper)
+func (c *Client) getAllResultRule(ctx context.Context, request *resultRuleRequest) ([]*ResultRule, error) {
+	rules := make([]*ResultRule, 0)
+	var result *ResultRuleWrapper
+	jsonStr, err := json.Marshal(*request)
+	if err != nil {
+		return nil, err
+	}
 
 	link, err := c.getResultLinkByRef(ctx, "rule")
 	if err != nil {
 		return nil, err
 	}
 
-	err = c.Do(ctx, "GET", link.Href, nil, result)
+	// Getting rules using a streaming mechanism
+	resp, err := c.makeRequest(ctx, "POST", link.Href, bytes.NewBuffer(jsonStr))
 	if err != nil {
 		return nil, NewError(err.Error())
 	}
-	if len(result.Rules) == 0 {
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 300 {
+		message := new(bytes.Buffer)
+		message.ReadFrom(resp.Body)
+		msg := fmt.Sprintf("%s", message.String())
+		return nil, NewError(msg)
+	}
+
+	decoder := json.NewDecoder(resp.Body)
+	for {
+		if err = decoder.Decode(&result); err == io.EOF {
+			break
+		} else if err != nil {
+			return nil, err
+		}
+		rules = append(rules, result.ViolatingRules.Rules...)
+	}
+
+	if len(rules) == 0 {
 		return nil, NewError("No violated rule")
 	}
-	return result.Rules, nil
-}
-
-func hasTeamID(teamInfo []TeamInfoWrapper, teamID string) bool {
-	for i := range teamInfo {
-		if teamInfo[i].TeamInfo.ID == teamID {
-			return true
-		}
-	}
-	return false
-}
-
-func hasCloudID(cloudInfo []string, cloudID string) bool {
-	for i := range cloudInfo {
-		if cloudInfo[i] == cloudID {
-			return true
-		}
-	}
-	return false
-}
-
-func hasLevel(targetLevel []string, level string) bool {
-	for i := range targetLevel {
-		if targetLevel[i] == level {
-			return true
-		}
-	}
-	return false
+	return rules, nil
 }

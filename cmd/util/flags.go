@@ -139,20 +139,6 @@ func CheckAPIKeyFlag(apiKey string, userProfile string) (string, error) {
 	return apiKey, nil
 }
 
-// CheckSecretKeyFlag flag check for secret key
-func CheckSecretKeyFlag(secretKey string, userProfile string) (string, error) {
-	if secretKey == content.None {
-		secretIDKey := fmt.Sprintf("%s.%s", userProfile, content.SecretKey)
-		secretKey = GetValueFromConfig(secretIDKey, false)
-
-		if secretKey == content.None {
-			return secretKey, fmt.Errorf(content.ErrorAPISecretMissing)
-		}
-	}
-
-	return secretKey, nil
-}
-
 //CheckTeamAddFlags Required flags check
 func CheckTeamAddFlags(teamName, teamDescription string) error {
 	if err := checkFlag(teamName, content.ErrorTeamNameRequired); err != nil {
