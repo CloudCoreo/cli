@@ -28,7 +28,7 @@ import (
 //TeamInfo records the info of a team
 type TeamInfo struct {
 	Name string `json:"name"`
-	ID   string `json:"id"`
+	ID   string `json:"teamId"`
 }
 
 //TeamInfoWrapper is a wrapper for team Info
@@ -38,42 +38,43 @@ type TeamInfoWrapper struct {
 
 //Info is the struct for rule_report
 type Info struct {
-	SuggestedAction          string `json:"suggested_action"`
+	SuggestedAction          string `json:"suggestedAction"`
 	Link                     string `json:"link"`
 	Description              string `json:"description"`
-	DisplayName              string `json:"display_name"`
+	DisplayName              string `json:"displayName"`
 	Level                    string `json:"level"`
 	Service                  string `json:"service"`
 	Name                     string `json:"name"`
-	Region                   string `json:"region"`
 	IncludeViolationsInCount bool   `json:"include_violations_in_count"`
-	TimeStamp                string `json:"timestamp"`
+	TimeStamp                string `json:"lastUpdateTime,omitempty"`
 }
 
 // ResultRule struct decodes json file returned by webapp
 type ResultRule struct {
-	ID     string            `json:"id"`
-	Info   Info              `json:"info"`
-	TInfo  []TeamInfoWrapper `json:"teamAndPlan"`
-	CInfo  []string          `json:"accounts"`
-	Object int               `json:"objects"`
+	ID      string            `json:"id"`
+	Info    Info              `json:"info"`
+	TInfo   []TeamInfoWrapper `json:"teamAndPlan"`
+	CInfo   []string          `json:"accounts"`
+	Object  int               `json:"objects"`
+	Regions []string          `json:"regions"`
 }
 
 // The ResultObject struct decodes json file returned by webapp
 type ResultObject struct {
 	ID        string   `json:"id"`
-	Info      Info     `json:"rule_report"`
+	Info      Info     `json:"ruleInfo"`
 	TInfo     TeamInfo `json:"team"`
 	RiskScore int      `json:"riskScore"`
+	Region    string   `json:"region"`
 }
 
 // ResultObjectWrapper contains an object array and number of total items
 type ResultObjectWrapper struct {
 	AccountName   string          `json:"accountName,omitempty"`
 	AccountNumber string          `json:"accountNumber,omitempty"`
-	TotalItems    int             `json:"totalItems"`
+	TotalItems    int             `json:"totalCount"`
 	Objects       []*ResultObject `json:"violations"`
-	ScrollID      string          `json:"scrollId,omitempty"`
+	ScrollID      string          `json:"continuationToken,omitempty"`
 }
 
 type ResultRuleWrapper struct {
@@ -192,7 +193,7 @@ func (c *Client) getResultObjects(ctx context.Context, teamID, cloudID, level, p
 
 	for firstCall || cur < totalItems {
 		if firstCall {
-			request = c.buildGetResultObjectsRequest(teamID, cloudID, level, scrollId, provider, false)
+			request = c.buildGetResultObjectsRequest(teamID, cloudID, level, scrollId, provider, true)
 		}
 		var err error
 		var tmp *ResultObjectWrapper
@@ -205,18 +206,20 @@ func (c *Client) getResultObjects(ctx context.Context, teamID, cloudID, level, p
 				return nil, err
 			}
 		}
+		if tmp == nil {
+			return nil, NewError("No violation object")
+		}
 		if firstCall {
 			totalItems = tmp.TotalItems
-			scrollId = tmp.ScrollID
-			request = c.buildGetResultObjectsRequest(teamID, cloudID, level, scrollId, provider, false)
 			firstCall = false
 		}
 
 		res = append(res, tmp.Objects...)
-		if len(tmp.Objects) < 200 {
+		if tmp.ScrollID == "" {
 			break
 		}
-
+		scrollId = tmp.ScrollID
+		request = c.buildGetResultObjectsRequest(teamID, cloudID, level, scrollId, provider, false)
 		cur += len(tmp.Objects)
 	}
 	wrapper := &ResultObjectWrapper{Objects: res, TotalItems: len(res)}

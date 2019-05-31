@@ -43,6 +43,7 @@ type Object struct {
 	RiskScore int    `json:"riskScore"`
 	TeamName  string `json:"teamName"`
 	TeamID    string `json:"teamID"`
+	Region    string `json:"region"`
 }
 
 type ObjectWrapper struct {
@@ -102,6 +103,7 @@ func (t *resultObjectCmd) prettyPrintObjects(wrappers []*client.ResultObjectWrap
 			result[i].Objects[j].RiskScore = object.RiskScore
 			result[i].Objects[j].ID = object.ID
 			result[i].Objects[j].Info = object.Info
+			result[i].Objects[j].Region = object.Region
 		}
 	}
 	_, err := fmt.Fprintln(t.out, util.PrettyJSON(result))

@@ -13,29 +13,31 @@ const iamInactiveKeyNoRotationRuleOutput = `[
 	{
 		"id": "fake-id1",
 		"info": {
-			"suggested_action": "fake suggestion",
+			"suggestedAction": "fake suggestion",
 			"link": "fake link",
 			"description": "fake description",
-			"display_name": "fake-display-name",
+			"displayName": "fake-display-name",
 			"level": "Medium",
 			"service": "iam",
 			"name": "fake-name",
-			"region": "global",
 			"include_violations_in_count": true,
-			"timestamp": "2018-10-11T17:21:54.448+00:00"
+			"lastUpdateTime": "2018-10-11T17:21:54.448+00:00"
 		},
 		"teamAndPlan": [
 			{
 				"team": {
 					"name": "fake-team-name",
-					"id": "fake-team-id"
+					"teamId": "fake-team-id"
 				}
 			}
 		],
 		"accounts": [
 			"fake-account-id"
 		],
-		"objects": 1528
+		"objects": 1528,
+		"regions": [
+			"us-east-1"
+		]
 	}
 ]
 `
@@ -44,42 +46,45 @@ const S3AllUserWriteRuleOutput = `[
 	{
 		"id": "fake-id2",
 		"info": {
-			"suggested_action": "fake suggestion",
+			"suggestedAction": "fake suggestion",
 			"link": "fake link",
 			"description": "fake description",
-			"display_name": "fake-display-name",
+			"displayName": "fake-display-name",
 			"level": "High",
 			"service": "s3",
 			"name": "fake-name",
-			"region": "us-east-1",
 			"include_violations_in_count": true,
-			"timestamp": "2018-10-11T17:21:55.387+00:00"
+			"lastUpdateTime": "2018-10-11T17:21:55.387+00:00"
 		},
 		"teamAndPlan": [
 			{
 				"team": {
 					"name": "fake-team-name",
-					"id": "fake-team-id"
+					"teamId": "fake-team-id"
 				}
 			}
 		],
 		"accounts": [
 			"fake-account-id"
 		],
-		"objects": 2
+		"objects": 2,
+		"regions": [
+			"us-west-1"
+		]
 	}
 ]
 `
 
 func TestResultRuleCmd(t *testing.T) {
 	mockRule := func(id string, info client.Info,
-		tInfo []client.TeamInfo, cInfo []string, object int) *client.ResultRule {
+		tInfo []client.TeamInfo, cInfo []string, object int, regions []string) *client.ResultRule {
 		return &client.ResultRule{
-			ID:     id,
-			Info:   info,
-			TInfo:  []client.TeamInfoWrapper{{TeamInfo: &tInfo[0]}},
-			CInfo:  cInfo,
-			Object: object,
+			ID:      id,
+			Info:    info,
+			TInfo:   []client.TeamInfoWrapper{{TeamInfo: &tInfo[0]}},
+			CInfo:   cInfo,
+			Object:  object,
+			Regions: regions,
 		}
 	}
 
@@ -108,7 +113,6 @@ func TestResultRuleCmd(t *testing.T) {
 						Level:           "Medium",
 						Service:         "iam",
 						Name:            "fake-name",
-						Region:          "global",
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:54.448+00:00",
 					},
@@ -121,7 +125,7 @@ func TestResultRuleCmd(t *testing.T) {
 					[]string{
 						"fake-account-id",
 					},
-					1528),
+					1528, []string{"us-east-1"}),
 			},
 			xout: iamInactiveKeyNoRotationRuleOutput,
 		},
@@ -140,7 +144,6 @@ func TestResultRuleCmd(t *testing.T) {
 						Level:           "High",
 						Service:         "s3",
 						Name:            "fake-name",
-						Region:          "us-east-1",
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:55.387+00:00",
 					},
@@ -151,7 +154,7 @@ func TestResultRuleCmd(t *testing.T) {
 						},
 					},
 					[]string{"fake-account-id"},
-					2),
+					2, []string{"us-west-1"}),
 			},
 			xout: S3AllUserWriteRuleOutput,
 		},
