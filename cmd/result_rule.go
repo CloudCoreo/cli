@@ -73,6 +73,5 @@ func (t *resultRuleCmd) run() error {
 		b[i] = res[i]
 	}
 	fmt.Fprintln(t.out, util.PrettyJSON(b))
-
 	return nil
 }

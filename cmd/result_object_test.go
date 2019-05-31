@@ -15,19 +15,19 @@ const kmsKeyRotatesObjectOutput = `[
 		"violations": [
 			{
 				"objectName": "fake-id1",
-				"suggested_action": "fake-suggestion",
+				"suggestedAction": "fake-suggestion",
 				"link": "fake-link",
 				"description": "fake description",
-				"display_name": "fake-display-name",
+				"displayName": "fake-display-name",
 				"level": "Medium",
 				"service": "kms",
 				"name": "fake-name",
-				"region": "us-east-1",
 				"include_violations_in_count": true,
-				"timestamp": "2018-10-11T17:21:55.111+00:00",
+				"lastUpdateTime": "2018-10-11T17:21:55.111+00:00",
 				"riskScore": 0,
 				"teamName": "fake-team-name",
-				"teamID": "fake-team-id"
+				"teamID": "fake-team-id",
+				"region": "us-east-1"
 			}
 		]
 	}
@@ -40,19 +40,19 @@ const iamInactiveKeyNoRotationObjectOutput = `[
 		"violations": [
 			{
 				"objectName": "fake-id2",
-				"suggested_action": "fake-suggestion",
+				"suggestedAction": "fake-suggestion",
 				"link": "fake-link",
 				"description": "fake description",
-				"display_name": "fake-display-name",
+				"displayName": "fake-display-name",
 				"level": "Medium",
 				"service": "iam",
 				"name": "fake-name",
-				"region": "global",
 				"include_violations_in_count": true,
-				"timestamp": "2018-10-11T17:21:54.448+00:00",
+				"lastUpdateTime": "2018-10-11T17:21:54.448+00:00",
 				"riskScore": 0,
 				"teamName": "fake-team-name",
-				"teamID": "fake-team-id"
+				"teamID": "fake-team-id",
+				"region": "us-west-2"
 			}
 		]
 	}
@@ -61,11 +61,12 @@ const iamInactiveKeyNoRotationObjectOutput = `[
 
 func TestResultObjectCmd(t *testing.T) {
 	mockObject := func(id string, info client.Info,
-		tInfo client.TeamInfo) *client.ResultObject {
+		tInfo client.TeamInfo, region string) *client.ResultObject {
 		return &client.ResultObject{
-			ID:    id,
-			Info:  info,
-			TInfo: tInfo,
+			ID:     id,
+			Info:   info,
+			TInfo:  tInfo,
+			Region: region,
 		}
 	}
 
@@ -99,14 +100,13 @@ func TestResultObjectCmd(t *testing.T) {
 						Level:           "Medium",
 						Service:         "kms",
 						Name:            "fake-name",
-						Region:          "us-east-1",
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:55.111+00:00",
 					},
 					client.TeamInfo{
 						Name: "fake-team-name",
 						ID:   "fake-team-id",
-					}),
+					}, "us-east-1"),
 			},
 			num:  mockInt(200),
 			xout: kmsKeyRotatesObjectOutput,
@@ -126,14 +126,13 @@ func TestResultObjectCmd(t *testing.T) {
 						Level:           "Medium",
 						Service:         "iam",
 						Name:            "fake-name",
-						Region:          "global",
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:54.448+00:00",
 					},
 					client.TeamInfo{
 						Name: "fake-team-name",
 						ID:   "fake-team-id",
-					}),
+					}, "us-west-2"),
 			},
 			num:  mockInt(100),
 			xout: iamInactiveKeyNoRotationObjectOutput,
