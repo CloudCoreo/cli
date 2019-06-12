@@ -52,7 +52,7 @@ func TestGetSetupConfigSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/cloudaccounts/cloudAccountID/event/setup", httpmock.NewStringResponder(http.StatusOK, EventConfigureResponse))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	config, err := client.GetSetupConfig(context.Background(), "teamID", "cloudAccountID")
@@ -67,7 +67,7 @@ func TestGetSetupConfigFailureWithNoResponse(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/cloudaccounts/cloudAccountID/event/setup", httpmock.NewStringResponder(http.StatusBadRequest, ""))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetSetupConfig(context.Background(), "teamID", "cloudAccountID")
@@ -80,7 +80,7 @@ func TestGetSetupConfigFailureWithNoLink(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(CloudAccountJSONPayloadNoSetup, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetSetupConfig(context.Background(), "teamID", "cloudAccountID")
@@ -95,7 +95,7 @@ func TestGetRemoveConfigSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/cloudaccounts/cloudAccountID/event/remove", httpmock.NewStringResponder(http.StatusOK, RemoveConfigureResponse))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	config, err := client.GetRemoveConfig(context.Background(), "teamID", "cloudAccountID")
@@ -110,7 +110,7 @@ func TestGetRemoveConfigFailureWithNoResponse(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/cloudaccounts/cloudAccountID/event/remove", httpmock.NewStringResponder(http.StatusBadRequest, ""))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetRemoveConfig(context.Background(), "teamID", "cloudAccountID")
@@ -123,7 +123,7 @@ func TestGetRemoveConfigFailureWithNoLink(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(CloudAccountJSONPayloadNoSetup, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetRemoveConfig(context.Background(), "teamID", "cloudAccountID")

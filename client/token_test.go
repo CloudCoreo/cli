@@ -85,7 +85,7 @@ func TestGetTokensSuccess(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, tokenJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetTokens(context.Background())
@@ -97,7 +97,7 @@ func TestGetTokensFailureInvalidTokenResponse(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, `[]`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetTokens(context.Background())
@@ -110,7 +110,7 @@ func TestGetTokensFailureInvalidUserResponse(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, tokenJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, ``))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetTokens(context.Background())
@@ -122,7 +122,7 @@ func TestGetTokensFailureMissingTokenLinkInResponse(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, ``))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, userJSONPayloadForTokenMissingTokenData))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetTokens(context.Background())
@@ -134,7 +134,7 @@ func TestGetTokenByIDSuccess(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, tokenJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetTokenByID(context.Background(), "tokenID")
@@ -146,7 +146,7 @@ func TestGetTokenByIDFailure(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, ``))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetTokenByID(context.Background(), "tokenID")
@@ -158,7 +158,7 @@ func TestGetTokenByIDFailureTeamIDNotFound(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, tokenJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetTokenByID(context.Background(), "583cb503ca5e631017ed6ac")
@@ -170,7 +170,7 @@ func TestCreateTokenSuccess(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusCreated, createdTokenJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.CreateToken(context.Background(), "tokenName", "tokenDescription")
@@ -182,7 +182,7 @@ func TestCreateTokenFailedToParseUser(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusCreated, createdTokenJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, ``))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.CreateToken(context.Background(), "tokenName", "tokenDescription")
@@ -194,7 +194,7 @@ func TestCreateTokenFailedToParseTokenLink(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusCreated, createdTokenJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, userJSONPayloadForTokenMissingTokenData))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.CreateToken(context.Background(), "tokenName", "tokenDescription")
@@ -207,7 +207,7 @@ func TestCreateTokenFailedToCreateToken(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusCreated, `{}`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.CreateToken(context.Background(), "tokenName", "tokenDescription")
@@ -220,7 +220,7 @@ func TestCreateTokenFailedToCreateTokenBadRequest(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusBadRequest, `{}`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.CreateToken(context.Background(), "tokenName", "tokenDescription")
@@ -233,7 +233,7 @@ func TestDeleteTokenByIDSuccess(t *testing.T) {
 	httpmock.RegisterRegexpResponder("DELETE", regexp.MustCompile(defaultAPIEndpoint+"/tokens/*"), httpmock.NewStringResponder(http.StatusOK, ``))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(tokenJSONPayload, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteTokenByID(context.Background(), "tokenID")
@@ -246,7 +246,7 @@ func TestDeleteTokenByIDFailedToParseUser(t *testing.T) {
 	httpmock.RegisterRegexpResponder("DELETE", regexp.MustCompile(defaultAPIEndpoint+"/tokens/*"), httpmock.NewStringResponder(http.StatusOK, `{}`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(tokenJSONPayload, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, ``))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteTokenByID(context.Background(), "tokenID")
@@ -259,7 +259,7 @@ func TestDeleteTokenByIDFailedToParseLink(t *testing.T) {
 	httpmock.RegisterRegexpResponder("DELETE", regexp.MustCompile(defaultAPIEndpoint+"/tokens/*"), httpmock.NewStringResponder(http.StatusOK, `{}`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, tokenJSONPayloadMissingSelfData))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteTokenByID(context.Background(), "tokenID")
@@ -272,7 +272,7 @@ func TestDeleteTokenByIDFailedToDeleteTokenBadRequest(t *testing.T) {
 	httpmock.RegisterRegexpResponder("DELETE", regexp.MustCompile(defaultAPIEndpoint+"/tokens/*"), httpmock.NewStringResponder(http.StatusBadRequest, `{}`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, tokenJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteTokenByID(context.Background(), "tokenID")
@@ -285,7 +285,7 @@ func TestDeleteTokenByIDFailedToDeleteTokenInvalidTokenID(t *testing.T) {
 	httpmock.RegisterRegexpResponder("DELETE", regexp.MustCompile(defaultAPIEndpoint+"/tokens/*"), httpmock.NewStringResponder(http.StatusBadRequest, `{}`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/tokens", httpmock.NewStringResponder(http.StatusOK, tokenJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForToken, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteTokenByID(context.Background(), "583cb503ca5e631017ed6ac")

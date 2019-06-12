@@ -165,7 +165,7 @@ func TestGetCloudAccountsSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, CloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetCloudAccounts(context.Background(), "teamID")
@@ -178,7 +178,7 @@ func TestGetCloudAccountsFailureInvalidUserResponse(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, CloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, `{}`))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetCloudAccounts(context.Background(), "teamID")
@@ -192,7 +192,7 @@ func TestGetCloudAccountsFailureInvalidTeamResponse(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, CloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, `{}`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetCloudAccounts(context.Background(), "teamID")
@@ -206,7 +206,7 @@ func TestGetCloudAccountsFailureInvalidCloudAccountresponse(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, `{}`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetCloudAccounts(context.Background(), "teamID")
@@ -220,7 +220,7 @@ func TestGetCloudAccountsFailureMissingCloudAccountsLink(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, CloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, teamCloudAccountJSONPayloadMissingCloudAccountLink))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetCloudAccounts(context.Background(), "teamID")
@@ -234,7 +234,7 @@ func TestGetCloudAccountsFailedNoCloudAccountsFound(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, `[]`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetCloudAccounts(context.Background(), "teamID")
@@ -249,7 +249,7 @@ func TestGetCloudAccountByIDSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, CloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetCloudAccountByID(context.Background(), "teamID", "cloudAccountID")
@@ -262,7 +262,7 @@ func TestGetCloudAccountByIDFailureInvalidTeamID(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, CloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetCloudAccountByID(context.Background(), "583bc8dbca5e631017ed46c", "cloudAccountID")
@@ -277,7 +277,7 @@ func TestGetCloudAccountByIDFailureInvalidCloudID(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, CloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetCloudAccountByID(context.Background(), "teamID", "InvalidcloudAccountID")
@@ -291,7 +291,7 @@ func TestSendCloudCreateRequestSuccess(t *testing.T) {
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusCreated, createdCloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	link := Link{
 		Href: defaultAPIEndpoint + "/teams/teamID/cloudaccounts",
@@ -316,7 +316,7 @@ func TestCreateCloudAccountSuccess(t *testing.T) {
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusCreated, createdCloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.CreateCloudAccount(context.Background(), &CreateCloudAccountInput{
@@ -334,7 +334,7 @@ func TestCreateCloudAccountFailureMissingRoleArn(t *testing.T) {
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusCreated, createdCloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.CreateCloudAccount(context.Background(), &CreateCloudAccountInput{
@@ -352,7 +352,7 @@ func TestCreateCloudAccountFailureBadRequest(t *testing.T) {
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusBadRequest, createdCloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	input := &CreateCloudAccountInput{
@@ -369,7 +369,7 @@ func TestCreateCloudAccountFailedToParseUser(t *testing.T) {
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusCreated, createdCloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, `{}`))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	input := &CreateCloudAccountInput{
@@ -386,7 +386,7 @@ func TestCreateCloudAccountFailedToParseCloudAccountLink(t *testing.T) {
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusCreated, createdCloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, `{}`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	input := &CreateCloudAccountInput{
@@ -404,7 +404,7 @@ func TestCreateCloudAccountsFailureMissingCloudAccountsLink(t *testing.T) {
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusCreated, createdCloudAccountJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, teamCloudAccountJSONPayloadMissingCloudAccountLink))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	input := &CreateCloudAccountInput{
@@ -422,7 +422,7 @@ func TestCreateCloudAccountFailureCloudAccountNotCreated(t *testing.T) {
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusCreated, `{}`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	input := &CreateCloudAccountInput{
@@ -442,7 +442,7 @@ func TestDeleteCloudAccountByIDSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(CloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteCloudAccountByID(context.Background(), "teamID", "cloudAccountID")
@@ -456,7 +456,7 @@ func TestDeleteCloudAccountByIDFailedToParseUser(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(CloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, ``))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteCloudAccountByID(context.Background(), "tokenID", "cloudAccountID")
@@ -470,7 +470,7 @@ func TestDeleteCloudAccountByIDFailedToParseLink(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(CloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, teamCloudAccountJSONPayloadMissingCloudAccountLink))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteCloudAccountByID(context.Background(), "tokenID", "cloudAccountID")
@@ -485,7 +485,7 @@ func TestDeleteCloudAccountByIDFailedToParseCloudAccountLink(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, `{}`))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, teamCloudAccountJSONPayloadMissingCloudAccountLink))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteCloudAccountByID(context.Background(), "tokenID", "cloudAccountID")
@@ -500,7 +500,7 @@ func TestDeleteCloudAccountByIDFailureMissingCloudAccountsLink(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, CloudAccountJSONPayloadMissingSelfData))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteCloudAccountByID(context.Background(), "teamID", "cloudAccountID")
@@ -515,7 +515,7 @@ func TestDeleteCloudAccountByIDAccountFailureBadRequest(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(CloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteCloudAccountByID(context.Background(), "teamID", "cloudAccountID")
@@ -529,7 +529,7 @@ func TestDeleteCloudAccountByIDFailureInvalidCloudID(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(CloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	err := client.DeleteCloudAccountByID(context.Background(), "teamID", "InvalidCloudAccountID")
@@ -543,7 +543,7 @@ func TestGetRoleCreationInfoFailureNoUserInfo(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/defaultid", httpmock.NewStringResponder(http.StatusOK, RoleCreationInfoJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, `{}`))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetRoleCreationInfo(context.Background(), &CreateCloudAccountInput{
@@ -558,7 +558,7 @@ func TestGetRoleCreationInfoSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/defaultid", httpmock.NewStringResponder(http.StatusOK, RoleCreationInfoJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetRoleCreationInfo(context.Background(), &CreateCloudAccountInput{
@@ -573,7 +573,7 @@ func TestGetRoleCreationInfoFailureNoTeamIDMatch(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/defaultid", httpmock.NewStringResponder(http.StatusOK, RoleCreationInfoJSONPayload))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetRoleCreationInfo(context.Background(), &CreateCloudAccountInput{
@@ -588,7 +588,7 @@ func TestGetRoleCreationInfoFailureDefaultIdLinkMissing(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, teamCloudAccountJSONPayloadMissingCloudAccountLink))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.GetRoleCreationInfo(context.Background(), &CreateCloudAccountInput{
@@ -605,10 +605,10 @@ func TestUpdateCloudAccountSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(CloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
-	_, err := client.UpdateCloudAccount(context.Background(), &UpdateCloudAccountInput{CreateCloudAccountInput: CreateCloudAccountInput{TeamID: "teamID"}, CloudId: "cloudAccountID"})
+	_, err := client.UpdateCloudAccount(context.Background(), &UpdateCloudAccountInput{CreateCloudAccountInput: CreateCloudAccountInput{TeamID: "teamID"}, CloudID: "cloudAccountID"})
 	assert.Nil(t, err, "UpdateCloudAccount shouldn't return error.")
 }
 
@@ -619,7 +619,7 @@ func TestReValidateRoleSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(CloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.ReValidateRole(context.Background(), "teamID", "cloudAccountID")
@@ -633,7 +633,7 @@ func TestReValidateRoleFaliureWithLinkMissing(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/teams/teamID/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, CloudAccountJSONPayloadMissingSelfData))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/teams", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(teamCloudAccountJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForTeam, defaultAPIEndpoint)))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.ReValidateRole(context.Background(), "teamID", "cloudAccountID")

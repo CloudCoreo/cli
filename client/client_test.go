@@ -55,7 +55,7 @@ func (suite *MakeClientTestSuite) TestMakeClientWithApiEmptyError() {
 func (suite *MakeClientTestSuite) TestMakeClient() {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, err := MakeClient("APIkey", "endpoint")
 	assert.Nil(suite.T(), err, "MakeClient should not return error for valid ApiKey, secretKey or endpoint")
@@ -130,7 +130,7 @@ func (suite *DoTestSuite) TestDo() {
 	],
 		"id": "teamID"
 	}`))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("APIkey", defaultAPIEndpoint)
 	team := &Team{}

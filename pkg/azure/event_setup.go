@@ -15,17 +15,21 @@ import (
 	"github.com/CloudCoreo/cli/client"
 )
 
+//SetupService is Azure SetupService
 type SetupService struct {
 	authFile string
 	region   string
 }
 
+// NewSetupService returns a new Azure SetupService
 func NewSetupService(input *NewServiceInput) *SetupService {
 	return &SetupService{
 		authFile: input.AuthFile,
 		region:   input.Region,
 	}
 }
+
+//SetupEventStream sets up Azure event stream
 func (a *SetupService) SetupEventStream(input *client.EventStreamConfig) error {
 	ctx := context.Background()
 	err := a.createResourceGroup(ctx, input)
@@ -97,7 +101,7 @@ func (a *SetupService) deployActionGroup(ctx context.Context, input *client.Even
 		"actionGroupName":      map[string]interface{}{"value": input.ActionGroup},
 		"actionGroupShortName": map[string]interface{}{"value": input.ActionGroupShort},
 		"webhookReceiverName":  map[string]interface{}{"value": input.WebhookReceiverName},
-		"webhookServiceUri":    map[string]interface{}{"value": input.WebhookServiceURI},
+		"webhookServiceURI":    map[string]interface{}{"value": input.WebhookServiceURI},
 	}
 	_, err = deploymentsClient.CreateOrUpdate(
 		ctx,

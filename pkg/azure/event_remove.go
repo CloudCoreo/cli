@@ -13,6 +13,7 @@ import (
 	"github.com/CloudCoreo/cli/client"
 )
 
+//RemoveService removes Azure event stream
 type RemoveService struct {
 	authFile string
 	region   string
@@ -26,6 +27,7 @@ func NewRemoveService(input *NewServiceInput) *RemoveService {
 	}
 }
 
+//RemoveEventStream removes Azure event stream
 func (a *RemoveService) RemoveEventStream(input *client.EventRemoveConfig) error {
 	ctx := context.Background()
 	err := a.removeResourceGroup(ctx, input)

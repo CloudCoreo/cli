@@ -15,6 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 )
 
+//RemoveService contains info needed for AWS event stream removal
 type RemoveService struct {
 	awsProfilePath string
 	awsProfile     string
@@ -78,9 +79,9 @@ func (a *RemoveService) newSession() (*session.Session, error) {
 	return sess, nil
 }
 
-func (a *RemoveService) snsPublish(sess *session.Session, arnType, region, cloudAccountId, topicName string) error {
+func (a *RemoveService) snsPublish(sess *session.Session, arnType, region, cloudAccountID, topicName string) error {
 	svc := sns.New(sess, aws.NewConfig().WithRegion(region))
-	topicArn := fmt.Sprintf("arn:%s:sns:%s:%s:%s", arnType, region, cloudAccountId, topicName)
+	topicArn := fmt.Sprintf("arn:%s:sns:%s:%s:%s", arnType, region, cloudAccountID, topicName)
 	publishInput := &sns.PublishInput{
 		Message:  aws.String("UnsubscribeConfirmation"),
 		TopicArn: aws.String(topicArn),
@@ -96,9 +97,9 @@ func (a *RemoveService) RemoveEventStream(input *client.EventRemoveConfig) error
 	if err != nil {
 		return err
 	}
-	fmt.Println("Deactivating devTime for cloud account", input.CloudAccountId)
+	fmt.Println("Deactivating devTime for cloud account", input.CloudAccountID)
 	for _, region := range regions {
-		err := a.snsPublish(sess, input.ArnType, region, input.CloudAccountId, input.TopicName)
+		err := a.snsPublish(sess, input.ArnType, region, input.CloudAccountID, input.TopicName)
 		if err != nil {
 			fmt.Println(err.Error())
 		}

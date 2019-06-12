@@ -25,7 +25,7 @@ import (
 	"strings"
 )
 
-const cspUrl = "https://console.cloud.vmware.com"
+const cspURL = "https://console.cloud.vmware.com"
 const cspResource = "/csp/gateway/am/api/auth/api-tokens/authorize"
 
 // Auth struct for API and secret key
@@ -62,7 +62,7 @@ func (a *Auth) getCspAuthToken() (*cspToken, error) {
 	data := url.Values{}
 	data.Set("refresh_token", a.RefreshToken)
 
-	url, _ := url.ParseRequestURI(cspUrl)
+	url, _ := url.ParseRequestURI(cspURL)
 	url.Path = cspResource
 
 	req, err := http.NewRequest("POST", url.String(), strings.NewReader(data.Encode()))

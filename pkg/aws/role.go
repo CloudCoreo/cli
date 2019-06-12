@@ -139,6 +139,7 @@ func (c *RoleService) newSession() (*session.Session, error) {
 	return sess, nil
 }
 
+//DetachPolicy removes all policy for the role
 func (c *RoleService) DetachPolicy(roleName, policyArn string) error {
 	sess, err := c.newSession()
 

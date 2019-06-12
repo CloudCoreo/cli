@@ -107,7 +107,7 @@ func TestGetAllResultRuleSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForResult, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/result", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(resultJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/rule", httpmock.NewStringResponder(http.StatusOK, iamInactiveKeyNoRotationRuleOutput))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	var request = &resultRuleRequest{}
@@ -122,7 +122,7 @@ func TestGetAllResultObjectSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForResult, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/result", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(resultJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/object", httpmock.NewStringResponder(http.StatusOK, kmsKeyRotatesObjectOutput))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.getResultObjects(context.Background(), content.None, content.None, "", "", 0)
@@ -135,7 +135,7 @@ func TestGetAllResultRuleFailureNoViolatedRule(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForResult, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/result", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(resultJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/rule", httpmock.NewStringResponder(http.StatusOK, `{"rules":[]}`))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	var request = &resultRuleRequest{}
@@ -151,7 +151,7 @@ func TestGetAllResultRuleFailureBadRequest(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForResult, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/result", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(resultJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/rule", httpmock.NewStringResponder(http.StatusBadRequest, iamInactiveKeyNoRotationRuleOutput))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	var request = &resultRuleRequest{}
@@ -167,7 +167,7 @@ func TestGetAllResultObjectFailureBadRequest(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForResult, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/result", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(resultJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/object", httpmock.NewStringResponder(http.StatusBadRequest, kmsKeyRotatesObjectOutput))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.getResultObjects(context.Background(), content.None, content.None, "", "", 0)
@@ -180,7 +180,7 @@ func TestGetResultRuleSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForResult, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/result", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(resultJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/rule", httpmock.NewStringResponder(http.StatusOK, iamInactiveKeyNoRotationRuleOutput))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.ShowResultRule(context.Background(), "team-id", "account-id", "Medium", "")
@@ -193,7 +193,7 @@ func TestShowResultObjectSuccess(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForResult, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/result", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(resultJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/object", httpmock.NewStringResponder(http.StatusOK, kmsKeyRotatesObjectOutput))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.ShowResultObject(context.Background(), "teamID", "cloudID", "", "", 0)
@@ -206,7 +206,7 @@ func TestGetResultRuleFailureNoViolatedRule(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForResult, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/result", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(resultJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/rule", httpmock.NewStringResponder(http.StatusOK, `{"rules":[]}`))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.ShowResultRule(context.Background(), "team-id", "account-id", "Medium", "")
@@ -220,7 +220,7 @@ func TestShowResultObjectFailureNoViolatedObject(t *testing.T) {
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/me", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(userJSONPayloadForResult, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/users/userID/result", httpmock.NewStringResponder(http.StatusOK, fmt.Sprintf(resultJSONPayload, defaultAPIEndpoint, defaultAPIEndpoint)))
 	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/object", httpmock.NewStringResponder(http.StatusOK, NoObjectOutput))
-	httpmock.RegisterResponder("POST", cspUrl+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
 	_, err := client.ShowResultObject(context.Background(), "teamID", "cloudID", "", "", 0)
