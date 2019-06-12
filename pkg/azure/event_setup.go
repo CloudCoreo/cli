@@ -97,7 +97,7 @@ func (a *SetupService) deployActionGroup(ctx context.Context, input *client.Even
 		"actionGroupName":      map[string]interface{}{"value": input.ActionGroup},
 		"actionGroupShortName": map[string]interface{}{"value": input.ActionGroupShort},
 		"webhookReceiverName":  map[string]interface{}{"value": input.WebhookReceiverName},
-		"webhookServiceUri":    map[string]interface{}{"value": input.WebhookServiceUri},
+		"webhookServiceUri":    map[string]interface{}{"value": input.WebhookServiceURI},
 	}
 	_, err = deploymentsClient.CreateOrUpdate(
 		ctx,
@@ -142,7 +142,7 @@ func (a *SetupService) sendSuccessEvent(input *client.EventStreamConfig) error {
 	//No additional whitespace is allowed in the below string, other with the http request may fail
 	//TODO: Discuss to see whether it needs to be a struct
 	data := fmt.Sprintf("{\"data\": {\"context\": {\"activityLog\": {\"subscriptionId\": \"%s\", \"operationName\": \"AzureStreamReady\"}}}}", input.SubscriptionID)
-	req, err := http.NewRequest("POST", input.WebhookServiceUri, bytes.NewBuffer([]byte(data)))
+	req, err := http.NewRequest("POST", input.WebhookServiceURI, bytes.NewBuffer([]byte(data)))
 	if err != nil {
 		return err
 	}

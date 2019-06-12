@@ -37,7 +37,7 @@ type AzureEventStreamConfig struct {
 	SubscriptionID       string `json:"subscriptionId"`
 	ActionDeployFile     string `json:"actionDeployFile"`
 	AlertDeployFile      string `json:"alertDeployFile"`
-	WebhookServiceUri    string `json:"webhookServiceUri"`
+	WebhookServiceURI    string `json:"webhookServiceUri"`
 	ResourceGroup        string `json:"resourceGroup"`
 	ActionDeploymentName string `json:"actionDeploymentName"`
 	AlertDeploymentName  string `json:"alertDeploymentName"`
@@ -65,7 +65,7 @@ type AWSEventRemoveConfig struct {
 type AzureEventRemoveConfig struct {
 	SubscriptionID    string `json:"subscriptionId"`
 	ResourceGroup     string `json:"resourceGroup"`
-	WebhookServiceUri string `json:"webhookServiceUri"`
+	WebhookServiceURI string `json:"webhookServiceUri"`
 }
 
 //GetSetupConfig get the config for event stream setup from secure state

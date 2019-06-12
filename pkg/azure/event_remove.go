@@ -65,7 +65,7 @@ func (a *RemoveService) getGroupsClient(input *client.EventRemoveConfig) (*resou
 func (a *RemoveService) sendRemoveEvent(input *client.EventRemoveConfig) error {
 	fmt.Println("Sending Event Removal message")
 	data := fmt.Sprintf("{\"data\": {\"context\": {\"activityLog\": {\"subscriptionId\": \"%s\", \"operationName\": \"AzureStreamNotReady\"}}}}", input.SubscriptionID)
-	req, err := http.NewRequest("POST", input.WebhookServiceUri, bytes.NewBuffer([]byte(data)))
+	req, err := http.NewRequest("POST", input.WebhookServiceURI, bytes.NewBuffer([]byte(data)))
 	if err != nil {
 		return err
 	}
