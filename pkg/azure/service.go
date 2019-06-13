@@ -5,11 +5,13 @@ import (
 	"github.com/CloudCoreo/cli/pkg/command"
 )
 
+//NewServiceInput contains the info needed for Azure Event Stream Setup
 type NewServiceInput struct {
 	AuthFile string
 	Region   string
 }
 
+//Service contains setup service and remove service
 type Service struct {
 	setup  *SetupService
 	remove *RemoveService

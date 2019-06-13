@@ -56,6 +56,8 @@ type CreateCloudAccountInput struct {
 	SubscriptionID string
 	Tags           string
 }
+
+//CloudInfo listed all info of cloud accounts
 type CloudInfo struct {
 	Name                string   `json:"name,omitempty"`
 	Arn                 string   `json:"arn,omitempty"`
@@ -111,7 +113,7 @@ type RoleReValidationResult struct {
 //UpdateCloudAccountInput is the info needed for update cloud account
 type UpdateCloudAccountInput struct {
 	CreateCloudAccountInput
-	CloudId string
+	CloudID string
 }
 
 // GetCloudAccounts method for cloud command
@@ -206,16 +208,16 @@ func (c *Client) GetRoleCreationInfo(ctx context.Context, input *CreateCloudAcco
 				return nil, err
 			}
 
-			defaultId := defaultID{}
-			err = c.Do(ctx, "GET", ref.Href, nil, &defaultId)
+			id := defaultID{}
+			err = c.Do(ctx, "GET", ref.Href, nil, &id)
 			if err != nil {
 				return nil, err
 			}
 
 			createNewRoleInfo := &RoleCreationInfo{
 				RoleName:   input.RoleName,
-				ExternalID: input.TeamID + "-" + defaultId.ExternalID,
-				AwsAccount: defaultId.AccountID,
+				ExternalID: input.TeamID + "-" + id.ExternalID,
+				AwsAccount: id.AccountID,
 				Policy:     input.Policy,
 			}
 
@@ -336,7 +338,7 @@ func (c *Client) ReValidateRole(ctx context.Context, teamID, cloudID string) (*R
 //UpdateCloudAccount updates cloud account
 func (c *Client) UpdateCloudAccount(ctx context.Context, input *UpdateCloudAccountInput) (*CloudAccount, error) {
 	result := new(CloudAccount)
-	account, err := c.GetCloudAccountByID(ctx, input.TeamID, input.CloudId)
+	account, err := c.GetCloudAccountByID(ctx, input.TeamID, input.CloudID)
 	if err != nil {
 		return nil, err
 	}
@@ -346,7 +348,7 @@ func (c *Client) UpdateCloudAccount(ctx context.Context, input *UpdateCloudAccou
 		return nil, err
 	}
 
-	updateInfo, err := input.mergeAndGetJson(account)
+	updateInfo, err := input.mergeAndGetJSON(account)
 	if err != nil {
 		return nil, err
 	}
@@ -357,7 +359,7 @@ func (c *Client) UpdateCloudAccount(ctx context.Context, input *UpdateCloudAccou
 	return result, err
 }
 
-func (t *UpdateCloudAccountInput) mergeAndGetJson(account *CloudAccount) ([]byte, error) {
+func (t *UpdateCloudAccountInput) mergeAndGetJSON(account *CloudAccount) ([]byte, error) {
 	updateInfo := t.toCloudPayLoad()
 	err := mergo.Merge(updateInfo, *(account.toCloudPayLoad()))
 	if err != nil {

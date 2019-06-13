@@ -24,6 +24,7 @@ type EventStreamConfig struct {
 	Provider string `json:"provider"`
 }
 
+//AWSEventStreamConfig contains info needed for AWS event stream setup
 type AWSEventStreamConfig struct {
 	TemplateURL     string   `json:"templateURL"`
 	TopicName       string   `json:"topicName"`
@@ -33,11 +34,13 @@ type AWSEventStreamConfig struct {
 	MonitorRule     string   `json:"monitorRule"`
 	Regions         []string `json:"regions"`
 }
+
+//AzureEventStreamConfig contains info needed for Azure event stream setup
 type AzureEventStreamConfig struct {
 	SubscriptionID       string `json:"subscriptionId"`
 	ActionDeployFile     string `json:"actionDeployFile"`
 	AlertDeployFile      string `json:"alertDeployFile"`
-	WebhookServiceUri    string `json:"webhookServiceUri"`
+	WebhookServiceURI    string `json:"webhookServiceUri"`
 	ResourceGroup        string `json:"resourceGroup"`
 	ActionDeploymentName string `json:"actionDeploymentName"`
 	AlertDeploymentName  string `json:"alertDeploymentName"`
@@ -54,18 +57,20 @@ type EventRemoveConfig struct {
 	Provider string `json:"provider"`
 }
 
+//AWSEventRemoveConfig contains info needed for AWS event stream removal
 type AWSEventRemoveConfig struct {
 	StackName      string   `json:"stackName"`
 	TopicName      string   `json:"topicName"`
 	Regions        []string `json:"regions"`
 	ArnType        string   `json:"arnType"`
-	CloudAccountId string   `json:"cloudAccountId"`
+	CloudAccountID string   `json:"cloudAccountId"`
 }
 
+//AzureEventRemoveConfig contains info needed for Azure event stream removal
 type AzureEventRemoveConfig struct {
 	SubscriptionID    string `json:"subscriptionId"`
 	ResourceGroup     string `json:"resourceGroup"`
-	WebhookServiceUri string `json:"webhookServiceUri"`
+	WebhookServiceURI string `json:"webhookServiceUri"`
 }
 
 //GetSetupConfig get the config for event stream setup from secure state
