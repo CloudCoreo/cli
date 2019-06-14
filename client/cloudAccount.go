@@ -77,6 +77,7 @@ type CloudInfo struct {
 	Tags                []string `json:"tags,omitempty"`
 	IsValid             bool     `json:"isValid"`
 	LastValidationCheck string   `json:"lastValidationCheck"`
+	TeamID              string   `json:"teamId"`
 }
 
 // CloudPayLoad ...
@@ -261,6 +262,7 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 					ApplicationID:  input.ApplicationID,
 					DirectoryID:    input.DirectoryID,
 					SubscriptionID: input.SubscriptionID,
+					TeamID:         input.TeamID,
 				},
 			}
 			if input.Environment != "" {
