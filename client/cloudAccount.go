@@ -180,6 +180,7 @@ func (c *Client) sendCloudCreateRequest(ctx context.Context, input *sendCloudCre
 	cloudAccount := &CloudAccount{}
 	cloudPayLoad := CloudPayLoad{
 		CloudInfo: input.CloudInfo,
+		TeamID:    input.TeamID,
 	}
 
 	jsonStr, err := json.Marshal(cloudPayLoad)
