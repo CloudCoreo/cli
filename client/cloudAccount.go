@@ -77,13 +77,12 @@ type CloudInfo struct {
 	Tags                []string `json:"tags,omitempty"`
 	IsValid             bool     `json:"isValid"`
 	LastValidationCheck string   `json:"lastValidationCheck"`
-	TeamID              string   `json:"teamId"`
 }
 
 // CloudPayLoad ...
 type CloudPayLoad struct {
 	CloudInfo
-	TeamID string `json:"teamId"`
+	TeamID string `json:"teamId,omitempty"`
 }
 
 type sendCloudCreateRequestInput struct {
@@ -180,7 +179,6 @@ func (c *Client) sendCloudCreateRequest(ctx context.Context, input *sendCloudCre
 	cloudAccount := &CloudAccount{}
 	cloudPayLoad := CloudPayLoad{
 		CloudInfo: input.CloudInfo,
-		TeamID:    input.TeamID,
 	}
 
 	jsonStr, err := json.Marshal(cloudPayLoad)
@@ -263,7 +261,6 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 					ApplicationID:  input.ApplicationID,
 					DirectoryID:    input.DirectoryID,
 					SubscriptionID: input.SubscriptionID,
-					TeamID:         input.TeamID,
 				},
 			}
 			if input.Environment != "" {
