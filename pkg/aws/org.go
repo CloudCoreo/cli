@@ -23,6 +23,7 @@ type OrgService struct {
 	awsProfile      string
 }
 
+//NewOrgService contains info needed for org setup
 func NewOrgService(input *NewServiceInput) (awsService *OrgService) {
 	return &OrgService{
 		duration:        input.Duration,

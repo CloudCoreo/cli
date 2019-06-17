@@ -13,6 +13,7 @@ import (
 	"github.com/CloudCoreo/cli/client"
 )
 
+//RemoveService removes Azure event stream
 type RemoveService struct {
 	authFile string
 	region   string
@@ -26,6 +27,7 @@ func NewRemoveService(input *NewServiceInput) *RemoveService {
 	}
 }
 
+//RemoveEventStream removes Azure event stream
 func (a *RemoveService) RemoveEventStream(input *client.EventRemoveConfig) error {
 	ctx := context.Background()
 	err := a.removeResourceGroup(ctx, input)
@@ -65,7 +67,7 @@ func (a *RemoveService) getGroupsClient(input *client.EventRemoveConfig) (*resou
 func (a *RemoveService) sendRemoveEvent(input *client.EventRemoveConfig) error {
 	fmt.Println("Sending Event Removal message")
 	data := fmt.Sprintf("{\"data\": {\"context\": {\"activityLog\": {\"subscriptionId\": \"%s\", \"operationName\": \"AzureStreamNotReady\"}}}}", input.SubscriptionID)
-	req, err := http.NewRequest("POST", input.WebhookServiceUri, bytes.NewBuffer([]byte(data)))
+	req, err := http.NewRequest("POST", input.WebhookServiceURI, bytes.NewBuffer([]byte(data)))
 	if err != nil {
 		return err
 	}

@@ -105,7 +105,7 @@ func (t *cloudUpdateCmd) run() error {
 			Policy:      t.policy,
 			Tags:        t.tags,
 		},
-		CloudId: t.cloudID,
+		CloudID: t.cloudID,
 	}
 
 	if t.roleName != "" {

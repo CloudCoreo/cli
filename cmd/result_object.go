@@ -37,6 +37,7 @@ type resultObjectCmd struct {
 	retry    uint
 }
 
+//Object is violation by objects
 type Object struct {
 	ID string `json:"objectName"`
 	client.Info
@@ -46,6 +47,7 @@ type Object struct {
 	Region    string `json:"region"`
 }
 
+//ObjectWrapper contains info other than object details
 type ObjectWrapper struct {
 	AccountName   string   `json:"accountName,omitempty"`
 	AccountNumber string   `json:"accountNumber,omitempty"`
