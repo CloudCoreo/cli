@@ -395,7 +395,6 @@ func (t *UpdateCloudAccountInput) toCloudPayLoad() *CloudPayLoad {
 			Name:           t.CloudName,
 			Arn:            t.RoleArn,
 			ScanEnabled:    t.ScanEnabled,
-			ScanInterval:   "Daily",
 			ScanRegion:     "All",
 			ExternalID:     t.ExternalID,
 			IsDraft:        t.IsDraft,
