@@ -251,7 +251,6 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 					Name:           input.CloudName,
 					Arn:            input.RoleArn,
 					ScanEnabled:    true,
-					ScanInterval:   "Daily",
 					ScanRegion:     "All",
 					IsDraft:        input.IsDraft,
 					Provider:       input.Provider,
@@ -268,6 +267,13 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 			}
 			if input.Tags != "" {
 				cloudCreateInput.Tags = strings.Split(input.Tags, "|")
+			}
+			if input.Provider == "AWS" {
+				cloudCreateInput.ScanInterval = "Weekly"
+			} else if input.Provider == "Azure" {
+				cloudCreateInput.ScanInterval = "Daily"
+			} else {
+				return nil, NewError("Unsupported CloudAccount type")
 			}
 			cloudAccount, err = c.sendCloudCreateRequest(ctx, cloudCreateInput)
 			if err != nil {
