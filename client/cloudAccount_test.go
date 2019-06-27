@@ -323,6 +323,7 @@ func TestCreateCloudAccountSuccess(t *testing.T) {
 		TeamID:      "teamID",
 		RoleArn:     "roleArn",
 		Environment: "Product",
+		Provider:    "AWS",
 	})
 	assert.Nil(t, err, "CreateCloudAccount shouldn't return error.")
 
