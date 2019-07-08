@@ -121,12 +121,14 @@ func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level, p
 		fmt.Fprintln(os.Stderr, err.Error())
 	}
 	for _, account := range accounts {
+		if account.IsDraft {
+			continue
+		}
 		result, err := c.getResultObjects(ctx, teamID, account.ID, level, provider, retry)
 		if err != nil {
 			return nil, err
 		}
 		res = append(res, result)
-
 	}
 
 	return res, nil
