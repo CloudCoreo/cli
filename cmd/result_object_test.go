@@ -14,20 +14,18 @@ const kmsKeyRotatesObjectOutput = `[
 		"totalItems": 200,
 		"violations": [
 			{
-				"objectName": "fake-id1",
-				"suggestedAction": "fake-suggestion",
-				"link": "fake-link",
-				"description": "fake description",
-				"displayName": "fake-display-name",
-				"level": "Medium",
-				"service": "kms",
-				"name": "fake-name",
-				"include_violations_in_count": true,
-				"lastUpdateTime": "2018-10-11T17:21:55.111+00:00",
-				"riskScore": 0,
-				"teamName": "fake-team-name",
-				"teamID": "fake-team-id",
-				"region": "us-east-1"
+				"ObjectName": "fake-id1",
+				"SuggestedAction": "fake-suggestion",
+				"KnowledgeBase": "fake-link",
+				"RuleDescription": "fake description",
+				"Name": "fake-display-name",
+				"Severity": "um",
+				"RuleService": "kms",
+				"RuleName": "fake-name",
+				"RiskScore": 0,
+				"RiskScoreSum": 0,
+				"TeamName": "fake-team-name",
+				"FindingRegion": "us-east-1"
 			}
 		]
 	}
@@ -39,20 +37,18 @@ const iamInactiveKeyNoRotationObjectOutput = `[
 		"totalItems": 100,
 		"violations": [
 			{
-				"objectName": "fake-id2",
-				"suggestedAction": "fake-suggestion",
-				"link": "fake-link",
-				"description": "fake description",
-				"displayName": "fake-display-name",
-				"level": "Medium",
-				"service": "iam",
-				"name": "fake-name",
-				"include_violations_in_count": true,
-				"lastUpdateTime": "2018-10-11T17:21:54.448+00:00",
-				"riskScore": 0,
-				"teamName": "fake-team-name",
-				"teamID": "fake-team-id",
-				"region": "us-west-2"
+				"ObjectName": "fake-id2",
+				"SuggestedAction": "fake-suggestion",
+				"KnowledgeBase": "fake-link",
+				"RuleDescription": "fake description",
+				"Name": "fake-display-name",
+				"Severity": "Medium",
+				"RuleService": "iam",
+				"RuleName": "fake-name",
+				"RiskScore": 0,
+				"RiskScoreSum": 0,
+				"TeamName": "fake-team-name",
+				"FindingRegion": "us-west-2"
 			}
 		]
 	}
@@ -63,10 +59,10 @@ func TestResultObjectCmd(t *testing.T) {
 	mockObject := func(id string, info client.Info,
 		tInfo client.TeamInfo, region string) *client.ResultObject {
 		return &client.ResultObject{
-			ID:     id,
-			Info:   info,
-			TInfo:  tInfo,
-			Region: region,
+			ObjectID: id,
+			Info:     info,
+			TInfo:    tInfo,
+			Region:   region,
 		}
 	}
 
@@ -93,13 +89,13 @@ func TestResultObjectCmd(t *testing.T) {
 				mockObject(
 					"fake-id1",
 					client.Info{
-						SuggestedAction: "fake-suggestion",
-						Link:            "fake-link",
-						Description:     "fake description",
-						DisplayName:     "fake-display-name",
-						Level:           "Medium",
-						Service:         "kms",
-						Name:            "fake-name",
+						SuggestedAction:          "fake-suggestion",
+						Link:                     "fake-link",
+						Description:              "fake description",
+						DisplayName:              "fake-display-name",
+						Level:                    "um",
+						Service:                  "kms",
+						RuleName:                 "fake-name",
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:55.111+00:00",
 					},
@@ -119,13 +115,13 @@ func TestResultObjectCmd(t *testing.T) {
 				mockObject(
 					"fake-id2",
 					client.Info{
-						SuggestedAction: "fake-suggestion",
-						Link:            "fake-link",
-						Description:     "fake description",
-						DisplayName:     "fake-display-name",
-						Level:           "Medium",
-						Service:         "iam",
-						Name:            "fake-name",
+						SuggestedAction:          "fake-suggestion",
+						Link:                     "fake-link",
+						Description:              "fake description",
+						DisplayName:              "fake-display-name",
+						Level:                    "Medium",
+						Service:                  "iam",
+						RuleName:                 "fake-name",
 						IncludeViolationsInCount: true,
 						TimeStamp:                "2018-10-11T17:21:54.448+00:00",
 					},

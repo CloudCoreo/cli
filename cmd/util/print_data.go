@@ -15,6 +15,7 @@
 package util
 
 import (
+	"bytes"
 	"reflect"
 
 	"encoding/json"
@@ -165,13 +166,17 @@ func PrettyPrintJSON(obj interface{}) {
 
 // PrettyJSON return pretty json
 func PrettyJSON(obj interface{}) string {
-	jsonData, err := json.MarshalIndent(obj, "", "\t")
+	buf := new(bytes.Buffer)
+	encoder := json.NewEncoder(buf)
+	encoder.SetEscapeHTML(false)
+	encoder.SetIndent("", "\t")
+	err := encoder.Encode(obj)
 	if err != nil {
 		fmt.Printf("Error: %s", err)
 		return ""
 	}
 
-	return string(jsonData)
+	return string(buf.String())
 }
 
 //PrintError print error
