@@ -72,6 +72,6 @@ func (t *resultRuleCmd) run() error {
 	for i := range res {
 		b[i] = res[i]
 	}
-	fmt.Fprintln(t.out, util.PrettyJSON(b))
+	fmt.Fprint(t.out, util.PrettyJSON(b))
 	return nil
 }
