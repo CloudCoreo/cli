@@ -19,6 +19,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/url"
 	"os"
 	"strings"
 
@@ -44,7 +45,7 @@ type Info struct {
 	DisplayName              string `json:"displayName"`
 	Level                    string `json:"level"`
 	Service                  string `json:"service"`
-	Name                     string `json:"name"`
+	RuleName                 string `json:"name"`
 	IncludeViolationsInCount bool   `json:"include_violations_in_count"`
 	TimeStamp                string `json:"lastUpdateTime,omitempty"`
 }
@@ -61,17 +62,20 @@ type ResultRule struct {
 
 // The ResultObject struct decodes json file returned by webapp
 type ResultObject struct {
-	ID        string   `json:"id"`
-	Info      Info     `json:"ruleInfo"`
-	TInfo     TeamInfo `json:"team"`
-	RiskScore int      `json:"riskScore"`
-	Region    string   `json:"region"`
+	ID           string   `json:"id"`
+	ObjectID     string   `json:"objectId"`
+	Info         Info     `json:"ruleInfo"`
+	TInfo        TeamInfo `json:"team"`
+	RiskScore    int      `json:"riskScore"`
+	RiskScoreSum int      `json:"riskScoreSum"`
+	Region       string   `json:"region"`
 }
 
 // ResultObjectWrapper contains an object array and number of total items
 type ResultObjectWrapper struct {
 	AccountName   string          `json:"accountName,omitempty"`
 	AccountNumber string          `json:"accountNumber,omitempty"`
+	Provider      string          `json:"provider,omitempty"`
 	TotalItems    int             `json:"totalCount"`
 	Objects       []*ResultObject `json:"violations"`
 	ScrollID      string          `json:"continuationToken,omitempty"`
@@ -121,12 +125,14 @@ func (c *Client) ShowResultObject(ctx context.Context, teamID, cloudID, level, p
 		fmt.Fprintln(os.Stderr, err.Error())
 	}
 	for _, account := range accounts {
+		if account.IsDraft {
+			continue
+		}
 		result, err := c.getResultObjects(ctx, teamID, account.ID, level, provider, retry)
 		if err != nil {
 			return nil, err
 		}
 		res = append(res, result)
-
 	}
 
 	return res, nil
@@ -233,6 +239,7 @@ func (c *Client) getResultObjects(ctx context.Context, teamID, cloudID, level, p
 		if account != nil {
 			wrapper.AccountNumber = account.AccountID
 			wrapper.AccountName = account.Name
+			wrapper.Provider = account.Provider
 		}
 	}
 	return wrapper, nil
@@ -325,4 +332,20 @@ func (c *Client) getAllResultRule(ctx context.Context, request *resultRuleReques
 		return nil, NewError("No violated rule")
 	}
 	return rules, nil
+}
+
+func (object *ResultObject) GenerateUrl(apiEndpoint string) (string, error) {
+	baseUrl, err := url.Parse(apiEndpoint[:len(apiEndpoint)-4] + "/main/violations/objects/")
+	if err != nil {
+		fmt.Println("Malformed API endpoint: ", err.Error())
+		return "", err
+	}
+	// objectId := "arn:aws:guardduty:us-east-1:530342348278:detector/e4b0053cb658f0a143d71501f5da8b7d/finding/b8b4960cbfb2026f8aa56cba6945011a"
+	baseUrl.Path += url.QueryEscape(object.ObjectID)
+	params := url.Values{}
+	params.Add("ruleId", object.Info.RuleName)
+	params.Add("fid", object.ID)
+
+	baseUrl.RawQuery = params.Encode()
+	return baseUrl.String(), nil
 }

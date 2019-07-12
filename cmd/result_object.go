@@ -39,18 +39,27 @@ type resultObjectCmd struct {
 
 //Object is violation by objects
 type Object struct {
-	ID string `json:"objectName"`
-	client.Info
-	RiskScore int    `json:"riskScore"`
-	TeamName  string `json:"teamName"`
-	TeamID    string `json:"teamID"`
-	Region    string `json:"region"`
+	ObjectID        string `json:"ObjectName"`
+	SuggestedAction string `json:"SuggestedAction"`
+	Link            string `json:"Link,omitempty"`
+	KnowledgeBase   string `json:"KnowledgeBase"`
+	RuleDescription string `json:"RuleDescription"`
+	DisplayName     string `json:"Name"`
+	Level           string `json:"Severity"`
+	Service         string `json:"RuleService"`
+	RuleName        string `json:"RuleName"`
+	// TimeStamp       string `json:"lastUpdateTime,omitempty"`
+	RiskScore    int    `json:"RiskScore"`
+	RiskScoreSum int    `json:"RiskScoreSum"`
+	TeamName     string `json:"TeamName"`
+	Region       string `json:"FindingRegion"`
 }
 
 //ObjectWrapper contains info other than object details
 type ObjectWrapper struct {
-	AccountName   string   `json:"accountName,omitempty"`
-	AccountNumber string   `json:"accountNumber,omitempty"`
+	AccountName   string   `json:"CloudAccountName,omitempty"`
+	AccountNumber string   `json:"CloudAccountId,omitempty"`
+	Provider      string   `json:"CloudProvider,omitempty"`
 	TotalItems    int      `json:"totalItems"`
 	Objects       []Object `json:"violations"`
 }
@@ -97,17 +106,31 @@ func (t *resultObjectCmd) prettyPrintObjects(wrappers []*client.ResultObjectWrap
 	for i, wrapper := range wrappers {
 		result[i].AccountName = wrapper.AccountName
 		result[i].AccountNumber = wrapper.AccountNumber
+		result[i].Provider = wrapper.Provider
 		result[i].TotalItems = wrapper.TotalItems
 		result[i].Objects = make([]Object, len(wrapper.Objects))
 		for j, object := range wrapper.Objects {
 			result[i].Objects[j].TeamName = object.TInfo.Name
-			result[i].Objects[j].TeamID = object.TInfo.ID
 			result[i].Objects[j].RiskScore = object.RiskScore
-			result[i].Objects[j].ID = object.ID
-			result[i].Objects[j].Info = object.Info
+			result[i].Objects[j].RiskScoreSum = object.RiskScoreSum
+			result[i].Objects[j].ObjectID = object.ObjectID
+			result[i].Objects[j].SuggestedAction = object.Info.SuggestedAction
+			result[i].Objects[j].KnowledgeBase = object.Info.Link
+			result[i].Objects[j].RuleDescription = object.Info.Description
+			result[i].Objects[j].DisplayName = object.Info.DisplayName
+			result[i].Objects[j].Level = object.Info.Level
+			result[i].Objects[j].Service = object.Info.Service
+			result[i].Objects[j].RuleName = object.Info.RuleName
+			/*
+				var err error
+				result[i].Objects[j].Link, err = object.GenerateUrl(apiEndpoint)
+				if err != nil {
+					return err
+				}
+			*/
 			result[i].Objects[j].Region = object.Region
 		}
 	}
-	_, err := fmt.Fprintln(t.out, util.PrettyJSON(result))
+	_, err := fmt.Fprint(t.out, util.PrettyJSON(result))
 	return err
 }
