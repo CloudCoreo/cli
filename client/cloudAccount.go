@@ -69,7 +69,7 @@ type CloudInfo struct {
 	Provider            string   `json:"provider"`
 	Email               string   `json:"email,omitempty"`
 	UserName            string   `json:"username,omitempty"`
-	Environment         []string `json:"environment,omitempty"`
+	Environment         string   `json:"environment,omitempty"`
 	KeyValue            string   `json:"key,omitempty"`
 	ApplicationID       string   `json:"appId,omitempty"`
 	DirectoryID         string   `json:"directoryId,omitempty"`
@@ -260,10 +260,8 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 					ApplicationID:  input.ApplicationID,
 					DirectoryID:    input.DirectoryID,
 					SubscriptionID: input.SubscriptionID,
+					Environment:    input.Environment,
 				},
-			}
-			if input.Environment != "" {
-				cloudCreateInput.Environment = []string{input.Environment}
 			}
 			if input.Tags != "" {
 				cloudCreateInput.Tags = strings.Split(input.Tags, "|")
@@ -375,9 +373,7 @@ func (t *UpdateCloudAccountInput) mergeAndGetJSON(account *CloudAccount) ([]byte
 	updateInfo.IsDraft = t.IsDraft
 	// Add teamID to pass webapp check for cloud account creation
 	updateInfo.TeamID = t.TeamID
-	if t.Environment != "" {
-		updateInfo.Environment = []string{t.Environment}
-	}
+	updateInfo.Environment = t.Environment
 	if t.Tags != "" {
 		updateInfo.Tags = strings.Split(t.Tags, "|")
 	}
