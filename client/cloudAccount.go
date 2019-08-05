@@ -138,6 +138,11 @@ func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]*CloudA
 			if err != nil {
 				return nil, NewError(err.Error())
 			}
+			for _, account := range clouds {
+				if account.Provider == "Azure" {
+					account.AccountID = account.SubscriptionID
+				}
+			}
 		}
 	}
 
@@ -283,6 +288,9 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 	}
 	if cloudAccount.ID == "" {
 		return nil, NewError(fmt.Sprintf(content.ErrorFailedToCreateCloudAccount, input.TeamID))
+	}
+	if cloudAccount.Provider == "Azure" {
+		cloudAccount.AccountID = cloudAccount.SubscriptionID
 	}
 	return cloudAccount, nil
 }
