@@ -1,6 +1,6 @@
 #!/bin/bash
 # account name, account id, environment, profile
-# To use this script, execute `sh cloud_add.sh < input_file` in Terminal
+# To use this script, execute `sh cloud_add_wrapper.sh < input_file` in Terminal
 # This script assumes account name is unique, so you can run it multiple times if adding any account fails.
 IFS=", "
 team_id="YOUR_TEAM_ID"
