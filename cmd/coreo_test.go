@@ -23,8 +23,6 @@ type fakeReleaseClient struct {
 	teams            []*client.Team
 	tokens           []*client.Token
 	cloudAccounts    []*client.CloudAccount
-	objects          *client.ResultObjectWrapper
-	rules            []*client.ResultRule
 	config           client.EventStreamConfig
 	err              error
 	info             client.RoleCreationInfo
@@ -105,16 +103,6 @@ func (c *fakeReleaseClient) CreateCloudAccount(input *client.CreateCloudAccountI
 
 func (c *fakeReleaseClient) DeleteCloudAccountByID(teamID, cloudID string) error {
 	return c.err
-}
-
-func (c *fakeReleaseClient) ShowResultRule(teamID, cloudID, level, provider string) ([]*client.ResultRule, error) {
-	resp := c.rules
-	return resp, c.err
-}
-
-func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level, provider string, retry uint) ([]*client.ResultObjectWrapper, error) {
-	resp := []*client.ResultObjectWrapper{c.objects}
-	return resp, c.err
 }
 
 func (c *fakeReleaseClient) GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error) {
