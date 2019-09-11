@@ -94,7 +94,7 @@ The most commonly used VSS commands are:
 |cloud     | Manage your cloud accounts                    | add, delete, list, scan, show, update, test|
 |configure | Configure CLI options. You may also view your current configuration using 'list' subcommand| list|
 |team      | Manage your team                              | add, list, show|
-|result    | Get violation results                         | rule, object|
+|result    | Get violation results (Deprecated, please follow the link to swagger API doc 'https://api.securestate.vmware.com')  | rule, object|
 |token     | Manage your api tokens                        | delete, list, show|
 |completion| Generate bash autocompletions script|
 |event     | Manage event stream                           | setup|
@@ -257,7 +257,7 @@ Manage Teams
         * `vss team show [flags]`        
 
 #### result
-Show violation results
+Show violation results (Deprecated, please follow the link to swagger API doc 'https://api.securestate.vmware.com'
 * object
     * Usage
         * `vss result object [flags]`

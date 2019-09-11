@@ -19,36 +19,26 @@ const (
 	CmdResultUse = "result"
 
 	//CmdResultShort ...
-	CmdResultShort = "Show the violation results"
+	CmdResultShort = "Show the violation results (Deprecated, please follow the link to swagger API doc https://api.securestate.vmware.com)"
 
 	//CmdResultLong ...
-	CmdResultLong = "Show the violation results"
+	CmdResultLong = "Show the violation results (Deprecated, please follow the link to swagger API doc https://api.securestate.vmware.com)"
 
 	//CmdResultRuleUse ...
 	CmdResultRuleUse = "rule"
 
 	//CmdResultRuleShort ...
-	CmdResultRuleShort = "Show violating rules"
+	CmdResultRuleShort = "Show violating rules (Deprecated)"
 
 	//CmdResultRuleLong ...
-	CmdResultRuleLong = "Show violating rules"
+	CmdResultRuleLong = "Show violating rules (Deprecated)"
 
 	//CmdResultObjectUse ...
 	CmdResultObjectUse = "object"
 
 	//CmdResultObjectShort ...
-	CmdResultObjectShort = "Show violating objects"
+	CmdResultObjectShort = "Show violating objects (Deprecated)"
 
 	//CmdResultObjectLong ...
-	CmdResultObjectLong = "Show violating objects"
-
-	//CmdResultRuleExample ...
-	CmdResultRuleExample = `  vss result rule --severity "High|Medium"
-  vss result rule --severity "High|Low"
-  vss result rule --cloud-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
-
-	//CmdResultObjectExample ...
-	CmdResultObjectExample = `vss result object --severity "High|Medium"
-  vss result object --severity "High|Low"
-  vss result object --cloud-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
+	CmdResultObjectLong = "Show violating objects (Deprecated)"
 )
