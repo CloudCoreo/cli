@@ -1,8 +1,9 @@
 #!/bin/bash
-# account name, account id, environment, profile
+# input file format: account name,account id,environment,profile
 # To use this script, execute `sh cloud_add.sh < input_file` in Terminal
+# You may customize this script by modifying line 10, 23, 26, 27
 # This script assumes account name is unique, so you can run it multiple times if adding any account fails.
-IFS=", "
+IFS=","
 team_id="YOUR_TEAM_ID"
 role_name="securestate_role"
 accounts=$(vss cloud list --json --team-id $team_id | jq -r .[].name)
