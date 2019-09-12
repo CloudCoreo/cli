@@ -17,7 +17,6 @@ type cloudScanCmd struct {
 	out             io.Writer
 	awsProfile      string
 	awsProfilePath  string
-	roleArn         string
 	client          command.Interface
 	cloud           command.CloudProvider
 	policy          string
@@ -48,7 +47,6 @@ func newCloudScanCmd(client command.Interface, out io.Writer) *cobra.Command {
 				newServiceInput := &aws.NewServiceInput{
 					AwsProfile:      cloudScan.awsProfile,
 					AwsProfilePath:  cloudScan.awsProfilePath,
-					RoleArn:         cloudScan.roleArn,
 					Policy:          cloudScan.policy,
 					RoleSessionName: cloudScan.roleSessionName,
 					Duration:        cloudScan.duration,
@@ -61,7 +59,6 @@ func newCloudScanCmd(client command.Interface, out io.Writer) *cobra.Command {
 		},
 	}
 	f := cmd.Flags()
-	f.StringVarP(&cloudScan.roleArn, content.CmdFlagRoleArn, "", "", content.CmdFlagRoleArnDescription)
 	f.StringVarP(&cloudScan.policy, content.CmdFlagAwsAssumeRolePolicy, "", "", content.CmdFlagAwsAssumeRolePolicyDescription)
 	f.StringVarP(&cloudScan.roleSessionName, content.CmdFlagRoleSessionName, "", "", content.CmdFlagRoleSessionNameDescription)
 	f.Int64Var(&cloudScan.duration, content.CmdFlagDuration, 3600, content.CmdFlagDurationDescription)

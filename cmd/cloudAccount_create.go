@@ -91,8 +91,6 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 				newServiceInput := &aws.NewServiceInput{
 					AwsProfile:     cloudCreate.awsProfile,
 					AwsProfilePath: cloudCreate.awsProfilePath,
-					RoleArn:        cloudCreate.awsRoleArn,
-					ExternalID:     cloudCreate.awsExternalID,
 				}
 				cloudCreate.cloud = aws.NewService(newServiceInput)
 			}
@@ -116,8 +114,6 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&cloudCreate.email, content.CmdFlagEmail, "", "", content.CmdFlagEmailDescription)
 	f.StringVarP(&cloudCreate.userName, content.CmdFlagUserName, "", "", content.CmdFlagUserNameDescription)
 	f.StringVarP(&cloudCreate.environment, content.CmdFlagEnvironmentLong, content.CmdFlagEnvironmentShort, "", content.CmdFlagEnvironmentDescription)
-	f.StringVarP(&cloudCreate.awsRoleArn, content.CmdFlagAwsRoleArn, "", "", content.CmdFlagAwsRoleArnDescription)
-	f.StringVarP(&cloudCreate.awsExternalID, content.CmdFlagAwsExternalID, "", "", content.CmdFlagAwsExternalIDDescription)
 	f.StringVarP(&cloudCreate.provider, content.CmdFlagProvider, "", "AWS", content.CmdFlagProviderDescription)
 	f.StringVarP(&cloudCreate.keyValue, content.CmdFlagKeyValue, "", "", content.CmdFlagKeyValueDescription)
 	f.StringVarP(&cloudCreate.applicationID, content.CmdFlagApplicationID, "", "", content.CmdFlagApplicationIDDescription)

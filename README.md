@@ -154,8 +154,6 @@ Manage Cloud Accounts
         | key |--key-value| Key is required for adding Azure cloud accounts
         | subscription id |--subscription-id| Subscription ID is required for adding Azure cloud accounts |
         | directory id |--directory-id| Directory ID is required for adding Azure Cloud Accounts |
-        |aws role arn| --aws-role-arn| The arn of the role you'd like to assume|
-        |aws external id|--aws-external-id |The external id of the role you'd like to assume|
         | cloud account tags| --tags| Cloud account tags|
         
     * You need to either use your own role or let CLI create one for you. 
@@ -173,6 +171,8 @@ Manage Cloud Accounts
         |Variable | Option | Description |
         | ------ | ------ | :-------- |
         | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to delete, this flag is required|
+        | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
+        | aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
 * list
     * Usage
         *  `vss cloud list [flags]`
@@ -330,8 +330,6 @@ Manage event stream
         |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
         | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to add event stream for, this flag is required|
         |ignore-missing-trails|--ignore-missing-trails| With this flag, CLI will skip regions of which CloudTrail in not enables and continue on other regions.|
-        |aws role arn| --aws-role-arn| The arn of the role you'd like to assume|
-        |aws external id|--aws-external-id |The external id of the role you'd like to assume|
 
 * remove
     * Usage 
@@ -343,8 +341,6 @@ Manage event stream
         | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
         |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
         | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to remove event stream for, this flag is required|
-        |aws role arn| --aws-role-arn| The arn of the role you'd like to assume|
-        |aws external id|--aws-external-id |The external id of the role you'd like to assume|
         
 #### help
 Help about any command

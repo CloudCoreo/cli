@@ -27,8 +27,6 @@ type eventRemoveCmd struct {
 	awsProfilePath string
 	cloudID        string
 	teamID         string
-	awsRoleArn     string
-	awsExternalID  string
 	authFile       string
 	region         string
 }
@@ -64,8 +62,6 @@ func newEventRemoveCmd(client command.Interface, provider command.CloudProvider,
 	f.StringVarP(&eventRemove.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&eventRemove.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	f.StringVarP(&eventRemove.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
-	f.StringVarP(&eventRemove.awsRoleArn, content.CmdFlagAwsRoleArn, "", "", content.CmdFlagAwsRoleArnDescription)
-	f.StringVarP(&eventRemove.awsExternalID, content.CmdFlagAwsExternalID, "", "", content.CmdFlagAwsExternalIDDescription)
 	f.StringVarP(&eventRemove.authFile, content.CmdEventAuthFile, "", "", content.CmdEventAuthFileDescription)
 	f.StringVarP(&eventRemove.region, content.CmdEventRegion, "", "eastus", content.CmdEventRegionDescription)
 
@@ -82,8 +78,6 @@ func (t *eventRemoveCmd) run() error {
 			newServiceInput := &aws.NewServiceInput{
 				AwsProfile:     t.awsProfile,
 				AwsProfilePath: t.awsProfilePath,
-				RoleArn:        t.awsRoleArn,
-				ExternalID:     t.awsExternalID,
 			}
 			t.cloud = aws.NewService(newServiceInput)
 		} else if config.Provider == "Azure" {

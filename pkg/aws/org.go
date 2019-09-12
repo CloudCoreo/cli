@@ -28,7 +28,6 @@ func NewOrgService(input *NewServiceInput) (awsService *OrgService) {
 	return &OrgService{
 		duration:        input.Duration,
 		policy:          input.Policy,
-		roleArn:         input.RoleArn,
 		roleSessionName: input.RoleSessionName,
 		awsProfile:      input.AwsProfile,
 		awsProfilePath:  input.AwsProfilePath,

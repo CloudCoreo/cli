@@ -19,10 +19,8 @@ type Service struct {
 type NewServiceInput struct {
 	AwsProfile          string
 	AwsProfilePath      string
-	RoleArn             string
 	Policy              string
 	RoleSessionName     string
-	ExternalID          string
 	Duration            int64
 	IgnoreMissingTrails bool
 }
