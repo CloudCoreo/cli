@@ -4,13 +4,11 @@ import (
 	"fmt"
 
 	"github.com/CloudCoreo/cli/client"
-	"github.com/CloudCoreo/cli/pkg/command"
 )
 
 // Service contains three aws service groups
 type Service struct {
 	setup  *SetupService
-	org    *OrgService
 	role   *RoleService
 	remove *RemoveService
 }
@@ -19,10 +17,8 @@ type Service struct {
 type NewServiceInput struct {
 	AwsProfile          string
 	AwsProfilePath      string
-	RoleArn             string
 	Policy              string
 	RoleSessionName     string
-	ExternalID          string
 	Duration            int64
 	IgnoreMissingTrails bool
 }
@@ -31,7 +27,6 @@ type NewServiceInput struct {
 func NewService(input *NewServiceInput) *Service {
 	return &Service{
 		setup:  NewSetupService(input),
-		org:    NewOrgService(input),
 		role:   NewRoleService(input),
 		remove: NewRemoveService(input),
 	}
@@ -40,11 +35,6 @@ func NewService(input *NewServiceInput) *Service {
 // SetupEventStream calls the SetupEventStream function in SetupService
 func (s *Service) SetupEventStream(input *client.EventStreamConfig) error {
 	return s.setup.SetupEventStream(input)
-}
-
-// GetOrgTree calls the GetOrganizationTree function in OrgService
-func (s *Service) GetOrgTree() ([]*command.TreeNode, error) {
-	return s.org.GetOrganizationTree()
 }
 
 // CreateNewRole calls the CreateNewRole function in RoleService

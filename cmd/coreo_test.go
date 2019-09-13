@@ -16,15 +16,12 @@ package main
 
 import (
 	"github.com/CloudCoreo/cli/client"
-	"github.com/CloudCoreo/cli/pkg/command"
 )
 
 type fakeReleaseClient struct {
 	teams            []*client.Team
 	tokens           []*client.Token
 	cloudAccounts    []*client.CloudAccount
-	objects          *client.ResultObjectWrapper
-	rules            []*client.ResultRule
 	config           client.EventStreamConfig
 	err              error
 	info             client.RoleCreationInfo
@@ -107,16 +104,6 @@ func (c *fakeReleaseClient) DeleteCloudAccountByID(teamID, cloudID string) error
 	return c.err
 }
 
-func (c *fakeReleaseClient) ShowResultRule(teamID, cloudID, level, provider string) ([]*client.ResultRule, error) {
-	resp := c.rules
-	return resp, c.err
-}
-
-func (c *fakeReleaseClient) ShowResultObject(teamID, cloudID, level, provider string, retry uint) ([]*client.ResultObjectWrapper, error) {
-	resp := []*client.ResultObjectWrapper{c.objects}
-	return resp, c.err
-}
-
 func (c *fakeReleaseClient) GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error) {
 	return &client.EventStreamConfig{
 		AWSEventStreamConfig: client.AWSEventStreamConfig{Regions: c.regions},
@@ -154,17 +141,11 @@ type fakeCloudProvider struct {
 	err        error
 	arn        string
 	externalID string
-	root       command.TreeNode
 }
 
 func (c *fakeCloudProvider) SetupEventStream(input *client.EventStreamConfig) error {
 
 	return c.err
-}
-
-func (c *fakeCloudProvider) GetOrgTree() ([]*command.TreeNode, error) {
-	resp := []*command.TreeNode{&c.root}
-	return resp, c.err
 }
 
 func (c *fakeCloudProvider) CreateNewRole(input *client.RoleCreationInfo) (arn string, externalID string, err error) {

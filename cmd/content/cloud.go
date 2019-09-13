@@ -79,10 +79,6 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagCloudIDLong flag
 	CmdFlagCloudIDLong = "cloud-id"
 
-	CmdFlagCloudAccountID = "cloud-account-id"
-
-	CmdFlagCloudAccountIDDescription = "cloud account number"
-
 	//CmdFlagRoleName is the name of the role to add a cloud account
 	CmdFlagRoleName = "role"
 
@@ -94,18 +90,6 @@ Add a cloud account. The result would be shown as the following if successful.
 
 	//CmdFlagRoleArnDescription is description for --arn
 	CmdFlagRoleArnDescription = "The arn of the role to connect"
-
-	//CmdFlagAwsRoleArn is the arn of the role users would like to assume
-	CmdFlagAwsRoleArn = "aws-arn"
-
-	//CmdFlagAwsRoleArnDescription is the description for flag --aws-arn
-	CmdFlagAwsRoleArnDescription = "The arn of the role you'd like to assume"
-
-	//CmdFlagAwsExternalID is the external id of the role users would like to assume
-	CmdFlagAwsExternalID = "aws-external-id"
-
-	//CmdFlagAwsExternalIDDescription is the description for flag --aws-external-id
-	CmdFlagAwsExternalIDDescription = "The external id of the role you'd like to assume"
 
 	//CmdFlagRoleExternalID is flag for external-id used to assume the provided role
 	CmdFlagRoleExternalID = "external-id"
@@ -178,10 +162,6 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagProviderDescription describes the usage of provider flag
 	CmdFlagProviderDescription = "Your cloud account provider, AWS or Azure"
 
-	CmdFlagRetry = "retry"
-
-	CmdFlagRetryDescription = "Retry times when getting violation fails"
-
 	//CmdFlagEmail is the owner email when adding cloud accounts, optional
 	CmdFlagEmail = "email"
 
@@ -193,9 +173,6 @@ Add a cloud account. The result would be shown as the following if successful.
 
 	//CmdFlagAwsAssumeRolePolicyDescription describes the usage of flag policy
 	CmdFlagAwsAssumeRolePolicyDescription = "The policy you'd like to use to assume that role"
-
-	//CmdFlagAwsAssumeRolePolicyDefault is the default assume role policy value
-	CmdFlagAwsAssumeRolePolicyDefault = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"organizations:*\",\"Resource\":\"*\"}]}"
 
 	//CmdFlagRoleExternalIDDescription is description for flag --external-id
 	CmdFlagRoleExternalIDDescription = "The external-id used to assume the provided role"
@@ -211,12 +188,6 @@ Add a cloud account. The result would be shown as the following if successful.
 
 	//ErrorCloudIDRequired error message
 	ErrorCloudIDRequired = "Cloud Account ID is required for this command. Use flag '--cloud-id'\n"
-
-	//CmdFlagLevelLong is flag --severity
-	CmdFlagLevelLong = "severity"
-
-	//CmdFlagLevelDescription is description for flag --severity
-	CmdFlagLevelDescription = "The severity level you'd like to show in violation results"
 
 	//CmdFlagDeleteRole is a flag to delete the role while deleting a cloud account
 	CmdFlagDeleteRole = "role"

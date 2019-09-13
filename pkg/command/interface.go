@@ -33,9 +33,6 @@ type Interface interface {
 	DeleteCloudAccountByID(teamID, cloudID string) error
 	ReValidateRole(teamID, cloudID string) (*client.RoleReValidationResult, error)
 
-	ShowResultObject(teamID, cloudID, level, provider string, retry uint) ([]*client.ResultObjectWrapper, error)
-	ShowResultRule(teamID, cloudID, level, provider string) ([]*client.ResultRule, error)
-
 	GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error)
 	GetEventRemoveConfig(teamID, cloudID string) (*client.EventRemoveConfig, error)
 	GetRoleCreationInfo(input *client.CreateCloudAccountInput) (*client.RoleCreationInfo, error)
@@ -44,7 +41,6 @@ type Interface interface {
 //CloudProvider for adding cloud account
 type CloudProvider interface {
 	SetupEventStream(input *client.EventStreamConfig) error
-	GetOrgTree() ([]*TreeNode, error)
 	CreateNewRole(input *client.RoleCreationInfo) (arn string, externalID string, err error)
 	DeleteRole(roleName string)
 	RemoveEventStream(input *client.EventRemoveConfig) error

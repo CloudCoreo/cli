@@ -41,7 +41,7 @@
   version = "v11.5.0"
 
 [[projects]]
-  digest = "1:163f194e411fb4c7665b2c896a0948c2b983a3595110b3fa43936db9e1eff32d"
+  digest = "1:317b5252a8ef601120f0a8dee349b9bcbc041935d56b6249c7e45a2cf5860621"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -53,6 +53,7 @@
     "aws/credentials",
     "aws/credentials/ec2rolecreds",
     "aws/credentials/endpointcreds",
+    "aws/credentials/processcreds",
     "aws/credentials/stscreds",
     "aws/csm",
     "aws/defaults",
@@ -63,6 +64,7 @@
     "aws/signer/v4",
     "internal/ini",
     "internal/sdkio",
+    "internal/sdkmath",
     "internal/sdkrand",
     "internal/sdkuri",
     "internal/shareddefaults",
@@ -76,13 +78,13 @@
     "service/cloudformation",
     "service/cloudtrail",
     "service/iam",
-    "service/organizations",
     "service/sns",
     "service/sts",
+    "service/sts/stsiface",
   ]
   pruneopts = "UT"
-  revision = "34ab03ee1a2b90b3baf97ff666397c8fb9b8714b"
-  version = "v1.15.64"
+  revision = "e8395d83f2fef980d5c2beb88c596e382236e21e"
+  version = "v1.23.21"
 
 [[projects]]
   digest = "1:6bf2ee5be0e5b6cf8fb2a4f6710cadd5737d0dd3a75798a6564634747535ca93"
@@ -204,11 +206,11 @@
   version = "v1.0.4"
 
 [[projects]]
-  digest = "1:e22af8c7518e1eab6f2eab2b7d7558927f816262586cd6ed9f349c97a6c285c4"
+  digest = "1:bb81097a5b62634f3e9fec1014657855610c82d19b9a40c17612e32651e35dca"
   name = "github.com/jmespath/go-jmespath"
   packages = ["."]
   pruneopts = "UT"
-  revision = "0b12d6b5"
+  revision = "c2b33e84"
 
 [[projects]]
   digest = "1:c568d7727aa262c32bdf8a3f7db83614f7af0ed661474b24588de635c20024c7"
@@ -495,14 +497,11 @@
     "github.com/Azure/go-autorest/autorest/azure/auth",
     "github.com/Azure/go-autorest/autorest/to",
     "github.com/aws/aws-sdk-go/aws",
-    "github.com/aws/aws-sdk-go/aws/credentials",
     "github.com/aws/aws-sdk-go/aws/session",
     "github.com/aws/aws-sdk-go/service/cloudformation",
     "github.com/aws/aws-sdk-go/service/cloudtrail",
     "github.com/aws/aws-sdk-go/service/iam",
-    "github.com/aws/aws-sdk-go/service/organizations",
     "github.com/aws/aws-sdk-go/service/sns",
-    "github.com/aws/aws-sdk-go/service/sts",
     "github.com/bndr/gotabulate",
     "github.com/imdario/mergo",
     "github.com/jarcoal/httpmock",

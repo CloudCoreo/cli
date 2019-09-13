@@ -18,10 +18,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/CloudCoreo/cli/client"
-
 	"github.com/CloudCoreo/cli/cmd/content"
-	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
@@ -29,39 +26,7 @@ import (
 
 type resultObjectCmd struct {
 	client   command.Interface
-	teamID   string
-	cloudID  string
 	out      io.Writer
-	level    string
-	provider string
-	retry    uint
-}
-
-//Object is violation by objects
-type Object struct {
-	ObjectID        string `json:"ObjectName"`
-	SuggestedAction string `json:"SuggestedAction"`
-	Link            string `json:"Link,omitempty"`
-	KnowledgeBase   string `json:"KnowledgeBase"`
-	RuleDescription string `json:"RuleDescription"`
-	DisplayName     string `json:"Name"`
-	Level           string `json:"Severity"`
-	Service         string `json:"RuleService"`
-	RuleName        string `json:"RuleName"`
-	// TimeStamp       string `json:"lastUpdateTime,omitempty"`
-	RiskScore    int    `json:"RiskScore"`
-	RiskScoreSum int    `json:"RiskScoreSum"`
-	TeamName     string `json:"TeamName"`
-	Region       string `json:"FindingRegion"`
-}
-
-//ObjectWrapper contains info other than object details
-type ObjectWrapper struct {
-	AccountName   string   `json:"CloudAccountName,omitempty"`
-	AccountNumber string   `json:"CloudAccountId,omitempty"`
-	Provider      string   `json:"CloudProvider,omitempty"`
-	TotalItems    int      `json:"totalItems"`
-	Objects       []Object `json:"violations"`
 }
 
 func newResultObjectCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -73,64 +38,14 @@ func newResultObjectCmd(client command.Interface, out io.Writer) *cobra.Command 
 		Use:     content.CmdResultObjectUse,
 		Short:   content.CmdResultObjectShort,
 		Long:    content.CmdResultObjectLong,
-		Example: content.CmdResultObjectExample,
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			if resultObject.client == nil {
 				resultObject.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
 					coreo.RefreshToken(key))
 			}
-
-			resultObject.teamID = teamID
-			return resultObject.run()
+			fmt.Fprint(resultObject.out, "Findings results are deprecated, please follow the link to swagger API doc `https://api.securestate.vmware.com` \n")
 		},
 	}
-	f := cmd.Flags()
-	f.StringVar(&resultObject.cloudID, content.CmdFlagCloudIDLong, content.None, content.CmdFlagCloudIDDescription)
-	f.StringVar(&resultObject.level, content.CmdFlagLevelLong, "", content.CmdFlagLevelDescription)
-	f.StringVar(&resultObject.provider, content.CmdFlagProvider, "", content.CmdFlagProviderDescription)
-	f.UintVar(&resultObject.retry, content.CmdFlagRetry, 1, content.CmdFlagRetryDescription)
 	return cmd
-}
-
-func (t *resultObjectCmd) run() error {
-	res, err := t.client.ShowResultObject(t.teamID, t.cloudID, t.level, t.provider, t.retry)
-	if err != nil {
-		return err
-	}
-	return t.prettyPrintObjects(res)
-}
-
-func (t *resultObjectCmd) prettyPrintObjects(wrappers []*client.ResultObjectWrapper) error {
-	result := make([]ObjectWrapper, len(wrappers))
-	for i, wrapper := range wrappers {
-		result[i].AccountName = wrapper.AccountName
-		result[i].AccountNumber = wrapper.AccountNumber
-		result[i].Provider = wrapper.Provider
-		result[i].TotalItems = wrapper.TotalItems
-		result[i].Objects = make([]Object, len(wrapper.Objects))
-		for j, object := range wrapper.Objects {
-			result[i].Objects[j].TeamName = object.TInfo.Name
-			result[i].Objects[j].RiskScore = object.RiskScore
-			result[i].Objects[j].RiskScoreSum = object.RiskScoreSum
-			result[i].Objects[j].ObjectID = object.ObjectID
-			result[i].Objects[j].SuggestedAction = object.Info.SuggestedAction
-			result[i].Objects[j].KnowledgeBase = object.Info.Link
-			result[i].Objects[j].RuleDescription = object.Info.Description
-			result[i].Objects[j].DisplayName = object.Info.DisplayName
-			result[i].Objects[j].Level = object.Info.Level
-			result[i].Objects[j].Service = object.Info.Service
-			result[i].Objects[j].RuleName = object.Info.RuleName
-			/*
-				var err error
-				result[i].Objects[j].Link, err = object.GenerateUrl(apiEndpoint)
-				if err != nil {
-					return err
-				}
-			*/
-			result[i].Objects[j].Region = object.Region
-		}
-	}
-	_, err := fmt.Fprint(t.out, util.PrettyJSON(result))
-	return err
 }
