@@ -2,7 +2,6 @@ package azure
 
 import (
 	"github.com/CloudCoreo/cli/client"
-	"github.com/CloudCoreo/cli/pkg/command"
 )
 
 //NewServiceInput contains the info needed for Azure Event Stream Setup
@@ -28,11 +27,6 @@ func NewService(input *NewServiceInput) *Service {
 // SetupEventStream calls the SetupEventStream function in SetupService
 func (s *Service) SetupEventStream(input *client.EventStreamConfig) error {
 	return s.setup.SetupEventStream(input)
-}
-
-// GetOrgTree calls the GetOrganizationTree function in OrgService
-func (s *Service) GetOrgTree() ([]*command.TreeNode, error) {
-	return nil, nil
 }
 
 // CreateNewRole calls the CreateNewRole function in RoleService

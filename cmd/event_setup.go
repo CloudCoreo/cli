@@ -24,8 +24,6 @@ type eventSetupCmd struct {
 	cloudID             string
 	teamID              string
 	ignoreMissingTrails bool
-	awsRoleArn          string
-	awsExternalID       string
 	authFile            string
 	region              string
 }
@@ -63,8 +61,6 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 	f.StringVarP(&eventSetup.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	f.StringVarP(&eventSetup.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
 	f.BoolVarP(&eventSetup.ignoreMissingTrails, content.CmdFlagIgnoreMissingTrails, "", false, content.CmdFlagIgnoreMissingTrailsDescription)
-	f.StringVarP(&eventSetup.awsRoleArn, content.CmdFlagAwsRoleArn, "", "", content.CmdFlagAwsRoleArnDescription)
-	f.StringVarP(&eventSetup.awsExternalID, content.CmdFlagAwsExternalID, "", "", content.CmdFlagAwsExternalIDDescription)
 	f.StringVarP(&eventSetup.authFile, content.CmdEventAuthFile, "", "", content.CmdEventAuthFileDescription)
 	f.StringVarP(&eventSetup.region, content.CmdEventRegion, "", "eastus", content.CmdEventRegionDescription)
 	return cmd
@@ -83,8 +79,6 @@ func (t *eventSetupCmd) run() error {
 				AwsProfile:          t.awsProfile,
 				AwsProfilePath:      t.awsProfilePath,
 				IgnoreMissingTrails: t.ignoreMissingTrails,
-				RoleArn:             t.awsRoleArn,
-				ExternalID:          t.awsExternalID,
 			}
 			t.cloud = aws.NewService(newServiceInput)
 		} else if config.Provider == "Azure" {
