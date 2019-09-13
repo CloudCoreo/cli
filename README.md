@@ -176,15 +176,7 @@ Manage Cloud Accounts
 * list
     * Usage
         *  `vss cloud list [flags]`
-* scan
-    * Usage
-        * `vss cloud scan [flags]`
-    * Flags
-    
-        |Variable | Option | Description |
-        | ------ | ------ | :-------- |
-        | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
-        |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
+
 * show
     * Usage
         * `vss cloud show --cloud-id YOUR_CLOUD_ID [flags]`

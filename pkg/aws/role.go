@@ -91,7 +91,11 @@ func (c *RoleService) newSession() (*session.Session, error) {
 	var err error
 
 	if c.awsProfile != "" {
-		sess, err = session.NewSessionWithOptions(session.Options{Profile: c.awsProfile, SharedConfigFiles: []string{c.awsProfilePath}})
+		if c.awsProfilePath != "" {
+			sess, err = session.NewSessionWithOptions(session.Options{Profile: c.awsProfile, SharedConfigFiles: []string{c.awsProfilePath}, SharedConfigState: session.SharedConfigEnable})
+		} else {
+			sess, err = session.NewSessionWithOptions(session.Options{Profile: c.awsProfile, SharedConfigState: session.SharedConfigEnable})
+		}
 		if err != nil {
 			return nil, err
 		}

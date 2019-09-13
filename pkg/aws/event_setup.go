@@ -31,7 +31,11 @@ func (a *SetupService) newSession() (*session.Session, error) {
 	var sess *session.Session
 	var err error
 	if a.awsProfile != "" {
-		sess, err = session.NewSessionWithOptions(session.Options{Profile: a.awsProfile, SharedConfigFiles: []string{a.awsProfilePath}})
+		if a.awsProfilePath != "" {
+			sess, err = session.NewSessionWithOptions(session.Options{Profile: a.awsProfile, SharedConfigFiles: []string{a.awsProfilePath}, SharedConfigState: session.SharedConfigEnable})
+		} else {
+			sess, err = session.NewSessionWithOptions(session.Options{Profile: a.awsProfile, SharedConfigState: session.SharedConfigEnable})
+		}
 		if err != nil {
 			return nil, err
 		}

@@ -16,7 +16,6 @@ package main
 
 import (
 	"github.com/CloudCoreo/cli/client"
-	"github.com/CloudCoreo/cli/pkg/command"
 )
 
 type fakeReleaseClient struct {
@@ -142,17 +141,11 @@ type fakeCloudProvider struct {
 	err        error
 	arn        string
 	externalID string
-	root       command.TreeNode
 }
 
 func (c *fakeCloudProvider) SetupEventStream(input *client.EventStreamConfig) error {
 
 	return c.err
-}
-
-func (c *fakeCloudProvider) GetOrgTree() ([]*command.TreeNode, error) {
-	resp := []*command.TreeNode{&c.root}
-	return resp, c.err
 }
 
 func (c *fakeCloudProvider) CreateNewRole(input *client.RoleCreationInfo) (arn string, externalID string, err error) {
