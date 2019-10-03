@@ -126,7 +126,7 @@ You may use CLI to do scriptable onboarding with two commands:
 If the team-id flag is omitted, CLI will use the default team id in configuration. If default team id is not set, an error will be returned.
 ## Docs
 
-Get started with [VSS commands](docs/vss/vss.md), setup for [VSS bash completion](docs/bash-completion.md)
+Get started with [VSS commands](docs/coreo/coreo.md), setup for [VSS bash completion](docs/bash-completion.md)
 
 #### cloud
 Manage Cloud Accounts

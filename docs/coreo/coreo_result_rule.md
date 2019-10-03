@@ -1,4 +1,4 @@
-## coreo result rule
+## coreo result rule (Deprecated, please follow the link to swagger API doc 'https://api.securestate.vmware.com')
 
 Show violating rules
 

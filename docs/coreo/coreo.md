@@ -26,7 +26,7 @@ CloudCoreo CLI.
 * [coreo completion](coreo_completion.md)	 - Generate bash autocompletions script
 * [coreo configure](coreo_configure.md)	 - Configure CLI options
 * [coreo event](coreo_event.md)	 - Manage event stream
-* [coreo result](coreo_result.md)	 - Show the violation results
+* [coreo result](coreo_result.md)	 - Show the violation results(Deprecated, please follow the link to swagger API doc 'https://api.securestate.vmware.com')
 * [coreo team](coreo_team.md)	 - Manage Teams
 * [coreo token](coreo_token.md)	 - Manage API Tokens
 * [coreo version](coreo_version.md)	 - Print the version number of Coreo CLI
