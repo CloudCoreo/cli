@@ -34,7 +34,6 @@ type cloudCreateCmd struct {
 	out            io.Writer
 	client         command.Interface
 	cloud          command.CloudProvider
-	teamID         string
 	resourceName   string
 	roleName       string
 	externalID     string
@@ -95,8 +94,6 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 				cloudCreate.cloud = aws.NewService(newServiceInput)
 			}
 
-			cloudCreate.teamID = teamID
-
 			return cloudCreate.run()
 		},
 	}
@@ -126,7 +123,6 @@ func newCloudCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 
 func (t *cloudCreateCmd) run() error {
 	input := &client.CreateCloudAccountInput{
-		TeamID:         t.teamID,
 		CloudName:      t.resourceName,
 		RoleName:       t.roleName,
 		ExternalID:     t.externalID,
@@ -170,12 +166,11 @@ func (t *cloudCreateCmd) run() error {
 	util.PrintResult(
 		t.out,
 		cloud,
-		[]string{"ID", "Name", "TeamID", "Tags"},
+		[]string{"ID", "Name", "Tags"},
 		map[string]string{
-			"ID":     "Cloud Account ID",
-			"Name":   "Cloud Account Name",
-			"TeamID": "Team ID",
-			"Tags":   "Tags",
+			"ID":   "Cloud Account ID",
+			"Name": "Cloud Account Name",
+			"Tags": "Tags",
 		},
 		jsonFormat,
 		verbose)

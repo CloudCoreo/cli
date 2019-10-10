@@ -27,11 +27,8 @@ import (
 func TestCloudAccountListCmd(t *testing.T) {
 	mockCloudAccount := func(cloudName, teamID, cloudID, accountID string) *client.CloudAccount {
 		return &client.CloudAccount{
-			ID: cloudID,
-			CloudPayLoad: client.CloudPayLoad{
-				TeamID:    teamID,
-				CloudInfo: client.CloudInfo{Name: cloudName},
-			},
+			ID:        cloudID,
+			CloudInfo: client.CloudInfo{Name: cloudName},
 			AccountID: accountID,
 		}
 	}
@@ -54,12 +51,12 @@ func TestCloudAccountListCmd(t *testing.T) {
 				mockCloudAccount("ID1", "Team1", "CloudName1", "AccountID1"),
 				mockCloudAccount("ID2", "Team2", "CloudName2", "AccountID2"),
 			},
-			xout: "---------------  -----------------------  ------------  ---------------------  ------------  ---------  -------------\n       " +
-				"ID           Cloud Account Name       Team ID       Cloud account ID       IsDraft       Tags       Provider  \n" +
-				"---------------  -----------------------  ------------  ---------------------  ------------  ---------  -------------\n" +
-				`   CloudName1              ID1                Team1           AccountID1           false         \[\]                  \n\n` +
-				`   CloudName2              ID2                Team2           AccountID2           false         \[\]                  \n` +
-				"---------------  -----------------------  ------------  ---------------------  ------------  ---------  -------------\n\n",
+			xout: "---------------  -----------------------  ---------------------  ------------  ---------  -------------\n       " +
+				"ID           Cloud Account Name       Cloud account ID       IsDraft       Tags       Provider  \n" +
+				"---------------  -----------------------  ---------------------  ------------  ---------  -------------\n" +
+				`   CloudName1              ID1                  AccountID1           false         \[\]                  \n\n` +
+				`   CloudName2              ID2                  AccountID2           false         \[\]                  \n` +
+				"---------------  -----------------------  ---------------------  ------------  ---------  -------------\n\n",
 		},
 		{
 			cmds: "coreo cloud list, failure",

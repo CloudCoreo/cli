@@ -19,25 +19,16 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/CloudCoreo/cli/client"
 	"github.com/pkg/errors"
 )
 
 func TestTeamShowCmd(t *testing.T) {
-	mockTeam := func(teamName, teamID, teamDescription string) *client.Team {
-		return &client.Team{
-			ID:              "ID1",
-			TeamDescription: "TeamDescription1",
-			TeamName:        "TeamName1",
-		}
-	}
 
 	tests := []struct {
 		cmds  string
 		desc  string
 		flags []string
 		args  []string
-		resp  []*client.Team
 		json  bool
 		err   bool
 		xout  string
@@ -46,27 +37,13 @@ func TestTeamShowCmd(t *testing.T) {
 			cmds:  "coreo team show",
 			desc:  "get a particular team",
 			flags: []string{""},
-			resp: []*client.Team{
-				mockTeam("ID1", "TeamDescription1", "TeamName1"),
-				mockTeam("ID2", "TeamDescription2", "TeamName2"),
-			},
-			xout: "------------  --------------  ---------------------\n   " +
-				"Team ID       Team Name       Team Description  \n------------  " +
-				"--------------  ---------------------\n     " +
-				"ID1         TeamName1       TeamDescription1 " +
-				" \n------------  --------------  ---------------------\n\n",
-		},
-		{
-			cmds: "coreo team show",
-			desc: "get a particular team, returns error",
-			args: []string{""},
-			err:  true,
+			xout:  "Teams are deprecated` \n",
 		},
 	}
 
 	var buf bytes.Buffer
 	for _, tt := range tests {
-		frc := &fakeReleaseClient{teams: tt.resp}
+		frc := &fakeReleaseClient{}
 		if tt.err {
 			frc.err = errors.New("Error")
 		}

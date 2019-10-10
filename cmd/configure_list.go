@@ -69,12 +69,10 @@ func (t *configureListCmd) run() error {
 
 		//generate config keys based on user profile
 		apiKey := fmt.Sprintf("%s.%s", k, content.AccessKey)
-		teamIDKey := fmt.Sprintf("%s.%s", k, content.TeamID)
 
 		profile := &Profile{
 			ProfileName: k,
 			APIKey:      util.GetValueFromConfig(apiKey, true),
-			TeamID:      util.GetValueFromConfig(teamIDKey, false),
 		}
 
 		profiles = append(profiles, profile)

@@ -22,7 +22,6 @@ type cloudUpdateCmd struct {
 	out            io.Writer
 	client         command.Interface
 	cloud          command.CloudProvider
-	teamID         string
 	cloudID        string
 	resourceName   string
 	roleName       string
@@ -67,7 +66,6 @@ func newCloudUpdateCmd(client command.Interface, out io.Writer) *cobra.Command {
 				cloudUpdate.cloud = aws.NewService(newServiceInput)
 			}
 
-			cloudUpdate.teamID = teamID
 			return cloudUpdate.run()
 		},
 	}
@@ -93,7 +91,6 @@ func newCloudUpdateCmd(client command.Interface, out io.Writer) *cobra.Command {
 func (t *cloudUpdateCmd) run() error {
 	input := &client.UpdateCloudAccountInput{
 		CreateCloudAccountInput: client.CreateCloudAccountInput{
-			TeamID:      t.teamID,
 			CloudName:   t.resourceName,
 			RoleName:    t.roleName,
 			ExternalID:  t.externalID,
@@ -134,11 +131,10 @@ func (t *cloudUpdateCmd) run() error {
 	util.PrintResult(
 		t.out,
 		cloud,
-		[]string{"ID", "Name", "TeamID"},
+		[]string{"ID", "Name"},
 		map[string]string{
-			"ID":     "Cloud Account ID",
-			"Name":   "Cloud Account Name",
-			"TeamID": "Team ID",
+			"ID":   "Cloud Account ID",
+			"Name": "Cloud Account Name",
 		},
 		jsonFormat,
 		verbose)

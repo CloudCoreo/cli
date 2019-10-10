@@ -51,17 +51,5 @@ const (
 	//CmdTeamDescriptionDescription provide team description
 	CmdTeamDescriptionDescription = "Provide team description"
 
-	//InfoUsingTeamID informational using team id
-	InfoUsingTeamID = "[ OK ] Using Team ID %s\n"
-
-	//ErrorTeamIDMissing error
-	ErrorTeamIDMissing = "Team ID is required for this command. Use flag --team-id\n"
-
-	//ErrorTeamNameRequired error
-	ErrorTeamNameRequired = "Team Name is required for this command. Use flag --name\n"
-
-	//ErrorTeamDescriptionRequired error
-	ErrorTeamDescriptionRequired = "Team description required for this command. Use flag --description\n"
-
 	ErrorProviderNotSupported = "Provider not supported, either input AWS or Azure\n"
 )
