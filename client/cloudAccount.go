@@ -19,6 +19,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"strings"
 
 	"github.com/imdario/mergo"
@@ -170,12 +171,21 @@ func (c *Client) GetRoleCreationInfo(ctx context.Context, input *CreateCloudAcco
 	createNewRoleInfo := &RoleCreationInfo{
 		RoleName: input.RoleName,
 		//Need to find out the right way to create external id.
-		ExternalID: "-" + id.ExternalID,
+		ExternalID: c.genRandomString(10) + id.ExternalID,
 		AwsAccount: id.AccountID,
 		Policy:     input.Policy,
 	}
 
 	return createNewRoleInfo, nil
+}
+
+func (c *Client) genRandomString(n int) string {
+	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
 
 // CreateCloudAccount method to create a cloud object
