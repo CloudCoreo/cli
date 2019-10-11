@@ -162,7 +162,7 @@ func (c *Client) sendCloudCreateRequest(ctx context.Context, input *CloudInfo) (
 func (c *Client) GetRoleCreationInfo(ctx context.Context, input *CreateCloudAccountInput) (*RoleCreationInfo, error) {
 
 	id := defaultID{}
-	err := c.Do(ctx, "GET", "cloudaccounts/connectinfo", nil, &id)
+	err := c.Do(ctx, "GET", ".well-known/vss-configuration", nil, &id)
 	if err != nil {
 		return nil, err
 	}

@@ -331,7 +331,7 @@ func TestDeleteCloudAccountByIDAccountFailureBadRequest(t *testing.T) {
 func TestGetRoleCreationInfoSuccess(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
-	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/cloudaccounts/connectinfo", httpmock.NewStringResponder(http.StatusOK, RoleCreationInfoJSONPayload))
+	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/.well-known/vss-configuration", httpmock.NewStringResponder(http.StatusOK, RoleCreationInfoJSONPayload))
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
@@ -342,7 +342,7 @@ func TestGetRoleCreationInfoSuccess(t *testing.T) {
 func TestGetRoleCreationInfoFailure(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
-	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/cloudaccounts/connectinfo", httpmock.NewStringResponder(http.StatusBadRequest, ""))
+	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/.well-known/vss-configuration", httpmock.NewStringResponder(http.StatusBadRequest, ""))
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
