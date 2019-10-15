@@ -17,11 +17,11 @@ Use CLI to...
 
 ### OSX
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_darwin_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.46/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.46/vss_darwin_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_darwin_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.46/vss_darwin_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -29,11 +29,11 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.45
 
 ### Linux
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_linux_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.46/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.46/vss_linux_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_linux_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.46/vss_linux_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -41,7 +41,7 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.45
 
 ### Windows
 
-Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_windows_amd64.exe)
+Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.46/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.46/vss_windows_amd64.exe)
 
 ```
 C:\Users\Username\Downloads> rename vss_windows_amd64.exe vss.exe
