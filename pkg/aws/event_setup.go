@@ -127,9 +127,9 @@ func (a *SetupService) newTag(key, value string) *cloudformation.Tag {
 }
 
 func (a *SetupService) newTagList(config *client.EventStreamConfig) []*cloudformation.Tag {
-	tags := make([]*cloudformation.Tag, 1)
+	tags := make([]*cloudformation.Tag, 2)
 	keys := []string{"Version", "LastUpdatedTime"}
-	values := []string{config.Version, time.Now().Format(time.RFC850)}
+	values := []string{config.Version, time.Now().Format(time.RFC3339)}
 	for i := range tags {
 		tags[i] = a.newTag(keys[i], values[i])
 	}
