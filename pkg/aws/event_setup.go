@@ -129,6 +129,7 @@ func (a *SetupService) newTag(key, value string) *cloudformation.Tag {
 func (a *SetupService) newTagList(config *client.EventStreamConfig) []*cloudformation.Tag {
 	tags := make([]*cloudformation.Tag, 2)
 	keys := []string{"Version", "LastUpdatedTime"}
+	//Do not put comma in tag values due to aws internal bug.
 	values := []string{config.Version, time.Now().Format(time.RFC3339)}
 	for i := range tags {
 		tags[i] = a.newTag(keys[i], values[i])
