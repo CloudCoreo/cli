@@ -124,7 +124,7 @@ You may use CLI to do scriptable onboarding with two commands:
  vss cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE [--aws-profile PROFILE_NAME] [–aws-profile-path PROFILE_PATH] [--policy-arn YOUR_POLICY_ARN]  
  vss event setup --cloud-id YOUR_CLOUD_ID [--aws-profile PROFILE_NAME] [--aws-profile-path PROFILE_PATH] 
 ```
-team-id flag is not required from CLI releae v0.0.48
+team-id flag is not required from CLI release v0.0.48
 ## Docs
 
 Get started with [VSS commands](docs/vss/vss.md), setup for [VSS bash completion](docs/bash-completion.md)
