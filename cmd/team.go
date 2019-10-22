@@ -15,10 +15,10 @@
 package main
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/CloudCoreo/cli/cmd/content"
-	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
@@ -63,34 +63,10 @@ func newTeamListCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.Host(apiEndpoint),
 					coreo.RefreshToken(key))
 			}
-
-			return teamList.run()
+			_, err := fmt.Fprint(out, "Teams are deprecated, only csp token is required` \n")
+			return err
 		},
 	}
 
 	return cmd
-}
-
-func (t *teamListCmd) run() error {
-	teams, err := t.client.ListTeams()
-	if err != nil {
-		return err
-	}
-
-	b := make([]interface{}, len(teams))
-	for i := range teams {
-		b[i] = teams[i]
-	}
-
-	util.PrintResult(t.out, b,
-		[]string{"ID", "TeamName", "TeamDescription"},
-		map[string]string{
-			"ID":              "Team ID",
-			"TeamName":        "Team Name",
-			"TeamDescription": "Team Description",
-		},
-		jsonFormat,
-		verbose)
-
-	return nil
 }

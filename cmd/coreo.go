@@ -120,18 +120,7 @@ func initConfig() {
 }
 
 func setupCoreoConfig(cmd *cobra.Command, args []string) error {
-	err := setupCoreoCredentials(cmd, args)
-
-	if err != nil {
-		return err
-	}
-
-	err = setupCoreoDefaultTeam(cmd, args)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return setupCoreoCredentials(cmd, args)
 }
 
 func setupCoreoCredentials(cmd *cobra.Command, args []string) error {
@@ -146,17 +135,6 @@ func setupCoreoCredentials(cmd *cobra.Command, args []string) error {
 	if verbose {
 		fmt.Printf(content.InfoUsingProfile, userProfile)
 	}
-
-	return nil
-}
-
-func setupCoreoDefaultTeam(cmd *cobra.Command, args []string) error {
-	tID, err := util.CheckTeamIDFlag(teamID, userProfile, verbose)
-
-	if err != nil {
-		return err
-	}
-	teamID = tID
 
 	return nil
 }

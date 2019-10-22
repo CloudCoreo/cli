@@ -25,13 +25,10 @@ import (
 )
 
 func TestCloudAccountCreateCmd(t *testing.T) {
-	mockCloudAccount := func(cloudName, teamID, cloudID string) *client.CloudAccount {
+	mockCloudAccount := func(cloudName, cloudID string) *client.CloudAccount {
 		return &client.CloudAccount{
-			ID: cloudID,
-			CloudPayLoad: client.CloudPayLoad{
-				TeamID:    teamID,
-				CloudInfo: client.CloudInfo{Name: cloudName},
-			},
+			ID:        cloudID,
+			CloudInfo: client.CloudInfo{Name: cloudName},
 		}
 	}
 
@@ -54,14 +51,14 @@ func TestCloudAccountCreateCmd(t *testing.T) {
 				"--arn", "CloudArn",
 			},
 			resp: []*client.CloudAccount{
-				mockCloudAccount("ID1", "Team1", "CloudName1"),
-				mockCloudAccount("ID2", "Team2", "CloudName2"),
+				mockCloudAccount("ID1", "CloudName1"),
+				mockCloudAccount("ID2", "CloudName2"),
 			},
-			xout: "---------------------  -----------------------  ------------  ---------\n   " +
-				"Cloud Account ID       Cloud Account Name       Team ID       Tags  \n" +
-				"---------------------  -----------------------  ------------  ---------\n" +
-				`      CloudName1                 ID1                Team1         \[\]   \n` +
-				"---------------------  -----------------------  ------------  ---------\n\n",
+			xout: "---------------------  -----------------------  ---------\n   " +
+				"Cloud Account ID       Cloud Account Name       Tags  \n" +
+				"---------------------  -----------------------  ---------\n" +
+				`      CloudName1                 ID1                \[\]   \n` +
+				"---------------------  -----------------------  ---------\n\n",
 		},
 		{
 			cmds:  "coreo cloud create",

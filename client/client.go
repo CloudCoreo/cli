@@ -120,7 +120,8 @@ func (c *Client) makeRequest(ctx context.Context, method, path string, body io.R
 	return ctxhttp.Do(ctx, &c.client, req)
 }
 
-func (c *Client) buildRequest(method, urlPath string, body io.Reader) (*http.Request, error) {
+func (c *Client) buildRequest(method, path string, body io.Reader) (*http.Request, error) {
+	urlPath := fmt.Sprintf("%s/%s", c.endpoint, path)
 	req, err := http.NewRequest(method, urlPath, body)
 	if err != nil {
 		return nil, err

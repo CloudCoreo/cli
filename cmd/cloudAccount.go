@@ -47,7 +47,6 @@ func newCloudAccountCmd(out io.Writer) *cobra.Command {
 type cloudListCmd struct {
 	out    io.Writer
 	client command.Interface
-	teamID string
 }
 
 func newCloudListCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -68,8 +67,6 @@ func newCloudListCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.RefreshToken(key))
 			}
 
-			cloudList.teamID = teamID
-
 			return cloudList.run()
 		},
 	}
@@ -78,7 +75,7 @@ func newCloudListCmd(client command.Interface, out io.Writer) *cobra.Command {
 }
 
 func (t *cloudListCmd) run() error {
-	clouds, err := t.client.ListCloudAccounts(t.teamID)
+	clouds, err := t.client.ListCloudAccounts()
 	if err != nil {
 		return err
 	}
@@ -91,11 +88,10 @@ func (t *cloudListCmd) run() error {
 	util.PrintResult(
 		t.out,
 		b,
-		[]string{"ID", "Name", "TeamID", "AccountID", "IsDraft", "Tags", "Provider"},
+		[]string{"ID", "Name", "AccountID", "IsDraft", "Tags", "Provider"},
 		map[string]string{
 			"ID":        "ID",
 			"Name":      "Cloud Account Name",
-			"TeamID":    "Team ID",
 			"AccountID": "Cloud account ID",
 			"IsDraft":   "IsDraft",
 			"Tags":      "Tags",
@@ -110,7 +106,6 @@ func (t *cloudListCmd) run() error {
 type cloudTestCmd struct {
 	out     io.Writer
 	client  command.Interface
-	teamID  string
 	cloudID string
 }
 
@@ -134,7 +129,6 @@ func newCloudTestCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.RefreshToken(key))
 			}
 
-			cloudTest.teamID = teamID
 			return cloudTest.run()
 		},
 	}
@@ -147,7 +141,7 @@ func newCloudTestCmd(client command.Interface, out io.Writer) *cobra.Command {
 }
 
 func (t *cloudTestCmd) run() error {
-	res, err := t.client.ReValidateRole(t.teamID, t.cloudID)
+	res, err := t.client.ReValidateRole(t.cloudID)
 	if err != nil {
 		return err
 	}
