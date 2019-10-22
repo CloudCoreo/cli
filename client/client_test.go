@@ -95,7 +95,7 @@ func (suite *DoTestSuite) TestDo() {
 		"name": "aws cloud account",
 		"roleId": "asdf",
 		"roleName": "CloudCoreoAssumedRole",
-		"id": "cloudAccountID",
+		"_id": "cloudAccountID",
 		"email": "testEmail"
 	}]`))
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
