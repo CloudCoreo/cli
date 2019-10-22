@@ -31,7 +31,7 @@ import (
 type CloudAccount struct {
 	RoleID    string `json:"roleId"`
 	RoleName  string `json:"roleName"`
-	ID        string `json:"id"`
+	ID        string `json:"_id"`
 	AccountID string `json:"accountId"`
 	CloudInfo
 }
