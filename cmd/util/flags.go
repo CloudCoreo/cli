@@ -16,7 +16,6 @@ package util
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/CloudCoreo/cli/cmd/content"
 )
@@ -107,24 +106,6 @@ func CheckTokenShowOrDeleteFlag(tokenID string, verbose bool) error {
 	return nil
 }
 
-// CheckTeamIDFlag flag check for team id
-func CheckTeamIDFlag(teamID, userProfile string, verbose bool) (string, error) {
-	if teamID == content.None {
-		teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.TeamID)
-		teamID = GetValueFromConfig(teamIDKey, false)
-
-		if teamID == content.None {
-			return teamID, fmt.Errorf(content.ErrorTeamIDMissing)
-		}
-	}
-
-	if verbose {
-		fmt.Printf(content.InfoUsingTeamID, teamID)
-	}
-
-	return teamID, nil
-}
-
 // CheckAPIKeyFlag flag check for api key
 func CheckAPIKeyFlag(apiKey string, userProfile string) (string, error) {
 	if apiKey == content.None {
@@ -137,23 +118,6 @@ func CheckAPIKeyFlag(apiKey string, userProfile string) (string, error) {
 	}
 
 	return apiKey, nil
-}
-
-//CheckTeamAddFlags Required flags check
-func CheckTeamAddFlags(teamName, teamDescription string) error {
-	if err := checkFlag(teamName, content.ErrorTeamNameRequired); err != nil {
-		return err
-	}
-
-	return checkFlag(teamDescription, content.ErrorTeamDescriptionRequired)
-}
-
-//CheckArgsCount check for args
-func CheckArgsCount(args []string) {
-	if len(args) > 0 {
-		fmt.Print(content.ErrorAcceptsNoArgs)
-		os.Exit(-1)
-	}
 }
 
 func CheckProviderFlag(provider string) error {

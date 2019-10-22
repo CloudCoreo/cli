@@ -15,6 +15,7 @@ package client
 
 import (
 	"context"
+	"fmt"
 )
 
 //EventStreamConfig for event stream setup
@@ -74,20 +75,10 @@ type AzureEventRemoveConfig struct {
 }
 
 //GetSetupConfig get the config for event stream setup from secure state
-func (c *Client) GetSetupConfig(ctx context.Context, teamID, cloudID string) (*EventStreamConfig, error) {
+func (c *Client) GetSetupConfig(ctx context.Context, cloudID string) (*EventStreamConfig, error) {
 	config := &EventStreamConfig{}
 
-	accounts, err := c.GetCloudAccountByID(ctx, teamID, cloudID)
-	if err != nil {
-		return nil, err
-	}
-
-	link, err := GetLinkByRef(accounts.Links, "setup")
-	if err != nil {
-		return nil, err
-	}
-
-	err = c.Do(ctx, "GET", link.Href, nil, config)
+	err := c.Do(ctx, "GET", fmt.Sprintf("cloudaccounts/%s/event/setup", cloudID), nil, config)
 	if err != nil {
 		return nil, err
 	}
@@ -95,19 +86,10 @@ func (c *Client) GetSetupConfig(ctx context.Context, teamID, cloudID string) (*E
 }
 
 //GetRemoveConfig get the config for event stream removal from secure state
-func (c *Client) GetRemoveConfig(ctx context.Context, teamID, cloudID string) (*EventRemoveConfig, error) {
+func (c *Client) GetRemoveConfig(ctx context.Context, cloudID string) (*EventRemoveConfig, error) {
 	config := &EventRemoveConfig{}
-	accounts, err := c.GetCloudAccountByID(ctx, teamID, cloudID)
-	if err != nil {
-		return nil, err
-	}
 
-	link, err := GetLinkByRef(accounts.Links, "remove")
-	if err != nil {
-		return nil, err
-	}
-
-	err = c.Do(ctx, "GET", link.Href, nil, config)
+	err := c.Do(ctx, "GET", fmt.Sprintf("cloudaccounts/%s/event/remove", cloudID), nil, config)
 	if err != nil {
 		return nil, err
 	}

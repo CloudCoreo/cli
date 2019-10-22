@@ -34,7 +34,6 @@ type cloudDeleteCmd struct {
 	out            io.Writer
 	client         command.Interface
 	cloud          command.CloudProvider
-	teamID         string
 	cloudID        string
 	deleteRole     bool
 	awsProfile     string
@@ -71,8 +70,6 @@ func newCloudDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
 				cloudDelete.cloud = aws.NewService(newServiceInput)
 			}
 
-			cloudDelete.teamID = teamID
-
 			return cloudDelete.run()
 		},
 	}
@@ -90,7 +87,7 @@ func newCloudDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
 func (t *cloudDeleteCmd) run() error {
 	var roleName string
 	if t.deleteRole {
-		cloud, err := t.client.ShowCloudAccountByID(t.teamID, t.cloudID)
+		cloud, err := t.client.ShowCloudAccountByID(t.cloudID)
 		if err != nil {
 			return err
 		}
@@ -101,7 +98,7 @@ func (t *cloudDeleteCmd) run() error {
 		t.cloud.DeleteRole(roleName)
 	}
 
-	err := t.client.DeleteCloudAccountByID(t.teamID, t.cloudID)
+	err := t.client.DeleteCloudAccountByID(t.cloudID)
 	if err != nil {
 		return err
 	}

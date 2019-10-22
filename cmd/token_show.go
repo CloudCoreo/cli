@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/CloudCoreo/cli/cmd/content"
@@ -51,8 +52,8 @@ func newTokenShowCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.Host(apiEndpoint),
 					coreo.RefreshToken(key))
 			}
-
-			return tokenShow.run()
+			_, err := fmt.Fprint(out, "Tokens are deprecated, only csp token is required` \n")
+			return err
 		},
 	}
 
@@ -61,25 +62,4 @@ func newTokenShowCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&tokenShow.tokenID, content.CmdFlagTokenIDLong, "", "", content.CmdFlagTokenIDDescription)
 
 	return cmd
-}
-
-func (t *tokenShowCmd) run() error {
-	token, err := t.client.ShowTokenByID(t.tokenID)
-	if err != nil {
-		return err
-	}
-
-	util.PrintResult(
-		t.out,
-		token,
-		[]string{"ID", "Name", "Description"},
-		map[string]string{
-			"ID":          "Token ID",
-			"Name":        "Token Name",
-			"Description": "Token Description",
-		},
-		jsonFormat,
-		verbose)
-
-	return nil
 }

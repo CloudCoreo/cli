@@ -27,11 +27,8 @@ import (
 func TestCloudAccountDeleteCmd(t *testing.T) {
 	mockCloudAccount := func(cloudName, teamID, cloudID string) *client.CloudAccount {
 		return &client.CloudAccount{
-			ID: cloudID,
-			CloudPayLoad: client.CloudPayLoad{
-				TeamID:    teamID,
-				CloudInfo: client.CloudInfo{Name: cloudName},
-			},
+			ID:        cloudID,
+			CloudInfo: client.CloudInfo{Name: cloudName},
 		}
 	}
 

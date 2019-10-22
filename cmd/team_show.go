@@ -15,10 +15,10 @@
 package main
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/CloudCoreo/cli/cmd/content"
-	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
@@ -27,7 +27,6 @@ import (
 type teamShowCmd struct {
 	out    io.Writer
 	client command.Interface
-	teamID string
 }
 
 func newTeamShowCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -48,30 +47,10 @@ func newTeamShowCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.RefreshToken(key))
 			}
 
-			teamShow.teamID = teamID
-
-			return teamShow.run()
+			_, err := fmt.Fprint(out, "Teams are deprecated` \n")
+			return err
 		},
 	}
 
 	return cmd
-}
-
-func (t *teamShowCmd) run() error {
-	team, err := t.client.ShowTeamByID(t.teamID)
-	if err != nil {
-		return err
-	}
-
-	util.PrintResult(t.out, team,
-		[]string{"ID", "TeamName", "TeamDescription"},
-		map[string]string{
-			"ID":              "Team ID",
-			"TeamName":        "Team Name",
-			"TeamDescription": "Team Description",
-		},
-		jsonFormat,
-		verbose)
-
-	return nil
 }
