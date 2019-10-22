@@ -53,25 +53,13 @@ func newTokenDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.Host(apiEndpoint),
 					coreo.RefreshToken(key))
 			}
-
-			return tokenDelete.run()
+			_, err := fmt.Fprint(out, "Tokens are deprecated, only csp token is required` \n")
+			return err
 		},
 	}
 
 	f := cmd.Flags()
-
 	f.StringVarP(&tokenDelete.tokenID, content.CmdFlagTokenIDLong, "", "", content.CmdFlagTokenIDDescription)
 
 	return cmd
-}
-
-func (t *tokenDeleteCmd) run() error {
-	err := t.client.DeleteTokenByID(t.tokenID)
-	if err != nil {
-		return err
-	}
-
-	fmt.Fprintln(t.out, content.InfoTokenDeleted)
-
-	return nil
 }

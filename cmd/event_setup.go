@@ -22,7 +22,6 @@ type eventSetupCmd struct {
 	awsProfile          string
 	awsProfilePath      string
 	cloudID             string
-	teamID              string
 	ignoreMissingTrails bool
 	authFile            string
 	region              string
@@ -51,8 +50,6 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 					coreo.RefreshToken(key))
 			}
 
-			eventSetup.teamID = teamID
-
 			return eventSetup.run()
 		},
 	}
@@ -68,7 +65,7 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 
 func (t *eventSetupCmd) run() error {
 
-	config, err := t.client.GetEventStreamConfig(t.teamID, t.cloudID)
+	config, err := t.client.GetEventStreamConfig(t.cloudID)
 	if err != nil {
 		return err
 	}

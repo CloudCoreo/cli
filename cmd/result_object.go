@@ -25,8 +25,8 @@ import (
 )
 
 type resultObjectCmd struct {
-	client   command.Interface
-	out      io.Writer
+	client command.Interface
+	out    io.Writer
 }
 
 func newResultObjectCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -35,16 +35,17 @@ func newResultObjectCmd(client command.Interface, out io.Writer) *cobra.Command 
 		out:    out,
 	}
 	cmd := &cobra.Command{
-		Use:     content.CmdResultObjectUse,
-		Short:   content.CmdResultObjectShort,
-		Long:    content.CmdResultObjectLong,
-		Run: func(cmd *cobra.Command, args []string) {
+		Use:   content.CmdResultObjectUse,
+		Short: content.CmdResultObjectShort,
+		Long:  content.CmdResultObjectLong,
+		RunE: func(cmd *cobra.Command, args []string) error {
 			if resultObject.client == nil {
 				resultObject.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
 					coreo.RefreshToken(key))
 			}
-			fmt.Fprint(resultObject.out, "Findings results are deprecated, please follow the link to swagger API doc `https://api.securestate.vmware.com` \n")
+			_, err := fmt.Fprint(out, "Findings results are deprecated, please follow the link to swagger API doc `https://api.securestate.vmware.com` \n")
+			return err
 		},
 	}
 	return cmd

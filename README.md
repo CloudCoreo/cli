@@ -17,11 +17,11 @@ Use CLI to...
 
 ### OSX
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_darwin_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.47/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.47/vss_darwin_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_darwin_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.47/vss_darwin_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -29,11 +29,11 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.45
 
 ### Linux
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_linux_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.47/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.47/vss_linux_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_linux_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.47/vss_linux_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -41,7 +41,7 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.45
 
 ### Windows
 
-Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.45/vss_windows_amd64.exe)
+Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.47/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.47/vss_windows_amd64.exe)
 
 ```
 C:\Users\Username\Downloads> rename vss_windows_amd64.exe vss.exe
@@ -75,12 +75,13 @@ Procedure
 4. Paste the token in a safe place so you can retrieve it to use later on.
 
 
-You may need to configure your access key and default team id the first time using CLI but you can also skip this step and pass these to CLI using flags `--api-key, --team-id`. You may set up configuration using:
+You may need to configure your access key the first time using CLI but you can also skip this step and pass these to CLI using flags `--api-key`. You may set up configuration using:
 	`vss  configure`
 	
-And then type your access key information and default team id as well. You may check you current configuration settings using
+And then type your access key information. You may check you current configuration settings using
 	`vss configure list`
 
+Team id concept is deprecated in the latest CLI release and is not required anymore.
 ## Usage
 ```sh
 vss <command> [--help] [--verbose] [--json] [<args>]
@@ -93,9 +94,9 @@ The most commonly used VSS commands are:
 | --------   | :-------------:| :-------------:|
 |cloud     | Manage your cloud accounts                    | add, delete, list, scan, show, update, test|
 |configure | Configure CLI options. You may also view your current configuration using 'list' subcommand| list|
-|team      | Manage your team                              | add, list, show|
+|team      | Manage your team(Deprecated, this info is not required anymore)                              | add, list, show|
 |result    | Get violation results (Deprecated, please follow the link to swagger API doc 'https://api.securestate.vmware.com')  | rule, object|
-|token     | Manage your api tokens                        | delete, list, show|
+|token     | Manage your api tokens(Deprecated, please manage your token through CSP portal)                        | delete, list, show|
 |completion| Generate bash autocompletions script|
 |event     | Manage event stream                           | setup|
 |help      | Help about any command|
@@ -111,7 +112,7 @@ The most commonly used VSS commands are:
 |home    | --home | $VSS_HOME | Location of your VSS config. Overrides $VSS_HOME.
 |json    |--json | | Output in json format
 |profile | --profile | $VSS_PROFILE | VSS profile to use. Overrides $VSS_PROFILE, default "default" |
-|team-id | --team-id | | VMware Secure State team id, will read team-id in configure file by default|
+|team-id | --team-id | | VMware Secure State team id. This flag is deprecated in the latest CLI release and not required anymore|
 |verbose | --verbose | | Enable verbose output
 
 The values passing by flags will override environment variables.  
@@ -120,10 +121,10 @@ Flags for specific commands are listed in Docs section.
 ## Example
 You may use CLI to do scriptable onboarding with two commands:
 ```sh
- vss cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE [--aws-profile PROFILE_NAME] [–aws-profile-path PROFILE_PATH] [--policy-arn YOUR_POLICY_ARN] [--team-id YOUR_TEAM_ID] 
- vss event setup --cloud-id YOUR_CLOUD_ID [--aws-profile PROFILE_NAME] [--aws-profile-path PROFILE_PATH] [--team-id YOUR_TEAM_ID]  
+ vss cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE [--aws-profile PROFILE_NAME] [–aws-profile-path PROFILE_PATH] [--policy-arn YOUR_POLICY_ARN]  
+ vss event setup --cloud-id YOUR_CLOUD_ID [--aws-profile PROFILE_NAME] [--aws-profile-path PROFILE_PATH] 
 ```
-If the team-id flag is omitted, CLI will use the default team id in configuration. If default team id is not set, an error will be returned.
+team-id flag is not required from CLI releae v0.0.47
 ## Docs
 
 Get started with [VSS commands](docs/vss/vss.md), setup for [VSS bash completion](docs/bash-completion.md)
@@ -132,8 +133,8 @@ Get started with [VSS commands](docs/vss/vss.md), setup for [VSS bash completion
 Manage Cloud Accounts
 * add
     * Usage
-        * `vss cloud add --team-id YOUR_TEAM_ID --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE [flags]`  
-        * `vss cloud add --team-id YOUR_TEAM_ID --name YOUR_NEW_ACCOUNT_NAME --arn YOUR_ROLE_ARN --external-id EXTERNAL_ID_OF_YOUR_ROLE [flags]`
+        * `vss cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE [flags]`  
+        * `vss cloud add --name YOUR_NEW_ACCOUNT_NAME --arn YOUR_ROLE_ARN --external-id EXTERNAL_ID_OF_YOUR_ROLE [flags]`
     * Flags
     
         |Variable | Option | Description |
@@ -160,8 +161,8 @@ Manage Cloud Accounts
         * To use your own role, you need to pass the role arn and external id to CLI. 
         * To make CLI create one for you, you need to pass the role name to CLI
     * Examples:
-        * `vss cloud add --team-id YOUR_TEAM_ID --name YOUR_NEW_ACCOUNT_NAME --provider AWS --role NAME_FOR_NEW_ROLE --aws-profile AWS_PROFILE --tags "key1:value1|key2:value2"`
-        * `vss cloud add --team-id YOUR_TEAM_ID --name YOUR_NEW_ACCOUNT_NAME --provider Azure --application-id AZURE_APPLICATION_ID --key-value KEY_VALUE --subscription-id SUBSCRIPTION_ID --directory-id DIRECTORY_ID`
+        * `vss cloud add --name YOUR_NEW_ACCOUNT_NAME --provider AWS --role NAME_FOR_NEW_ROLE --aws-profile AWS_PROFILE --tags "key1:value1|key2:value2"`
+        * `vss cloud add --name YOUR_NEW_ACCOUNT_NAME --provider Azure --application-id AZURE_APPLICATION_ID --key-value KEY_VALUE --subscription-id SUBSCRIPTION_ID --directory-id DIRECTORY_ID`
         
 * delete
     * Usage
@@ -224,11 +225,11 @@ Configure CLI options
     * `vss configure list` &nbsp; : list current configuration
 * Examples
     * `vss configure`
-    * `vss configure --api-key VSS_API_TOKEN --team-id VSS_TEAM_ID`
+    * `vss configure --api-key VSS_API_TOKEN`
     * `vss configure list`
     
 #### team
-Manage Teams
+Manage Teams(These commands are deprecated from CLI version v0.0.47)
 * add
     * Usage
         * `vss team add -n YOUR_NEW_TEAM_NAME -d YOUR_TEAM_DESCRIPTION [flags]`
@@ -281,7 +282,7 @@ Show violation results (Deprecated, please follow the link to swagger API doc 'h
         * `vss result rule --cloud-account-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
         
 #### token
-Manage API Tokens
+Manage API Tokens(These commands are deprecated from CLI version v0.0.47, please use [CSP portal](https://console.cloud.vmware.com/csp/gateway/portal/#/user/tokens)) to manage your token)
 * delete
     * Usage
         * `vss token delete --token-id YOUR_TOKEN_ID [flags]`
@@ -313,7 +314,7 @@ Generate bash auto-completions script
 Manage event stream
 * setup
     * Usage 
-        * `vss event setup --team-id YOUR_TEAM_ID --cloud-id YOUR_CLOUD_ID [flags]`
+        * `vss event setup --cloud-id YOUR_CLOUD_ID [flags]`
     * Flags
     
         |Variable | Option | Description |
@@ -325,7 +326,7 @@ Manage event stream
 
 * remove
     * Usage 
-        * `vss event remove --team-id YOUR_TEAM_ID --cloud-id YOUR_CLOUD_ID [flags]`
+        * `vss event remove --cloud-id YOUR_CLOUD_ID [flags]`
     * Flags
         
         |Variable | Option | Description |

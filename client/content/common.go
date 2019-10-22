@@ -5,13 +5,13 @@ const (
 	ErrorMissingAPIOrSecretKey = "Missing API key or/and Secret key. Please run 'coreo configure' to configure them."
 
 	//ErrorNoCloudAccountsFound error
-	ErrorNoCloudAccountsFound = "No cloud accounts found under team ID %s."
+	ErrorNoCloudAccountsFound = "No cloud accounts found."
 
 	//ErrorNoCloudAccountWithIDFound error
-	ErrorNoCloudAccountWithIDFound = "No cloud account with ID %s found under team ID %s."
+	ErrorNoCloudAccountWithIDFound = "No cloud account with ID %s found."
 
 	//ErrorFailedToCreateCloudAccount error
-	ErrorFailedToCreateCloudAccount = "Failed to create cloud account under team ID %s."
+	ErrorFailedToCreateCloudAccount = "Failed to create cloud account."
 
 	//ErrorFailedToDeleteCloudAccount error
 	ErrorFailedToDeleteCloudAccount = "Failed to delete cloud account with ID %s under team ID %s."

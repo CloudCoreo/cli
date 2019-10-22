@@ -19,6 +19,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"strings"
 
 	"github.com/imdario/mergo"
@@ -30,15 +31,13 @@ import (
 type CloudAccount struct {
 	RoleID    string `json:"roleId"`
 	RoleName  string `json:"roleName"`
-	Links     []Link `json:"links"`
 	ID        string `json:"id"`
 	AccountID string `json:"accountId"`
-	CloudPayLoad
+	CloudInfo
 }
 
 // CreateCloudAccountInput for function CreateCloudAccount
 type CreateCloudAccountInput struct {
-	TeamID         string
 	CloudName      string
 	RoleName       string
 	ExternalID     string
@@ -79,17 +78,6 @@ type CloudInfo struct {
 	LastValidationCheck string   `json:"lastValidationCheck"`
 }
 
-// CloudPayLoad ...
-type CloudPayLoad struct {
-	CloudInfo
-	TeamID string `json:"teamId,omitempty"`
-}
-
-type sendCloudCreateRequestInput struct {
-	cloudLink Link
-	CloudInfo
-}
-
 type defaultID struct {
 	AccountID  string `json:"accountId"`
 	ExternalID string `json:"externalId"`
@@ -117,177 +105,129 @@ type UpdateCloudAccountInput struct {
 }
 
 // GetCloudAccounts method for cloud command
-func (c *Client) GetCloudAccounts(ctx context.Context, teamID string) ([]*CloudAccount, error) {
+func (c *Client) GetCloudAccounts(ctx context.Context) ([]*CloudAccount, error) {
 	// clouds := []*CloudAccount{}
 	clouds := make([]*CloudAccount, 0)
-	teams, err := c.GetTeams(ctx)
 
+	err := c.Do(ctx, "GET", "cloudaccounts", nil, &clouds)
 	if err != nil {
-		return nil, err
+		return nil, NewError(err.Error())
 	}
-
-	for _, team := range teams {
-		if team.ID == teamID {
-			cloudLink, e := GetLinkByRef(team.Links, "cloudAccounts")
-
-			if e != nil {
-				return nil, NewError(e.Error())
-			}
-
-			err = c.Do(ctx, "GET", cloudLink.Href, nil, &clouds)
-			if err != nil {
-				return nil, NewError(err.Error())
-			}
-			for _, account := range clouds {
-				if account.Provider == "Azure" {
-					account.AccountID = account.SubscriptionID
-				}
-			}
+	for _, account := range clouds {
+		if account.Provider == "Azure" {
+			account.AccountID = account.SubscriptionID
 		}
 	}
 
 	if len(clouds) == 0 {
-		return nil, NewError(fmt.Sprintf(content.ErrorNoCloudAccountsFound, teamID))
+		return nil, NewError(content.ErrorNoCloudAccountsFound)
 	}
 
 	return clouds, nil
 }
 
 // GetCloudAccountByID method getting cloud account by user ID
-func (c *Client) GetCloudAccountByID(ctx context.Context, teamID, cloudID string) (*CloudAccount, error) {
+func (c *Client) GetCloudAccountByID(ctx context.Context, cloudID string) (*CloudAccount, error) {
 	cloudAccount := &CloudAccount{}
 
-	cloudAccounts, err := c.GetCloudAccounts(ctx, teamID)
-
+	err := c.Do(ctx, "GET", fmt.Sprintf("cloudaccounts/%s", cloudID), nil, cloudAccount)
 	if err != nil {
-		return nil, NewError(err.Error())
-	}
-
-	for _, c := range cloudAccounts {
-		if c.ID == cloudID {
-			cloudAccount = c
-			break
-		}
+		return nil, err
 	}
 
 	if cloudAccount.ID == "" {
-		return nil, NewError(fmt.Sprintf(content.ErrorNoCloudAccountWithIDFound, cloudID, teamID))
+		return nil, NewError(fmt.Sprintf(content.ErrorNoCloudAccountWithIDFound, cloudID))
 	}
-
 	return cloudAccount, nil
 }
 
-func (c *Client) sendCloudCreateRequest(ctx context.Context, input *sendCloudCreateRequestInput) (*CloudAccount, error) {
+func (c *Client) sendCloudCreateRequest(ctx context.Context, input *CloudInfo) (*CloudAccount, error) {
 	// Connect with webapp to add the new cloud account into team
 	// Do not include space in cloudPayLoad!!! Otherwise the whitespace would be removed at some point and
 	// the authentication would fail!!!
-	cloudAccount := &CloudAccount{}
-	cloudPayLoad := CloudPayLoad{
-		CloudInfo: input.CloudInfo,
-	}
+	cloudAccount := CloudAccount{}
 
-	jsonStr, err := json.Marshal(cloudPayLoad)
+	jsonStr, err := json.Marshal(*input)
 	if err != nil {
 		return nil, err
 	}
 
-	err = c.Do(ctx, "POST", input.cloudLink.Href, bytes.NewBuffer(jsonStr), &cloudAccount)
+	err = c.Do(ctx, "POST", "cloudaccounts", bytes.NewBuffer(jsonStr), &cloudAccount)
 	if err != nil {
 		return nil, err
 	}
-	return cloudAccount, nil
+	return &cloudAccount, nil
 }
 
 // GetRoleCreationInfo returns the configuration for creating a new role
 func (c *Client) GetRoleCreationInfo(ctx context.Context, input *CreateCloudAccountInput) (*RoleCreationInfo, error) {
-	teams, err := c.GetTeams(ctx)
+
+	id := defaultID{}
+	err := c.Do(ctx, "GET", ".well-known/vss-configuration", nil, &id)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, team := range teams {
-		if team.ID == input.TeamID {
-			ref, err := GetLinkByRef(team.Links, "defaultid")
-
-			if err != nil {
-				return nil, err
-			}
-
-			id := defaultID{}
-			err = c.Do(ctx, "GET", ref.Href, nil, &id)
-			if err != nil {
-				return nil, err
-			}
-
-			createNewRoleInfo := &RoleCreationInfo{
-				RoleName:   input.RoleName,
-				ExternalID: input.TeamID + "-" + id.ExternalID,
-				AwsAccount: id.AccountID,
-				Policy:     input.Policy,
-			}
-
-			return createNewRoleInfo, nil
-		}
+	createNewRoleInfo := &RoleCreationInfo{
+		RoleName: input.RoleName,
+		//Need to find out the right way to create external id.
+		ExternalID: c.genRandomString(10) + id.ExternalID,
+		AwsAccount: id.AccountID,
+		Policy:     input.Policy,
 	}
-	return nil, NewError("No team id match")
+
+	return createNewRoleInfo, nil
+}
+
+func (c *Client) genRandomString(n int) string {
+	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
 
 // CreateCloudAccount method to create a cloud object
 func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccountInput) (*CloudAccount, error) {
-	var cloudAccount = &CloudAccount{}
-	teams, err := c.GetTeams(ctx)
+	var cloudAccount *CloudAccount
+
+	if input.Provider == "AWS" && input.RoleArn == "" {
+		return nil, NewError(content.ErrorMissingRoleInformation)
+	}
+	cloudCreateInput := CloudInfo{
+		ExternalID:     input.ExternalID,
+		Name:           input.CloudName,
+		Arn:            input.RoleArn,
+		ScanEnabled:    true,
+		ScanRegion:     "All",
+		IsDraft:        input.IsDraft,
+		Provider:       input.Provider,
+		Email:          input.Email,
+		UserName:       input.UserName,
+		KeyValue:       input.KeyValue,
+		ApplicationID:  input.ApplicationID,
+		DirectoryID:    input.DirectoryID,
+		SubscriptionID: input.SubscriptionID,
+		Environment:    input.Environment,
+	}
+	if input.Tags != "" {
+		cloudCreateInput.Tags = strings.Split(input.Tags, "|")
+	}
+	if input.Provider == "AWS" {
+		cloudCreateInput.ScanInterval = "Weekly"
+	} else if input.Provider == "Azure" {
+		cloudCreateInput.ScanInterval = "Daily"
+	} else {
+		return nil, NewError("Unsupported CloudAccount type")
+	}
+	cloudAccount, err := c.sendCloudCreateRequest(ctx, &cloudCreateInput)
 	if err != nil {
 		return nil, err
 	}
-	for _, team := range teams {
-		if team.ID == input.TeamID {
-			cloudLink, err := GetLinkByRef(team.Links, "cloudAccounts")
-			if err != nil {
-				return nil, NewError(err.Error())
-			}
 
-			if input.Provider == "AWS" && input.RoleArn == "" {
-				return nil, NewError(content.ErrorMissingRoleInformation)
-			}
-			cloudCreateInput := &sendCloudCreateRequestInput{
-				cloudLink: cloudLink,
-				CloudInfo: CloudInfo{
-					ExternalID:     input.ExternalID,
-					Name:           input.CloudName,
-					Arn:            input.RoleArn,
-					ScanEnabled:    true,
-					ScanRegion:     "All",
-					IsDraft:        input.IsDraft,
-					Provider:       input.Provider,
-					Email:          input.Email,
-					UserName:       input.UserName,
-					KeyValue:       input.KeyValue,
-					ApplicationID:  input.ApplicationID,
-					DirectoryID:    input.DirectoryID,
-					SubscriptionID: input.SubscriptionID,
-					Environment:    input.Environment,
-				},
-			}
-			if input.Tags != "" {
-				cloudCreateInput.Tags = strings.Split(input.Tags, "|")
-			}
-			if input.Provider == "AWS" {
-				cloudCreateInput.ScanInterval = "Weekly"
-			} else if input.Provider == "Azure" {
-				cloudCreateInput.ScanInterval = "Daily"
-			} else {
-				return nil, NewError("Unsupported CloudAccount type")
-			}
-			cloudAccount, err = c.sendCloudCreateRequest(ctx, cloudCreateInput)
-			if err != nil {
-				return nil, err
-			}
-
-			break
-		}
-	}
 	if cloudAccount.ID == "" {
-		return nil, NewError(fmt.Sprintf(content.ErrorFailedToCreateCloudAccount, input.TeamID))
+		return nil, NewError(content.ErrorFailedToCreateCloudAccount)
 	}
 	if cloudAccount.Provider == "Azure" {
 		cloudAccount.AccountID = cloudAccount.SubscriptionID
@@ -296,51 +236,15 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 }
 
 // DeleteCloudAccountByID method to delete cloud object
-func (c *Client) DeleteCloudAccountByID(ctx context.Context, teamID, cloudID string) error {
-	cloudAccounts, err := c.GetCloudAccounts(ctx, teamID)
-	cloudAccountFound := false
-	if err != nil {
-		return err
-	}
-
-	for _, cloudAccount := range cloudAccounts {
-		if cloudAccount.ID == cloudID {
-			cloudAccountFound = true
-			cloudLink, err := GetLinkByRef(cloudAccount.Links, "self")
-			if err != nil {
-				return NewError(err.Error())
-			}
-
-			err = c.Do(ctx, "DELETE", cloudLink.Href, nil, nil)
-			if err != nil {
-				return NewError(err.Error())
-			}
-			break
-		}
-	}
-
-	if !cloudAccountFound {
-		return NewError(fmt.Sprintf(content.ErrorFailedToDeleteCloudAccount, cloudID, teamID))
-	}
-
-	return nil
+func (c *Client) DeleteCloudAccountByID(ctx context.Context, cloudID string) error {
+	err := c.Do(ctx, "DELETE", fmt.Sprintf("cloudaccounts/%s", cloudID), nil, nil)
+	return err
 }
 
 //ReValidateRole checks role validation and re-validate it
-func (c *Client) ReValidateRole(ctx context.Context, teamID, cloudID string) (*RoleReValidationResult, error) {
+func (c *Client) ReValidateRole(ctx context.Context, cloudID string) (*RoleReValidationResult, error) {
 	result := new(RoleReValidationResult)
-
-	accounts, err := c.GetCloudAccountByID(ctx, teamID, cloudID)
-	if err != nil {
-		return nil, err
-	}
-
-	link, err := GetLinkByRef(accounts.Links, "test")
-	if err != nil {
-		return nil, err
-	}
-
-	err = c.Do(ctx, "GET", link.Href, nil, result)
+	err := c.Do(ctx, "GET", fmt.Sprintf("cloudaccounts/%s/re-validate", cloudID), nil, result)
 	if err != nil {
 		return nil, err
 	}
@@ -350,12 +254,7 @@ func (c *Client) ReValidateRole(ctx context.Context, teamID, cloudID string) (*R
 //UpdateCloudAccount updates cloud account
 func (c *Client) UpdateCloudAccount(ctx context.Context, input *UpdateCloudAccountInput) (*CloudAccount, error) {
 	result := new(CloudAccount)
-	account, err := c.GetCloudAccountByID(ctx, input.TeamID, input.CloudID)
-	if err != nil {
-		return nil, err
-	}
-
-	link, err := GetLinkByRef(account.Links, "update")
+	account, err := c.GetCloudAccountByID(ctx, input.CloudID)
 	if err != nil {
 		return nil, err
 	}
@@ -364,7 +263,7 @@ func (c *Client) UpdateCloudAccount(ctx context.Context, input *UpdateCloudAccou
 	if err != nil {
 		return nil, err
 	}
-	err = c.Do(ctx, "POST", link.Href, bytes.NewBuffer(updateInfo), result)
+	err = c.Do(ctx, "POST", fmt.Sprintf("cloudaccounts/%s/update", input.CloudID), bytes.NewBuffer(updateInfo), result)
 	if err != nil {
 		return nil, err
 	}
@@ -372,15 +271,13 @@ func (c *Client) UpdateCloudAccount(ctx context.Context, input *UpdateCloudAccou
 }
 
 func (t *UpdateCloudAccountInput) mergeAndGetJSON(account *CloudAccount) ([]byte, error) {
-	updateInfo := t.toCloudPayLoad()
-	err := mergo.Merge(updateInfo, *(account.toCloudPayLoad()))
+	updateInfo := t.toCloudInfo()
+	err := mergo.Merge(updateInfo, *(account.toCloudInfo()))
 	if err != nil {
 		return nil, err
 	}
 	// mergo package will override false to true
 	updateInfo.IsDraft = t.IsDraft
-	// Add teamID to pass webapp check for cloud account creation
-	updateInfo.TeamID = t.TeamID
 	updateInfo.Environment = t.Environment
 	if t.Tags != "" {
 		updateInfo.Tags = strings.Split(t.Tags, "|")
@@ -393,46 +290,43 @@ func (t *UpdateCloudAccountInput) mergeAndGetJSON(account *CloudAccount) ([]byte
 	return jsonStr, nil
 }
 
-func (t *UpdateCloudAccountInput) toCloudPayLoad() *CloudPayLoad {
-	cloudPayLoad := &CloudPayLoad{
-		CloudInfo: CloudInfo{
-			Name:           t.CloudName,
-			Arn:            t.RoleArn,
-			ScanEnabled:    t.ScanEnabled,
-			ScanRegion:     "All",
-			ExternalID:     t.ExternalID,
-			IsDraft:        t.IsDraft,
-			Email:          t.Email,
-			UserName:       t.UserName,
-			SubscriptionID: t.SubscriptionID,
-			KeyValue:       t.KeyValue,
-			ApplicationID:  t.ApplicationID,
-			DirectoryID:    t.DirectoryID,
-		},
+func (t *UpdateCloudAccountInput) toCloudInfo() *CloudInfo {
+	cloudInfo := &CloudInfo{
+		Name:           t.CloudName,
+		Arn:            t.RoleArn,
+		ScanEnabled:    t.ScanEnabled,
+		ScanRegion:     "All",
+		ExternalID:     t.ExternalID,
+		IsDraft:        t.IsDraft,
+		Email:          t.Email,
+		UserName:       t.UserName,
+		SubscriptionID: t.SubscriptionID,
+		KeyValue:       t.KeyValue,
+		ApplicationID:  t.ApplicationID,
+		DirectoryID:    t.DirectoryID,
 	}
-	return cloudPayLoad
+
+	return cloudInfo
 }
 
-func (t *CloudAccount) toCloudPayLoad() *CloudPayLoad {
-	cloudPayLoad := &CloudPayLoad{
-		CloudInfo: CloudInfo{
-			Name:           t.Name,
-			Arn:            t.Arn,
-			ScanEnabled:    t.ScanEnabled,
-			ScanInterval:   t.ScanInterval,
-			ScanRegion:     t.ScanRegion,
-			ExternalID:     t.ExternalID,
-			IsDraft:        t.IsDraft,
-			Provider:       t.Provider,
-			Email:          t.Email,
-			UserName:       t.UserName,
-			Environment:    t.Environment,
-			SubscriptionID: t.SubscriptionID,
-			KeyValue:       t.KeyValue,
-			ApplicationID:  t.ApplicationID,
-			DirectoryID:    t.DirectoryID,
-			Tags:           t.Tags,
-		},
+func (t *CloudAccount) toCloudInfo() *CloudInfo {
+	cloudInfo := &CloudInfo{
+		Name:           t.Name,
+		Arn:            t.Arn,
+		ScanEnabled:    t.ScanEnabled,
+		ScanInterval:   t.ScanInterval,
+		ScanRegion:     t.ScanRegion,
+		ExternalID:     t.ExternalID,
+		IsDraft:        t.IsDraft,
+		Provider:       t.Provider,
+		Email:          t.Email,
+		UserName:       t.UserName,
+		Environment:    t.Environment,
+		SubscriptionID: t.SubscriptionID,
+		KeyValue:       t.KeyValue,
+		ApplicationID:  t.ApplicationID,
+		DirectoryID:    t.DirectoryID,
+		Tags:           t.Tags,
 	}
-	return cloudPayLoad
+	return cloudInfo
 }

@@ -42,111 +42,15 @@ func (c *Client) MakeClient() (*client.Client, error) {
 	return client.MakeClient(c.opts.refreshToken, c.opts.host)
 }
 
-//ListTeams get list of teams
-func (c *Client) ListTeams() ([]*client.Team, error) {
-	ctx := NewContext()
-	clt, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	teams, err := clt.GetTeams(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return teams, nil
-}
-
-//ShowTeamByID show team with ID
-func (c *Client) ShowTeamByID(teamID string) (*client.Team, error) {
-	ctx := NewContext()
-	clt, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	team, err := clt.GetTeamByID(ctx, teamID)
-	if err != nil {
-		return nil, err
-	}
-
-	return team, nil
-}
-
-//CreateTeam Create a new team
-func (c *Client) CreateTeam(teamName, teamDescription string) (*client.Team, error) {
-	ctx := NewContext()
-	clt, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	team, err := clt.CreateTeam(ctx, teamName, teamDescription)
-	if err != nil {
-		return nil, err
-	}
-
-	return team, nil
-}
-
-//ListTokens get tokens list
-func (c *Client) ListTokens() ([]*client.Token, error) {
-	ctx := NewContext()
-	clt, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	tokens, err := clt.GetTokens(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return tokens, nil
-}
-
-//ShowTokenByID show token by ID
-func (c *Client) ShowTokenByID(tokenID string) (*client.Token, error) {
-	ctx := NewContext()
-	clt, err := c.MakeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	token, err := clt.GetTokenByID(ctx, tokenID)
-	if err != nil {
-		return nil, err
-	}
-
-	return token, nil
-}
-
-//DeleteTokenByID Delete token by ID
-func (c *Client) DeleteTokenByID(tokenID string) error {
-	ctx := NewContext()
-	clt, err := c.MakeClient()
-	if err != nil {
-		return err
-	}
-
-	err = clt.DeleteTokenByID(ctx, tokenID)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 //ListCloudAccounts Get list of cloud accounts
-func (c *Client) ListCloudAccounts(teamID string) ([]*client.CloudAccount, error) {
+func (c *Client) ListCloudAccounts() ([]*client.CloudAccount, error) {
 	ctx := NewContext()
 	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	cloudAccounts, err := clt.GetCloudAccounts(ctx, teamID)
+	cloudAccounts, err := clt.GetCloudAccounts(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -155,14 +59,14 @@ func (c *Client) ListCloudAccounts(teamID string) ([]*client.CloudAccount, error
 }
 
 //ShowCloudAccountByID show cloud account by ID
-func (c *Client) ShowCloudAccountByID(teamID, cloudID string) (*client.CloudAccount, error) {
+func (c *Client) ShowCloudAccountByID(cloudID string) (*client.CloudAccount, error) {
 	ctx := NewContext()
 	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	cloudAccount, err := clt.GetCloudAccountByID(ctx, teamID, cloudID)
+	cloudAccount, err := clt.GetCloudAccountByID(ctx, cloudID)
 	if err != nil {
 		return nil, err
 	}
@@ -201,14 +105,14 @@ func (c *Client) UpdateCloudAccount(input *client.UpdateCloudAccountInput) (*cli
 }
 
 //DeleteCloudAccountByID Delete cloud by ID
-func (c *Client) DeleteCloudAccountByID(teamID, cloudID string) error {
+func (c *Client) DeleteCloudAccountByID(cloudID string) error {
 	ctx := NewContext()
 	clt, err := c.MakeClient()
 	if err != nil {
 		return err
 	}
 
-	err = clt.DeleteCloudAccountByID(ctx, teamID, cloudID)
+	err = clt.DeleteCloudAccountByID(ctx, cloudID)
 	if err != nil {
 		return err
 	}
@@ -216,13 +120,13 @@ func (c *Client) DeleteCloudAccountByID(teamID, cloudID string) error {
 	return nil
 }
 
-func (c *Client) ReValidateRole(teamID, cloudID string) (*client.RoleReValidationResult, error) {
+func (c *Client) ReValidateRole(cloudID string) (*client.RoleReValidationResult, error) {
 	ctx := NewContext()
 	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
-	result, err := clt.ReValidateRole(ctx, teamID, cloudID)
+	result, err := clt.ReValidateRole(ctx, cloudID)
 	if err != nil {
 		return nil, err
 	}
@@ -231,24 +135,24 @@ func (c *Client) ReValidateRole(teamID, cloudID string) (*client.RoleReValidatio
 }
 
 //GetEventStreamConfig gets event stream setup config
-func (c *Client) GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error) {
+func (c *Client) GetEventStreamConfig(cloudID string) (*client.EventStreamConfig, error) {
 	ctx := NewContext()
 	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	return clt.GetSetupConfig(ctx, teamID, cloudID)
+	return clt.GetSetupConfig(ctx, cloudID)
 }
 
-func (c *Client) GetEventRemoveConfig(teamID, cloudID string) (*client.EventRemoveConfig, error) {
+func (c *Client) GetEventRemoveConfig(cloudID string) (*client.EventRemoveConfig, error) {
 	ctx := NewContext()
 	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	return clt.GetRemoveConfig(ctx, teamID, cloudID)
+	return clt.GetRemoveConfig(ctx, cloudID)
 }
 
 func (c *Client) GetRoleCreationInfo(input *client.CreateCloudAccountInput) (*client.RoleCreationInfo, error) {

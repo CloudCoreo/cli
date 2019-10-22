@@ -28,7 +28,6 @@ import (
 type cloudShowCmd struct {
 	out     io.Writer
 	client  command.Interface
-	teamID  string
 	cloudID string
 }
 
@@ -54,8 +53,6 @@ func newCloudShowCmd(client command.Interface, out io.Writer) *cobra.Command {
 					coreo.RefreshToken(key))
 			}
 
-			cloudShow.teamID = teamID
-
 			return cloudShow.run()
 		},
 	}
@@ -68,7 +65,7 @@ func newCloudShowCmd(client command.Interface, out io.Writer) *cobra.Command {
 }
 
 func (t *cloudShowCmd) run() error {
-	cloud, err := t.client.ShowCloudAccountByID(t.teamID, t.cloudID)
+	cloud, err := t.client.ShowCloudAccountByID(t.cloudID)
 	if err != nil {
 		return err
 	}
@@ -76,11 +73,10 @@ func (t *cloudShowCmd) run() error {
 	util.PrintResult(
 		t.out,
 		cloud,
-		[]string{"ID", "Name", "TeamID", "AccountID", "Provider"},
+		[]string{"ID", "Name", "AccountID", "Provider"},
 		map[string]string{
 			"ID":        "ID",
 			"Name":      "Cloud Account Name",
-			"TeamID":    "Team ID",
 			"AccountID": "Cloud Account ID",
 			"Provider":  "Cloud Provider",
 		},
