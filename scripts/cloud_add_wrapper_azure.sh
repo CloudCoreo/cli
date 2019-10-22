@@ -1,9 +1,8 @@
 #!/bin/bash
-# account_name, application_id, key_value, subscription_id, environment
+# account_name,application_id,key_value,subscription_id,environment
 # To use this script, execute `sh cloud_add.sh < input_file` in Terminal
 # This script assumes account name is unique, so you can run it multiple times if adding any account fails.
-IFS=", "
-team_id="YOUR_TEAM_ID"
+IFS=","
 directory_id="YOUR_DIRECTORY_ID"
 accounts=$(vss cloud list --json | jq -r .[].name)
 while read account_name application_id key_value subscription_id environment; do

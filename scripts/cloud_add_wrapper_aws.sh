@@ -4,7 +4,6 @@
 # You may customize this script by modifying line 10, 23, 26, 27
 # This script assumes account name is unique, so you can run it multiple times if adding any account fails.
 IFS=","
-team_id="YOUR_TEAM_ID"
 role_name="securestate_role"
 accounts=$(vss cloud list --json | jq -r .[].name)
 while read account_name account_id environment profile; do
