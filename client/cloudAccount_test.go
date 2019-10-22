@@ -23,91 +23,9 @@ const refreshTokenJSONPayload = `{
     "refresh_token": "fake-refresh-token"
 }`
 
-const teamCloudAccountJSONPayload = `[{
-		"teamName": "gitUser-default",
-			"ownerId": "userID",
-			"teamIcon": "periodic-bg-5.png",
-			"teamDescription": null,
-			"default": true,
-			"links": [
-		{
-		"ref": "self",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID"
-		},
-		{
-		"ref": "owner",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/users/userID"
-		},
-		{
-		"ref": "composites",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID/composites"
-		},
-		{
-		"ref": "users",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID/users"
-		},
-		{
-		"ref": "gitKeys",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID/gitkeys"
-		},
-		{
-		"ref": "cloudAccounts",
-		"method": "GET",
-		"href": "%s/teams/teamID/cloudaccounts"
-		},
-		{
-		"ref": "defaultid",
-		"method": "GET",
-		"href":  "%s/teams/teamID/defaultid"
-		}
-	],
-		"id": "teamID"
-	}]`
-
 const revalidateRoleJSONPayload = `{
 	"isValid": true
 	}`
-
-const teamCloudAccountJSONPayloadMissingCloudAccountLink = `[{
-		"teamName": "gitUser-default",
-			"ownerId": "userID",
-			"teamIcon": "periodic-bg-5.png",
-			"teamDescription": null,
-			"default": true,
-			"links": [
-		{
-		"ref": "self",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID"
-		},
-		{
-		"ref": "owner",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/users/userID"
-		},
-		{
-		"ref": "composites",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID/composites"
-		},
-		{
-		"ref": "users",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID/users"
-		},
-		{
-		"ref": "gitKeys",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID/gitkeys"
-		}
-	],
-		"id": "teamID"
-	}]`
 
 const CloudAccountsJSONPayload = `[
 	{
@@ -147,7 +65,7 @@ const CloudAccountsJSONPayload = `[
 				"href": "%s/cloudaccounts/cloudAccountID/re-validate"
 			}
 		],
-		"id": "cloudAccountID",
+		"_id": "cloudAccountID",
 		"email": "testEmail"
 	}]`
 
@@ -162,11 +80,11 @@ const CloudAccountJSONPayload = `{
 		"name": "aws cloud account",
 		"roleId": "asdf",
 		"roleName": "CloudCoreoAssumedRole",
-		"id": "cloudAccountID"
+		"_id": "cloudAccountID"
 	}`
 
 const createdCloudAccountJSONPayload = `{
-		"id": "cloudAccountID"
+		"_id": "cloudAccountID"
 	}`
 
 func TestGetCloudAccountsSuccess(t *testing.T) {

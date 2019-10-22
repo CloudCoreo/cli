@@ -18,11 +18,11 @@ while read account_name application_id key_value subscription_id environment; do
 	done <<< "$accounts"
 	if [ $is_exist = true ]; then
 		echo "Cloud account with name $account_name already exist, skip for this account"
-		cloud_id=$(vss cloud list --json --team-id $team_id | jq  -r '.[] | select(.name=="'$account_name'")|.id')
+		cloud_id=$(vss cloud list --json --team-id $team_id | jq  -r '.[] | select(.name=="'$account_name'")|._id')
 		vss event setup --team-id $team_id --cloud-id $cloud_id
 		continue
 	fi
-	cloud_id=$(vss cloud add --team-id $team_id --name $account_name --application-id $application_id --key-value $key_value --subscription-id $subscription_id --directory-id $directory_id  --environment $environment --provider Azure --json | jq -r .id)
+	cloud_id=$(vss cloud add --team-id $team_id --name $account_name --application-id $application_id --key-value $key_value --subscription-id $subscription_id --directory-id $directory_id  --environment $environment --provider Azure --json | jq -r ._id)
 	vss event setup --team-id $team_id --cloud-id $cloud_id
 done
 unset IFS

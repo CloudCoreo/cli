@@ -19,11 +19,11 @@ while read account_name account_id environment profile; do
 	done <<< "$accounts"
 	if [ $is_exist = true ]; then
 		echo "Cloud account with name $account_name already exist, skip for this account"
-		cloud_id=$(vss cloud list --json --team-id $team_id | jq  -r '.[] | select(.name=="'$account_name'")|.id')
+		cloud_id=$(vss cloud list --json --team-id $team_id | jq  -r '.[] | select(.name=="'$account_name'")|._id')
 		vss event setup --team-id $team_id --cloud-id $cloud_id --aws-profile $profile --ignore-missing-trails
 		continue
 	fi
-	cloud_id=$(vss cloud add --team-id $team_id --name $account_name --role $role_name --aws-profile $profile --environment $environment --json | jq -r .id)
+	cloud_id=$(vss cloud add --team-id $team_id --name $account_name --role $role_name --aws-profile $profile --environment $environment --json | jq -r ._id)
 	vss event setup --team-id $team_id --cloud-id $cloud_id --aws-profile $profile --ignore-missing-trails
 done
 unset IFS
