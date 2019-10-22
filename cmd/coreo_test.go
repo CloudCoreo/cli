@@ -19,8 +19,6 @@ import (
 )
 
 type fakeReleaseClient struct {
-	teams            []*client.Team
-	tokens           []*client.Token
 	cloudAccounts    []*client.CloudAccount
 	config           client.EventStreamConfig
 	err              error
@@ -29,58 +27,13 @@ type fakeReleaseClient struct {
 	validationResult client.RoleReValidationResult
 }
 
-func (c *fakeReleaseClient) ListTeams() ([]*client.Team, error) {
-	resp := c.teams
-
-	return resp, c.err
-}
-
-func (c *fakeReleaseClient) ShowTeamByID(teamID string) (*client.Team, error) {
-	resp := &client.Team{}
-	if len(c.teams) > 0 {
-
-		resp = c.teams[0]
-	}
-
-	return resp, c.err
-}
-
-func (c *fakeReleaseClient) CreateTeam(teamName, teamDescription string) (*client.Team, error) {
-	resp := &client.Team{}
-	if len(c.teams) > 0 {
-		resp = c.teams[0]
-	}
-
-	return resp, c.err
-}
-
-func (c *fakeReleaseClient) ListTokens() ([]*client.Token, error) {
-	resp := c.tokens
-
-	return resp, c.err
-}
-
-func (c *fakeReleaseClient) ShowTokenByID(tokenID string) (*client.Token, error) {
-	resp := &client.Token{}
-	if len(c.tokens) > 0 {
-
-		resp = c.tokens[0]
-	}
-
-	return resp, c.err
-}
-
-func (c *fakeReleaseClient) DeleteTokenByID(tokenID string) error {
-	return c.err
-}
-
-func (c *fakeReleaseClient) ListCloudAccounts(teamID string) ([]*client.CloudAccount, error) {
+func (c *fakeReleaseClient) ListCloudAccounts() ([]*client.CloudAccount, error) {
 	resp := c.cloudAccounts
 
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ShowCloudAccountByID(teamID, cloudID string) (*client.CloudAccount, error) {
+func (c *fakeReleaseClient) ShowCloudAccountByID(cloudID string) (*client.CloudAccount, error) {
 	resp := &client.CloudAccount{}
 	if len(c.cloudAccounts) > 0 {
 
@@ -100,17 +53,17 @@ func (c *fakeReleaseClient) CreateCloudAccount(input *client.CreateCloudAccountI
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) DeleteCloudAccountByID(teamID, cloudID string) error {
+func (c *fakeReleaseClient) DeleteCloudAccountByID(cloudID string) error {
 	return c.err
 }
 
-func (c *fakeReleaseClient) GetEventStreamConfig(teamID, cloudID string) (*client.EventStreamConfig, error) {
+func (c *fakeReleaseClient) GetEventStreamConfig(cloudID string) (*client.EventStreamConfig, error) {
 	return &client.EventStreamConfig{
 		AWSEventStreamConfig: client.AWSEventStreamConfig{Regions: c.regions},
 	}, c.err
 }
 
-func (c *fakeReleaseClient) GetEventRemoveConfig(teamID, cloudID string) (*client.EventRemoveConfig, error) {
+func (c *fakeReleaseClient) GetEventRemoveConfig(cloudID string) (*client.EventRemoveConfig, error) {
 	return &client.EventRemoveConfig{
 		AWSEventRemoveConfig: client.AWSEventRemoveConfig{
 			Regions: c.regions,
@@ -132,7 +85,7 @@ func (c *fakeReleaseClient) UpdateCloudAccount(input *client.UpdateCloudAccountI
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ReValidateRole(teamID, cloudID string) (*client.RoleReValidationResult, error) {
+func (c *fakeReleaseClient) ReValidateRole(cloudID string) (*client.RoleReValidationResult, error) {
 	resp := c.validationResult
 	return &resp, c.err
 }

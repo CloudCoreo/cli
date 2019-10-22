@@ -26,7 +26,6 @@ type eventRemoveCmd struct {
 	awsProfile     string
 	awsProfilePath string
 	cloudID        string
-	teamID         string
 	authFile       string
 	region         string
 }
@@ -54,7 +53,6 @@ func newEventRemoveCmd(client command.Interface, provider command.CloudProvider,
 					coreo.RefreshToken(key))
 			}
 
-			eventRemove.teamID = teamID
 			return eventRemove.run()
 		},
 	}
@@ -69,7 +67,7 @@ func newEventRemoveCmd(client command.Interface, provider command.CloudProvider,
 }
 
 func (t *eventRemoveCmd) run() error {
-	config, err := t.client.GetEventRemoveConfig(t.teamID, t.cloudID)
+	config, err := t.client.GetEventRemoveConfig(t.cloudID)
 	if err != nil {
 		return err
 	}

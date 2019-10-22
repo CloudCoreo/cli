@@ -19,25 +19,16 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/CloudCoreo/cli/client"
 	"github.com/pkg/errors"
 )
 
 func TestTokenDeleteCmd(t *testing.T) {
-	mockToken := func(tokenName, tokenID, tokenDescription string) *client.Token {
-		return &client.Token{
-			ID:          tokenID,
-			Description: tokenDescription,
-			Name:        tokenName,
-		}
-	}
 
 	tests := []struct {
 		cmds  string
 		desc  string
 		flags []string
 		args  []string
-		resp  []*client.Token
 		json  bool
 		err   bool
 		xout  string
@@ -48,32 +39,13 @@ func TestTokenDeleteCmd(t *testing.T) {
 			flags: []string{
 				"--token-id", "123",
 			},
-			resp: []*client.Token{
-				mockToken("ID1", "TokenDescription1", "TokenName1"),
-				mockToken("ID2", "TokenDescription2", "TokenName2"),
-			},
-			xout: "",
-		},
-		{
-			cmds: "coreo token delete",
-			desc: "delete a particular token",
-			args: []string{""},
-			err:  true,
-		},
-		{
-			cmds: "coreo token delete",
-			desc: "delete a particular token",
-			flags: []string{
-				"--token-id", "123",
-			},
-			args: []string{""},
-			err:  true,
+			xout: "Tokens are deprecated, only csp token is required` \n",
 		},
 	}
 
 	var buf bytes.Buffer
 	for _, tt := range tests {
-		frc := &fakeReleaseClient{tokens: tt.resp}
+		frc := &fakeReleaseClient{}
 		if tt.err {
 			frc.err = errors.New("Error")
 		}

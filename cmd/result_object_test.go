@@ -22,13 +22,13 @@ func TestResultObjectCmd(t *testing.T) {
 			cmds:  "coreo result object",
 			desc:  "Show violating objects",
 			flags: []string{},
-			xout: "Findings results are deprecated, please follow the link to swagger API doc `https://api.securestate.vmware.com` \n",
+			xout:  "Findings results are deprecated, please follow the link to swagger API doc `https://api.securestate.vmware.com` \n",
 		},
 		{
 			cmds:  "coreo result object",
 			desc:  "Show violating objects",
 			flags: []string{},
-			xout: "Findings results are deprecated, please follow the link to swagger API doc `https://api.securestate.vmware.com` \n",
+			xout:  "Findings results are deprecated, please follow the link to swagger API doc `https://api.securestate.vmware.com` \n",
 		},
 	}
 
@@ -41,7 +41,7 @@ func TestResultObjectCmd(t *testing.T) {
 
 		cmd := newResultObjectCmd(frc, &buf)
 		cmd.ParseFlags(test.flags)
-		cmd.Run(cmd, test.args)
+		cmd.RunE(cmd, test.args)
 
 		if buf.String() != test.xout {
 			t.Fatalf("%q\n\t%s:\nexpected\n\t%q\nactual\n\t%q", test.cmds, test.desc, test.xout, buf.String())

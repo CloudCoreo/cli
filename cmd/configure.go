@@ -29,7 +29,6 @@ import (
 type configureCmd struct {
 	out         io.Writer
 	client      command.Interface
-	teamID      string
 	compositeID string
 }
 
@@ -58,22 +57,17 @@ func (t *configureCmd) run() error {
 
 	//generate config keys based on user profile
 	apiKey := fmt.Sprintf("%s.%s", userProfile, content.AccessKey)
-	teamIDKey := fmt.Sprintf("%s.%s", userProfile, content.TeamID)
 
 	userAPIkey := ""
-	userTeamID := ""
 
 	// load from config
 	apiKeyValue := util.GetValueFromConfig(apiKey, true)
-	teamIDValue := util.GetValueFromConfig(teamIDKey, false)
 
 	// prompt user for input
 	setValue(&userAPIkey, key, fmt.Sprintf(content.CmdConfigurePromptAPIKEY, apiKeyValue))
-	setValue(&userTeamID, teamID, fmt.Sprintf(content.CmdConfigurePromptTeamID, teamIDValue))
 
 	// replace values in config
 	util.UpdateConfig(apiKey, userAPIkey)
-	util.UpdateConfig(teamIDKey, userTeamID)
 
 	// save config
 	if err := util.SaveViperConfig(); err != nil {

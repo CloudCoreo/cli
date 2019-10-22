@@ -90,53 +90,21 @@ func (suite *DoTestSuite) SetupTest() {
 func (suite *DoTestSuite) TestDo() {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
-	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/teams", httpmock.NewStringResponder(http.StatusOK, `{
-		"teamName": "gitUser-default",
-			"ownerId": "userID",
-			"teamIcon": "periodic-bg-5.png",
-			"teamDescription": null,
-			"default": true,
-			"links": [
-		{
-		"ref": "self",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID"
-		},
-		{
-		"ref": "owner",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/users/userID"
-		},
-		{
-		"ref": "composites",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID/composites"
-		},
-		{
-		"ref": "users",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID/users"
-		},
-		{
-		"ref": "gitKeys",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID/gitkeys"
-		},
-		{
-		"ref": "cloudAccounts",
-		"method": "GET",
-		"href": "https://app.cloudcoreo.com/api/teams/teamID/cloudaccounts"
-		}
-	],
-		"id": "teamID"
-	}`))
+	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/cloudaccounts", httpmock.NewStringResponder(http.StatusOK, `[
+	{
+		"name": "aws cloud account",
+		"roleId": "asdf",
+		"roleName": "CloudCoreoAssumedRole",
+		"id": "cloudAccountID",
+		"email": "testEmail"
+	}]`))
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("APIkey", defaultAPIEndpoint)
-	team := &Team{}
-	err := client.Do(context.Background(), "POST", defaultAPIEndpoint+"/teams", nil, &team)
+	accounts := make([]*CloudAccount, 0)
+	err := client.Do(context.Background(), "GET", "cloudaccounts", nil, &accounts)
 	assert.Nil(suite.T(), err, "Do shouldn't return error.")
-	assert.Equal(suite.T(), "teamID", team.ID)
+	assert.Equal(suite.T(), "cloudAccountID", accounts[0].ID)
 }
 
 // TestDoTestSuite Execute TestDoTestSuite test suite

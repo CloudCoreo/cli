@@ -15,10 +15,10 @@
 package main
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/CloudCoreo/cli/cmd/content"
-	"github.com/CloudCoreo/cli/cmd/util"
 	"github.com/CloudCoreo/cli/pkg/command"
 	"github.com/CloudCoreo/cli/pkg/coreo"
 	"github.com/spf13/cobra"
@@ -43,17 +43,13 @@ func newTeamCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Long:  content.CmdTeamAddLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			if err := util.CheckTeamAddFlags(teamCreate.teamName, teamCreate.teamDescription); err != nil {
-				return err
-			}
-
 			if teamCreate.client == nil {
 				teamCreate.client = coreo.NewClient(
 					coreo.Host(apiEndpoint),
 					coreo.RefreshToken(key))
 			}
-
-			return teamCreate.run()
+			_, err := fmt.Fprint(out, "Teams are deprecated` \n")
+			return err
 		},
 	}
 
@@ -63,25 +59,4 @@ func newTeamCreateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&teamCreate.teamDescription, content.CmdFlagDescriptionLong, content.CmdFlagDescriptionShort, "", content.CmdTeamDescriptionDescription)
 
 	return cmd
-}
-
-func (t *teamCreateCmd) run() error {
-	team, err := t.client.CreateTeam(t.teamName, t.teamDescription)
-	if err != nil {
-		return err
-	}
-
-	util.PrintResult(
-		t.out,
-		team,
-		[]string{"ID", "TeamName", "TeamDescription"},
-		map[string]string{
-			"ID":              "Team ID",
-			"TeamName":        "Team Name",
-			"TeamDescription": "Team Description",
-		},
-		jsonFormat,
-		verbose)
-
-	return nil
 }
