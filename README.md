@@ -1,15 +1,17 @@
-# VMware Secure State CLI
+# CloudHealth Secure State CLI
 
 [![Build Status](https://travis-ci.org/CloudCoreo/cli.svg?branch=master)](https://travis-ci.org/CloudCoreo/cli)
 [![Go Report Card](https://goreportcard.com/badge/github.com/CloudCoreo/cli)](https://goreportcard.com/report/github.com/CloudCoreo/cli)
 
-CLI is a tool for managing Vmware Secure State resources. 
+CLI is a tool for managing CloudHealth Secure State resources. 
 
 Use CLI to...
 
-- Add/remove teams, cloud accounts and API tokens
-- Get violation results
+- Add/remove cloud accounts and API tokens
 - Event stream setup and removal
+- Get violation results
+
+**NOTE: Secure State recently changed our name to CloudHealth Secure State. The CLI will still include references to vss.
 
 ## Install
 
@@ -100,7 +102,7 @@ The most commonly used VSS commands are:
 |completion| Generate bash autocompletions script|
 |event     | Manage event stream                           | setup|
 |help      | Help about any command|
-|version   | Print the version number of VMware Secure State CLI|
+|version   | Print the version number of the Secure State CLI|
 -------------      
  
 ## Configurable variables
@@ -112,7 +114,7 @@ The most commonly used VSS commands are:
 |home    | --home | $VSS_HOME | Location of your VSS config. Overrides $VSS_HOME.
 |json    |--json | | Output in json format
 |profile | --profile | $VSS_PROFILE | VSS profile to use. Overrides $VSS_PROFILE, default "default" |
-|team-id | --team-id | | VMware Secure State team id. This flag is deprecated in the latest CLI release and not required anymore|
+|team-id | --team-id | | Secure State team id. This flag is deprecated in the latest CLI release and not required anymore|
 |verbose | --verbose | | Enable verbose output
 
 The values passing by flags will override environment variables.  
@@ -171,7 +173,7 @@ Manage Cloud Accounts
     
         |Variable | Option | Description |
         | ------ | ------ | :-------- |
-        | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to delete, this flag is required|
+        | cloud id| --cloud-id| Secure State cloud id of which account you'd like to delete, this flag is required|
         | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
         | aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
 * list
@@ -185,7 +187,7 @@ Manage Cloud Accounts
     
         |Variable | Option | Description |
         | ------ | ------ | :-------- |
-        | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to show information for, this flag is required|
+        | cloud id| --cloud-id| Secure State cloud id of which account you'd like to show information for, this flag is required|
 * update
     * Usage
         * `vss cloud update --cloud-id YOUR_CLOUD_ID [flags]`
@@ -204,7 +206,7 @@ Manage Cloud Accounts
         |Environment| --env| Environment label for the cloud account to add, must be one of these: Production, Staging, Development, Test"|
         |email|--email|The email address of account owner|
         |username|--username| The username of account owner|
-        | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to update information for, this flag is required|
+        | cloud id| --cloud-id| Secure State cloud id of which account you'd like to update information for, this flag is required|
         | cloud account tags| --tags| Cloud account tags|
     * For role update, you may either provide your own role or let CLI create one
     * You may need to use --draft flag if you still want to keep it as draft status, otherwise VSS CLI will switch it to non-draft status
@@ -216,7 +218,7 @@ Manage Cloud Accounts
         
             |Variable | Option | Description |
             | ------ | ------ | :-------- |
-            | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to test role validation for, this flag is required|
+            | cloud id| --cloud-id| Secure State cloud id of which account you'd like to test role validation for, this flag is required|
             
 #### configure
 Configure CLI options
@@ -258,7 +260,7 @@ Show violation results (Deprecated, please follow the link to swagger API doc 'h
         
          |Variable | Option | Description |
          | ------ | ------ | :-------- |
-         | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to show violation for, this flag is optional|
+         | cloud id| --cloud-id| Secure State cloud id of which account you'd like to show violation for, this flag is optional|
          | severity | --severity | The severity level you'd like to show in violation results |
          | retry | --retry | Retry times when getting violation fails |
     * By default you will get all violation objects under your team, three flag filters are provided: team-id, cloud-id and severity. If team-id is not specified, the team in your profile will be automatically used.
@@ -273,7 +275,7 @@ Show violation results (Deprecated, please follow the link to swagger API doc 'h
     
         |Variable | Option | Description |
         | ------ | ------ | :-------- |
-        | cloud account| --cloud-account-id| VMware Secure State cloud id of which account you'd like to show violation for, this flag is optional|
+        | cloud account| --cloud-account-id| Secure State cloud id of which account you'd like to show violation for, this flag is optional|
         | severity | --severity | The severity level you'd like to show in violation results |
     * By default you will get all violation rules under your team, three flag filters are provided: team-id, cloud-id and severity. If team-id is not specified, the team in your profile will be automatically used.
     * Examples
@@ -321,7 +323,7 @@ Manage event stream
         | ------ | ------ | :-------- |
         | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
         |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
-        | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to add event stream for, this flag is required|
+        | cloud id| --cloud-id| Secure State cloud id of which account you'd like to add event stream for, this flag is required|
         |ignore-missing-trails|--ignore-missing-trails| With this flag, CLI will skip regions of which CloudTrail in not enables and continue on other regions.|
 
 * remove
@@ -333,14 +335,14 @@ Manage event stream
         | ------ | ------ | :-------- |
         | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
         |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
-        | cloud id| --cloud-id| VMware Secure State cloud id of which account you'd like to remove event stream for, this flag is required|
+        | cloud id| --cloud-id| Secure State cloud id of which account you'd like to remove event stream for, this flag is required|
         
 #### help
 Help about any command
 * Usage   
     * `vss help`
 #### version
-Print the version number of VMware Secure State CLI
+Print the version number of Secure State CLI
 * Usage 
     * `vss version`
 ## Community, discussion, contribution, and support
