@@ -19,11 +19,11 @@ Use CLI to...
 
 ### OSX
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.48/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.48/vss_darwin_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.49/vss_darwin_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.49/vss_darwin_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.48/vss_darwin_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.49/vss_darwin_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -31,11 +31,11 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.48
 
 ### Linux
 
-Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.48/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.48/vss_linux_amd64)
+Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.49/vss_linux_amd64](https://github.com/CloudCoreo/cli/releases/download/v0.0.49/vss_linux_amd64)
 
 ```sh
  mkdir vss && cd vss
- wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.48/vss_linux_amd64
+ wget -q -O vss https://github.com/CloudCoreo/cli/releases/download/v0.0.49/vss_linux_amd64
  chmod +x vss
  export PATH=$PATH:${PWD}   # Add current dir where vss has been downloaded to
  vss
@@ -43,7 +43,7 @@ Download `vss` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.48
 
 ### Windows
 
-Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.48/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.48/vss_windows_amd64.exe)
+Download `vss.exe` from [https://github.com/CloudCoreo/cli/releases/download/v0.0.49/vss_windows_amd64.exe](https://github.com/CloudCoreo/cli/releases/download/v0.0.49/vss_windows_amd64.exe)
 
 ```
 C:\Users\Username\Downloads> rename vss_windows_amd64.exe vss.exe
@@ -126,7 +126,7 @@ You may use CLI to do scriptable onboarding with two commands:
  vss cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE [--aws-profile PROFILE_NAME] [–aws-profile-path PROFILE_PATH] [--policy-arn YOUR_POLICY_ARN]  
  vss event setup --cloud-id YOUR_CLOUD_ID [--aws-profile PROFILE_NAME] [--aws-profile-path PROFILE_PATH] 
 ```
-team-id flag is not required from CLI release v0.0.48
+team-id flag is not required from CLI release v0.0.49
 ## Docs
 
 Get started with [VSS commands](docs/vss/vss.md), setup for [VSS bash completion](docs/bash-completion.md)
@@ -231,7 +231,7 @@ Configure CLI options
     * `vss configure list`
     
 #### team
-Manage Teams(These commands are deprecated from CLI version v0.0.48)
+Manage Teams(These commands are deprecated from CLI version v0.0.49)
 * add
     * Usage
         * `vss team add -n YOUR_NEW_TEAM_NAME -d YOUR_TEAM_DESCRIPTION [flags]`
@@ -284,7 +284,7 @@ Show violation results (Deprecated, please follow the link to swagger API doc 'h
         * `vss result rule --cloud-account-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
         
 #### token
-Manage API Tokens(These commands are deprecated from CLI version v0.0.48, please use [CSP portal](https://console.cloud.vmware.com/csp/gateway/portal/#/user/tokens)) to manage your token)
+Manage API Tokens(These commands are deprecated from CLI version v0.0.49, please use [CSP portal](https://console.cloud.vmware.com/csp/gateway/portal/#/user/tokens)) to manage your token)
 * delete
     * Usage
         * `vss token delete --token-id YOUR_TOKEN_ID [flags]`
