@@ -1,26 +1,19 @@
 language: go
 go:
 - '1.10'
-gobuild_args: -ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER
-  -X main.githash=$TRAVIS_COMMIT"
+gobuild_args: -ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT"
 install:
-- go get github.com/mattn/goveralls
-- go get -u golang.org/x/lint/golint
+  - go get github.com/mattn/goveralls
+  - go get -u golang.org/x/lint/golint
 script:
-- go vet $(go list ./... | grep -v vendor)
+  - go vet $(go list ./... | grep -v vendor)
 before_deploy:
-- GOOS=linux GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER
-  -X main.githash=$TRAVIS_COMMIT" -o vss_linux_amd64 github.com/CloudCoreo/cli/cmd
-- GOOS=linux GOARCH=386 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER
-  -X main.githash=$TRAVIS_COMMIT" -o vss_linux_386 github.com/CloudCoreo/cli/cmd
-- GOOS=linux GOARCH=arm go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER
-  -X main.githash=$TRAVIS_COMMIT" -o vss_linux_arm github.com/CloudCoreo/cli/cmd
-- GOOS=darwin GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER
-  -X main.githash=$TRAVIS_COMMIT" -o vss_darwin_amd64 github.com/CloudCoreo/cli/cmd
-- GOOS=windows GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER
-  -X main.githash=$TRAVIS_COMMIT" -o vss_windows_amd64.exe github.com/CloudCoreo/cli/cmd
-- GOOS=windows GOARCH=386 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER
-  -X main.githash=$TRAVIS_COMMIT" -o vss_windows_386.exe github.com/CloudCoreo/cli/cmd
+  - GOOS=linux GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_linux_amd64 github.com/CloudCoreo/cli/cmd
+  - GOOS=linux GOARCH=386 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_linux_386 github.com/CloudCoreo/cli/cmd
+  - GOOS=linux GOARCH=arm go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_linux_arm github.com/CloudCoreo/cli/cmd
+  - GOOS=darwin GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_darwin_amd64 github.com/CloudCoreo/cli/cmd
+  - GOOS=windows GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_windows_amd64.exe github.com/CloudCoreo/cli/cmd
+  - GOOS=windows GOARCH=386 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_windows_386.exe github.com/CloudCoreo/cli/cmd
 deploy:
   provider: releases
   api_key:
