@@ -1,6 +1,6 @@
 language: go
 go:
-- '1.10'
+  - "1.10"
 gobuild_args: -ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT"
 install:
   - go get github.com/mattn/goveralls
@@ -8,14 +8,15 @@ install:
 script:
   - go vet $(go list ./... | grep -v vendor)
 before_deploy:
-  - GOOS=linux GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_linux_amd64 github.com/CloudCoreo/cli/cmd
-  - GOOS=linux GOARCH=386 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_linux_386 github.com/CloudCoreo/cli/cmd
-  - GOOS=linux GOARCH=arm go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_linux_arm github.com/CloudCoreo/cli/cmd
-  - GOOS=darwin GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_darwin_amd64 github.com/CloudCoreo/cli/cmd
-  - GOOS=windows GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_windows_amd64.exe github.com/CloudCoreo/cli/cmd
-  - GOOS=windows GOARCH=386 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_windows_386.exe github.com/CloudCoreo/cli/cmd
+  - 'GOOS=linux GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_linux_amd64 github.com/CloudCoreo/cli/cmd'
+  - 'GOOS=linux GOARCH=386 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_linux_386 github.com/CloudCoreo/cli/cmd'
+  - 'GOOS=linux GOARCH=arm go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_linux_arm github.com/CloudCoreo/cli/cmd'
+  - 'GOOS=darwin GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_darwin_amd64 github.com/CloudCoreo/cli/cmd'
+  - 'GOOS=windows GOARCH=amd64 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_windows_amd64.exe github.com/CloudCoreo/cli/cmd'
+  - 'GOOS=windows GOARCH=386 go build --ldflags "-X main.version=$TRAVIS_TAG -X main.buildID=$TRAVIS_BUILD_NUMBER -X main.githash=$TRAVIS_COMMIT" -o vss_windows_386.exe github.com/CloudCoreo/cli/cmd'
 deploy:
   provider: releases
+  skip_cleanup: true
   api_key:
     secure: aO/8UPeiN2Ao1UJ6VbwF0PtzUUFDMyezBVJA4QeQFuGZngRhjbNZqNpGEMI7mLjQFvjgE12rSG9ig3nJsApGprVMe0L2lu5rp1A0pgvo+nCVvlfmqaHr+nHOHbjoy144Txw6ftinQ+4QDp+6Zpp/Jn2yIt4CFT1M9KW8e8Jfd5+1Gl7TeAkI29+lMhf9tCDv5isJLqZy1XgpSY6AQ/CBnOrygnMvZpfr5sng61rpts+mxX/UQ7GQGAvJ3Z3YZ61FLXdvfFlX+1mQYvMMo4PSe0sn+2EKA/VnfwLl+wA1C3un+DyxN16hRqDUWVkMEi359fj/Itp8f472CwMT7PxCYbI4Iyu/jzQAnBmvb14Cxkl/ZHNIuci/MHpKkopN3gVPqoVCM6X61IWF1PcCi0K6+b1iCP9UIjDKI1QOgybQVMbCXoNBS4pKEFi1f/tE8WMNiVprzdNnd5RUVK133Kv9xXL8rzmiBSJARuckzC4R/Qz8WK2nonmP+Dzst3SRvznBw1p5PEHdZIaiwgeIwdWnbjQiWAzT1u8/YIXELTNKOl0WarWak5dKFOxB3NBdNz5sRxwCdKbyNUYZ/2vQpnIlELFFHKuGOzrrCcjrHgBsk4BMiAJaN0Y2qi6b5IDtOh516Tb0Ow4I6d4E0NIeUupJihFPHs4lJBcTyutB5H2sZhE=
   file:
@@ -28,5 +29,5 @@ deploy:
   draft: true
   on:
     repo: CloudCoreo/cli
+    branch: dev
     tags: true
-  skip_cleanup: 'true'
