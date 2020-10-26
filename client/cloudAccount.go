@@ -54,6 +54,7 @@ type CreateCloudAccountInput struct {
 	DirectoryID    string
 	SubscriptionID string
 	Tags           string
+	CSPProjectID   string
 }
 
 //CloudInfo listed all info of cloud accounts
@@ -76,6 +77,7 @@ type CloudInfo struct {
 	Tags                []string `json:"tags,omitempty"`
 	IsValid             bool     `json:"isValid"`
 	LastValidationCheck string   `json:"lastValidationCheck"`
+	CSPProjectID        string   `json:"cspProjectId"`
 }
 
 type defaultID struct {
@@ -210,6 +212,7 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 		DirectoryID:    input.DirectoryID,
 		SubscriptionID: input.SubscriptionID,
 		Environment:    input.Environment,
+		CSPProjectID:   input.CSPProjectID,
 	}
 	if input.Tags != "" {
 		cloudCreateInput.Tags = strings.Split(input.Tags, "|")
@@ -263,7 +266,7 @@ func (c *Client) UpdateCloudAccount(ctx context.Context, input *UpdateCloudAccou
 	if err != nil {
 		return nil, err
 	}
-	err = c.Do(ctx, "POST", fmt.Sprintf("cloudaccounts/%s/update", input.CloudID), bytes.NewBuffer(updateInfo), result)
+	err = c.Do(ctx, "PUT", fmt.Sprintf("cloudaccounts/%s", input.CloudID), bytes.NewBuffer(updateInfo), result)
 	if err != nil {
 		return nil, err
 	}
@@ -304,6 +307,7 @@ func (t *UpdateCloudAccountInput) toCloudInfo() *CloudInfo {
 		KeyValue:       t.KeyValue,
 		ApplicationID:  t.ApplicationID,
 		DirectoryID:    t.DirectoryID,
+		CSPProjectID:   t.CSPProjectID,
 	}
 
 	return cloudInfo
@@ -327,6 +331,7 @@ func (t *CloudAccount) toCloudInfo() *CloudInfo {
 		ApplicationID:  t.ApplicationID,
 		DirectoryID:    t.DirectoryID,
 		Tags:           t.Tags,
+		CSPProjectID:   t.CSPProjectID,
 	}
 	return cloudInfo
 }

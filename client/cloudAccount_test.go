@@ -56,8 +56,8 @@ const CloudAccountsJSONPayload = `[
 			},
 			{
 				"ref": "update",
-				"method": "POST",
-				"href": "%s/cloudaccounts/cloudAccountID/update"
+				"method": "PUT",
+				"href": "%s/cloudaccounts/cloudAccountID"
 			},
 			{
 				"ref": "test",
@@ -72,7 +72,7 @@ const CloudAccountsJSONPayload = `[
 const RoleCreationInfoJSONPayload = `{
 		"accountId": "Fake-aws-account-id",
 		"externalId": "Fake-external-id",
-		"domain": "fake domain"
+		"domain": "fake domain"	
 	}`
 
 const CloudAccountJSONPayload = `{
