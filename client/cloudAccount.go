@@ -217,6 +217,9 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 	if input.Tags != "" {
 		cloudCreateInput.Tags = strings.Split(input.Tags, "|")
 	}
+	if input.CSPProjectID == "" {
+		cloudCreateInput.CSPProjectID = "default"
+	}
 	if input.Provider == "AWS" {
 		cloudCreateInput.ScanInterval = "Weekly"
 	} else if input.Provider == "Azure" {
