@@ -115,7 +115,7 @@ func TestDoTestSuite(t *testing.T) {
 
 func TestBuildRequest(t *testing.T) {
 
-	i := Interceptor(func(req *http.Request) error { return fmt.Errorf("Return error") })
+	i := Interceptor(func(req *http.Request) error { return fmt.Errorf("return error") })
 	c := newClient("http://test.com", WithInterceptor(i))
 	_, err := c.buildRequest("GET", "http://test.com", nil)
 

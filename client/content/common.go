@@ -17,7 +17,7 @@ const (
 	ErrorFailedToDeleteCloudAccount = "Failed to delete cloud account with ID %s under team ID %s."
 
 	//ErrorMissingRoleInformation error
-	ErrorMissingRoleInformation = "Adding cloud account falied, you need to provide either rolearn and external id or new role name"
+	ErrorMissingRoleInformation = "Adding cloud account failed, you need to provide either rolearn and external id or new role name"
 
 	//ErrorNoTokensFound error
 	ErrorNoTokensFound = "No tokens found. To create a token use `coreo token add [flags]` command."
