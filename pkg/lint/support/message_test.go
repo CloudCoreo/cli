@@ -60,18 +60,18 @@ func TestRunLinterRule(t *testing.T) {
 }
 
 func TestMessage(t *testing.T) {
-	m := Message{ErrorSev, "config.yaml", errors.New("Foo")}
-	if m.Error() != "[ERROR] config.yaml: Foo" {
+	m := Message{ErrorSev, "config.yaml", errors.New("foo")}
+	if m.Error() != "[ERROR] config.yaml: foo" {
 		t.Errorf("Unexpected output: %s", m.Error())
 	}
 
-	m = Message{WarningSev, "config.yaml", errors.New("Bar")}
-	if m.Error() != "[WARNING] config.yaml: Bar" {
+	m = Message{WarningSev, "config.yaml", errors.New("bar")}
+	if m.Error() != "[WARNING] config.yaml: bar" {
 		t.Errorf("Unexpected output: %s", m.Error())
 	}
 
-	m = Message{InfoSev, "config.yaml", errors.New("FooBar")}
-	if m.Error() != "[INFO] config.yaml: FooBar" {
+	m = Message{InfoSev, "config.yaml", errors.New("foobar")}
+	if m.Error() != "[INFO] config.yaml: foobar" {
 		t.Errorf("Unexpected output: %s", m.Error())
 	}
 }

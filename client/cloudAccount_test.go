@@ -221,7 +221,7 @@ func TestCreateCloudAccountFailureCloudAccountNotCreated(t *testing.T) {
 	}
 	_, err := client.CreateCloudAccount(context.Background(), input)
 	assert.NotNil(t, err, "CreateCloudAccount should return error.")
-	assert.Equal(t, "Adding cloud account falied, you need to provide either rolearn and external id or new role name", err.Error())
+	assert.Equal(t, "Adding cloud account failed, you need to provide either rolearn and external id or new role name", err.Error())
 }
 
 func TestDeleteCloudAccountByIDSuccess(t *testing.T) {
@@ -272,7 +272,7 @@ func TestUpdateCloudAccountSuccess(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/cloudaccounts/cloudAccountID", httpmock.NewStringResponder(http.StatusOK, createdCloudAccountJSONPayload))
-	httpmock.RegisterResponder("POST", defaultAPIEndpoint+"/cloudaccounts/cloudAccountID/update", httpmock.NewStringResponder(http.StatusOK, createdCloudAccountJSONPayload))
+	httpmock.RegisterResponder("PUT", defaultAPIEndpoint+"/cloudaccounts/cloudAccountID", httpmock.NewStringResponder(http.StatusOK, createdCloudAccountJSONPayload))
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)

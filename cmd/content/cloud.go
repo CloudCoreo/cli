@@ -70,10 +70,10 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdCloudShowLong long description
 	CmdCloudShowLong = `Show a cloud account.`
 
-	//CmdCloudDeleteShort short desription
+	//CmdCloudDeleteShort short description
 	CmdCloudDeleteShort = "Delete a cloud account"
 
-	//CmdCloudDeleteLong long desription
+	//CmdCloudDeleteLong long description
 	CmdCloudDeleteLong = `Delete a cloud account.`
 
 	//CmdFlagCloudIDLong flag
@@ -107,7 +107,7 @@ Add a cloud account. The result would be shown as the following if successful.
 	CmdFlagIgnoreMissingTrailsDescription = "CLI will continue on event steam setup even if CloudTrail is not enabled in all regions"
 
 	//CmdFlagDuration is the duration of session keys for cloud scan command
-	CmdFlagDuration = "duartion"
+	CmdFlagDuration = "duration"
 
 	//CmdFlagDurationDescription describes the flag duration
 	CmdFlagDurationDescription = "The duration for session in seconds"

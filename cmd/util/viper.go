@@ -34,7 +34,7 @@ func SaveViperConfig() error {
 
 	b, err := yaml.Marshal(all)
 	if err != nil {
-		return fmt.Errorf("Panic while encoding into YAML format.")
+		return fmt.Errorf("panic while encoding into YAML format")
 	}
 	if _, err := f.WriteString(string(b)); err != nil {
 		return err
