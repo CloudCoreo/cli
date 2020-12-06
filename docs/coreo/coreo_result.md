@@ -1,4 +1,4 @@
-## coreo result
+## coreo result (Deprecated, please follow the link to swagger API doc 'https://api.securestate.vmware.com')
 
 Show the violation results
 

@@ -129,7 +129,7 @@ You may use CLI to do scriptable onboarding with two commands:
 team-id flag is not required from CLI release v0.0.49
 ## Docs
 
-Get started with [VSS commands](docs/vss/vss.md), setup for [VSS bash completion](docs/bash-completion.md)
+Get started with [VSS commands](docs/coreo/coreo.md), setup for [VSS bash completion](docs/bash-completion.md)
 
 #### cloud
 Manage Cloud Accounts
