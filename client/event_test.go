@@ -8,6 +8,8 @@ import (
 	"github.com/jarcoal/httpmock"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/CloudCoreo/cli/cmd/util"
 )
 
 const EventConfigureResponse = `{
@@ -41,7 +43,7 @@ const CloudAccountJSONPayloadNoSetup = `[
 				"href": "https://app.cloudcoreo.com/api/teams/teamID"
 			}
 		],
-		"id": "cloudAccountID"
+		"accountId": "cloudAccountID"
 	}]`
 
 func TestGetSetupConfigSuccess(t *testing.T) {
@@ -51,7 +53,7 @@ func TestGetSetupConfigSuccess(t *testing.T) {
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
-	config, err := client.GetSetupConfig(context.Background(), "cloudAccountID")
+	config, err := client.GetSetupConfig(context.Background(), "cloudAccountID", util.ProviderAWS)
 	assert.Nil(t, err, "getSetupConfig shouldn't return error")
 	assert.Equal(t, "fakeStackName", config.StackName)
 }
@@ -63,7 +65,7 @@ func TestGetSetupConfigFailureWithNoResponse(t *testing.T) {
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
-	_, err := client.GetSetupConfig(context.Background(), "cloudAccountID")
+	_, err := client.GetSetupConfig(context.Background(), "cloudAccountID", util.ProviderAWS)
 	assert.NotNil(t, err, "getSetupConfig should return error")
 }
 
@@ -74,7 +76,7 @@ func TestGetRemoveConfigSuccess(t *testing.T) {
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
-	config, err := client.GetRemoveConfig(context.Background(), "cloudAccountID")
+	config, err := client.GetRemoveConfig(context.Background(), "cloudAccountID", util.ProviderAWS)
 	assert.Nil(t, err, "getRemoveConfig shouldn't return error")
 	assert.Equal(t, "fakeStackName", config.StackName)
 }
@@ -86,6 +88,6 @@ func TestGetRemoveConfigFailureWithNoResponse(t *testing.T) {
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
-	_, err := client.GetRemoveConfig(context.Background(), "cloudAccountID")
+	_, err := client.GetRemoveConfig(context.Background(), "cloudAccountID", util.ProviderAWS)
 	assert.NotNil(t, err, "getRemovepConfig should return error")
 }

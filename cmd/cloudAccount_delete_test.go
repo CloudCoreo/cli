@@ -25,9 +25,9 @@ import (
 )
 
 func TestCloudAccountDeleteCmd(t *testing.T) {
-	mockCloudAccount := func(cloudName, teamID, cloudID string) *client.CloudAccount {
+	mockCloudAccount := func(cloudName, teamID, accountNumber string) *client.CloudAccount {
 		return &client.CloudAccount{
-			ID:        cloudID,
+			AccountID: accountNumber,
 			CloudInfo: client.CloudInfo{Name: cloudName},
 		}
 	}
@@ -46,7 +46,7 @@ func TestCloudAccountDeleteCmd(t *testing.T) {
 			cmds: "coreo cloud delete, success",
 			desc: "get a particular cloud account",
 			flags: []string{
-				"--cloud-id", "123123",
+				"--account-id", "123123",
 			},
 			resp: []*client.CloudAccount{
 				mockCloudAccount("ID1", "Team1", "CloudName1"),

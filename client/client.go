@@ -22,6 +22,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 
 	"github.com/CloudCoreo/cli/client/content"
 	"golang.org/x/net/context/ctxhttp"
@@ -137,4 +138,22 @@ func (c *Client) buildRequest(method, path string, body io.Reader) (*http.Reques
 	}
 
 	return req, nil
+}
+
+func genPathWithQueryParams(path string, queryParams map[string]string) (*string, error) {
+	base, err := url.Parse("")
+	if err != nil {
+		return nil, err
+	}
+	base.Path += path
+
+	// Query params
+	params := url.Values{}
+	for key, value := range queryParams {
+		params.Add(key, value)
+	}
+	base.RawQuery = params.Encode()
+
+	s := base.String()
+	return &s, nil
 }

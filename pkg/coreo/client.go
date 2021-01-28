@@ -59,14 +59,14 @@ func (c *Client) ListCloudAccounts() ([]*client.CloudAccount, error) {
 }
 
 //ShowCloudAccountByID show cloud account by ID
-func (c *Client) ShowCloudAccountByID(cloudID string) (*client.CloudAccount, error) {
+func (c *Client) ShowCloudAccountByID(accountNumber, provider string) (*client.CloudAccount, error) {
 	ctx := NewContext()
 	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	cloudAccount, err := clt.GetCloudAccountByID(ctx, cloudID)
+	cloudAccount, err := clt.GetCloudAccountByID(ctx, accountNumber, provider)
 	if err != nil {
 		return nil, err
 	}
@@ -105,14 +105,14 @@ func (c *Client) UpdateCloudAccount(input *client.UpdateCloudAccountInput) (*cli
 }
 
 //DeleteCloudAccountByID Delete cloud by ID
-func (c *Client) DeleteCloudAccountByID(cloudID string) error {
+func (c *Client) DeleteCloudAccountByID(accountNumber, provider string) error {
 	ctx := NewContext()
 	clt, err := c.MakeClient()
 	if err != nil {
 		return err
 	}
 
-	err = clt.DeleteCloudAccountByID(ctx, cloudID)
+	err = clt.DeleteCloudAccountByID(ctx, accountNumber, provider)
 	if err != nil {
 		return err
 	}
@@ -120,13 +120,13 @@ func (c *Client) DeleteCloudAccountByID(cloudID string) error {
 	return nil
 }
 
-func (c *Client) ReValidateRole(cloudID string) (*client.RoleReValidationResult, error) {
+func (c *Client) ReValidateRole(accountNumber, provider string) (*client.RoleReValidationResult, error) {
 	ctx := NewContext()
 	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
-	result, err := clt.ReValidateRole(ctx, cloudID)
+	result, err := clt.ReValidateRole(ctx, accountNumber, provider)
 	if err != nil {
 		return nil, err
 	}
@@ -135,24 +135,24 @@ func (c *Client) ReValidateRole(cloudID string) (*client.RoleReValidationResult,
 }
 
 //GetEventStreamConfig gets event stream setup config
-func (c *Client) GetEventStreamConfig(cloudID string) (*client.EventStreamConfig, error) {
+func (c *Client) GetEventStreamConfig(accountNumber, provider string) (*client.EventStreamConfig, error) {
 	ctx := NewContext()
 	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	return clt.GetSetupConfig(ctx, cloudID)
+	return clt.GetSetupConfig(ctx, accountNumber, provider)
 }
 
-func (c *Client) GetEventRemoveConfig(cloudID string) (*client.EventRemoveConfig, error) {
+func (c *Client) GetEventRemoveConfig(accountNumber, provider string) (*client.EventRemoveConfig, error) {
 	ctx := NewContext()
 	clt, err := c.MakeClient()
 	if err != nil {
 		return nil, err
 	}
 
-	return clt.GetRemoveConfig(ctx, cloudID)
+	return clt.GetRemoveConfig(ctx, accountNumber, provider)
 }
 
 func (c *Client) GetRoleCreationInfo(input *client.CreateCloudAccountInput) (*client.RoleCreationInfo, error) {

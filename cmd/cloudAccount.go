@@ -88,9 +88,8 @@ func (t *cloudListCmd) run() error {
 	util.PrintResult(
 		t.out,
 		b,
-		[]string{"ID", "Name", "AccountID", "IsDraft", "Tags", "Provider"},
+		[]string{"Name", "AccountID", "IsDraft", "Tags", "Provider"},
 		map[string]string{
-			"ID":        "ID",
 			"Name":      "Cloud Account Name",
 			"AccountID": "Cloud account ID",
 			"IsDraft":   "IsDraft",
@@ -104,9 +103,10 @@ func (t *cloudListCmd) run() error {
 }
 
 type cloudTestCmd struct {
-	out     io.Writer
-	client  command.Interface
-	cloudID string
+	out           io.Writer
+	client        command.Interface
+	accountNumber string
+	provider      string
 }
 
 func newCloudTestCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -120,7 +120,7 @@ func newCloudTestCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Short: content.CmdCloudTestShort,
 		Long:  content.CmdCloudTestLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := util.CheckCloudShowOrDeleteFlag(cloudTest.cloudID, verbose); err != nil {
+			if err := util.CheckCloudShowOrDeleteFlag(cloudTest.accountNumber, verbose); err != nil {
 				return err
 			}
 			if cloudTest.client == nil {
@@ -135,13 +135,13 @@ func newCloudTestCmd(client command.Interface, out io.Writer) *cobra.Command {
 
 	f := cmd.Flags()
 
-	f.StringVarP(&cloudTest.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
+	f.StringVarP(&cloudTest.accountNumber, content.CmdFlagAccountIDLong, "", "", content.CmdFlagAccountIDDescription)
 
 	return cmd
 }
 
 func (t *cloudTestCmd) run() error {
-	res, err := t.client.ReValidateRole(t.cloudID)
+	res, err := t.client.ReValidateRole(t.accountNumber, t.provider)
 	if err != nil {
 		return err
 	}

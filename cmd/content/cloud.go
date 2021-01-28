@@ -76,8 +76,8 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdCloudDeleteLong long description
 	CmdCloudDeleteLong = `Delete a cloud account.`
 
-	//CmdFlagCloudIDLong flag
-	CmdFlagCloudIDLong = "cloud-id"
+	//CmdFlagAccountIDLong flag
+	CmdFlagAccountIDLong = "account-id"
 
 	//CmdFlagRoleName is the name of the role to add a cloud account
 	CmdFlagRoleName = "role"
@@ -177,8 +177,8 @@ Add a cloud account. The result would be shown as the following if successful.
 	//CmdFlagRoleExternalIDDescription is description for flag --external-id
 	CmdFlagRoleExternalIDDescription = "The external-id used to assume the provided role"
 
-	//CmdFlagCloudIDDescription flag description
-	CmdFlagCloudIDDescription = "Vss cloud id"
+	//CmdFlagAccountIDDescription flag description
+	CmdFlagAccountIDDescription = "cloud account number for AWS accounts, subscription id for Azure accounts and project id for GCP accounts"
 
 	//InfoCloudAccountDeleted info
 	InfoCloudAccountDeleted = "Cloud account was deleted"
@@ -187,7 +187,7 @@ Add a cloud account. The result would be shown as the following if successful.
 	InfoUsingCloudAccount = "[ OK ] Using Cloud Account ID %s\n"
 
 	//ErrorCloudIDRequired error message
-	ErrorCloudIDRequired = "Cloud Account ID is required for this command. Use flag '--cloud-id'\n"
+	ErrorCloudIDRequired = "Cloud Account ID is required for this command. Use flag '--account-id'\n"
 
 	//CmdFlagDeleteRole is a flag to delete the role while deleting a cloud account
 	CmdFlagDeleteRole = "role"

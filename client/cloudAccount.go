@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"net/http"
 	"strings"
 
 	"github.com/imdario/mergo"
@@ -31,7 +32,6 @@ import (
 type CloudAccount struct {
 	RoleID    string `json:"roleId"`
 	RoleName  string `json:"roleName"`
-	ID        string `json:"_id"`
 	AccountID string `json:"accountId"`
 	CloudInfo
 }
@@ -103,12 +103,11 @@ type RoleReValidationResult struct {
 //UpdateCloudAccountInput is the info needed for update cloud account
 type UpdateCloudAccountInput struct {
 	CreateCloudAccountInput
-	CloudID string
+	AccountNumber string
 }
 
 // GetCloudAccounts method for cloud command
 func (c *Client) GetCloudAccounts(ctx context.Context) ([]*CloudAccount, error) {
-	// clouds := []*CloudAccount{}
 	clouds := make([]*CloudAccount, 0)
 
 	err := c.Do(ctx, "GET", "cloudaccounts", nil, &clouds)
@@ -129,16 +128,23 @@ func (c *Client) GetCloudAccounts(ctx context.Context) ([]*CloudAccount, error) 
 }
 
 // GetCloudAccountByID method getting cloud account by user ID
-func (c *Client) GetCloudAccountByID(ctx context.Context, cloudID string) (*CloudAccount, error) {
+func (c *Client) GetCloudAccountByID(ctx context.Context, accountNumber, provider string) (*CloudAccount, error) {
 	cloudAccount := &CloudAccount{}
-
-	err := c.Do(ctx, "GET", fmt.Sprintf("cloudaccounts/%s", cloudID), nil, cloudAccount)
+	path, err := genPathWithQueryParams(
+		fmt.Sprintf("cloudaccounts/%s", accountNumber),
+		map[string]string{"provider": provider},
+	)
 	if err != nil {
 		return nil, err
 	}
 
-	if cloudAccount.ID == "" {
-		return nil, NewError(fmt.Sprintf(content.ErrorNoCloudAccountWithIDFound, cloudID))
+	err = c.Do(ctx, http.MethodGet, *path, nil, cloudAccount)
+	if err != nil {
+		return nil, err
+	}
+
+	if cloudAccount.AccountID == "" {
+		return nil, NewError(fmt.Sprintf(content.ErrorNoCloudAccountWithIDFound, accountNumber))
 	}
 	return cloudAccount, nil
 }
@@ -232,9 +238,6 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 		return nil, err
 	}
 
-	if cloudAccount.ID == "" {
-		return nil, NewError(content.ErrorFailedToCreateCloudAccount)
-	}
 	if cloudAccount.Provider == "Azure" {
 		cloudAccount.AccountID = cloudAccount.SubscriptionID
 	}
@@ -242,15 +245,33 @@ func (c *Client) CreateCloudAccount(ctx context.Context, input *CreateCloudAccou
 }
 
 // DeleteCloudAccountByID method to delete cloud object
-func (c *Client) DeleteCloudAccountByID(ctx context.Context, cloudID string) error {
-	err := c.Do(ctx, "DELETE", fmt.Sprintf("cloudaccounts/%s", cloudID), nil, nil)
+func (c *Client) DeleteCloudAccountByID(ctx context.Context, accountNumber, provider string) error {
+	path, err := genPathWithQueryParams(
+		fmt.Sprintf("cloudaccounts/%s", accountNumber),
+		map[string]string{"provider": provider},
+	)
+	if err != nil {
+		return err
+	}
+	err = c.Do(ctx, http.MethodDelete, *path, nil, nil)
 	return err
 }
 
 //ReValidateRole checks role validation and re-validate it
-func (c *Client) ReValidateRole(ctx context.Context, cloudID string) (*RoleReValidationResult, error) {
+func (c *Client) ReValidateRole(ctx context.Context, accountNumber, provider string) (*RoleReValidationResult, error) {
 	result := new(RoleReValidationResult)
-	err := c.Do(ctx, "GET", fmt.Sprintf("cloudaccounts/%s/re-validate", cloudID), nil, result)
+	body := struct {
+		Provider string `json:"provider"`
+	}{
+		Provider: provider,
+	}
+
+	jsonStr, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.Do(ctx, http.MethodPost, fmt.Sprintf("cloudaccounts/%s/re-validate", accountNumber), bytes.NewBuffer(jsonStr), result)
 	if err != nil {
 		return nil, err
 	}
@@ -260,7 +281,7 @@ func (c *Client) ReValidateRole(ctx context.Context, cloudID string) (*RoleReVal
 //UpdateCloudAccount updates cloud account
 func (c *Client) UpdateCloudAccount(ctx context.Context, input *UpdateCloudAccountInput) (*CloudAccount, error) {
 	result := new(CloudAccount)
-	account, err := c.GetCloudAccountByID(ctx, input.CloudID)
+	account, err := c.GetCloudAccountByID(ctx, input.AccountNumber, input.Provider)
 	if err != nil {
 		return nil, err
 	}
@@ -269,7 +290,7 @@ func (c *Client) UpdateCloudAccount(ctx context.Context, input *UpdateCloudAccou
 	if err != nil {
 		return nil, err
 	}
-	err = c.Do(ctx, "PUT", fmt.Sprintf("cloudaccounts/%s", input.CloudID), bytes.NewBuffer(updateInfo), result)
+	err = c.Do(ctx, "PUT", fmt.Sprintf("cloudaccounts/%s", input.AccountNumber), bytes.NewBuffer(updateInfo), result)
 	if err != nil {
 		return nil, err
 	}

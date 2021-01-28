@@ -16,6 +16,7 @@ package client
 import (
 	"context"
 	"fmt"
+	"net/http"
 )
 
 //EventStreamConfig for event stream setup
@@ -75,10 +76,17 @@ type AzureEventRemoveConfig struct {
 }
 
 //GetSetupConfig get the config for event stream setup from secure state
-func (c *Client) GetSetupConfig(ctx context.Context, cloudID string) (*EventStreamConfig, error) {
+func (c *Client) GetSetupConfig(ctx context.Context, accountNumber, provider string) (*EventStreamConfig, error) {
 	config := &EventStreamConfig{}
+	path, err := genPathWithQueryParams(
+		fmt.Sprintf("cloudaccounts/%s/event/setup", accountNumber),
+		map[string]string{"provider": provider},
+		)
+	if err != nil {
+		return nil, err
+	}
 
-	err := c.Do(ctx, "GET", fmt.Sprintf("cloudaccounts/%s/event/setup", cloudID), nil, config)
+	err = c.Do(ctx, http.MethodGet, *path, nil, config)
 	if err != nil {
 		return nil, err
 	}
@@ -86,10 +94,17 @@ func (c *Client) GetSetupConfig(ctx context.Context, cloudID string) (*EventStre
 }
 
 //GetRemoveConfig get the config for event stream removal from secure state
-func (c *Client) GetRemoveConfig(ctx context.Context, cloudID string) (*EventRemoveConfig, error) {
+func (c *Client) GetRemoveConfig(ctx context.Context, accountNumber, provider string) (*EventRemoveConfig, error) {
 	config := &EventRemoveConfig{}
+	path, err := genPathWithQueryParams(
+		fmt.Sprintf("cloudaccounts/%s/event/remove", accountNumber),
+		map[string]string{"provider": provider},
+	)
+	if err != nil {
+		return nil, err
+	}
 
-	err := c.Do(ctx, "GET", fmt.Sprintf("cloudaccounts/%s/event/remove", cloudID), nil, config)
+	err = c.Do(ctx, http.MethodGet, *path, nil, config)
 	if err != nil {
 		return nil, err
 	}

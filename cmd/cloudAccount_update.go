@@ -22,7 +22,7 @@ type cloudUpdateCmd struct {
 	out            io.Writer
 	client         command.Interface
 	cloud          command.CloudProvider
-	cloudID        string
+	accountNumber  string
 	resourceName   string
 	roleName       string
 	externalID     string
@@ -48,7 +48,7 @@ func newCloudUpdateCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Short: content.CmdCloudUpdateShort,
 		Long:  content.CmdCloudUpdateLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := util.CheckCloudShowOrDeleteFlag(cloudUpdate.cloudID, verbose); err != nil {
+			if err := util.CheckCloudShowOrDeleteFlag(cloudUpdate.accountNumber, verbose); err != nil {
 				return err
 			}
 
@@ -78,7 +78,7 @@ func newCloudUpdateCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f.StringVarP(&cloudUpdate.email, content.CmdFlagEmail, "", "", content.CmdFlagEmailDescription)
 	f.StringVarP(&cloudUpdate.userName, content.CmdFlagUserName, "", "", content.CmdFlagUserNameDescription)
 	f.StringVarP(&cloudUpdate.environment, content.CmdFlagEnvironmentLong, content.CmdFlagEnvironmentShort, "", content.CmdFlagEnvironmentDescription)
-	f.StringVarP(&cloudUpdate.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
+	f.StringVarP(&cloudUpdate.accountNumber, content.CmdFlagAccountIDLong, "", "", content.CmdFlagAccountIDDescription)
 	f.StringVarP(&cloudUpdate.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&cloudUpdate.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 	f.StringVarP(&cloudUpdate.policy, content.CmdFlagAwsPolicy, "", content.CmdFlagAwsPolicyDefault, content.CmdFlagAwsPolicyDescription)
@@ -102,7 +102,7 @@ func (t *cloudUpdateCmd) run() error {
 			Policy:      t.policy,
 			Tags:        t.tags,
 		},
-		CloudID: t.cloudID,
+		AccountNumber: t.accountNumber,
 	}
 
 	if t.roleName != "" {

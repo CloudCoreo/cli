@@ -7,6 +7,7 @@ import (
 	"github.com/jarcoal/httpmock"
 
 	"github.com/CloudCoreo/cli/client/content"
+	"github.com/CloudCoreo/cli/cmd/util"
 
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
@@ -65,7 +66,8 @@ const CloudAccountsJSONPayload = `[
 				"href": "%s/cloudaccounts/cloudAccountID/re-validate"
 			}
 		],
-		"_id": "cloudAccountID",
+		"accountId": "cloudAccountID",
+		"provider": "AWS",
 		"email": "testEmail"
 	}]`
 
@@ -80,11 +82,12 @@ const CloudAccountJSONPayload = `{
 		"name": "aws cloud account",
 		"roleId": "asdf",
 		"roleName": "CloudCoreoAssumedRole",
-		"_id": "cloudAccountID"
+		"accountId": "cloudAccountID",
+        "provider": "AWS"
 	}`
 
 const createdCloudAccountJSONPayload = `{
-		"_id": "cloudAccountID"
+		"accountId": "cloudAccountID"
 	}`
 
 func TestGetCloudAccountsSuccess(t *testing.T) {
@@ -130,7 +133,7 @@ func TestGetCloudAccountByIDSuccess(t *testing.T) {
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
-	_, err := client.GetCloudAccountByID(context.Background(), "cloudAccountID")
+	_, err := client.GetCloudAccountByID(context.Background(), "cloudAccountID", util.ProviderAWS)
 	assert.Nil(t, err, "GetCloudAccountByID shouldn't return error.")
 }
 
@@ -141,7 +144,7 @@ func TestGetCloudAccountByIDFailureInvalidCloudID(t *testing.T) {
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
-	_, err := client.GetCloudAccountByID(context.Background(), "InvalidcloudAccountID")
+	_, err := client.GetCloudAccountByID(context.Background(), "InvalidcloudAccountID", util.ProviderAWS)
 	assert.NotNil(t, err, "GetCloudAccountByID should return error.")
 	assert.Equal(t, "No cloud account with ID InvalidcloudAccountID found.", err.Error())
 }
@@ -231,7 +234,7 @@ func TestDeleteCloudAccountByIDSuccess(t *testing.T) {
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
-	err := client.DeleteCloudAccountByID(context.Background(), "cloudAccountID")
+	err := client.DeleteCloudAccountByID(context.Background(), "cloudAccountID", util.ProviderAWS)
 	assert.Nil(t, err, "DeleteCloudAccountByID shouldn't return error.")
 }
 
@@ -242,7 +245,7 @@ func TestDeleteCloudAccountByIDAccountFailureBadRequest(t *testing.T) {
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
-	err := client.DeleteCloudAccountByID(context.Background(), "cloudAccountID")
+	err := client.DeleteCloudAccountByID(context.Background(), "cloudAccountID", util.ProviderAWS)
 	assert.NotNil(t, err, "DeleteCloudAccountByID should return error.")
 }
 
@@ -276,17 +279,17 @@ func TestUpdateCloudAccountSuccess(t *testing.T) {
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
-	_, err := client.UpdateCloudAccount(context.Background(), &UpdateCloudAccountInput{CreateCloudAccountInput: CreateCloudAccountInput{}, CloudID: "cloudAccountID"})
+	_, err := client.UpdateCloudAccount(context.Background(), &UpdateCloudAccountInput{CreateCloudAccountInput: CreateCloudAccountInput{}, AccountNumber: "cloudAccountID"})
 	assert.Nil(t, err, "UpdateCloudAccount shouldn't return error.")
 }
 
 func TestReValidateRoleSuccess(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
-	httpmock.RegisterResponder("GET", defaultAPIEndpoint+"/cloudaccounts/cloudAccountID/re-validate", httpmock.NewStringResponder(http.StatusOK, revalidateRoleJSONPayload))
-	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
+	httpmock.RegisterResponder(http.MethodPost, defaultAPIEndpoint+"/cloudaccounts/cloudAccountID/re-validate", httpmock.NewStringResponder(http.StatusOK, revalidateRoleJSONPayload))
+	httpmock.RegisterResponder(http.MethodPost, cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
 
 	client, _ := MakeClient("ApiKey", defaultAPIEndpoint)
-	_, err := client.ReValidateRole(context.Background(), "cloudAccountID")
+	_, err := client.ReValidateRole(context.Background(), "cloudAccountID", util.ProviderAWS)
 	assert.Nil(t, err, "ReValidateRole shouldn't return error.")
 }

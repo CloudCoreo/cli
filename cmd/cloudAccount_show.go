@@ -26,9 +26,10 @@ import (
 )
 
 type cloudShowCmd struct {
-	out     io.Writer
-	client  command.Interface
-	cloudID string
+	out           io.Writer
+	client        command.Interface
+	accountNumber string
+	provider      string
 }
 
 func newCloudShowCmd(client command.Interface, out io.Writer) *cobra.Command {
@@ -43,7 +44,7 @@ func newCloudShowCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Long:  content.CmdCloudShowLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			if err := util.CheckCloudShowOrDeleteFlag(cloudShow.cloudID, verbose); err != nil {
+			if err := util.CheckCloudShowOrDeleteFlag(cloudShow.accountNumber, verbose); err != nil {
 				return err
 			}
 
@@ -59,13 +60,13 @@ func newCloudShowCmd(client command.Interface, out io.Writer) *cobra.Command {
 
 	f := cmd.Flags()
 
-	f.StringVarP(&cloudShow.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
-
+	f.StringVarP(&cloudShow.accountNumber, content.CmdFlagAccountIDLong, "", "", content.CmdFlagAccountIDDescription)
+	f.StringVarP(&cloudShow.provider, content.CmdFlagProvider, "", "AWS", content.CmdFlagProviderDescription)
 	return cmd
 }
 
 func (t *cloudShowCmd) run() error {
-	cloud, err := t.client.ShowCloudAccountByID(t.cloudID)
+	cloud, err := t.client.ShowCloudAccountByID(t.accountNumber, t.provider)
 	if err != nil {
 		return err
 	}
@@ -73,9 +74,8 @@ func (t *cloudShowCmd) run() error {
 	util.PrintResult(
 		t.out,
 		cloud,
-		[]string{"ID", "Name", "AccountID", "Provider"},
+		[]string{"Name", "AccountID", "Provider"},
 		map[string]string{
-			"ID":        "ID",
 			"Name":      "Cloud Account Name",
 			"AccountID": "Cloud Account ID",
 			"Provider":  "Cloud Provider",

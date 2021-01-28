@@ -124,7 +124,7 @@ Flags for specific commands are listed in Docs section.
 You may use CLI to do scriptable onboarding with two commands:
 ```sh
  vss cloud add --name YOUR_NEW_ACCOUNT_NAME --role NAME_FOR_NEW_ROLE [--aws-profile PROFILE_NAME] [–aws-profile-path PROFILE_PATH] [--policy-arn YOUR_POLICY_ARN]  
- vss event setup --cloud-id YOUR_CLOUD_ID [--aws-profile PROFILE_NAME] [--aws-profile-path PROFILE_PATH] 
+ vss event setup --account-id YOUR_ACCOUNT_ID [--aws-profile PROFILE_NAME] [--aws-profile-path PROFILE_PATH] 
 ```
 team-id flag is not required from CLI release v0.0.49
 ## Docs
@@ -168,12 +168,13 @@ Manage Cloud Accounts
         
 * delete
     * Usage
-        * `vss cloud delete --cloud-id YOUR_CLOUD_ID [flags]`
+        * `vss cloud delete --account-id YOUR_ACCOUNT_ID --provider PROVIDER [flags]`
     * Flags  
     
         |Variable | Option | Description |
         | ------ | ------ | :-------- |
-        | cloud id| --cloud-id| Secure State cloud id of which account you'd like to delete, this flag is required|
+        | account id| --account-id| Cloud account id of which account you'd like to delete, this flag is required|
+        | provider|--provider| Cloud provider type, you may use AWS, Azure or GCP, AWS by default|
         | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
         | aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
 * list
@@ -182,15 +183,16 @@ Manage Cloud Accounts
 
 * show
     * Usage
-        * `vss cloud show --cloud-id YOUR_CLOUD_ID [flags]`
+        * `vss cloud show --account-id YOUR_ACCOUNT_ID --provider PROVIDER [flags]`
     * Flags
     
         |Variable | Option | Description |
         | ------ | ------ | :-------- |
-        | cloud id| --cloud-id| Secure State cloud id of which account you'd like to show information for, this flag is required|
+        | account id| --account-id| Cloud account id of which account you'd like to delete, this flag is required|
+        | provider|--provider| Cloud provider type, you may use AWS, Azure or GCP, AWS by default|
 * update
     * Usage
-        * `vss cloud update --cloud-id YOUR_CLOUD_ID [flags]`
+        * `vss cloud update --account-id YOUR_ACCOUNT_ID --provider PROVIDER [flags]`
     * Flags 
     
         |Variable | Option | Description |
@@ -206,19 +208,21 @@ Manage Cloud Accounts
         |Environment| --env| Environment label for the cloud account to add, must be one of these: Production, Staging, Development, Test"|
         |email|--email|The email address of account owner|
         |username|--username| The username of account owner|
-        | cloud id| --cloud-id| Secure State cloud id of which account you'd like to update information for, this flag is required|
+        | account id| --account-id| Cloud account id of which account you'd like to delete, this flag is required|
+        | provider|--provider| Cloud provider type, you may use AWS, Azure or GCP, AWS by default|
         | cloud account tags| --tags| Cloud account tags|
     * For role update, you may either provide your own role or let CLI create one
     * You may need to use --draft flag if you still want to keep it as draft status, otherwise VSS CLI will switch it to non-draft status
         
 * test
     * Usage
-        * `vss cloud test --cloud-id`
+        * `vss cloud test --account-id YOUR_ACCOUNT_ID --provider PROVIDER`
         * Flags
         
             |Variable | Option | Description |
             | ------ | ------ | :-------- |
-            | cloud id| --cloud-id| Secure State cloud id of which account you'd like to test role validation for, this flag is required|
+            | account id| --account-id| Cloud account id of which account you'd like to delete, this flag is required|
+            | provider|--provider| Cloud provider type, you may use AWS, Azure or GCP, AWS by default|
             
 #### configure
 Configure CLI options
@@ -256,56 +260,21 @@ Show violation results (Deprecated, please follow the link to swagger API doc 'h
 * object
     * Usage
         * `vss result object [flags]`
-    * Flags
-        
-         |Variable | Option | Description |
-         | ------ | ------ | :-------- |
-         | cloud id| --cloud-id| Secure State cloud id of which account you'd like to show violation for, this flag is optional|
-         | severity | --severity | The severity level you'd like to show in violation results |
-         | retry | --retry | Retry times when getting violation fails |
-    * By default you will get all violation objects under your team, three flag filters are provided: team-id, cloud-id and severity. If team-id is not specified, the team in your profile will be automatically used.
-    * Examples
-         * `vss result object --severity "High|Medium"`    
-         * `vss result object --severity "High|Low"`  
-         * `vss result object --cloud-id YOUR_CLOUD_ID --severity "Low"`
 * rule
     * Usage
         * `vss result rule [flags]`
-    * Flags
-    
-        |Variable | Option | Description |
-        | ------ | ------ | :-------- |
-        | cloud account| --cloud-account-id| Secure State cloud id of which account you'd like to show violation for, this flag is optional|
-        | severity | --severity | The severity level you'd like to show in violation results |
-    * By default you will get all violation rules under your team, three flag filters are provided: team-id, cloud-id and severity. If team-id is not specified, the team in your profile will be automatically used.
-    * Examples
-        * `vss result rule --severity "High|Medium"`
-        * `vss result rule --severity "High|Low"`
-        * `vss result rule --cloud-account-id YOUR_SECURITY_STATE_CLOUD_ACCOUNT_ID --severity "Low"`
         
 #### token
 Manage API Tokens(These commands are deprecated from CLI version v0.0.49, please use [CSP portal](https://console.cloud.vmware.com/csp/gateway/portal/#/user/tokens)) to manage your token)
 * delete
     * Usage
-        * `vss token delete --token-id YOUR_TOKEN_ID [flags]`
-    * Flags
-    
-        |Variable | Option | Description |
-        | :------: | :------: | :--------: |
-        | token id| --token-id| Secure State token id, this flag is required|
-                
+        * `vss token delete --token-id YOUR_TOKEN_ID [flags]`             
 * list
     * Usage 
         * `vss token list [flags]`
-        
 * show
     * Usage
         * `vss token show --token-id YOUR_TOKEN_ID [flags]`
-    * Flags
-    
-        |Variable | Option | Description |
-        | :------: | :------: | :--------: |
-        | token id| --token-id| Secure State token id, this flag is required|
         
 #### completion
 Generate bash auto-completions script
@@ -316,26 +285,28 @@ Generate bash auto-completions script
 Manage event stream
 * setup
     * Usage 
-        * `vss event setup --cloud-id YOUR_CLOUD_ID [flags]`
+        * `vss event setup --account-id YOUR_ACCOUNT_ID --provider PROVIDER [flags]`
     * Flags
     
         |Variable | Option | Description |
         | ------ | ------ | :-------- |
         | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
         |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
-        | cloud id| --cloud-id| Secure State cloud id of which account you'd like to add event stream for, this flag is required|
+        | account id| --account-id| Cloud account id of which account you'd like to delete, this flag is required|
+        | provider|--provider| Cloud provider type, you may use AWS, Azure or GCP, AWS by default|
         |ignore-missing-trails|--ignore-missing-trails| With this flag, CLI will skip regions of which CloudTrail in not enables and continue on other regions.|
 
 * remove
     * Usage 
-        * `vss event remove --cloud-id YOUR_CLOUD_ID [flags]`
+        * `vss event remove --account-id YOUR_ACCOUNT_ID --provider PROVIDER [flags]`
     * Flags
         
         |Variable | Option | Description |
         | ------ | ------ | :-------- |
         | aws profile | --aws-profile |  Aws shared credential file. If empty default provider chain will be used to look for credentials with the following order. <br> <br> 1. Environment variables.<br>2. Shared credentials file. <br>3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
         |aws profile path| --aws-profile-path| The file path of aws profile. If empty will look for AWS_SHARED_CREDENTIALS_FILE env variable. If the env value is empty will default to current user's home directory. <br> <br> Linux/OSX: &nbsp; "$HOME/.aws/credentials"<br> Windows: &nbsp;&nbsp;&nbsp; "%USERPROFILE%\.aws\credentials"
-        | cloud id| --cloud-id| Secure State cloud id of which account you'd like to remove event stream for, this flag is required|
+        | account id| --account-id| Cloud account id of which account you'd like to delete, this flag is required|
+        | provider|--provider| Cloud provider type, you may use AWS, Azure or GCP, AWS by default|
         
 #### help
 Help about any command

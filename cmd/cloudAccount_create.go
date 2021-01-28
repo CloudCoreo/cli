@@ -166,11 +166,11 @@ func (t *cloudCreateCmd) run() error {
 	util.PrintResult(
 		t.out,
 		cloud,
-		[]string{"ID", "Name", "Tags"},
+		[]string{"AccountID", "Name", "Tags"},
 		map[string]string{
-			"ID":   "Cloud Account ID",
-			"Name": "Cloud Account Name",
-			"Tags": "Tags",
+			"AccountID": "Cloud Account ID",
+			"Name":      "Cloud Account Name",
+			"Tags":      "Tags",
 		},
 		jsonFormat,
 		verbose)
