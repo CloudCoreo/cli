@@ -82,6 +82,7 @@ func (t *cloudListCmd) run() error {
 
 	b := make([]interface{}, len(clouds))
 	for i := range clouds {
+		clouds[i].ID = clouds[i].AccountID
 		b[i] = clouds[i]
 	}
 
@@ -136,6 +137,7 @@ func newCloudTestCmd(client command.Interface, out io.Writer) *cobra.Command {
 	f := cmd.Flags()
 
 	f.StringVarP(&cloudTest.accountNumber, content.CmdFlagAccountIDLong, "", "", content.CmdFlagAccountIDDescription)
+	f.StringVarP(&cloudTest.provider, content.CmdFlagProvider, "", "AWS", content.CmdFlagProviderDescription)
 
 	return cmd
 }

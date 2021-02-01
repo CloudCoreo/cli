@@ -30,9 +30,10 @@ import (
 
 // CloudAccount Information
 type CloudAccount struct {
-	RoleID    string `json:"roleId"`
-	RoleName  string `json:"roleName"`
-	AccountID string `json:"accountId"`
+	RoleID    string `json:"roleId,omitempty"`
+	RoleName  string `json:"roleName,omitempty"`
+	AccountID string `json:"accountId,omitempty"`
+	ID        string `json:"_id,omitempty"`
 	CloudInfo
 }
 
@@ -62,8 +63,8 @@ type CloudInfo struct {
 	Name                string   `json:"name,omitempty"`
 	Arn                 string   `json:"arn,omitempty"`
 	ScanEnabled         bool     `json:"scanEnabled"`
-	ScanInterval        string   `json:"scanInterval"`
-	ScanRegion          string   `json:"scanRegion"`
+	ScanInterval        string   `json:"scanInterval,omitempty"`
+	ScanRegion          string   `json:"scanRegion,omitempty"`
 	ExternalID          string   `json:"externalId,omitempty"`
 	IsDraft             bool     `json:"isDraft"`
 	Provider            string   `json:"provider"`
@@ -76,8 +77,8 @@ type CloudInfo struct {
 	SubscriptionID      string   `json:"subscriptionId,omitempty"`
 	Tags                []string `json:"tags,omitempty"`
 	IsValid             bool     `json:"isValid"`
-	LastValidationCheck string   `json:"lastValidationCheck"`
-	CSPProjectID        string   `json:"cspProjectId"`
+	LastValidationCheck string   `json:"lastValidationCheck,omitempty"`
+	CSPProjectID        string   `json:"cspProjectId,omitempty"`
 }
 
 type defaultID struct {

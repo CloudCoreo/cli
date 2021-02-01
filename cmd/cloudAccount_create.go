@@ -162,6 +162,7 @@ func (t *cloudCreateCmd) run() error {
 		}
 		return err
 	}
+	cloud.ID = cloud.AccountID
 
 	util.PrintResult(
 		t.out,

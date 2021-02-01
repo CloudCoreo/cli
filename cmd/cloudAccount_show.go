@@ -70,6 +70,7 @@ func (t *cloudShowCmd) run() error {
 	if err != nil {
 		return err
 	}
+	cloud.ID = cloud.AccountID
 
 	util.PrintResult(
 		t.out,
