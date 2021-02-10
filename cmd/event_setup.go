@@ -61,6 +61,7 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 	f.BoolVarP(&eventSetup.ignoreMissingTrails, content.CmdFlagIgnoreMissingTrails, "", false, content.CmdFlagIgnoreMissingTrailsDescription)
 	f.StringVarP(&eventSetup.authFile, content.CmdEventAuthFile, "", "", content.CmdEventAuthFileDescription)
 	f.StringVarP(&eventSetup.region, content.CmdEventRegion, "", "eastus", content.CmdEventRegionDescription)
+	f.StringVarP(&eventSetup.provider, content.CmdFlagProvider, "", "AWS", content.CmdFlagProviderDescription)
 	return cmd
 }
 
