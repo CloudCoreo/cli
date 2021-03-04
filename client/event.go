@@ -28,13 +28,14 @@ type EventStreamConfig struct {
 
 //AWSEventStreamConfig contains info needed for AWS event stream setup
 type AWSEventStreamConfig struct {
-	TemplateURL     string   `json:"templateURL"`
-	TopicName       string   `json:"topicName"`
-	StackName       string   `json:"stackName"`
-	DevtimeQueueArn string   `json:"devtimeQueueArn"`
-	Version         string   `json:"version"`
-	MonitorRule     string   `json:"monitorRule"`
-	Regions         []string `json:"regions"`
+	TemplateURL            string   `json:"templateURL"`
+	TopicName              string   `json:"topicName"`
+	StackName              string   `json:"stackName"`
+	DevtimeQueueArn        string   `json:"devtimeQueueArn"`
+	Version                string   `json:"version"`
+	MonitorRule            string   `json:"monitorRule"`
+	Regions                []string `json:"regions"`
+	TopicEncryptionKeyName string   ` json: "topicEncryptionKeyName"`
 }
 
 //AzureEventStreamConfig contains info needed for Azure event stream setup
@@ -81,7 +82,7 @@ func (c *Client) GetSetupConfig(ctx context.Context, accountNumber, provider str
 	path, err := genPathWithQueryParams(
 		fmt.Sprintf("cloudaccounts/%s/event/setup", accountNumber),
 		map[string]string{"provider": provider},
-		)
+	)
 	if err != nil {
 		return nil, err
 	}
