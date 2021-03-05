@@ -35,7 +35,7 @@ type AWSEventStreamConfig struct {
 	Version                string   `json:"version"`
 	MonitorRule            string   `json:"monitorRule"`
 	Regions                []string `json:"regions"`
-	TopicEncryptionKeyName string   ` json: "topicEncryptionKeyName"`
+	TopicEncryptionKeyName string   `json:"topicEncryptionKeyName"`
 }
 
 //AzureEventStreamConfig contains info needed for Azure event stream setup
