@@ -19,14 +19,14 @@ import "github.com/CloudCoreo/cli/client"
 // Interface for Coreo client for mocking in tests
 type Interface interface {
 	ListCloudAccounts() ([]*client.CloudAccount, error)
-	ShowCloudAccountByID(cloudID string) (*client.CloudAccount, error)
+	ShowCloudAccountByID(accountNumber, provider string) (*client.CloudAccount, error)
 	CreateCloudAccount(input *client.CreateCloudAccountInput) (*client.CloudAccount, error)
 	UpdateCloudAccount(input *client.UpdateCloudAccountInput) (*client.CloudAccount, error)
-	DeleteCloudAccountByID(cloudID string) error
-	ReValidateRole(cloudID string) (*client.RoleReValidationResult, error)
+	DeleteCloudAccountByID(accountNumber, provider string) error
+	ReValidateRole(accountNumber, provider string) (*client.RoleReValidationResult, error)
 
-	GetEventStreamConfig(cloudID string) (*client.EventStreamConfig, error)
-	GetEventRemoveConfig(cloudID string) (*client.EventRemoveConfig, error)
+	GetEventStreamConfig(accountNumber, provider string) (*client.EventStreamConfig, error)
+	GetEventRemoveConfig(accountNumber, provider string) (*client.EventRemoveConfig, error)
 	GetRoleCreationInfo(input *client.CreateCloudAccountInput) (*client.RoleCreationInfo, error)
 }
 

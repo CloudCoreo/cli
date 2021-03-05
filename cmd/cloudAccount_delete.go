@@ -34,7 +34,8 @@ type cloudDeleteCmd struct {
 	out            io.Writer
 	client         command.Interface
 	cloud          command.CloudProvider
-	cloudID        string
+	accountNumber  string
+	provider       string
 	deleteRole     bool
 	awsProfile     string
 	awsProfilePath string
@@ -52,7 +53,7 @@ func newCloudDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
 		Long:  content.CmdCloudDeleteLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			if err := util.CheckCloudShowOrDeleteFlag(cloudDelete.cloudID, verbose); err != nil {
+			if err := util.CheckCloudShowOrDeleteFlag(cloudDelete.accountNumber, verbose); err != nil {
 				return err
 			}
 
@@ -76,9 +77,10 @@ func newCloudDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
 
 	f := cmd.Flags()
 
-	f.StringVarP(&cloudDelete.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
+	f.StringVarP(&cloudDelete.accountNumber, content.CmdFlagAccountIDLong, "", "", content.CmdFlagAccountIDDescription)
 	f.BoolVarP(&cloudDelete.deleteRole, content.CmdFlagDeleteRole, "", false, content.CmdFLagDeleteRoleDescription)
 	f.StringVarP(&cloudDelete.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
+	f.StringVarP(&cloudDelete.provider, content.CmdFlagProvider, "", "AWS", content.CmdFlagProviderDescription)
 	f.StringVarP(&cloudDelete.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
 
 	return cmd
@@ -87,7 +89,7 @@ func newCloudDeleteCmd(client command.Interface, out io.Writer) *cobra.Command {
 func (t *cloudDeleteCmd) run() error {
 	var roleName string
 	if t.deleteRole {
-		cloud, err := t.client.ShowCloudAccountByID(t.cloudID)
+		cloud, err := t.client.ShowCloudAccountByID(t.accountNumber, t.provider)
 		if err != nil {
 			return err
 		}
@@ -98,7 +100,7 @@ func (t *cloudDeleteCmd) run() error {
 		t.cloud.DeleteRole(roleName)
 	}
 
-	err := t.client.DeleteCloudAccountByID(t.cloudID)
+	err := t.client.DeleteCloudAccountByID(t.accountNumber, t.provider)
 	if err != nil {
 		return err
 	}

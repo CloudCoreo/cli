@@ -32,7 +32,7 @@ func TestNewEventSetupCmd(t *testing.T) {
 		},
 		{
 			flags: []string{
-				"--cloud-id", "cloud-id",
+				"--account-id", "cloud-id",
 				"--aws-profile", "default",
 				"--aws-profile-path", "$HOME",
 			},
@@ -40,7 +40,7 @@ func TestNewEventSetupCmd(t *testing.T) {
 		},
 		{
 			flags: []string{
-				"--cloud-id", "cloud-id",
+				"--account-id", "cloud-id",
 				"--aws-profile", "default",
 				"--aws-profile-path", "$HOME",
 			},
@@ -49,7 +49,7 @@ func TestNewEventSetupCmd(t *testing.T) {
 		},
 		{
 			flags: []string{
-				"--cloud-id", "cloud-id",
+				"--account-id", "cloud-id",
 				"--aws-profile", "default",
 				"--aws-profile-path", "$HOME",
 			},
@@ -59,7 +59,7 @@ func TestNewEventSetupCmd(t *testing.T) {
 		},
 		{
 			flags: []string{
-				"--cloud-id", "cloud-id",
+				"--account-id", "cloud-id",
 				"--aws-profile", "default",
 				"--aws-profile-path", "$HOME",
 			},

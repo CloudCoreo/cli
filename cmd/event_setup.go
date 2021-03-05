@@ -21,9 +21,10 @@ type eventSetupCmd struct {
 	out                 io.Writer
 	awsProfile          string
 	awsProfilePath      string
-	cloudID             string
+	accountNumber       string
 	ignoreMissingTrails bool
 	authFile            string
+	provider            string
 	region              string
 }
 
@@ -41,7 +42,7 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 		Example: content.CmdEventSetupExample,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Check for --cloud-id
-			if err := util.CheckCloudShowOrDeleteFlag(eventSetup.cloudID, verbose); err != nil {
+			if err := util.CheckCloudShowOrDeleteFlag(eventSetup.accountNumber, verbose); err != nil {
 				return err
 			}
 			if eventSetup.client == nil {
@@ -56,16 +57,17 @@ func newEventSetupCmd(client command.Interface, provider command.CloudProvider, 
 	f := cmd.Flags()
 	f.StringVarP(&eventSetup.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&eventSetup.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
-	f.StringVarP(&eventSetup.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
+	f.StringVarP(&eventSetup.accountNumber, content.CmdFlagAccountIDLong, "", "", content.CmdFlagAccountIDDescription)
 	f.BoolVarP(&eventSetup.ignoreMissingTrails, content.CmdFlagIgnoreMissingTrails, "", false, content.CmdFlagIgnoreMissingTrailsDescription)
 	f.StringVarP(&eventSetup.authFile, content.CmdEventAuthFile, "", "", content.CmdEventAuthFileDescription)
 	f.StringVarP(&eventSetup.region, content.CmdEventRegion, "", "eastus", content.CmdEventRegionDescription)
+	f.StringVarP(&eventSetup.provider, content.CmdFlagProvider, "", "AWS", content.CmdFlagProviderDescription)
 	return cmd
 }
 
 func (t *eventSetupCmd) run() error {
 
-	config, err := t.client.GetEventStreamConfig(t.cloudID)
+	config, err := t.client.GetEventStreamConfig(t.accountNumber, t.provider)
 	if err != nil {
 		return err
 	}

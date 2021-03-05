@@ -145,9 +145,9 @@ func (a *SetupService) newParameter(key, value string) *cloudformation.Parameter
 }
 
 func (a *SetupService) newParameterList(config *client.EventStreamConfig) []*cloudformation.Parameter {
-	parameters := make([]*cloudformation.Parameter, 3)
-	keys := []string{"CloudCoreoDevTimeQueueArn", "CloudCoreoDevTimeTopicName", "CloudCoreoDevTimeMonitorRule"}
-	values := []string{config.DevtimeQueueArn, config.TopicName, config.MonitorRule}
+	keys := []string{"CloudCoreoDevTimeQueueArn", "CloudCoreoDevTimeTopicName", "CloudCoreoDevTimeMonitorRule", "CloudCoreoDevTimeTopicEncryptionKeyName"}
+	values := []string{config.DevtimeQueueArn, config.TopicName, config.MonitorRule, config.TopicEncryptionKeyName}
+	parameters := make([]*cloudformation.Parameter, len(keys))
 
 	for i := range parameters {
 		parameters[i] = a.newParameter(keys[i], values[i])

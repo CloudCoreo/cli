@@ -20,6 +20,11 @@ import (
 	"github.com/CloudCoreo/cli/cmd/content"
 )
 
+const (
+	ProviderAWS   = "AWS"
+	ProviderAzure = "Azure"
+)
+
 func checkFlag(flag, error string) error {
 	if flag == "" {
 		return fmt.Errorf(error)
@@ -29,14 +34,14 @@ func checkFlag(flag, error string) error {
 }
 
 // CheckCloudShowOrDeleteFlag flags check for cloud show or delete command
-func CheckCloudShowOrDeleteFlag(cloudID string, verbose bool) error {
+func CheckCloudShowOrDeleteFlag(accountNumber string, verbose bool) error {
 
-	if err := checkFlag(cloudID, content.ErrorCloudIDRequired); err != nil {
+	if err := checkFlag(accountNumber, content.ErrorCloudIDRequired); err != nil {
 		return err
 	}
 
 	if verbose {
-		fmt.Printf(content.InfoUsingCloudAccount, cloudID)
+		fmt.Printf(content.InfoUsingCloudAccount, accountNumber)
 	}
 
 	return nil
@@ -121,7 +126,7 @@ func CheckAPIKeyFlag(apiKey string, userProfile string) (string, error) {
 }
 
 func CheckProviderFlag(provider string) error {
-	if provider != "AWS" && provider != "Azure" {
+	if provider != ProviderAWS && provider != ProviderAzure {
 		return fmt.Errorf(content.ErrorProviderNotSupported)
 	}
 	return nil

@@ -95,7 +95,7 @@ func (suite *DoTestSuite) TestDo() {
 		"name": "aws cloud account",
 		"roleId": "asdf",
 		"roleName": "CloudCoreoAssumedRole",
-		"_id": "cloudAccountID",
+		"accountId": "cloudAccountID",
 		"email": "testEmail"
 	}]`))
 	httpmock.RegisterResponder("POST", cspURL+cspResource, httpmock.NewStringResponder(http.StatusOK, refreshTokenJSONPayload))
@@ -104,7 +104,7 @@ func (suite *DoTestSuite) TestDo() {
 	accounts := make([]*CloudAccount, 0)
 	err := client.Do(context.Background(), "GET", "cloudaccounts", nil, &accounts)
 	assert.Nil(suite.T(), err, "Do shouldn't return error.")
-	assert.Equal(suite.T(), "cloudAccountID", accounts[0].ID)
+	assert.Equal(suite.T(), "cloudAccountID", accounts[0].AccountID)
 }
 
 // TestDoTestSuite Execute TestDoTestSuite test suite

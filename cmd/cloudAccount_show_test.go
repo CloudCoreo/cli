@@ -25,10 +25,9 @@ import (
 )
 
 func TestCloudAccountShowCmd(t *testing.T) {
-	mockCloudAccount := func(cloudName, teamID, cloudID, accountId, arn string) *client.CloudAccount {
+	mockCloudAccount := func(cloudName, accountId, arn string) *client.CloudAccount {
 		return &client.CloudAccount{
-			ID:        cloudID,
-			CloudInfo: client.CloudInfo{Name: cloudName, Arn: arn},
+			CloudInfo: client.CloudInfo{Name: cloudName, Arn: arn, Provider: "AWS"},
 			AccountID: accountId,
 		}
 	}
@@ -47,17 +46,17 @@ func TestCloudAccountShowCmd(t *testing.T) {
 			cmds: "coreo cloud show, success",
 			desc: "",
 			flags: []string{
-				"--cloud-id", "123123",
+				"--account-id", "123123",
 			},
 			resp: []*client.CloudAccount{
-				mockCloudAccount("ID1", "Team1", "CloudName1", "AccountID1", "Arn1"),
-				mockCloudAccount("ID2", "Team2", "CloudName2", "AccountID2", "Arn2"),
+				mockCloudAccount("CloudName1", "AccountID1", "Arn1"),
+				mockCloudAccount("CloudName2", "AccountID2", "Arn2"),
 			},
-			xout: "---------------  -----------------------  ---------------------  -------------------\n       " +
-				"ID           Cloud Account Name       Cloud Account ID       Cloud Provider  \n" +
-				"---------------  -----------------------  ---------------------  -------------------\n" +
-				"   CloudName1              ID1                  AccountID1                          \n" +
-				"---------------  -----------------------  ---------------------  -------------------\n\n",
+			xout: "-----------------------  ---------------------  -------------------\n   " +
+				"Cloud Account Name       Cloud Account ID       Cloud Provider  \n" +
+				"-----------------------  ---------------------  -------------------\n" +
+				"       CloudName1              AccountID1               AWS        \n" +
+				"-----------------------  ---------------------  -------------------\n\n",
 		},
 		{
 			cmds: "coreo cloud show, failure",

@@ -25,9 +25,9 @@ import (
 )
 
 func TestCloudAccountCreateCmd(t *testing.T) {
-	mockCloudAccount := func(cloudName, cloudID string) *client.CloudAccount {
+	mockCloudAccount := func(cloudName, accountNumber string) *client.CloudAccount {
 		return &client.CloudAccount{
-			ID:        cloudID,
+			AccountID: accountNumber,
 			CloudInfo: client.CloudInfo{Name: cloudName},
 		}
 	}

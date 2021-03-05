@@ -25,7 +25,8 @@ type eventRemoveCmd struct {
 	out            io.Writer
 	awsProfile     string
 	awsProfilePath string
-	cloudID        string
+	accountNumber  string
+	provider       string
 	authFile       string
 	region         string
 }
@@ -44,7 +45,7 @@ func newEventRemoveCmd(client command.Interface, provider command.CloudProvider,
 		Example: content.CmdEventRemoveExample,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Check for --cloud-id
-			if err := util.CheckCloudShowOrDeleteFlag(eventRemove.cloudID, verbose); err != nil {
+			if err := util.CheckCloudShowOrDeleteFlag(eventRemove.accountNumber, verbose); err != nil {
 				return err
 			}
 			if eventRemove.client == nil {
@@ -59,15 +60,16 @@ func newEventRemoveCmd(client command.Interface, provider command.CloudProvider,
 	f := cmd.Flags()
 	f.StringVarP(&eventRemove.awsProfile, content.CmdFlagAwsProfile, "", "", content.CmdFlagAwsProfileDescription)
 	f.StringVarP(&eventRemove.awsProfilePath, content.CmdFlagAwsProfilePath, "", "", content.CmdFlagAwsProfilePathDescription)
-	f.StringVarP(&eventRemove.cloudID, content.CmdFlagCloudIDLong, "", "", content.CmdFlagCloudIDDescription)
+	f.StringVarP(&eventRemove.accountNumber, content.CmdFlagAccountIDLong, "", "", content.CmdFlagAccountIDDescription)
 	f.StringVarP(&eventRemove.authFile, content.CmdEventAuthFile, "", "", content.CmdEventAuthFileDescription)
+	f.StringVarP(&eventRemove.provider, content.CmdFlagProvider, "", "AWS", content.CmdFlagProviderDescription)
 	f.StringVarP(&eventRemove.region, content.CmdEventRegion, "", "eastus", content.CmdEventRegionDescription)
 
 	return cmd
 }
 
 func (t *eventRemoveCmd) run() error {
-	config, err := t.client.GetEventRemoveConfig(t.cloudID)
+	config, err := t.client.GetEventRemoveConfig(t.accountNumber, t.provider)
 	if err != nil {
 		return err
 	}

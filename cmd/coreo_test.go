@@ -33,7 +33,7 @@ func (c *fakeReleaseClient) ListCloudAccounts() ([]*client.CloudAccount, error) 
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ShowCloudAccountByID(cloudID string) (*client.CloudAccount, error) {
+func (c *fakeReleaseClient) ShowCloudAccountByID(accountNumber, provider string) (*client.CloudAccount, error) {
 	resp := &client.CloudAccount{}
 	if len(c.cloudAccounts) > 0 {
 
@@ -53,17 +53,17 @@ func (c *fakeReleaseClient) CreateCloudAccount(input *client.CreateCloudAccountI
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) DeleteCloudAccountByID(cloudID string) error {
+func (c *fakeReleaseClient) DeleteCloudAccountByID(accountNumber, provider string) error {
 	return c.err
 }
 
-func (c *fakeReleaseClient) GetEventStreamConfig(cloudID string) (*client.EventStreamConfig, error) {
+func (c *fakeReleaseClient) GetEventStreamConfig(accountNumber, provider string) (*client.EventStreamConfig, error) {
 	return &client.EventStreamConfig{
 		AWSEventStreamConfig: client.AWSEventStreamConfig{Regions: c.regions},
 	}, c.err
 }
 
-func (c *fakeReleaseClient) GetEventRemoveConfig(cloudID string) (*client.EventRemoveConfig, error) {
+func (c *fakeReleaseClient) GetEventRemoveConfig(accountNumber, provider string) (*client.EventRemoveConfig, error) {
 	return &client.EventRemoveConfig{
 		AWSEventRemoveConfig: client.AWSEventRemoveConfig{
 			Regions: c.regions,
@@ -85,7 +85,7 @@ func (c *fakeReleaseClient) UpdateCloudAccount(input *client.UpdateCloudAccountI
 	return resp, c.err
 }
 
-func (c *fakeReleaseClient) ReValidateRole(cloudID string) (*client.RoleReValidationResult, error) {
+func (c *fakeReleaseClient) ReValidateRole(accountNumber, provider string) (*client.RoleReValidationResult, error) {
 	resp := c.validationResult
 	return &resp, c.err
 }
